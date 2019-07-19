@@ -26,9 +26,9 @@ using std::string;
 #define MAX_SHAKE_INTERVAL              200
 #define MAX_VOLUME                      10
 
-#define DEFAULT_SCALE                   2
+#define DEFAULT_SCALE                   4
 #define DEFAULT_FULLSCREEN              0
-#define DEFAULT_FILTER                  "Scale2x"
+#define DEFAULT_FILTER                  "point"
 #define DEFAULT_VIDEO_TYPE              "VGA"
 #define DEFAULT_GEM_LAYOUT              "Standard"
 #define DEFAULT_LINEOFSIGHT             "DOS"
