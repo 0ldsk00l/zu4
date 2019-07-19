@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="Algorithms.xsl"?>
+<algorithms>
+    <intro>        
+        The following are the algorithms used by xu4.  Most of them are exact matches
+        to the original Ultima IV, while others are simply guessed. Algorithms have a
+        certain level of accuracy to the original Ultima IV, which is indicated by the
+        "Accuracy" column.
+        
+        Values are:
+                exact   - Exact emulation of the original Ultima IV behavior
+                near    - Near-exact emulation
+                unknown - Level of accuracy unknown        
+    </intro>
+    
+    <section name="Camping">
+        <algorithm desc="Ambushed during rest?" prec="exact">
+            <line>random(8) == 0</line>
+        </algorithm>
+        <algorithm desc="Healed after camping?" prec="exact">
+            <line>(((moves/100) >= 0x10000) or (((moves/100) &amp; 0xffff) != lastcamp))</line>
+            <line>lastcamp = (moves/100) &amp; 0xffff</line>
+        </algorithm>
+        <algorithm desc="Ambushed by rogues at inn?" prec="exact">
+            <line>random(8) == 0</line>
+        </algorithm>
+        <algorithm desc="Innkeeper warns about rats?" prec="exact">
+            <line>random(4) == 0</line>
+        </algorithm>
+        <algorithm desc="Visited by Isaac the Ghost?" prec="exact">
+            <line>(map == Skara Brae) and (random(4) == 0)</line>
+        </algorithm>
+    </section>
+
+    <section name="Combat">
+        <algorithm desc="Place monster's leader's leader" prec="exact">
+            <line>random(32) == 0</line>
+        </algorithm>
+        <algorithm desc="Place monster's leader" prec="exact">
+            <line>!placedLeadersLeader and (random(8) == 0)</line>
+        </algorithm>
+        <algorithm desc="# of creatures (town)" prec="exact">
+            <line>if (guard)<line>ncreatures = numPartyMembers * 2</line></line>
+            <line>else<line>ncreatures = 1</line></line>
+        </algorithm>
+        <algorithm desc="# of creatures (normal)" prec="near">
+            <line>ncreatures = random(8) + 1</line>
+            <line>if (ncreatures == 1) {
+                <line>if (creature.encountersize == 0)
+                    <line>ncreatures = random(creature.encountersize) + creature.encountersize + 1</line></line>
+                <line>else ncreatures = 8</line>
+            </line>
+            <line>}</line>
+            <line>while (ncreatures > (2 * numPartyMembers))
+                <line>ncreatures = random(16) + 1</line>
+            </line>
+            </algorithm>
+        <algorithm desc="Does player get an extra turn?" prec="near">
+            <line>(aura == quick) and playerIsNotDisabled and (random(2) == 0)</line>
+        </algorithm>
+        <algorithm desc="Does player wake up?" prec="exact">
+            <line>random(8) == 0</line>
+        </algorithm>
+        <algorithm desc="Monster placement" prec="exact">
+            <pseudo>Add monster to random empty location in combat monsters location array</pseudo>
+        </algorithm>
+        <algorithm desc="Player poisoned by ranged poison attack" prec="exact"><line>random(2) == 0 and !alreadyPoisoned</line></algorithm>
+        <algorithm desc="Player slept by ranged sleep attack" prec="exact"><line>random(2) == 0</line></algorithm>
+        <algorithm desc="Player damage to creature" prec="exact">
+            <line>maxDamage = weapon.damage</line>
+            <line>maxDamage += player.strength</line>
+            <line>if(maxDamage > 255)<line>maxDamage=255</line></line>
+            <line>realDamage = random(maxDamage)</line>
+        </algorithm>
+        <algorithm desc="Creature damage to player/creature" prec="exact">
+            <line>x = random(creature.basehp >> 2)</line>
+            <line>damage = (x >> 4) + ((x >> 2) &amp; 0xfc)</line>
+            <line>damage += x % 10</line>            
+        </algorithm>
+        <algorithm desc="Creature hits player" prec="exact">
+            <line>xu4_random(0x100) > armor.defense</line>
+        </algorithm>
+        <algorithm desc="Player hits creature" prec="exact">
+            <line>(player.dex + 0x80) >= xu4_random(0x100)</line>
+        </algorithm>
+        <algorithm desc="Player is disabled" prec="exact">
+            <line>(player.status == 'G') or (player.status == 'P')</line>
+        </algorithm>
+    </section>    
+
+    <section name="Party">
+        <algorithm desc="Is karma adjusted?" prec="near">
+            <line>
+                if (!adjustment.isTimeLimited or (<line>((moves / 16) >= 0x10000) or (((moves / 16) &amp; 0xFFFF) != lastvirtue))) {</line>
+                <line>lastvirtue = (moves / 16) &amp; 0xFFFF;</line>
+                <line>return true;</line>
+            </line>
+            <line>}</line>
+        </algorithm>
+        <algorithm desc="Player poisoned on swamp?" prec="exact">
+            <line>random(5) == 0</line>
+        </algorithm>
+        <algorithm desc="Player slept on sleep field?" prec="exact">
+            <line>random(2) == 0</line>
+        </algorithm>
+        <algorithm desc="Ship repaired this turn?" prec="exact">
+            <line>(hull &lt; 50) and (random(4) == 0)</line>
+        </algorithm>
+        <algorithm desc="Amount of gold in chest" prec="exact">
+            <line>random(50) + random(8) + 10</line>
+        </algorithm>
+        <algorithm desc="Party immobilized" prec="exact">
+            <pseudo>yes if all party members are disabled</pseudo>
+        </algorithm>
+        <algorithm desc="Can person join party?" prec="exact">            
+            <line>!(person of that class already in party) and</line>
+            <line>(numPartyMembers + 1 &lt; (avatar.hpMax / 100)) and </line>
+            <line>((party.karma[class] == 0) or (party.karma[class] >= 40))</line>
+        </algorithm>
+    </section>
+    
+    <section name="Game">
+		<algorithm desc="Spawned creature location in dungeon" prec="exact">
+			<line>for (i = 0; i &lt; 0x20; i++) {
+				<line>test_x = random(map.width)</line>
+				<line>test_y = random(map.height)</line>
+				<line>tile = map.tileAt(test_x, test_y)</line>
+				<line>if (tile.isCreatureWalkable()) {
+					<line>x = test_x</line>
+					<line>y = test_y</line>					
+				</line>
+				<line>}</line>
+			</line>
+			<line>}</line>			
+		</algorithm>
+		
+		<algorithm desc="Spawned creature location (world map)" prec="exact">
+			<line>bool ok = false</line>
+			<line>int tries = 0</line>
+			<line>static const int MAX_TRIES = 10</line>
+			<line>while (!ok and (tries &lt; MAX_TRIES)) {
+				<line>dx = 7</line>			
+				<line>dy = random(7)</line>				
+				<line>if (random(2))<line>dx = -dx</line></line>
+				<line>if (random(2))<line>dy = -dy</line></line>
+				<line>if (random(2)) {
+					<line>temp = dx</line>
+					<line>dx = dy</line>
+					<line>dy = temp</line>
+				</line>				
+				<line>}</line>
+				<line>if (creature.canMoveOn(map.tileAt(avatar.x + dx, avatar.y + dy))) {
+					<line>spawn_x = avatar.x + dx</line>				
+					<line>spawn_y = avatar.y + dy</line>
+					<line>ok = true</line>
+				</line>
+				<line>} else tries++</line>
+			</line>
+		</algorithm>
+    </section>
+</algorithms>

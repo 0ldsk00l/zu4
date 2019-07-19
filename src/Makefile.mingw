@@ -1,0 +1,84 @@
+#
+# $Id: Makefile.mingw 3084 2014-09-10 01:42:37Z kirben $
+#
+
+# Where xu4 will be installed
+U4PATH=C:/xu4
+
+SRC=.
+
+### Modify these paths
+SDL_CXXFLAGS=-I$(SRC)/sdl/include
+SDL_LIBS=-L$(SRC)/sdl/lib -lSDL_mixer -lSDLmain -lSDL
+
+XML_CXXFLAGS=$(shell xml2-config --cflags)
+XML_LIBS=$(shell xml2-config --libs)
+
+UI=sdl
+
+CXX=g++
+CC=gcc
+CXXFLAGS=-Wall -g -I. $(SDL_CXXFLAGS) $(XML_CXXFLAGS) -DVERSION=\"$(VERSION)\" -DHAVE_VARIADIC_MACROS
+CFLAGS=$(CXXFLAGS)
+LDFLAGS=-static-libgcc -static-libstdc++
+LIBS=-lmingw32 $(SDL_LIBS) $(XML_LIBS) -lpng -mwindows
+EXEEXT	:=.exe
+OBJS= xu4ico.o
+
+include Makefile.common
+
+xu4ico.o: xu4.ico win32/xu4.rc
+	windres win32/xu4.rc xu4ico.o
+
+install: u4.exe
+	mkdir -p $(U4PATH)
+	mkdir -p $(U4PATH)/conf
+	mkdir -p $(U4PATH)/dtd
+	mkdir -p $(U4PATH)/graphics
+	mkdir -p $(U4PATH)/graphics/ega
+	mkdir -p $(U4PATH)/graphics/fmtowns
+	mkdir -p $(U4PATH)/graphics/hires
+	mkdir -p $(U4PATH)/graphics/new
+	mkdir -p $(U4PATH)/graphics/png
+	mkdir -p $(U4PATH)/graphics/vga
+	mkdir -p $(U4PATH)/graphics/vga2
+	mkdir -p $(U4PATH)/mid
+	mkdir -p $(U4PATH)/sound
+	strip $(MAIN) -o $(U4PATH)/$(MAIN)
+	cp ../conf/*.xml $(U4PATH)/conf
+	cp ../conf/dtd/*.dtd $(U4PATH)/dtd/
+	cp ../graphics/ega/*.png $(U4PATH)/graphics/ega/
+	cp ../graphics/fmtowns/*.TIF $(U4PATH)/graphics/fmtowns/
+	cp ../graphics/hires/*.png $(U4PATH)/graphics/hires/
+	cp ../graphics/hires/*.vga $(U4PATH)/graphics/hires/
+	cp ../graphics/new/*.png $(U4PATH)/graphics/new/
+	cp ../graphics/png/*.png $(U4PATH)/graphics/png/
+	cp ../graphics/vga/*.png $(U4PATH)/graphics/vga/
+	cp ../graphics/vga2/*.png $(U4PATH)/graphics/vga2/
+	cp ../mid/*.it $(U4PATH)/mid
+	cp ../mid/*.mid $(U4PATH)/mid
+	cp ../mid/*.mp3 $(U4PATH)/mid
+	cp ../sound/*.ogg $(U4PATH)/sound
+	
+	cp SDL/lib/SDL.dll $(U4PATH)
+	cp SDL/lib/SDL_mixer.dll $(U4PATH)
+	cp win32/xu4.iss $(U4PATH)
+
+tools: mkutils
+	mkdir -p $(U4PATH)
+	mkdir -p $(U4PATH)/tools
+	strip coord.exe -o $(U4PATH)/tools/coord.exe
+	strip dumpsavegame.exe -o $(U4PATH)/tools/dumpsavegame.exe
+	strip tlkconv.exe -o $(U4PATH)/tools/tlkconv.exe
+	strip u4dec.exe -o $(U4PATH)/tools/u4dec.exe
+	strip u4enc.exe -o $(U4PATH)/tools/u4enc.exe
+	strip u4unpackexe.exe -o $(U4PATH)/tools/u4unpackexe.exe
+
+dist:  install tools
+	cp ../AUTHORS $(U4PATH)/AUTHORS.txt
+	cp ../COPYING $(U4PATH)/COPYING.txt
+	cp ../README $(U4PATH)/README.txt
+	cp ../doc/tools.txt $(U4PATH)/tools/tools.txt
+	cp SDL/README-SDL.txt $(U4PATH)
+	cp ../doc/xu4winsvn.txt $(U4PATH)
+	u2d $(U4PATH)/*.txt $(U4PATH)/tools/*.txt
