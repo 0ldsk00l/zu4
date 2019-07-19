@@ -16,7 +16,7 @@
  * Seed the random number generator.
  */
 void xu4_srandom() {
-#if (defined(BSD) && (BSD >= 199103)) || (defined (MACOSX) || defined (IOS)) 
+#if (defined(BSD) && (BSD >= 199103)) || (defined (MACOSX))
     srandom(time(NULL));
 #else
     srand((unsigned int)time(NULL));
@@ -30,7 +30,7 @@ void xu4_srandom() {
  * lower bits (e.g. MacOS X).
  */
 int xu4_random(int upperRange) {
-#if (defined(BSD) && (BSD >= 199103)) || (defined (MACOSX) || defined (IOS)) 
+#if (defined(BSD) && (BSD >= 199103)) || (defined (MACOSX))
     int r = random();
 #else
     int r = rand();

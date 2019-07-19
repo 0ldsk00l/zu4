@@ -15,17 +15,6 @@
 #include "filesystem.h"
 #include "utils.h"
 
-#if defined(_WIN32) || defined(__CYGWIN__)
-#include <windows.h>
-#include <shlobj.h>
-#elif defined(MACOSX)
-#include <CoreServices/CoreServices.h>
-#elif defined(IOS)
-#include <CoreFoundation/CoreFoundation.h>
-#include "U4CFHelper.h"
-#include "ios_helpers.h"
-#endif
-
 using namespace std;
 
 /*
@@ -33,11 +22,8 @@ using namespace std;
  */ 
 Settings *Settings::instance = NULL;
 
-#if defined(_WIN32) || defined(__CYGWIN__)
-#define SETTINGS_BASE_FILENAME "xu4.cfg"
-#else
 #define SETTINGS_BASE_FILENAME "xu4rc"
-#endif
+
 
 bool SettingsData::operator==(const SettingsData &s) const {    
     intptr_t offset = (intptr_t)&end_of_bitwise_comparators - (intptr_t)this;
@@ -86,70 +72,14 @@ void Settings::init(const bool useProfile, const string profileName) {
 		userPath += profileName.c_str();
 		userPath += "/";
 	} else {
-
-#if defined(MACOSX)
-            FSRef folder;
-            OSErr err = FSFindFolder(kUserDomain, kApplicationSupportFolderType, kCreateFolder, &folder);
-            if (err == noErr) {
-                UInt8 path[2048];
-                if (FSRefMakePath(&folder, path, 2048) == noErr) {
-                    userPath.append(reinterpret_cast<const char *>(path));
-                    userPath.append("/xu4/");
-                }
-            }
-            if (userPath.empty()) {
-                char *home = getenv("HOME");
-                if (home && home[0]) {
-                    if (userPath.size() == 0) {
-                        userPath += home;
-                        userPath += "/.xu4";
-                        userPath += "/";
-                    }
-                } else {
-                    userPath = "./";
-                }
-            }
-#elif defined(IOS)
-        boost::intrusive_ptr<CFURL> urlForLocation = cftypeFromCreateOrCopy(U4IOS::copyAppSupportDirectoryLocation());
-        if (urlForLocation != 0) {
-            char path[2048];
-            boost::intrusive_ptr<CFString> tmpStr = cftypeFromCreateOrCopy(CFURLCopyFileSystemPath(urlForLocation.get(), kCFURLPOSIXPathStyle));
-            if (CFStringGetFileSystemRepresentation(tmpStr.get(), path, 2048) != false) {
-                userPath.append(path);
-                userPath += "/";
-            }
-        }
-#elif defined(__unix__)
         char *home = getenv("HOME");
         if (home && home[0]) {
             userPath += home;
             userPath += "/.xu4";
             userPath += "/";
-        } else
+        } else {
             userPath = "./";
-#elif defined(_WIN32) || defined(__CYGWIN__)
-        userPath = "./";
-        LPMALLOC pMalloc = NULL;
-        if (SHGetMalloc(&pMalloc) == S_OK) {
-            LPITEMIDLIST pItemIDList = NULL;
-            if (SHGetSpecialFolderLocation(NULL, CSIDL_APPDATA, &pItemIDList) == S_OK &&
-                pItemIDList != NULL) {
-                LPSTR pBuffer = NULL;
-                if ((pBuffer = (LPSTR) pMalloc->Alloc(MAX_PATH + 2)) != NULL) {
-                    if (SHGetPathFromIDList(pItemIDList, pBuffer) == TRUE) {
-                        userPath = pBuffer;
-                        userPath += "/xu4/";
-                    }
-                    pMalloc->Free(pBuffer);
-                }
-                pMalloc->Free(pItemIDList);
-            } 
-            pMalloc->Release();
         }
-#else
-        userPath = "./";
-#endif
-
 	}
     FileSystem::createDirectory(userPath);
 

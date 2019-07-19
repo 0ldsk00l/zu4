@@ -55,10 +55,6 @@
 #include "weapon.h"
 #include "dungeonview.h"
 
-#ifdef IOS
-#include "ios_helpers.h"
-#endif
-
 using namespace std;
 
 GameController *game = NULL;
@@ -121,17 +117,9 @@ MouseArea mouseAreas[] = {
     { 0 }
 };
 
-ReadPlayerController::ReadPlayerController() : ReadChoiceController("12345678 \033\n") {
-#ifdef IOS
-    U4IOS::beginCharacterChoiceDialog();
-#endif
-}
+ReadPlayerController::ReadPlayerController() : ReadChoiceController("12345678 \033\n") {}
 
-ReadPlayerController::~ReadPlayerController() {
-#ifdef IOS
-    U4IOS::endCharacterChoiceDialog();
-#endif
-}
+ReadPlayerController::~ReadPlayerController() {}
 
 bool ReadPlayerController::keyPressed(int key) {
     bool valid = ReadChoiceController::keyPressed(key);
@@ -324,12 +312,6 @@ void GameController::init() {
     /* add some observers */
     c->aura->addObserver(c->stats);
     c->party->addObserver(c->stats);
-#ifdef IOS
-    c->aura->addObserver(U4IOS::IOSObserver::sharedInstance());
-    c->party->addObserver(U4IOS::IOSObserver::sharedInstance());
-#endif
-
-
 
     initScreenWithoutReloadingState();
     TRACE(gameDbg, "gameInit() completed successfully."); 
@@ -562,9 +544,6 @@ void GameController::setMap(Map *map, bool saveLocation, const Portal *portal, T
     c->location = new Location(coords, map, viewMode, context, turnCompleter, c->location);
     c->location->addObserver(this);
     c->party->setActivePlayer(activePlayer);
-#ifdef IOS
-    U4IOS::updateGameControllerContext(c->location->context);
-#endif
 
     /* now, actually set our new tileset */
     mapArea.setTileset(map->tileset);
@@ -602,10 +581,7 @@ int GameController::exitToParentMap() {
         locationFree(&c->location);
 
         // restore the tileset to the one the current map uses
-        mapArea.setTileset(c->location->map->tileset);
-#ifdef IOS
-        U4IOS::updateGameControllerContext(c->location->context);
-#endif        
+        mapArea.setTileset(c->location->map->tileset);       
         
         return 1;
     }
@@ -855,12 +831,7 @@ bool GameController::keyPressed(int key) {
             if (c->party->isFlying())
                 key = 'd';
             else {
-#ifdef IOS
-                U4IOS::IOSSuperButtonHelper superHelper;
-                key = ReadChoiceController::get("xk \033\n");
-#else
                 key = 'k';
-#endif
             }
         }
         /* X-it transport */
@@ -878,12 +849,7 @@ bool GameController::keyPressed(int key) {
 			bool up = dungeon->ladderUpAt(c->location->coords);
 			bool down = dungeon->ladderDownAt(c->location->coords);
 			if (up && down) {
-#ifdef IOS
-                U4IOS::IOSClimbHelper climbHelper;
-                key = ReadChoiceController::get("kd \033\n");
-#else
                 key = 'k'; // This is consistent with the previous code. Ideally, I would have a UI here as well.
-#endif
 			} else if (up) {
 				key = 'k';
 			} else {
@@ -1181,11 +1147,6 @@ bool GameController::keyPressed(int key) {
 
         case 'm':
             mixReagents();
-#ifdef IOS
-            // The iOS MixSpell dialog needs control of the event loop, so it is its
-            // job to complete the turn.
-            endTurn = false;
-#endif
             break;
 
         case 'n':
@@ -1247,9 +1208,6 @@ bool GameController::keyPressed(int key) {
                 /* a little xu4 enhancement: show items in inventory when prompted for an item to use */
                 c->stats->setView(STATS_ITEMS);
             }
-#ifdef IOS
-            U4IOS::IOSConversationHelper::setIntroString("Use which item?");
-#endif
 			itemUse(gameGetInput().c_str());
             break;
 		}
@@ -1313,9 +1271,6 @@ bool GameController::keyPressed(int key) {
             break;
         
         case 'h' + U4_ALT: {
-#ifdef IOS
-            U4IOS::IOSHideActionKeysHelper hideActionKeys;
-#endif
             ReadChoiceController pauseController("");
 
             screenMessage("Key Reference:\n"
@@ -1490,11 +1445,6 @@ bool GameController::keyPressed(int key) {
 string gameGetInput(int maxlen) {
     screenEnableCursor();
     screenShowCursor();
-#ifdef IOS
-    U4IOS::IOSConversationHelper helper;
-    helper.beginConversation(U4IOS::UIKeyboardTypeDefault);
-#endif
-
     return ReadStringController::get(maxlen, TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
 }
 
@@ -1544,9 +1494,6 @@ Direction gameGetDirection() {
     ReadDirController dirController;
 
 	screenMessage("Dir?");
-#ifdef IOS
-    U4IOS::IOSDirectionHelper directionPopup;
-#endif
 
     eventHandler->pushController(&dirController);
     Direction dir = dirController.waitFor();
@@ -1784,10 +1731,7 @@ void castSpell(int player) {
     // get the spell to cast
     c->stats->setView(STATS_MIXTURES);
     screenMessage("Spell: ");
-    // ### Put the iPad thing too.
-#ifdef IOS
-    U4IOS::IOSCastSpellHelper castSpellController;
-#endif
+    
     int spell = AlphaActionController::get('z', "Spell: ");
     if (spell == -1)
         return;
@@ -1809,11 +1753,7 @@ void castSpell(int player) {
         break;
     case Spell::PARAM_PHASE: {
         screenMessage("To Phase: ");
-#ifdef IOS
-        U4IOS::IOSConversationChoiceHelper choiceController;
-        choiceController.fullSizeChoicePanel();
-        choiceController.updateGateSpellChoices();
-#endif
+
         int choice = ReadChoiceController::get("12345678 \033\n");
         if (choice < '1' || choice > '8')
             screenMessage("None\n");
@@ -1842,11 +1782,6 @@ void castSpell(int player) {
         break;
     case Spell::PARAM_TYPEDIR: {
         screenMessage("Energy type? ");
-#ifdef IOS
-        U4IOS::IOSConversationChoiceHelper choiceController;
-        choiceController.fullSizeChoicePanel();
-        choiceController.updateEnergyFieldSpellChoices();
-#endif
         EnergyFieldType fieldType = ENERGYFIELD_NONE;
         char key = ReadChoiceController::get("flps \033\n\r");
         switch(key) {
@@ -2552,10 +2487,6 @@ void mixReagents() {
 
     while (!done) {
         screenMessage("Mix reagents\n");
-#ifdef IOS
-        U4IOS::beginMixSpellController();
-        return; // Just return, the dialog takes control from here.
-#endif
 
         // Verify that there are reagents remaining in the inventory
         bool found = false;
@@ -2723,11 +2654,7 @@ bool gamePeerCity(int city, void *data) {
         game->pausedTimer = 0;
 
         screenDisableCursor();
-#ifdef IOS
-        U4IOS::IOSConversationChoiceHelper continueHelper;
-        continueHelper.updateChoices(" ");
-        continueHelper.fullSizeChoicePanel();
-#endif
+
         ReadChoiceController::get("\015 \033");
 
         game->exitToParentMap();
@@ -2759,11 +2686,7 @@ void peer(bool useGem) {
     screenDisableCursor();
     
     c->location->viewMode = VIEW_GEM;
-#ifdef IOS
-    U4IOS::IOSConversationChoiceHelper continueHelper;
-    continueHelper.updateChoices(" ");
-    continueHelper.fullSizeChoicePanel();
-#endif
+
     ReadChoiceController::get("\015 \033");
 
     screenEnableCursor();    
@@ -2835,10 +2758,6 @@ void talkRunConversation(Conversation &conv, Person *talker, bool showPrompt) {
         /* if all chunks haven't been shown, wait for a key and process next chunk*/    
         int size = conv.reply.size();
         if (size > 0) {
-#ifdef IOS
-            U4IOS::IOSConversationChoiceHelper continueDialog;
-            continueDialog.updateChoices(" ");
-#endif
             ReadChoiceController::get("");
             continue;
         }
@@ -2877,10 +2796,6 @@ void talkRunConversation(Conversation &conv, Person *talker, bool showPrompt) {
             string prompt = talker->getPrompt(&conv);
             if (!prompt.empty()) {
                 if (linesused + linecount(prompt, TEXT_AREA_W) > TEXT_AREA_H) {
-#ifdef IOS
-                    U4IOS::IOSConversationChoiceHelper continueDialog;
-                    continueDialog.updateChoices(" ");
-#endif
                     ReadChoiceController::get("");
                 }
                     
@@ -2892,9 +2807,6 @@ void talkRunConversation(Conversation &conv, Person *talker, bool showPrompt) {
         switch (conv.getInputRequired(&maxlen)) {
         case Conversation::INPUT_STRING: {
             conv.playerInput = gameGetInput(maxlen);
-#ifdef IOS
-            screenMessage("%s", conv.playerInput.c_str()); // Since we put this in a different window, we need to show it again.
-#endif
             conv.reply = talker->getConversationText(&conv, conv.playerInput.c_str());
             conv.playerInput.erase();
             showPrompt = true;
@@ -2902,10 +2814,6 @@ void talkRunConversation(Conversation &conv, Person *talker, bool showPrompt) {
         }
         case Conversation::INPUT_CHARACTER: {
             char message[2];
-#ifdef IOS
-            U4IOS::IOSConversationChoiceHelper yesNoHelper;
-            yesNoHelper.updateChoices("yn ");
-#endif
             int choice = ReadChoiceController::get("");
             
 
@@ -2987,9 +2895,7 @@ void ztatsFor(int player) {
     c->stats->resetReagentsMenu();
 
     c->stats->setView(StatsView(STATS_CHAR1 + player));
-#ifdef IOS
-    U4IOS::IOSHideActionKeysHelper hideExtraControls;
-#endif
+
     ZtatsController ctrl;
     eventHandler->pushController(&ctrl);
     ctrl.waitFor();
@@ -3428,11 +3334,7 @@ void GameController::creatureCleanup() {
  */
 void GameController::checkRandomCreatures() {
     int canSpawnHere = c->location->map->isWorldMap() || c->location->context & CTX_DUNGEON;
-#ifdef IOS
-    int spawnDivisor = c->location->context & CTX_DUNGEON ? (53 - (c->location->coords.z << 2)) : 53;
-#else
     int spawnDivisor = c->location->context & CTX_DUNGEON ? (32 - (c->location->coords.z << 2)) : 32;
-#endif
 
     /* If there are too many creatures already,
        or we're not on the world map, don't worry about it! */

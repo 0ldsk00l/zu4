@@ -8,10 +8,6 @@
 #include "debug.h"
 #include "person.h"
 #include "script.h"
-#ifdef IOS
-#include "context.h"
-#include "ios_helpers.h"
-#endif
 
 /* Static variable initialization */
 const ResponsePart ResponsePart::NONE("<NONE>", "", true);
@@ -218,16 +214,9 @@ string Dialogue::dump(const string &arg) {
 
 Conversation::Conversation() : logger(0), state(INTRO), script(new Script()) {
     logger = new Debug("debug/conversation.txt", "Conversation"); 
-#ifdef IOS
-    U4IOS::incrementConversationCount();
-#endif
-
 }
 
 Conversation::~Conversation() {
-#ifdef IOS
-    U4IOS::decrementConversationCount();
-#endif
     delete logger;
     delete script;
 }

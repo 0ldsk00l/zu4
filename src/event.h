@@ -119,11 +119,6 @@ public:
 
     static string get(int maxlen, int screenX, int screenY, EventHandler *eh = NULL);
     static string get(int maxlen, TextView *view, EventHandler *eh = NULL);
-#ifdef IOS
-    void setValue(const string &utf8StringValue) {
-        value = utf8StringValue;
-    }
-#endif
 
 protected:
     int maxlen, screenX, screenY;
@@ -209,17 +204,6 @@ protected:
     int current;
 };
 
-#if defined(IOS)
-#ifndef __OBJC__
-typedef void *TimedManagerHelper;
-typedef void *UIEvent;
-#else
-@class TimedManagerHelper;
-@class UIEvent;
-#endif
-#endif
-
-
 /**
  * A class for managing timed events
  */ 
@@ -247,9 +231,6 @@ public:
     void start();
     
     void reset(unsigned int interval);     /**< Re-initializes the event manager to a new base interval */
-#if defined(IOS)
-    bool hasActiveTimer() const;
-#endif
 
 private:
     void lock();                /**< Locks the event list */
@@ -265,9 +246,6 @@ protected:
     bool locked;
     List events;
     List deferredRemovals;
-#if defined(IOS)
-    TimedManagerHelper *m_helper;
-#endif
 };
 
 typedef void(*updateScreenCallback)(void);
@@ -298,11 +276,6 @@ public:
     /* Event functions */    
     void run();
     void setScreenUpdate(void (*updateScreen)(void));
-#if defined(IOS)
-    void handleEvent(UIEvent *);
-    static void controllerStopped_helper();
-    updateScreenCallback screenCallback() { return updateScreen; }
-#endif
 
     /* Controller functions */
     Controller *pushController(Controller *c);

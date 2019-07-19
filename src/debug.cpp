@@ -2,14 +2,6 @@
  * $Id: debug.cpp 2880 2011-04-02 16:49:32Z twschulz $
  */
 
-
-#ifdef MACOSX
-#include <CoreServices/CoreServices.h>
-#elif defined(IOS)
-#include <CoreFoundation/CoreFoundation.h>
-#endif
-
-
 #include "debug.h"
 
 #include <algorithm>
@@ -109,22 +101,6 @@ Debug::Debug(const string &fn, const string &nm, bool append) : disabled(false),
         return;
     }
 
-#ifdef MACOSX
-    /* In Mac OS X store debug files in a user-specific location */
-    FSRef folder;
-    OSErr err = FSFindFolder(kUserDomain, kApplicationSupportFolderType, kCreateFolder, &folder);
-    if (err == noErr) {
-        UInt8 path[2048];
-        if (FSRefMakePath(&folder, path, 2048) == noErr) {
-            filename = reinterpret_cast<const char *>(path);
-            filename += "/xu4/" + fn;
-        }
-
-    }
-#else
-    
-#endif
-
     if (append)
         file = FileSystem::openFile(filename, "at");
     else file = FileSystem::openFile(filename, "wt");
@@ -147,24 +123,7 @@ void Debug::initGlobal(const string &filename) {
     if (global)
         fclose(global);
 
-#ifdef MACOSX
-    /* In Mac OS X store debug files in a user-specific location */
-    string osxfname;
-    osxfname.reserve(2048);
-    FSRef folder;
-    OSErr err = FSFindFolder(kUserDomain, kApplicationSupportFolderType, kCreateFolder, &folder);
-    if (err == noErr) {
-        UInt8 path[2048];
-        if (FSRefMakePath(&folder, path, 2048) == noErr) {
-            osxfname.append(reinterpret_cast<const char *>(path));
-            osxfname += "/xu4/";
-            osxfname += filename;
-        }
-    }
-    global = osxfname.empty() ? NULL : FileSystem::openFile(osxfname, "wt");
-#else
     global = FileSystem::openFile(filename, "wt");
-#endif
 
     if (!global) {} // FIXME: throw exception here
 }
@@ -242,19 +201,3 @@ bool Debug::loggingEnabled(const string &name) {
 
     return false;
 }
-
-#if defined(_WIN32)
-#include <windows.h>
-
-class ExceptionHandler
-{
-	public:
-	
-	ExceptionHandler()
-	{
-		LoadLibrary("exchndl.dll");
-	}
-};
-
-static ExceptionHandler gExceptionHandler;	//  global instance of class
-#endif

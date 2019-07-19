@@ -16,9 +16,6 @@
 #include "script.h"
 #include "tile.h"
 #include "types.h"
-#ifdef IOS
-#include "ios_helpers.h"
-#endif
 
 class Armor;
 class Party;
@@ -234,9 +231,6 @@ private:
     MapTile transport;
     int torchduration;
     int activePlayer;
-#ifdef IOS
-    friend void U4IOS::syncPartyMembersWithSaveGame();
-#endif
 };
 
 bool isPartyMember(Object *punknown);

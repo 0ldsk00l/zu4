@@ -11,14 +11,8 @@
 #include "u4file.h"
 #include "textcolor.h"
 
-#if defined(IOS)
-typedef struct CGImage *CGImageRef;
-typedef struct CGLayer *CGLayerRef;
-typedef CGLayerRef BackendSurface;
-#else
 struct SDL_Surface;
 typedef SDL_Surface *BackendSurface;
-#endif
 
 using std::string;
 
@@ -148,23 +142,12 @@ public:
     bool isIndexed() const { return indexed; }
     BackendSurface getSurface() { return surface; }
     void save(const string &filename);
-#ifdef IOS
-    void initWithImage(CGImageRef image);
-    void clearImageContents();
-#endif
     void drawHighlighted();
-
 
 private:
     unsigned int w, h;
     bool indexed;
     RGBA backgroundColor;
-#ifdef IOS
-    mutable char *cachedImageData;
-    void clearCachedImageData() const;
-    void createCachedImage() const;
-    friend Image *screenScale(Image *src, int scale, int n, int filter);
-#endif
     Image();                    /* use create method to construct images */
 
     // disallow assignments, copy contruction

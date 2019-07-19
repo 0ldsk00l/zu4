@@ -5,15 +5,11 @@
 #include <cctype>
 #include <cstring>
 #include <cstdlib>
+#include <libgen.h>
 
 #include "u4file.h"
 #include "unzip.h"
 #include "debug.h"
-#ifdef MACOSX
-#include <libgen.h>
-#elif defined(IOS)
-#include "ios_helpers.h"
-#endif
 
 using std::map;
 using std::string;
@@ -681,32 +677,6 @@ string u4find_path(const string &fname, std::list<string> specificSubPaths) {
             }
         }
     }
-#if defined(IOS)
-    if (f == NULL) {
-        string base = fname;
-        string ext = "";
-        string dir = "";
-        // This is VERY dependant on the current layout of the XML files. It will fail in a general case.
-        size_t seppos = fname.rfind('/');
-        if (seppos != string::npos)
-            dir = fname.substr(0, seppos);        
-        size_t pos = fname.rfind('.');
-        if (pos != string::npos) {
-            if (seppos != string::npos)
-                base = fname.substr(seppos + 1, pos - seppos - 1);
-            else
-                base = fname.substr(0, pos);
-            ext = fname.substr(pos + 1);
-        }
-        
-        string pathFile = U4IOS::getFileLocation(dir, base, ext);
-        strncpy(path, pathFile.c_str(), 2048);
-        if (verbose)
-            printf("trying to open %s\n", path);
-        
-        f = fopen(path, "rb");
-    }    
-#endif
 
     if (verbose) {
         if (f != NULL)

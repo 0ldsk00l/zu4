@@ -33,17 +33,9 @@
 #ifndef SOUND_P_H
 #define SOUND_P_H
 
-#ifdef IOS
-# if __OBJC__
-@class U4AudioController;
-# else
-typedef void U4AudioController;
-# endif
-typedef U4AudioController OSSoundChunk;
-#else // SDL
+// SDL
 struct Mix_Chunk;
 typedef Mix_Chunk OSSoundChunk;
-#endif
 
 #include <string>
 #include <vector>

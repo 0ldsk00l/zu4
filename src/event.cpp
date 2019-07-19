@@ -18,12 +18,7 @@
 
 using namespace std;
 
-#ifdef IOS
-// Seems that iOS hands-off event loop means we need to fire a bit more slowly.
-int eventTimerGranularity = 300;
-#else
 int eventTimerGranularity = 250;
-#endif
 
 extern bool quit;
 bool EventHandler::controllerDone = false;
@@ -65,10 +60,6 @@ void EventHandler::wait_cycles(unsigned int cycles) {
 void EventHandler::setControllerDone(bool done) 
 { 
 	controllerDone = done; 
-#if defined(IOS)
-    if (done)
-        controllerStopped_helper();
-#endif
 }     /**< Sets the controller exit flag for the event handler */
 bool EventHandler::getControllerDone()         { return controllerDone; }      /**< Returns the current value of the global exit flag */
 void EventHandler::end() { ended = true; }                                     /**< End all event processing */

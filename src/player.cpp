@@ -20,10 +20,6 @@
 #include "utils.h"
 #include "weapon.h"
 
-#ifdef IOS
-#include "ios_helpers.h"
-#endif
-
 bool isPartyMember(Object *punknown) {
     PartyMember *pm;
     if ((pm = dynamic_cast<PartyMember*>(punknown)) != NULL)

@@ -1,9 +1,4 @@
-
-#ifndef IOS
 #include <SDL.h>
-#else
-#include "ios_helpers.h"
-#endif
 
 #include "image.h"
 #include "imagemgr.h"
@@ -40,9 +35,6 @@ void View::clear() {
 void View::update() {
     if (highlighted)
         drawHighlighted();
-#ifdef IOS
-    U4IOS::updateView();
-#endif
 }
 
 /**
@@ -51,9 +43,6 @@ void View::update() {
 void View::update(int x, int y, int width, int height) {
     if (highlighted)
         drawHighlighted();
-#ifdef IOS
-    U4IOS::updateRectInView(x, y, width, height);
-#endif
 }
 
 /**

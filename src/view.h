@@ -7,10 +7,6 @@
 
 #define SCALED(n) ((n) * settings.scale)
 
-#ifdef IOS
-#include "ios_helpers.h"
-#endif
-
 class Image;
 
 /**
@@ -34,9 +30,6 @@ protected:
     bool highlighted;
     int highlightX, highlightY, highlightW, highlightH;
     void drawHighlighted();
-#ifdef IOS
-    friend void U4IOS::updateScreenView();
-#endif
     static Image *screen;
 };
 

@@ -31,10 +31,6 @@
 #include "tileview.h"
 #include "annotation.h"
 
-#ifdef IOS
-#include "ios_helpers.h"
-#endif
-
 enum LayoutType {
     LAYOUT_STANDARD,
     LAYOUT_GEM,
@@ -199,10 +195,6 @@ void screenPrompt() {
 }
 
 void screenMessage(const char *fmt, ...) {
-#ifdef IOS
-    static bool recursed = false;
-#endif
-    
     if (!c)
     	return; //Because some cases (like the intro) don't have the context initiated.
     char buffer[BufferSize];
@@ -213,12 +205,6 @@ void screenMessage(const char *fmt, ...) {
     va_start(args, fmt);
     vsnprintf(buffer, BufferSize, fmt, args);
     va_end(args);
-#ifdef IOS
-    if (recursed)
-        recursed = false;
-    else
-        U4IOS::drawMessageOnLabel(string(buffer, 1024));
-#endif
 
     screenHideCursor();
 
@@ -262,9 +248,6 @@ void screenMessage(const char *fmt, ...) {
                 i++;
             c->line++;
             c->col = 0;
-#ifdef IOS
-            recursed = true;
-#endif
             screenMessage("%s", buffer + i);
             return;
         }
@@ -1327,10 +1310,3 @@ void screenGemUpdate() {
     screenUpdateMoons();
     screenUpdateWind();
 }
-
-#ifdef IOS
-//Unsure if implementation required in iOS.
-void inline screenLock(){};
-void inline screenUnlock(){};
-void inline screenWait(int numberOfAnimationFrames){};
-#endif

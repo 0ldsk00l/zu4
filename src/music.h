@@ -18,17 +18,9 @@
 #define INN_FADE_IN_TIME            5000
 #define NLOOPS -1
 
-#ifdef IOS
-# if __OBJC__
-@class U4AudioController;
-# else
-typedef void U4AudioController;
-# endif
-typedef U4AudioController OSMusicMixer;
-#else // SDL
+// SDL
 struct _Mix_Music;
 typedef _Mix_Music OSMusicMixer;
-#endif
 
 
 
@@ -73,9 +65,6 @@ public:
     void shopping()     {playMid(SHOPPING); } /**< Music when talking to a vendor */
     void intro()        
     {
-#ifdef IOS
-        on = true; // Force iOS to turn this back on from going in the background.
-#endif
         playMid(introMid);
     } /**< Play the introduction music on title loadup */
     void introSwitch(int n);
