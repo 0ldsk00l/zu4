@@ -9,13 +9,6 @@
 extern "C" {
 #endif
 
-/* Microsoft VC port */
-#if defined(_MSC_VER) 
-#ifndef VERSION
-	#define VERSION "1.1svn"
-#endif
-#endif
-
 /* info for loading city data from *.ult and *.tlk */
 #define CITY_HEIGHT 32
 #define CITY_WIDTH 32

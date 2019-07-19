@@ -164,12 +164,10 @@ int main(int argc, char *argv[]) {
             printf("\n-s <int>,\n");
             printf("--scale <int>		Used to specify scaling options.\n");
             printf("-p <string>,\n");
-            printf("--profile <string>	Used to pass extra arguements to the program.\n");
+            printf("--profile <string>	Used to pass extra arguments to the program.\n");
             printf("--filter <string>	Used to specify filtering options.\n");
 
             printf("\n-h, --help		Prints this message.\n");
-
-            printf("\nHomepage: http://xu4.sourceforge.com\n");
 
             return 0;
         }
