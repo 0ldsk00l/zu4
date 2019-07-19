@@ -38,14 +38,7 @@ int KeyHandler::setKeyRepeat(int delay, int interval) {
  */
 bool KeyHandler::globalHandler(int key) {
     switch(key) {
-#if defined(MACOSX)
-    case U4_META + 'q': /* Cmd+q */
-    case U4_META + 'x': /* Cmd+x */
-#endif
     case U4_ALT + 'x': /* Alt+x */
-#if defined(WIN32)
-    case U4_ALT + U4_FKEY + 3:
-#endif
         quit = true;
         EventHandler::end();
         return true;
@@ -264,11 +257,7 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
         key = event.key.keysym.sym;
     
     if (event.key.keysym.mod & KMOD_ALT)
-#if defined(MACOSX)
-        key = U4_ALT + event.key.keysym.sym; // macosx translates alt keys into strange unicode chars
-#else
-    key += U4_ALT;
-#endif
+        key += U4_ALT;
     if (event.key.keysym.mod & KMOD_META)
         key += U4_META;
     
@@ -283,12 +272,6 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
     else if (event.key.keysym.sym == SDLK_BACKSPACE ||
              event.key.keysym.sym == SDLK_DELETE)
         key = U4_BACKSPACE;
-    
-#if defined(MACOSX)
-    // Mac OS X translates function keys weirdly too
-    if ((event.key.keysym.sym >= SDLK_F1) && (event.key.keysym.sym <= SDLK_F15))
-        key = U4_FKEY + (event.key.keysym.sym - SDLK_F1);
-#endif
     
     if (verbose)
         printf("key event: unicode = %d, sym = %d, mod = %d; translated = %d\n", 

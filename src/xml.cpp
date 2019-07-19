@@ -18,10 +18,6 @@
 
 using namespace std;
 
-#if defined(_WIN32)
-    #define vsnprintf _vsnprintf
-#endif
-
 void xmlAccumError(void *l, const char *fmt, ...);
 
 extern bool verbose;

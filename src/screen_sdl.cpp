@@ -12,11 +12,7 @@
 #include "config.h"
 #include "context.h"
 
-#if defined(MACOSX)
-#include "macosx/cursors.h"
-#else
 #include "cursors.h"
-#endif
 
 #include "debug.h"
 #include "dungeonview.h"
@@ -362,11 +358,7 @@ Image *screenScaleDown(Image *src, int scale) {
  * Create an SDL cursor object from an xpm.  Derived from example in
  * SDL documentation project.
  */
-#if defined(MACOSX)
-#define CURSORSIZE 16
-#else
 #define CURSORSIZE 32
-#endif
 SDL_Cursor *screenInitCursor(const char * const xpm[]) {
     int i, row, col;
     Uint8 data[(CURSORSIZE/8)*CURSORSIZE];

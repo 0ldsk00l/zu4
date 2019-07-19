@@ -26,11 +26,6 @@
 #include "tileset.h"
 #include "utils.h"
 
-#if defined(MACOSX)
-#include "macosx/osxinit.h"
-#include "SDL.h"
-#endif
-
 bool verbose = false;
 bool quit = false;
 bool useProfile = false;
@@ -44,10 +39,6 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     Debug::initGlobal("debug/global.txt");
-    
-#if defined(MACOSX)
-    osxInit(argv[0]);
-#endif
 
     if (!u4fopen("AVATAR.EXE"))
 	{
