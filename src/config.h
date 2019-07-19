@@ -5,7 +5,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 #include <string>
 #include <vector>
 #include <libxml/xmlmemory.h>

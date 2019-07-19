@@ -2,7 +2,6 @@
  * $Id: dialogueloader_tlk.cpp 2844 2011-03-26 13:29:24Z twschulz $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <string>
 #include <cstring>

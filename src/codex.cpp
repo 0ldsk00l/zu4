@@ -2,7 +2,6 @@
  * $Id: codex.cpp 2996 2011-12-03 22:41:33Z twschulz $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <string>
 #include <cstring>

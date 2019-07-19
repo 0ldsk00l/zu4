@@ -2,7 +2,6 @@
  * $Id: mapmgr.cpp 2994 2011-12-03 22:40:57Z twschulz $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <vector>
 

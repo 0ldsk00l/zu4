@@ -2,7 +2,6 @@
  * $Id: tile.cpp 3028 2012-03-18 12:02:46Z daniel_santos $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "tile.h"
 

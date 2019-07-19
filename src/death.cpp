@@ -2,7 +2,6 @@
  * $Id: death.cpp 2658 2006-01-14 08:25:38Z solus $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <ctime>
 #include "u4.h"

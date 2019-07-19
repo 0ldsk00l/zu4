@@ -4,7 +4,6 @@
    Read unzip.h for more info
 */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #ifdef __cplusplus
 extern "C" {

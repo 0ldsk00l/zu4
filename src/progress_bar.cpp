@@ -2,7 +2,6 @@
  * $Id: progress_bar.cpp 2679 2007-01-01 20:00:21Z solus $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "progress_bar.h"
 

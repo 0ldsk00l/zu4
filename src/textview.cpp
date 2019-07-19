@@ -2,7 +2,6 @@
  * $Id: textview.cpp 3014 2012-03-05 21:24:47Z twschulz $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <stdarg.h>
 #include <cstring>

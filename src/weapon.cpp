@@ -2,7 +2,6 @@
  * $Id: weapon.cpp 3026 2012-03-18 11:48:18Z daniel_santos $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <string>
 #include <cstring>

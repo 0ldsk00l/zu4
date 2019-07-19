@@ -2,7 +2,6 @@
  * $Id: direction.cpp 2720 2009-12-28 21:01:57Z andrewtaylor $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "direction.h"
 

@@ -2,7 +2,6 @@
  * $Id: image_sdl.cpp 3066 2014-07-21 00:18:48Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <SDL.h>
 

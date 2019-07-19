@@ -2,7 +2,6 @@
  * $Id: screen_sdl.cpp 3087 2015-01-24 03:44:46Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <algorithm>
 #include <functional>

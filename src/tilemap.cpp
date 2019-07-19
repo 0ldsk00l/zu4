@@ -2,7 +2,6 @@
  * $Id: tilemap.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <vector>
 

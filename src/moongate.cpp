@@ -2,7 +2,6 @@
  * $Id: moongate.cpp 2793 2011-01-25 00:37:56Z Kirben $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cstdlib>
 #include <map>

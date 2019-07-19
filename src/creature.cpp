@@ -2,7 +2,6 @@
  * $Id: creature.cpp 3077 2014-07-30 00:37:32Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "creature.h"
 

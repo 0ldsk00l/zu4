@@ -2,7 +2,6 @@
  * $Id: game.cpp 3076 2014-07-30 00:20:58Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cctype>
 #include <ctime>

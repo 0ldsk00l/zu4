@@ -2,7 +2,6 @@
  * $Id: io.cpp 1866 2004-05-19 20:07:41Z dougday $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cstdio>
 

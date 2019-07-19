@@ -2,7 +2,6 @@
  * $Id: utils.cpp 3071 2014-07-26 18:01:08Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #if (defined(__unix__) || defined(unix)) && !defined(USG)
 #include <sys/param.h>

@@ -2,7 +2,6 @@
  * $Id: imageloader.cpp 2926 2011-06-24 21:48:05Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "debug.h"
 #include "image.h"

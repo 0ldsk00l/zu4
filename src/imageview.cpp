@@ -2,7 +2,6 @@
  * $Id: imageview.cpp 2671 2006-09-04 18:56:09Z solus $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "debug.h"
 #include "error.h"

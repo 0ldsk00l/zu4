@@ -2,7 +2,6 @@
  * $Id: menuitem.cpp 2700 2007-08-02 08:53:48Z solus $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "debug.h"
 #include "error.h"

@@ -2,7 +2,6 @@
  * $Id: dialogueloader.cpp 2819 2011-01-31 05:38:20Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cstdlib>
 #include <cstring>

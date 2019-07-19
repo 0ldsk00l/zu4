@@ -2,7 +2,6 @@
  * $Id: savegame.cpp 2721 2009-12-29 04:50:55Z andrewtaylor $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "savegame.h"
 

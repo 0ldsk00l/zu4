@@ -2,7 +2,6 @@
  * $Id: error.cpp 1916 2004-05-24 17:10:36Z dougday $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cstdio>
 #include <cstdarg>

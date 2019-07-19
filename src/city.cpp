@@ -2,7 +2,6 @@
  * $Id: city.cpp 3022 2012-03-18 11:32:01Z daniel_santos $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <string>
 #include <typeinfo>

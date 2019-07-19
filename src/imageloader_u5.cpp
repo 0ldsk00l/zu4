@@ -2,7 +2,6 @@
  * $Id: imageloader_u5.cpp 2885 2011-04-03 19:18:32Z andrewtaylor $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <vector>
 

@@ -2,7 +2,6 @@
  * $Id: xml.cpp 2661 2006-01-14 23:43:54Z solus $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cstdlib>
 #include <cstdarg>

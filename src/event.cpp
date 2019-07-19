@@ -2,7 +2,6 @@
  * $Id: event.cpp 3003 2012-02-08 21:45:39Z twschulz $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cctype>
 #include <list>

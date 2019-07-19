@@ -2,7 +2,6 @@
  * $Id: scale.cpp 2674 2006-12-20 08:25:50Z solus $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "debug.h"
 #include "image.h"

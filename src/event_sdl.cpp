@@ -2,7 +2,6 @@
  * $Id: event_sdl.cpp 3059 2013-01-06 22:37:10Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <SDL.h>
 #include "u4.h"

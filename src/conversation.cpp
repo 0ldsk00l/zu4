@@ -2,7 +2,6 @@
  * $Id: conversation.cpp 3048 2012-06-23 11:50:23Z twschulz $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cstring>
 #include "conversation.h"

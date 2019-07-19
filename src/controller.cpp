@@ -2,7 +2,6 @@
  * $Id: controller.cpp 2176 2004-09-09 03:26:10Z andrewtaylor $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include "controller.h"
 #include "event.h"

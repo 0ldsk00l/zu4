@@ -2,7 +2,6 @@
  * $Id: dialogueloader_lb.cpp 3012 2012-03-05 21:24:06Z twschulz $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <string>
 #include <vector>

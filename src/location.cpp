@@ -2,7 +2,6 @@
  * $Id: location.cpp 3082 2014-09-10 01:05:01Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <list>
 #include <map>

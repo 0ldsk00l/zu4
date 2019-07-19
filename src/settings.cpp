@@ -2,7 +2,6 @@
  * $Id: settings.cpp 3090 2016-01-26 02:55:36Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cctype>
 #include <cstring>

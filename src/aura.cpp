@@ -2,7 +2,6 @@
  * $Id: aura.cpp 3019 2012-03-18 11:31:13Z daniel_santos $
  */
 
-#include "vc6.h"
 
 #include "aura.h"
 

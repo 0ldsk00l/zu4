@@ -2,7 +2,6 @@
  * $Id: person.cpp 3064 2014-07-19 15:44:38Z darren_janeczek $
  */
 
-#include "vc6.h" // Fixes things if you're using VC6, does nothing if otherwise
 
 #include <cctype>
 #include <string>
