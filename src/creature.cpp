@@ -995,12 +995,15 @@ Creature *CreatureMgr::randomForTile(const Tile *tile) {
         return NULL;
 
     //if (c->saveGame->moves > 100000) // FIXME: what's 100,000 moves all about (if anything)?
-    if (c->saveGame->moves > 30000)
+    if (c->saveGame->moves > 30000) {
         era = 0x0f;
-    else if (c->saveGame->moves > 20000)
+    }
+    else if (c->saveGame->moves > 20000) {
         era = 0x07;
-    else
+    }
+    else {
         era = 0x03;
+    }
 
 	randTile = creatures.find(ORC_ID)->second->getTile().getId();
     randTile += era & xu4_random(0x10) & xu4_random(0x10);

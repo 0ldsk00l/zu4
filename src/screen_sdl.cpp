@@ -328,14 +328,17 @@ Image *screenScaleDown(Image *src, int scale) {
     src->alphaOff();
 
     dest = Image::create(src->width() / scale, src->height() / scale, src->isIndexed(), Image::HARDWARE);
-    if (!dest)
+    if (!dest) {
         return NULL;
+    }
 
-	if (!dest)
+	if (!dest) {
 		dest = Image::duplicate(src);
+    }
 
-    if (dest->isIndexed())
+    if (dest->isIndexed()) {
         dest->setPaletteFromImage(src);
+    }
 
     for (y = 0; y < src->height(); y+=scale) {
         for (x = 0; x < src->width(); x+=scale) {

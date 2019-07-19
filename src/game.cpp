@@ -3376,16 +3376,15 @@ void gameLordBritishCheckLevels() {
 
     for (int i = 0; i < c->party->size(); i++) {
         PartyMember *player = c->party->member(i);
-        if (player->getRealLevel() <
-            player->getMaxLevel())
+        if (player->getRealLevel() < player->getMaxLevel()) {
 
             // add an extra space to separate messages
             if (!advanced) {
                 screenMessage("\n");
                 advanced = true;
             }
-
-            player->advanceLevel();
+        }
+        player->advanceLevel(); // FIXME: Should this be within the if?
     }
  
     screenMessage("\nWhat would thou\nask of me?\n");
