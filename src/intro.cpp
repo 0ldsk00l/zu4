@@ -1402,7 +1402,7 @@ void IntroController::initPlayers(SaveGame *saveGame) {
 
     saveGame->players[0].klass = static_cast<ClassType>(questionTree[14]);
 
-    ASSERT(saveGame->players[0].klass < 8, "bad class: %d", saveGame->players[0].klass);
+    //ASSERT(saveGame->players[0].klass < 8, "bad class: %d", saveGame->players[0].klass);
 
     saveGame->players[0].weapon = initValuesForClass[saveGame->players[0].klass].weapon;
     saveGame->players[0].armor = initValuesForClass[saveGame->players[0].klass].armor;
@@ -1618,8 +1618,8 @@ void IntroController::getTitleSourceData()
                 RGBA color = info->image->setColor(0, 255, 255);    // cyan for EGA
                 int blue[16] = {255, 250, 226, 226, 210, 194, 161, 161,
                                 129,  97,  97,  64,  64,  32,  32,   0};
-                int x = 0;
-                int y = 0;
+                uint8_t x = 0;
+                uint8_t y = 0;
 
                 while (srcData[titles[i].animStepMax] != 0)
                 {
@@ -1634,9 +1634,9 @@ void IntroController::getTitleSourceData()
                     AnimPlot plot = {
                         x,
                         y,
-                        color.r,
-                        color.g,
-                        color.b,
+                        (uint8_t)color.r,
+                        (uint8_t)color.g,
+                        (uint8_t)color.b,
                         255};
                     titles[i].plotData.push_back(plot);
                     titles[i].animStepMax += 2;
@@ -1660,7 +1660,7 @@ void IntroController::getTitleSourceData()
                         titles[i].srcImage->getPixel(x*info->prescale, y*info->prescale, r, g, b, a);
                         if (r || g || b)
                         {
-                            AnimPlot plot = {x+1, y+1, r, g, b, a};
+                            AnimPlot plot = {(uint8_t)(x+1), (uint8_t)(y+1), (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a};
                             titles[i].plotData.push_back(plot);
                         }
                     }

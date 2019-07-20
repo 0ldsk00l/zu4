@@ -1,7 +1,8 @@
 #
 # $Id: Makefile 3062 2014-07-19 02:07:26Z darren_janeczek $
 #
-
+#CC=clang
+#CXX=clang++
 prefix=/usr/local
 bindir=$(prefix)/bin
 libdir=$(prefix)/lib
