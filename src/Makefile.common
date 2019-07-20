@@ -1,5 +1,5 @@
 NULL=
-MAIN=u4$(EXEEXT)
+MAIN=u4
 
 VERSION=1.1-git
 
@@ -95,9 +95,10 @@ CXXSRCS=\
 
 OBJS += $(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
 
-all:: $(MAIN) mkutils
+#all:: $(MAIN) mkutils
+all:: $(MAIN)
 
-mkutils::  coord$(EXEEXT) dumpsavegame$(EXEEXT) tlkconv$(EXEEXT) u4dec$(EXEEXT) u4enc$(EXEEXT) u4unpackexe$(EXEEXT)
+mkutils::  coord dumpsavegame tlkconv u4dec u4enc u4unpackexe
 
 $(MAIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
@@ -120,11 +121,12 @@ u4enc$(EXEEXT) : util/u4enc.o lzw/hash.o util/pngconv.o
 u4unpackexe$(EXEEXT): util/u4unpackexe.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $+
 
-clean:: cleanutil
+#clean:: cleanutil
+clean::
 	rm -rf *~ */*~ $(OBJS) $(MAIN)
 
 cleanutil::
-	rm -rf util/coord.o coord$(EXEEXT) util/dumpsavegame.o dumpsavegame$(EXEEXT) util/u4dec.o u4dec$(EXEEXT) util/u4enc.o u4enc$(EXEEXT) util/pngconv.o util/tlkconv.o tlkconv$(EXEEXT) util/u4unpackexe.o u4unpackexe$(EXEEXT)
+	rm -rf util/coord.o coord util/dumpsavegame.o dumpsavegame util/u4dec.o u4dec util/u4enc.o u4enc util/pngconv.o util/tlkconv.o tlkconv util/u4unpackexe.o u4unpackexe
 
 TAGS: $(CSRCS) $(CXXSRCS)
 	etags *.h $(CSRCS) $(CXXSRCS)
