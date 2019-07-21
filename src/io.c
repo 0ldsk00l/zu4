@@ -1,9 +1,11 @@
 /*
  * $Id: io.cpp 1866 2004-05-19 20:07:41Z dougday $
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-
-#include <cstdio>
+#include <stdio.h>
 
 #include "io.h"
 
@@ -50,4 +52,6 @@ int readChar(unsigned char *c, FILE *f) {
 
     return 1;
 }
-
+#ifdef __cplusplus
+}
+#endif

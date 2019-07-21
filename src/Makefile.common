@@ -8,6 +8,9 @@ CSRCS=\
         lzw/lzw.c \
         lzw/u4decode.c \
         error.c \
+        io.c \
+        rle.c \
+        u4_sdl.c \
         unzip.c \
         $(NULL)
 
@@ -38,7 +41,6 @@ CXXSRCS=\
         event_$(UI).cpp \
         filesystem.cpp \
         game.cpp \
-        io.cpp \
         image_$(UI).cpp \
         imageloader.cpp \
         imageloader_png.cpp \
@@ -65,7 +67,6 @@ CXXSRCS=\
         player.cpp \
         portal.cpp \
         progress_bar.cpp \
-        rle.cpp \
         savegame.cpp \
         scale.cpp \
         script.cpp \
@@ -84,7 +85,6 @@ CXXSRCS=\
         tileset.cpp \
         tileview.cpp \
         u4.cpp \
-        u4_$(UI).cpp \
         u4file.cpp \
         utils.cpp \
         view.cpp \

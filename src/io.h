@@ -1,10 +1,12 @@
 /*
  * $Id: io.h 2475 2005-08-22 05:46:10Z andrewtaylor $
  */
-
 #ifndef IO_H
 #define IO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*
  * These are endian-independant routines for reading and writing
  * 4-byte (int), 2-byte (short), and 1-byte (char) values to and from
@@ -18,4 +20,8 @@ int readInt(unsigned int *i, FILE *f);
 int readShort(unsigned short *s, FILE *f);
 int readChar(unsigned char *c, FILE *f);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

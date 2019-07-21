@@ -1,10 +1,12 @@
 /*
- * $Id: rle.cpp 3014 2012-03-05 21:24:47Z twschulz $
+ * $Id: rle.c 3014 2012-03-05 21:24:47Z twschulz $
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-
-#include <cstdio>
-#include <cstdlib>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "rle.h"
 
@@ -106,3 +108,6 @@ long rleDecompress(unsigned char *indata, long inlen, unsigned char *outdata, lo
 
     return q - outdata;
 }
+#ifdef __cplusplus
+}
+#endif
