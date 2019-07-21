@@ -46,7 +46,7 @@ using std::string;
 #define DEFAULT_CYCLES_PER_SECOND       4
 #define DEFAULT_ANIMATION_FRAMES_PER_SECOND 24
 #define DEFAULT_DEBUG                   0
-#define DEFAULT_VALIDATE_XML            1
+#define DEFAULT_VALIDATE_XML            0
 #define DEFAULT_SPELL_EFFECT_SPEED      10
 #define DEFAULT_CAMP_TIME               10
 #define DEFAULT_INN_TIME                8

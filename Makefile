@@ -152,21 +152,21 @@ TAGS: $(CSRCS) $(CXXSRCS)
 
 install::
 	$(INSTALL) -D $(MAIN) $(bindir)/$(MAIN)
-	$(INSTALL) -D ../graphics/u4.png $(datadir)/pixmaps/u4.png
+	$(INSTALL) -D graphics/u4.png $(datadir)/pixmaps/u4.png
 	mkdir -p $(libdir)/u4/music
-	$(INSTALL) ../mid/*.mid $(libdir)/u4/music
-	$(INSTALL) ../mid/*.it $(libdir)/u4/music
+	$(INSTALL) mid/*.mid $(libdir)/u4/music
+	$(INSTALL) mid/*.it $(libdir)/u4/music
 	mkdir -p $(libdir)/u4/sound
-	$(INSTALL) ../sound/*.ogg $(libdir)/u4/sound
+	$(INSTALL) sound/*.ogg $(libdir)/u4/sound
 	$(INSTALL) -D coord $(libdir)/u4/coord
 	$(INSTALL) -D dumpsavegame $(libdir)/u4/dumpsavegame
 	$(INSTALL) -D tlkconv $(libdir)/u4/tlkconv
 	$(INSTALL) -D u4dec $(libdir)/u4/u4dec
 	$(INSTALL) -D u4enc $(libdir)/u4/u4enc
 	$(INSTALL) -D u4unpackexe $(libdir)/u4/u4unpackexe
-	$(INSTALL) ../conf/*.xml $(libdir)/u4
+	$(INSTALL) conf/*.xml $(libdir)/u4
 	mkdir -p $(libdir)/u4/dtd
-	$(INSTALL) ../conf/dtd/*.dtd $(libdir)/u4/dtd
+	$(INSTALL) conf/dtd/*.dtd $(libdir)/u4/dtd
 	mkdir -p $(libdir)/u4/graphics
 	mkdir -p $(libdir)/u4/graphics/ega
 	mkdir -p $(libdir)/u4/graphics/hires
@@ -174,14 +174,14 @@ install::
 	mkdir -p $(libdir)/u4/graphics/vga
 	mkdir -p $(libdir)/u4/graphics/vga2
 	mkdir -p $(libdir)/u4/graphics/new
-	$(INSTALL) ../graphics/ega/*.png $(libdir)/u4/graphics/ega
-	$(INSTALL) ../graphics/hires/*.png $(libdir)/u4/graphics/hires
-	$(INSTALL) ../graphics/hires/*.vga $(libdir)/u4/graphics/hires
-	$(INSTALL) ../graphics/png/*.png $(libdir)/u4/graphics/png
-	$(INSTALL) ../graphics/vga/*.png $(libdir)/u4/graphics/vga
-	$(INSTALL) ../graphics/vga2/*.png $(libdir)/u4/graphics/vga2
-	$(INSTALL) ../graphics/new/* $(libdir)/u4/graphics/new
-	$(INSTALL) -D ../u4.desktop $(datadir)/applications/u4.desktop
+	$(INSTALL) graphics/ega/*.png $(libdir)/u4/graphics/ega
+	$(INSTALL) graphics/hires/*.png $(libdir)/u4/graphics/hires
+	$(INSTALL) graphics/hires/*.vga $(libdir)/u4/graphics/hires
+	$(INSTALL) graphics/png/*.png $(libdir)/u4/graphics/png
+	$(INSTALL) graphics/vga/*.png $(libdir)/u4/graphics/vga
+	$(INSTALL) graphics/vga2/*.png $(libdir)/u4/graphics/vga2
+	$(INSTALL) graphics/new/* $(libdir)/u4/graphics/new
+	$(INSTALL) -D u4.desktop $(datadir)/applications/u4.desktop
 
 
 # use GCC's automatic dependency generation
