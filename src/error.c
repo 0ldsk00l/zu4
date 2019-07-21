@@ -12,7 +12,7 @@ void xu4_error(int level, const char *fmt, ...) {
 	// Handle and log errors
 	va_list va;
 	char buffer[4096] = {0};
-	static const char *levelchr = "diwe";
+	const char *levelchr = "diwe";
 	
 	va_start(va, fmt);
 	vsnprintf(buffer, sizeof(buffer), fmt, va);

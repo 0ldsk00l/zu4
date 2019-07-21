@@ -14,4 +14,5 @@ make
 * Remove unneeded dependencies
 * Greatly simplify the codebase
 * Update to use modern libraries
+* Convert from ugly C++ to beautiful C
 * Make it "Just Work"
