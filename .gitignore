@@ -1,10 +1,6 @@
+debug/
+ultima4/
 *.o
-src/debug/
-src/ultima4/
-src/coord
-src/dumpsavegame
-src/tlkconv
-src/u4
-src/u4dec
-src/u4enc
-src/u4unpackexe
+u4upgrad.zip
+ultima4.zip
+u4
