@@ -17,13 +17,16 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#include "lzw.h"
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "u4decode.h"
+#include "lzw.h"
 
 /*
  * Loads a file, decompresses it (from memory to memory), and writes the decompressed data to another file
@@ -155,4 +158,6 @@ unsigned char mightBeValidCompressedFile(FILE *input_file)
     /* check if upper 4 bits are 0 */
     return ((c1 || c2) && c3);
 }
-
+#ifdef __cplusplus
+}
+#endif

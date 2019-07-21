@@ -6,6 +6,7 @@ VERSION=1.1-git
 CSRCS=\
         lzw/hash.c \
         lzw/lzw.c \
+        lzw/u4decode.c \
         error.c \
         unzip.c \
         $(NULL)
@@ -89,7 +90,6 @@ CXXSRCS=\
         view.cpp \
         weapon.cpp \
         xml.cpp \
-        lzw/u4decode.cpp \
         lzw/u6decode.cpp \
         $(NULL)
 
