@@ -30,6 +30,7 @@ CSRCS=\
 		src/error.c \
 		src/io.c \
 		src/rle.c \
+		src/savegame.c \
 		src/u4_sdl.c \
 		src/unzip.c
 
@@ -86,7 +87,6 @@ CXXSRCS=\
 		src/player.cpp \
 		src/portal.cpp \
 		src/progress_bar.cpp \
-		src/savegame.cpp \
 		src/scale.cpp \
 		src/script.cpp \
 		src/screen.cpp \

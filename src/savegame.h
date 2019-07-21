@@ -1,6 +1,10 @@
 #ifndef SAVEGAME_H
 #define SAVEGAME_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 
 #define PARTY_SAV_BASE_FILENAME         "party.sav"
@@ -15,7 +19,7 @@
  * The list of all weapons.  These values are used in both the
  * inventory fields and character records of the savegame.
  */
-enum WeaponType {
+typedef enum _WeaponType {
 	WEAP_HANDS,
 	WEAP_STAFF, 
 	WEAP_DAGGER,
@@ -33,13 +37,13 @@ enum WeaponType {
 	WEAP_MAGICWAND,
 	WEAP_MYSTICSWORD,
 	WEAP_MAX
-};
+} WeaponType;
 
 /**
  * The list of all armor types.  These values are used in both the
  * inventory fields and character records of the savegame.
  */
-enum ArmorType {
+typedef enum _ArmorType {
 	ARMR_NONE,
 	ARMR_CLOTH,
 	ARMR_LEATHER,
@@ -49,21 +53,21 @@ enum ArmorType {
 	ARMR_MAGICPLATE,
 	ARMR_MYSTICROBES,
 	ARMR_MAX
-};
+} ArmorType;
 
 /**
  * The list of sex values for the savegame character records.  The
  * values match the male and female symbols in the character set.
  */
-enum SexType {
+typedef enum _SexType {
 	SEX_MALE = 0xb,
 	SEX_FEMALE = 0xc
-};
+} SexType;
 
 /**
  * The list of class types for the savegame character records.
  */
-enum ClassType {
+typedef enum _ClassType {
 	CLASS_MAGE,
 	CLASS_BARD,
 	CLASS_FIGHTER,
@@ -72,20 +76,20 @@ enum ClassType {
 	CLASS_PALADIN,
 	CLASS_RANGER,
 	CLASS_SHEPHERD
-};
+} ClassType;
 
 /**
  * The list of status values for the savegame character records.  The
  * values match the letter thats appear in the ztats area.
  */
-enum StatusType {
+typedef enum _StatusType {
 	STAT_GOOD = 'G',
 	STAT_POISONED = 'P',
 	STAT_SLEEPING = 'S',
 	STAT_DEAD = 'D'
-};
+} StatusType;
 
-enum Virtue {
+typedef enum _Virtue {
 	VIRT_HONESTY,
 	VIRT_COMPASSION,
 	VIRT_VALOR,
@@ -95,16 +99,16 @@ enum Virtue {
 	VIRT_SPIRITUALITY,
 	VIRT_HUMILITY,
 	VIRT_MAX
-};
+} Virtue;
 
-enum BaseVirtue {
+typedef enum _BaseVirtue {
 	VIRT_NONE       = 0x00,
 	VIRT_TRUTH      = 0x01,
 	VIRT_LOVE       = 0x02,
 	VIRT_COURAGE    = 0x04
-};
+} BaseVirtue;
 
-enum Reagent {
+typedef enum _Reagent {
 	REAG_ASH,
 	REAG_GINSENG,
 	REAG_GARLIC,
@@ -114,11 +118,11 @@ enum Reagent {
 	REAG_NIGHTSHADE,
 	REAG_MANDRAKE,
 	REAG_MAX
-};
+} Reagent;
 
 #define SPELL_MAX 26
 
-enum Item {
+typedef enum _Item {
 	ITEM_SKULL  = 0x01,
 	ITEM_SKULL_DESTROYED = 0x02,
 	ITEM_CANDLE = 0x04,
@@ -132,9 +136,9 @@ enum Item {
 	ITEM_CANDLE_USED = 0x400,
 	ITEM_BOOK_USED = 0x800,
 	ITEM_BELL_USED = 0x1000
-};
+} Item;
 
-enum Stone {
+typedef enum _Stone {
 	STONE_BLUE   = 0x01,
 	STONE_YELLOW = 0x02,
 	STONE_RED    = 0x04,
@@ -143,9 +147,9 @@ enum Stone {
 	STONE_PURPLE = 0x20,
 	STONE_WHITE  = 0x40,
 	STONE_BLACK  = 0x80
-};
+} Stone;
 
-enum Rune {
+typedef enum _Rune {
 	RUNE_HONESTY      = 0x01,
 	RUNE_COMPASSION   = 0x02,
 	RUNE_VALOR        = 0x04,
@@ -154,7 +158,7 @@ enum Rune {
 	RUNE_HONOR        = 0x20,
 	RUNE_SPIRITUALITY = 0x40,
 	RUNE_HUMILITY     = 0x80
-};
+} Rune;
 
 /**
  * The Ultima IV savegame player record data.  
@@ -240,5 +244,9 @@ int saveGameWrite(SaveGame *sg, FILE *f);
 void saveGamePlayerRecordInit(SaveGamePlayerRecord *player);
 int saveGamePlayerRecordRead(SaveGamePlayerRecord *pRecord, FILE *f);
 int saveGamePlayerRecordWrite(SaveGamePlayerRecord *pRecord, FILE *f);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
