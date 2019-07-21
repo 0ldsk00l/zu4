@@ -742,10 +742,10 @@ void IntroController::finishInitiateGame(const string &nameBuffer, SexType sex)
         return;
     }
 
-    avatar.init();
+    saveGamePlayerRecordInit(&avatar);
     strcpy(avatar.name, nameBuffer.c_str());
     avatar.sex = sex;
-    saveGame.init(&avatar);
+    saveGameInit(&saveGame, &avatar);
     screenHideCursor();
     initPlayers(&saveGame);
     saveGame.food = 30000;
@@ -753,7 +753,8 @@ void IntroController::finishInitiateGame(const string &nameBuffer, SexType sex)
     saveGame.reagents[REAG_GINSENG] = 3;
     saveGame.reagents[REAG_GARLIC] = 4;
     saveGame.torches = 2;
-    saveGame.write(saveGameFile);
+    //saveGame.write(saveGameFile);
+    saveGameWrite(&saveGame, saveGameFile);
     fclose(saveGameFile);
 
     saveGameFile = fopen((settings.getUserPath() + MONSTERS_SAV_BASE_FILENAME).c_str(), "wb");
@@ -902,15 +903,17 @@ void IntroController::journeyOnward() {
      */
     saveGameFile = fopen((settings.getUserPath() + PARTY_SAV_BASE_FILENAME).c_str(), "rb");
     if (saveGameFile) {
-        SaveGame *saveGame = new SaveGame;
+        //SaveGame *saveGame = new SaveGame;
+        SaveGame saveGame;
 
         // Make sure there are players in party.sav --
         // In the Ultima Collection CD, party.sav exists, but does
-        // not contain valid info to journey onward        
-        saveGame->read(saveGameFile);        
-        if (saveGame->members > 0)
+        // not contain valid info to journey onward
+        //saveGame->read(saveGameFile);
+        saveGameRead(&saveGame, saveGameFile);
+        if (saveGame.members > 0)
             validSave = true;
-        delete saveGame;
+        //delete saveGame;
         fclose(saveGameFile);
     }
     

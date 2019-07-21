@@ -233,7 +233,8 @@ void GameController::init() {
     /* load in the save game */
     saveGameFile = fopen((settings.getUserPath() + PARTY_SAV_BASE_FILENAME).c_str(), "rb");
     if (saveGameFile) {
-        c->saveGame->read(saveGameFile);
+        //c->saveGame->read(saveGameFile);
+        saveGameRead(c->saveGame, saveGameFile);
         fclose(saveGameFile);
     } else
         xu4_error(XU4_LOG_ERR, "no savegame found!");
@@ -353,7 +354,8 @@ int gameSave() {
         return 0;
     }
 
-    if (!save.write(saveGameFile)) {
+    //if (!save.write(saveGameFile)) {
+    if (!saveGameWrite(&save, saveGameFile)) {
         screenMessage("Error writing to " PARTY_SAV_BASE_FILENAME "\n");
         fclose(saveGameFile);
         return 0;
