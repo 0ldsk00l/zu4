@@ -78,7 +78,7 @@ Weapon::Weapon(const ConfigElement &conf)
             flags |= WEAP_ABSOLUTERANGE;
     }
     if (_range.empty())
-        errorFatal("malformed weapons.xml file: range or absolute_range not found for weapon %s", name.c_str());
+        xu4_error(XU4_LOG_ERR, "malformed weapons.xml file: range or absolute_range not found for weapon %s", name.c_str());
 
     range = atoi(_range.c_str());
 
@@ -116,7 +116,7 @@ Weapon::Weapon(const ConfigElement &conf)
         if (mask == 0 && strcasecmp(i->getString("class").c_str(), "all") == 0)
             mask = 0xFF;
         if (mask == 0) {
-            errorFatal("malformed weapons.xml file: constraint has unknown class %s", 
+            xu4_error(XU4_LOG_ERR, "malformed weapons.xml file: constraint has unknown class %s", 
                        i->getString("class").c_str());
         }
         if (i->getBool("canuse"))

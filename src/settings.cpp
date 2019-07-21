@@ -298,7 +298,7 @@ bool Settings::read() {
         /***/
 
         else
-            errorWarning("invalid line in settings file %s", buffer);
+            xu4_error(XU4_LOG_WRN, "invalid line in settings file %s", buffer);
     }
 
     fclose(settingsFile);
@@ -316,7 +316,7 @@ bool Settings::write() {
         
     settingsFile = fopen(filename.c_str(), "wt");
     if (!settingsFile) {
-        errorWarning("can't write settings file");
+        xu4_error(XU4_LOG_WRN, "can't write settings file");
         return false;
     }    
 

@@ -110,7 +110,7 @@ Map *MapMgr::initMap(Map::Type type) {
         break;
         
     default:
-        errorFatal("Error: invalid map type used");
+        xu4_error(XU4_LOG_ERR, "Error: invalid map type used");
         break;
     }
     
@@ -122,7 +122,7 @@ Map *MapMgr::get(MapId id) {
     if (!mapList[id]->data.size()) {
         MapLoader *loader = MapLoader::getLoader(mapList[id]->type);
         if (loader == NULL)
-            errorFatal("can't load map of type \"%d\"", mapList[id]->type);
+            xu4_error(XU4_LOG_ERR, "can't load map of type \"%d\"", mapList[id]->type);
 
         TRACE_LOCAL(*logger, string("loading map data for map \'") + mapList[id]->fname + "\'");
 
@@ -136,7 +136,7 @@ void MapMgr::registerMap(Map *map) {
         mapList.resize(map->id + 1, NULL);
 
     if (mapList[map->id] != NULL)
-        errorFatal("Error: A map with id '%d' already exists", map->id);
+        xu4_error(XU4_LOG_ERR, "Error: A map with id '%d' already exists", map->id);
 
     mapList[map->id] = map;
 }
@@ -270,7 +270,7 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
     else if (prop == "exit_west")
         portal->trigger_action = ACTION_EXIT_WEST;
     else
-        errorFatal("unknown trigger_action: %s", prop.c_str());
+        xu4_error(XU4_LOG_ERR, "unknown trigger_action: %s", prop.c_str());
     
     prop = portalConf.getString("condition");
     if (!prop.empty()) {
@@ -279,7 +279,7 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
         else if (prop == "abyss")
             portal->portalConditionsMet = &isAbyssOpened;
         else
-            errorFatal("unknown portalConditionsMet: %s", prop.c_str());
+            xu4_error(XU4_LOG_ERR, "unknown portalConditionsMet: %s", prop.c_str());
     }
 
     portal->saveLocation = portalConf.getBool("savelocation");
@@ -292,7 +292,7 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
     else if (prop == "footorhorse")
         portal->portalTransportRequisites = TRANSPORT_FOOT_OR_HORSE;
     else
-        errorFatal("unknown transport: %s", prop.c_str());
+        xu4_error(XU4_LOG_ERR, "unknown transport: %s", prop.c_str());
 
     portal->exitPortal = portalConf.getBool("exits");
 

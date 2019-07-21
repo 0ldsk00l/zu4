@@ -66,7 +66,7 @@ Armor::Armor(const ConfigElement &conf) {
         if (mask == 0 && strcasecmp(i->getString("class").c_str(), "all") == 0)
             mask = 0xFF;
         if (mask == 0) {
-            errorFatal("malformed armor.xml file: constraint has unknown class %s", 
+            xu4_error(XU4_LOG_ERR, "malformed armor.xml file: constraint has unknown class %s", 
                        i->getString("class").c_str());
         }
         if (i->getBool("canuse"))

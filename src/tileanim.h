@@ -31,8 +31,8 @@ public:
     // Properties
     int random;
 
-private:    
-    bool replaces;
+//private:    
+//    bool replaces;
 };
 
 /**

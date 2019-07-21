@@ -938,7 +938,7 @@ Creature *CreatureMgr::getByTile(MapTile tile) {
     }
 
 //    if (tile.id)
-//    	errorWarning("Did not find creature for tile %d", tile.id);
+//    	xu4_error(XU4_LOG_WRN, "Did not find creature for tile %d", tile.id);
     return NULL;
 }
 

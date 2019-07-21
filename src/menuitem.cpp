@@ -119,7 +119,7 @@ void StringMenuItem::activate(MenuEvent &event) {
     vector<string>::const_iterator current = find(validSettings.begin(), validSettings.end(), *val);
 
     if (current == validSettings.end())
-        errorFatal("Error: menu string '%s' not a valid choice", val->c_str());
+        xu4_error(XU4_LOG_ERR, "Error: menu string '%s' not a valid choice", val->c_str());
             
     if (event.getType() == MenuEvent::INCREMENT || event.getType() == MenuEvent::ACTIVATE) {
         /* move to the next valid choice, wrapping if necessary */

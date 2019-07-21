@@ -94,7 +94,7 @@ void TileMap::load(const ConfigElement &tilemapConf) {
         /* find the tile this references */
         Tile *t = Tileset::get(tileset)->getByName(tile);
         if (!t)
-            errorFatal("Error: tile '%s' from '%s' was not found in tileset %s", tile.c_str(), name.c_str(), tileset.c_str());
+            xu4_error(XU4_LOG_ERR, "Error: tile '%s' from '%s' was not found in tileset %s", tile.c_str(), name.c_str(), tileset.c_str());
         
         if (i->exists("index"))
             index = i->getInt("index");        

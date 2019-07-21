@@ -17,7 +17,7 @@ MoongateList gates;
 
 void moongateAdd(int phase, const Coords &coords) {
     if (!gates.insert(MoongateList::value_type(phase, coords)).second)
-        errorFatal("Error: A moongate for phase %d already exists", phase);    
+        xu4_error(XU4_LOG_ERR, "Error: A moongate for phase %d already exists", phase);    
 }
 
 const Coords *moongateGetGateCoordsForPhase(int phase) {

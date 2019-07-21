@@ -24,7 +24,7 @@ ImageLoader *FMTOWNSImageLoader::instance_tif = ImageLoader::registerLoader(new 
  */
 Image *FMTOWNSImageLoader::load(U4FILE *file, int width, int height, int bpp) {
     if (width == -1 || height == -1 || bpp == -1) {
-          errorFatal("dimensions not set for fmtowns image");
+          xu4_error(XU4_LOG_ERR, "dimensions not set for fmtowns image");
     }
 
     ASSERT((bpp == 16) | (bpp == 4), "invalid bpp: %d", bpp);
@@ -38,7 +38,7 @@ Image *FMTOWNSImageLoader::load(U4FILE *file, int width, int height, int bpp) {
     if (rawLen < requiredLength) {
         if (raw)
             free(raw);
-        errorWarning("FMTOWNS Image of size %ld does not fit anticipated size %ld", rawLen, requiredLength);
+        xu4_error(XU4_LOG_WRN, "FMTOWNS Image of size %ld does not fit anticipated size %ld", rawLen, requiredLength);
         return NULL;
     }
 
@@ -55,7 +55,7 @@ Image *FMTOWNSImageLoader::load(U4FILE *file, int width, int height, int bpp) {
     	image->setPalette(pal.loadEgaPalette(), 16);
     	setFromRawData(image, width, height, bpp, raw);
 //    	if (width % 2)
-//    		errorFatal("FMTOWNS 4bit images cannot handle widths not divisible by 2!");
+//    		xu4_error(XU4_LOG_ERR, "FMTOWNS 4bit images cannot handle widths not divisible by 2!");
 //    	unsigned char nibble_mask = 0x0F;
 //        for (int y = 0; y < height; y++)
 //        {

@@ -141,7 +141,7 @@ TimedEventMgr::TimedEventMgr(int i) : baseInterval(i) {
     /* start the SDL timer */    
     if (instances == 0) {
         if (u4_SDL_InitSubSystem(SDL_INIT_TIMER) < 0)
-            errorFatal("unable to init SDL: %s", SDL_GetError());
+            xu4_error(XU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());
     }
 
     id = static_cast<void*>(SDL_AddTimer(i, &TimedEventMgr::callback, this));

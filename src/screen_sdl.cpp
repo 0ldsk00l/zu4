@@ -48,7 +48,7 @@ void screenRefreshThreadEnd();
 void screenInit_sys() {
     /* start SDL */
     if (u4_SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
-        errorFatal("unable to init SDL: %s", SDL_GetError());    
+        xu4_error(XU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());    
     SDL_EnableUNICODE(1);
     SDL_SetGamma(settings.gamma / 100.0f, settings.gamma / 100.0f, settings.gamma / 100.0f);
     atexit(SDL_Quit);
@@ -59,7 +59,7 @@ void screenInit_sys() {
 #endif   
 
     if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 0, SDL_HWSURFACE | SDL_ANYFORMAT | (settings.fullscreen ? SDL_FULLSCREEN : 0)))
-        errorFatal("unable to set video: %s", SDL_GetError());
+        xu4_error(XU4_LOG_ERR, "unable to set video: %s", SDL_GetError());
 
     if (verbose) {
         char driver[32];
@@ -80,7 +80,7 @@ void screenInit_sys() {
 
     filterScaler = scalerGet(settings.filter);
     if (!filterScaler)
-        errorFatal("%s is not a valid filter", settings.filter.c_str());
+        xu4_error(XU4_LOG_ERR, "%s is not a valid filter", settings.filter.c_str());
 
     screenRefreshThreadInit();
 }
@@ -246,13 +246,13 @@ void screenRefreshThreadInit() {
 
 	continueScreenRefresh = true;
 	if (screenRefreshThread) {
-		errorWarning("Screen refresh thread already exists.");
+		xu4_error(XU4_LOG_WRN, "Screen refresh thread already exists.");
 		return;
 	}
 
 	screenRefreshThread = SDL_CreateThread(screenRefreshThreadFunction, NULL);
 	if (!screenRefreshThread) {
-		errorWarning(SDL_GetError());
+		xu4_error(XU4_LOG_WRN, SDL_GetError());
 		return;
 	}
 }

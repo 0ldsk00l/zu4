@@ -236,7 +236,7 @@ void GameController::init() {
         c->saveGame->read(saveGameFile);
         fclose(saveGameFile);
     } else
-        errorFatal("no savegame found!");
+        xu4_error(XU4_LOG_ERR, "no savegame found!");
 
     TRACE_LOCAL(gameDbg, "Save game loaded."); ++pb;
 

@@ -275,7 +275,7 @@ void Menu::activateItem(int id, MenuEvent::Type action) {
     else mi = *getCurrent();
        
     if (!mi)
-        errorFatal("Error: Unable to find menu item with id '%d'", id);
+        xu4_error(XU4_LOG_ERR, "Error: Unable to find menu item with id '%d'", id);
 
     /* make sure the action given will activate the menu item */
     if (mi->getClosesMenu())

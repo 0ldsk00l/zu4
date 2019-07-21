@@ -1,17 +1,16 @@
-/*
- * $Id: error.h 2475 2005-08-22 05:46:10Z andrewtaylor $
- */
-
 #ifndef ERROR_H
 #define ERROR_H
 
-#if __GNUC__
-#define PRINTF_LIKE(x,y)  __attribute__ ((format (printf, (x), (y))))
-#else
-#define PRINTF_LIKE(x,y) /* nothing */
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-void errorFatal(const char *fmt, ...) PRINTF_LIKE(1, 2);
-void errorWarning(const char *fmt, ...) PRINTF_LIKE(1, 2);
+enum xu4_loglevel { XU4_LOG_DBG, XU4_LOG_INF, XU4_LOG_WRN, XU4_LOG_ERR };
+
+void xu4_error(int level, const char *fmt, ...);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -2,7 +2,6 @@
  * $Id: screen.cpp 3071 2014-07-26 18:01:08Z darren_janeczek $
  */
 
-
 #include <cstdio>
 #include <cstdarg>
 #include <cfloat>
@@ -124,7 +123,7 @@ void screenInit() {
             tileanims = set;
     }
     if (!tileanims)
-        errorFatal("unable to find tile animations for \"%s\" video mode in graphics.xml", settings.videoType.c_str());
+        xu4_error(XU4_LOG_ERR, "unable to find tile animations for \"%s\" video mode in graphics.xml", settings.videoType.c_str());
     
     dungeonTileChars.clear();
     dungeonTileChars["brick_floor"] = CHARSET_FLOOR;
@@ -315,7 +314,7 @@ void screenLoadGraphicsFromConf() {
         }
     }
     if (!gemlayout)
-        errorFatal("no gem layout named %s found!\n", settings.gemLayout.c_str());
+        xu4_error(XU4_LOG_ERR, "no gem layout named %s found!\n", settings.gemLayout.c_str());
 }
 
 Layout *screenLoadLayoutFromConf(const ConfigElement &conf) {
@@ -493,7 +492,7 @@ void screenDrawImage(const string &name, int x, int y) {
             return;
         }
     }
-    errorFatal("ERROR 1006: Unable to load the image \"%s\".\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", name.c_str(), settings.game.c_str());
+    xu4_error(XU4_LOG_ERR, "ERROR 1006: Unable to load the image \"%s\".\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", name.c_str(), settings.game.c_str());
 }
 
 void screenDrawImageInMapArea(const string &name) {
@@ -501,7 +500,7 @@ void screenDrawImageInMapArea(const string &name) {
     
     info = imageMgr->get(name);
     if (!info)
-        errorFatal("ERROR 1004: Unable to load data files.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", settings.game.c_str());
+        xu4_error(XU4_LOG_ERR, "ERROR 1004: Unable to load data files.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", settings.game.c_str());
     
     info->image->drawSubRect(BORDER_WIDTH * settings.scale, BORDER_HEIGHT * settings.scale,
                              BORDER_WIDTH * settings.scale, BORDER_HEIGHT * settings.scale,
@@ -517,7 +516,7 @@ void screenTextColor(int color) {
     if (charsetInfo == NULL) {
         charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!charsetInfo)
-            errorFatal("ERROR 1003: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET, settings.game.c_str());
+            xu4_error(XU4_LOG_ERR, "ERROR 1003: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET, settings.game.c_str());
     }
     
 	if (!settings.enhancements || !settings.enhancementsOptions.textColorization) {
@@ -544,7 +543,7 @@ void screenShowChar(int chr, int x, int y) {
     if (charsetInfo == NULL) {
         charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!charsetInfo)
-            errorFatal("ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET, settings.game.c_str());
+            xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET, settings.game.c_str());
     }
     
     charsetInfo->image->drawSubRect(x * charsetInfo->image->width(), y * (CHAR_HEIGHT * settings.scale),
@@ -699,7 +698,7 @@ void screenFindLineOfSight(vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H
     else if (settings.lineOfSight == "Enhanced")
         screenFindLineOfSightEnhanced(viewportTiles);
     else
-        errorFatal("unknown line of sight style %s!\n", settings.lineOfSight.c_str());
+        xu4_error(XU4_LOG_ERR, "unknown line of sight style %s!\n", settings.lineOfSight.c_str());
 }        
 
 
@@ -1167,7 +1166,7 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
         if (gemTilesInfo == NULL) {
             gemTilesInfo = imageMgr->get(BKGD_GEMTILES);
             if (!gemTilesInfo)
-                errorFatal("ERROR 1002: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_GEMTILES, settings.game.c_str());
+                xu4_error(XU4_LOG_ERR, "ERROR 1002: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_GEMTILES, settings.game.c_str());
         }
         
         if (tile < 128) {
@@ -1197,7 +1196,7 @@ Layout *screenGetGemLayout(const Map *map) {
             if (layout->type == LAYOUT_DUNGEONGEM)
                 return layout;
         }
-        errorFatal("no dungeon gem layout found!\n");
+        xu4_error(XU4_LOG_ERR, "no dungeon gem layout found!\n");
         return NULL;
     }
     else

@@ -6,6 +6,7 @@ VERSION=1.1-git
 CSRCS=\
         lzw/hash.c \
         lzw/lzw.c \
+        error.c \
         unzip.c \
         $(NULL)
 
@@ -32,7 +33,6 @@ CXXSRCS=\
         direction.cpp \
         dungeon.cpp \
         dungeonview.cpp \
-        error.cpp \
         event.cpp \
         event_$(UI).cpp \
         filesystem.cpp \

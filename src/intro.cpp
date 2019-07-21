@@ -1565,13 +1565,13 @@ void IntroController::getTitleSourceData()
     // will be scaled appropriately.
     ImageInfo *info = imageMgr->get(BKGD_INTRO, true);
     if (!info) {
-        errorFatal("ERROR 1007: Unable to load the image \"%s\".\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO, settings.game.c_str());
+        xu4_error(XU4_LOG_ERR, "ERROR 1007: Unable to load the image \"%s\".\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO, settings.game.c_str());
     }
 
     if (info->width / info->prescale != 320 || info->height / info->prescale != 200)
     {
         // the image appears to have been scaled already
-    	errorWarning("ERROR 1008: The title image (\"%s\") has been scaled too early!\t\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
+    	xu4_error(XU4_LOG_WRN, "ERROR 1008: The title image (\"%s\") has been scaled too early!\t\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
     }
 
     // get the transparent color

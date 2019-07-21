@@ -30,7 +30,7 @@ RGBA *U4PaletteLoader::vgaPalette = NULL;
  */
 Image *U4RawImageLoader::load(U4FILE *file, int width, int height, int bpp) {
     if (width == -1 || height == -1 || bpp == -1) {
-          errorFatal("dimensions not set for u4raw image");
+          xu4_error(XU4_LOG_ERR, "dimensions not set for u4raw image");
     }
 
     ASSERT(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
@@ -43,7 +43,7 @@ Image *U4RawImageLoader::load(U4FILE *file, int width, int height, int bpp) {
     if (rawLen < requiredLength) {
         if (raw)
             free(raw);
-        errorWarning("u4Raw Image of size %ld does not fit anticipated size %ld", rawLen, requiredLength);
+        xu4_error(XU4_LOG_WRN, "u4Raw Image of size %ld does not fit anticipated size %ld", rawLen, requiredLength);
         return NULL;
     }
 
@@ -75,7 +75,7 @@ Image *U4RawImageLoader::load(U4FILE *file, int width, int height, int bpp) {
  */
 Image *U4RleImageLoader::load(U4FILE *file, int width, int height, int bpp) {
     if (width == -1 || height == -1 || bpp == -1) {
-          errorFatal("dimensions not set for u4rle image");
+          xu4_error(XU4_LOG_ERR, "dimensions not set for u4rle image");
     }
 
     ASSERT(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
@@ -122,7 +122,7 @@ Image *U4RleImageLoader::load(U4FILE *file, int width, int height, int bpp) {
  */
 Image *U4LzwImageLoader::load(U4FILE *file, int width, int height, int bpp) {
     if (width == -1 || height == -1 || bpp == -1) {
-          errorFatal("dimensions not set for u4lzw image");
+          xu4_error(XU4_LOG_ERR, "dimensions not set for u4lzw image");
     }
 
     ASSERT(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);

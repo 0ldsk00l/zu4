@@ -28,7 +28,7 @@ void Music::create_sys() {
 	int audio_buffers = 1024;
 
 	if (u4_SDL_InitSubSystem(SDL_INIT_AUDIO) == -1) {
-		errorWarning("unable to init SDL audio subsystem: %s",
+		xu4_error(XU4_LOG_WRN, "unable to init SDL audio subsystem: %s",
 				SDL_GetError());
 		this->functional = false;
 		return;
@@ -72,7 +72,7 @@ bool Music::load_sys(const string &pathname) {
 
 	playing = Mix_LoadMUS(pathname.c_str());
 	if (!playing) {
-		errorWarning("unable to load music file %s: %s", pathname.c_str(),
+		xu4_error(XU4_LOG_WRN, "unable to load music file %s: %s", pathname.c_str(),
 				Mix_GetError());
 		return false;
 	}
@@ -129,10 +129,10 @@ void Music::setMusicVolume_sys(int volume) {
 
 void Music::fadeIn_sys(int msecs, bool loadFromMap) {
 	if (Mix_FadeInMusic(playing, NLOOPS, msecs) == -1)
-		errorWarning("Mix_FadeInMusic: %s\n", Mix_GetError());
+		xu4_error(XU4_LOG_WRN, "Mix_FadeInMusic: %s\n", Mix_GetError());
 }
 
 void Music::fadeOut_sys(int msecs) {
 	if (Mix_FadeOutMusic(msecs) == -1)
-		errorWarning("Mix_FadeOutMusic: %s\n", Mix_GetError());
+		xu4_error(XU4_LOG_WRN, "Mix_FadeOutMusic: %s\n", Mix_GetError());
 }

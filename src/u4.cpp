@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 
     if (!u4fopen("AVATAR.EXE"))
 	{
-        errorFatal(	"xu4 requires the PC version of Ultima IV to be present. "
+        xu4_error(XU4_LOG_ERR, 	"xu4 requires the PC version of Ultima IV to be present. "
         			"It must either be in the same directory as the xu4 executable, "
         			"or in a subdirectory named \"ultima4\"."
         			"\n\nThis can be achieved by downloading \"UltimaIV.zip\" from www.ultimaforever.com"
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
                 i++;
             }
             else
-                errorFatal("%s is invalid alone: Requires a string for input. See --help for more detail.\n", argv[i]);
+                xu4_error(XU4_LOG_ERR, "%s is invalid alone: Requires a string for input. See --help for more detail.\n", argv[i]);
 
         }
         else if (strcmp(argv[i], "-s") == 0
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
                 i++;
             }
             else
-                errorFatal("%s is invalid alone: Requires a number for input. See --help for more detail.\n", argv[i]);
+                xu4_error(XU4_LOG_ERR, "%s is invalid alone: Requires a number for input. See --help for more detail.\n", argv[i]);
 
 
         }
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
             if ((unsigned int)argc > i + 1)
                 i++;
             else
-                errorFatal("%s is invalid alone: Requires a string as input. See --help for more detail.\n", argv[i]);
+                xu4_error(XU4_LOG_ERR, "%s is invalid alone: Requires a string as input. See --help for more detail.\n", argv[i]);
 
         }
         else if (strcmp(argv[i], "-i") == 0
@@ -172,7 +172,7 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         else
-            errorFatal("Unrecognized argument: %s\n\nUse --help for a list of supported arguments.", argv[i]);
+            xu4_error(XU4_LOG_ERR, "Unrecognized argument: %s\n\nUse --help for a list of supported arguments.", argv[i]);
 
     }
 

@@ -23,7 +23,7 @@
 bool SoundManager::load_sys(Sound sound, const string &pathname) {
     soundChunk[sound] = Mix_LoadWAV(pathname.c_str());
     if (!soundChunk[sound]) {
-        errorWarning("Unable to load sound effect file %s: %s", soundFilenames[sound].c_str(), Mix_GetError());
+        xu4_error(XU4_LOG_WRN, "Unable to load sound effect file %s: %s", soundFilenames[sound].c_str(), Mix_GetError());
         return false;
     }
     return true;
@@ -36,7 +36,7 @@ void SoundManager::play_sys(Sound sound, bool onlyOnce, int specificDurationInTi
      */
     if (!onlyOnce || !Mix_Playing(1)) {
         if (Mix_PlayChannelTimed(1, soundChunk[sound], specificDurationInTicks == -1 ? 0 : -1, specificDurationInTicks) == -1)
-            fprintf(stderr, "Error playing sound %d: %s\n", sound, Mix_GetError());
+            xu4_error(XU4_LOG_WRN, "Error playing sound %d: %s\n", sound, Mix_GetError());
     }
 }
 

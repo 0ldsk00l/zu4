@@ -46,7 +46,7 @@ void TileRule::load() {
     }    
     
     if (TileRule::findByName("default") == NULL)
-        errorFatal("no 'default' rule found in tile rules");
+        xu4_error(XU4_LOG_ERR, "no 'default' rule found in tile rules");
 }
 
 /**

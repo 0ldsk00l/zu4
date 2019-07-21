@@ -54,7 +54,7 @@ xmlDocPtr xmlParse(const char *filename) {
 
     doc = xmlParseFile(filename);
     if (!doc)
-        errorFatal("error parsing %s", filename);
+        xu4_error(XU4_LOG_ERR, "error parsing %s", filename);
 
     if (settings.validateXml && doc->intSubset) {
         string errorMessage;        
@@ -67,7 +67,7 @@ xmlDocPtr xmlParse(const char *filename) {
         cvp.error = &xmlAccumError;
 
         if (!xmlValidateDocument(&cvp, doc))            
-            errorFatal("xml parse error:\n%s", errorMessage.c_str());        
+            xu4_error(XU4_LOG_ERR, "xml parse error:\n%s", errorMessage.c_str());        
     }
 
     return doc;
@@ -174,7 +174,7 @@ int xmlGetPropAsEnum(xmlNodePtr node, const char *name, const char *enumValues[]
     }
 
     if (result == -1)
-        errorFatal("invalid enum value for %s: %s", name, prop);
+        xu4_error(XU4_LOG_ERR, "invalid enum value for %s: %s", name, prop);
 
     xmlFree(prop);
 

@@ -56,7 +56,7 @@ MapLoader *MapLoader::registerLoader(MapLoader *loader, Map::Type type) {
         loaderMap = new std::map<Map::Type, MapLoader *>;
 
     if (loaderMap->find(type) != loaderMap->end())
-        errorFatal("map loader already registered for type %d", type);
+        xu4_error(XU4_LOG_ERR, "map loader already registered for type %d", type);
 
     (*loaderMap)[type] = loader;
     return loader;
@@ -147,7 +147,7 @@ bool CityMapLoader::load(Map *map) {
     U4FILE *ult = u4fopen(city->fname);
     U4FILE *tlk = u4fopen(city->tlk_fname);
     if (!ult || !tlk)
-        errorFatal("unable to load map data");
+        xu4_error(XU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 32x32 to be read from an .ULT file */
     ASSERT(city->width == CITY_WIDTH, "map width is %d, should be %d", city->width, CITY_WIDTH);
@@ -262,7 +262,7 @@ bool ConMapLoader::load(Map *map) {
 
     U4FILE *con = u4fopen(map->fname);
     if (!con)
-        errorFatal("unable to load map data");
+        xu4_error(XU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 11x11 to be read from an .CON file */
     ASSERT(map->width == CON_WIDTH, "map width is %d, should be %d", map->width, CON_WIDTH);
@@ -302,7 +302,7 @@ bool DngMapLoader::load(Map *map) {
 
     U4FILE *dng = u4fopen(dungeon->fname);
     if (!dng)
-        errorFatal("unable to load map data");
+        xu4_error(XU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 11x11 to be read from an .CON file */
     ASSERT(dungeon->width == DNG_WIDTH, "map width is %d, should be %d", dungeon->width, DNG_WIDTH);
@@ -464,7 +464,7 @@ void DngMapLoader::initDungeonRoom(Dungeon *dng, int room) {
 bool WorldMapLoader::load(Map *map) {
     U4FILE *world = u4fopen(map->fname);
     if (!world)
-        errorFatal("unable to load map data");
+        xu4_error(XU4_LOG_ERR, "unable to load map data");
 
     if (!loadData(map, world))
         return false;

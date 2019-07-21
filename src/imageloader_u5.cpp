@@ -24,7 +24,7 @@ ImageLoader *U5LzwImageLoader::instance = ImageLoader::registerLoader(new U5LzwI
  */
 Image *U5LzwImageLoader::load(U4FILE *file, int width, int height, int bpp) {
     if (width == -1 || height == -1 || bpp == -1) {
-          errorFatal("dimensions not set for u5lzw image");
+          xu4_error(XU4_LOG_ERR, "dimensions not set for u5lzw image");
     }
 
     ASSERT(bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);

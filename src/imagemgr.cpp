@@ -328,7 +328,7 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
         ImageInfo *borderInfo = imageMgr->get(BKGD_BORDERS, true);
 //        ImageInfo *charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!borderInfo)
-            errorFatal("ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_BORDERS, settings.game.c_str());
+            xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_BORDERS, settings.game.c_str());
 
         delete borderInfo->image;
         borderInfo->image = NULL;
@@ -515,7 +515,7 @@ ImageInfo *ImageMgr::getInfoFromSet(const string &name, ImageSet *imageset) {
         return getInfoFromSet(name, imageset);
     }
 
-    //errorWarning("Searched recursively from imageset %s through to %s and couldn't find %s", baseSet->name.c_str(), imageset->name.c_str(), name.c_str());
+    //xu4_error(XU4_LOG_WRN, "Searched recursively from imageset %s through to %s and couldn't find %s", baseSet->name.c_str(), imageset->name.c_str(), name.c_str());
     return NULL;
 }
 
@@ -597,7 +597,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         string filetype = info->filetype;
         ImageLoader *loader = ImageLoader::getLoader(filetype);
         if (loader == NULL)
-            errorWarning("can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
+            xu4_error(XU4_LOG_WRN, "can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
         else
         {
 			unscaled = loader->load(file, info->width, info->height, info->depth);
@@ -612,7 +612,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
     }
     else
     {
-        errorWarning("Failed to open file %s for reading.", info->filename.c_str());
+        xu4_error(XU4_LOG_WRN, "Failed to open file %s for reading.", info->filename.c_str());
         return NULL;
     }
 
@@ -675,7 +675,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         int orig_scale = settings.scale;
         settings.scale = info->prescale;
         settings.write();
-    	errorFatal("image %s is prescaled to an incompatible size: %d\nResetting the scale to %d. Sorry about the inconvenience, please restart.", info->filename.c_str(), orig_scale, settings.scale);
+    	xu4_error(XU4_LOG_ERR, "image %s is prescaled to an incompatible size: %d\nResetting the scale to %d. Sorry about the inconvenience, please restart.", info->filename.c_str(), orig_scale, settings.scale);
     }
     imageScale /= info->prescale;
 

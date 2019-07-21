@@ -367,7 +367,7 @@ void Image::setTransparentIndex(unsigned int index)//, unsigned int numFrames, u
     if (indexed) {
         SDL_SetColorKey(surface, SDL_SRCCOLORKEY, index);
     } else {
-    	//errorWarning("Setting transparent index for non indexed");
+    	//xu4_error(XU4_LOG_WRN, "Setting transparent index for non indexed");
     }
 }
 

@@ -85,7 +85,7 @@ void Tile::loadProperties(const ConfigElement &conf) {
     if (conf.exists("directions")) {
         string dirs = conf.getString("directions");
         if (dirs.length() != (unsigned) frames)
-            errorFatal("Error: %ld directions for tile but only %d frames", (long) dirs.length(), frames);
+            xu4_error(XU4_LOG_ERR, "Error: %ld directions for tile but only %d frames", (long) dirs.length(), frames);
         for (unsigned i = 0; i < dirs.length(); i++) {
             if (dirs[i] == 'w')
                 directions.push_back(DIR_WEST);
@@ -96,7 +96,7 @@ void Tile::loadProperties(const ConfigElement &conf) {
             else if (dirs[i] == 's')
                 directions.push_back(DIR_SOUTH);
             else
-                errorFatal("Error: unknown direction specified by %c", dirs[i]);
+                xu4_error(XU4_LOG_ERR, "Error: unknown direction specified by %c", dirs[i]);
         }
     }
 }
@@ -124,7 +124,7 @@ void Tile::loadImage() {
         }
         if (!info) //IF still no info loaded
         {
-            errorWarning("Error: couldn't load image for tile '%s'", name.c_str());
+            xu4_error(XU4_LOG_WRN, "Error: couldn't load image for tile '%s'", name.c_str());
             return;
         }
 
@@ -166,7 +166,7 @@ void Tile::loadImage() {
             if (tileanims)
                 anim = tileanims->getByName(animationRule);
             if (anim == NULL)
-                errorWarning("Warning: animation style '%s' not found", animationRule.c_str());
+                xu4_error(XU4_LOG_WRN, "Warning: animation style '%s' not found", animationRule.c_str());
         }
 
         /* if we have animations, we always used 'animated' to draw from */
