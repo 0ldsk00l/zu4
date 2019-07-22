@@ -19,11 +19,9 @@
  * MA 02110-1301, USA.
  * 
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 
 #include "io.h"
@@ -100,36 +98,36 @@ int saveGameRead(SaveGame *sg, FILE *f) {
 		if (!saveGamePlayerRecordRead(&sg->players[i], f)) { return 0; }
 	}
 	
-	if (!readInt((unsigned int*)&sg->food, f) ||
-		!readShort((unsigned short*)&sg->gold, f)) {
+	if (!readInt((uint32_t*)&sg->food, f) ||
+		!readShort((uint16_t*)&sg->gold, f)) {
 		return 0;
 	}
 	
 	for (int i = 0; i < 8; i++) {
-		if (!readShort((unsigned short*)&sg->karma[i], f)) { return 0; }
+		if (!readShort((uint16_t*)&sg->karma[i], f)) { return 0; }
 	}
 	
-	if (!readShort((unsigned short*)&sg->torches, f) ||
-		!readShort((unsigned short*)&sg->gems, f) ||
-		!readShort((unsigned short*)&sg->keys, f) ||
-		!readShort((unsigned short*)&sg->sextants, f)) {
+	if (!readShort((uint16_t*)&sg->torches, f) ||
+		!readShort((uint16_t*)&sg->gems, f) ||
+		!readShort((uint16_t*)&sg->keys, f) ||
+		!readShort((uint16_t*)&sg->sextants, f)) {
 		return 0;
 	}
 	
 	for (int i = 0; i < ARMR_MAX; i++) {
-		if (!readShort((unsigned short*)&sg->armor[i], f)) { return 0; }
+		if (!readShort((uint16_t*)&sg->armor[i], f)) { return 0; }
 	}
 	
 	for (int i = 0; i < WEAP_MAX; i++) {
-		if (!readShort((unsigned short*)&sg->weapons[i], f)) { return 0; }
+		if (!readShort((uint16_t*)&sg->weapons[i], f)) { return 0; }
 	}
 	
 	for (int i = 0; i < REAG_MAX; i++) {
-		if (!readShort((unsigned short*)&sg->reagents[i], f)) { return 0; }
+		if (!readShort((uint16_t*)&sg->reagents[i], f)) { return 0; }
 	}
 	
 	for (int i = 0; i < SPELL_MAX; i++) {
-		if (!readShort((unsigned short*)&sg->mixtures[i], f)) { return 0; }
+		if (!readShort((uint16_t*)&sg->mixtures[i], f)) { return 0; }
 	}
 	
 	if (!readShort(&sg->items, f) ||
@@ -222,8 +220,8 @@ int saveGamePlayerRecordWrite(SaveGamePlayerRecord *pRecord, FILE *f) {
 		!writeShort(pRecord->intel, f) ||
 		!writeShort(pRecord->mp, f) ||
 		!writeShort(pRecord->unknown, f) ||
-		!writeShort((unsigned short)pRecord->weapon, f) ||
-		!writeShort((unsigned short)pRecord->armor, f)) {
+		!writeShort((uint16_t)pRecord->weapon, f) ||
+		!writeShort((uint16_t)pRecord->armor, f)) {
 		return 0;
 	}
 	
@@ -231,9 +229,9 @@ int saveGamePlayerRecordWrite(SaveGamePlayerRecord *pRecord, FILE *f) {
 		if (!writeChar(pRecord->name[i], f)) { return 0; }
 	}
 	
-	if (!writeChar((unsigned char)pRecord->sex, f) ||
-		!writeChar((unsigned char)pRecord->klass, f) ||
-		!writeChar((unsigned char)pRecord->status, f)) {
+	if (!writeChar((uint8_t)pRecord->sex, f) ||
+		!writeChar((uint8_t)pRecord->klass, f) ||
+		!writeChar((uint8_t)pRecord->status, f)) {
 		return 0;
 	}
 	
@@ -242,8 +240,8 @@ int saveGamePlayerRecordWrite(SaveGamePlayerRecord *pRecord, FILE *f) {
 
 int saveGamePlayerRecordRead(SaveGamePlayerRecord *pRecord, FILE *f) {
 	// Read a SaveGamePlayerRecord
-	unsigned char ch;
-	unsigned short s;
+	uint8_t ch;
+	uint16_t s;
 	
 	if (!readShort(&pRecord->hp, f) ||
 		!readShort(&pRecord->hpMax, f) ||
@@ -263,7 +261,7 @@ int saveGamePlayerRecordRead(SaveGamePlayerRecord *pRecord, FILE *f) {
 	pRecord->armor = (ArmorType)s;
 	
 	for (int i = 0; i < 16; i++) {
-		if (!readChar((unsigned char *)&pRecord->name[i], f)) { return 0; }
+		if (!readChar((uint8_t *)&pRecord->name[i], f)) { return 0; }
 	}
 
 	if (!readChar(&ch, f)) { return 0; }
@@ -336,7 +334,7 @@ int saveGameMonstersWrite(SaveGameMonsterRecord *monsterTable, FILE *f) {
 	else {
 		int max = MONSTERTABLE_SIZE * 8;
 		for (int i = 0; i < max; i++) {
-			if (!writeChar((unsigned char)0, f)) { return 0; }
+			if (!writeChar((uint8_t)0, f)) { return 0; }
 		}
 	}
 	return 1;

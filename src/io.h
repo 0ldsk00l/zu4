@@ -1,6 +1,3 @@
-/*
- * $Id: io.h 2475 2005-08-22 05:46:10Z andrewtaylor $
- */
 #ifndef IO_H
 #define IO_H
 
@@ -10,18 +7,18 @@ extern "C" {
 /*
  * These are endian-independant routines for reading and writing
  * 4-byte (int), 2-byte (short), and 1-byte (char) values to and from
- * the ultima 4 data files.  If sizeof(int) != 4, all bets are off.
+ * the ultima 4 data files.
  */
 
-int writeInt(unsigned int i, FILE *f);
-int writeShort(unsigned short s, FILE *f);
-int writeChar(unsigned char c, FILE *f);
-int readInt(unsigned int *i, FILE *f);
-int readShort(unsigned short *s, FILE *f);
-int readChar(unsigned char *c, FILE *f);
-
-#endif
+int writeInt(uint32_t i, FILE *f);
+int writeShort(uint16_t s, FILE *f);
+int writeChar(uint8_t c, FILE *f);
+int readInt(uint32_t *i, FILE *f);
+int readShort(uint16_t *s, FILE *f);
+int readChar(uint8_t *c, FILE *f);
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif

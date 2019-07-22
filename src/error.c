@@ -18,9 +18,6 @@
  * MA 02110-1301, USA.
  * 
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,6 +40,3 @@ void xu4_error(int level, const char *fmt, ...) {
 	
 	if (level >= XU4_LOG_ERR) { exit(1); }
 }
-#ifdef __cplusplus
-}
-#endif

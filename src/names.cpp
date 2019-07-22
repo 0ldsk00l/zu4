@@ -2,6 +2,8 @@
  * $Id: names.cpp 1866 2004-05-19 20:07:41Z dougday $
  */
 
+#include <stdio.h>
+#include <stdint.h>
 
 #include "names.h"
 

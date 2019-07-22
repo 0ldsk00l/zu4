@@ -164,12 +164,12 @@ typedef enum _Rune {
  * The Ultima IV savegame player record data.  
  */
 typedef struct _SaveGamePlayerRecord {
-	unsigned short hp;
-	unsigned short hpMax;
-	unsigned short xp;
-	unsigned short str, dex, intel;
-	unsigned short mp;
-	unsigned short unknown;
+	uint16_t hp;
+	uint16_t hpMax;
+	uint16_t xp;
+	uint16_t str, dex, intel;
+	uint16_t mp;
+	uint16_t unknown;
 	WeaponType weapon;
 	ArmorType armor;
 	char name[16];
@@ -182,56 +182,57 @@ typedef struct _SaveGamePlayerRecord {
  * How Ultima IV stores monster information
  */
 typedef struct _SaveGameMonsterRecord {
-	unsigned char tile;
-	unsigned char x;
-	unsigned char y;
-	unsigned char prevTile;
-	unsigned char prevx;
-	unsigned char prevy;
-	unsigned char unused1;
-	unsigned char unused2;
+	uint8_t tile;
+	uint8_t x;
+	uint8_t y;
+	uint8_t prevTile;
+	uint8_t prevx;
+	uint8_t prevy;
+	uint8_t unused1;
+	uint8_t unused2;
 } SaveGameMonsterRecord;
 
 /**
  * Represents the on-disk contents of PARTY.SAV.
  */
+// FIXME: why are some of these signed? Bad style?
 typedef struct SaveGame {
-	unsigned int unknown1;
-	unsigned int moves;
+	uint32_t unknown1;
+	uint32_t moves;
 	SaveGamePlayerRecord players[8];
-	int food;
-	short gold;
-	short karma[VIRT_MAX];
-	short torches;
-	short gems;
-	short keys;
-	short sextants;
-	short armor[ARMR_MAX];
-	short weapons[WEAP_MAX];
-	short reagents[REAG_MAX];
-	short mixtures[SPELL_MAX];
-	unsigned short items;
-	unsigned char x, y;
-	unsigned char stones;
-	unsigned char runes;
-	unsigned short members;
-	unsigned short transport;
+	int32_t food;
+	int16_t gold;
+	int16_t karma[VIRT_MAX];
+	int16_t torches;
+	int16_t gems;
+	int16_t keys;
+	int16_t sextants;
+	int16_t armor[ARMR_MAX];
+	int16_t weapons[WEAP_MAX];
+	int16_t reagents[REAG_MAX];
+	int16_t mixtures[SPELL_MAX];
+	uint16_t items;
+	uint8_t x, y;
+	uint8_t stones;
+	uint8_t runes;
+	uint16_t members;
+	uint16_t transport;
 	union {
-		unsigned short balloonstate;
-		unsigned short torchduration;
+		uint16_t balloonstate;
+		uint16_t torchduration;
 	};
-	unsigned short trammelphase;
-	unsigned short feluccaphase;
-	unsigned short shiphull;
-	unsigned short lbintro;
-	unsigned short lastcamp;
-	unsigned short lastreagent;
-	unsigned short lastmeditation;
-	unsigned short lastvirtue;
-	unsigned char dngx, dngy;
-	unsigned short orientation;
-	unsigned short dnglevel;
-	unsigned short location;
+	uint16_t trammelphase;
+	uint16_t feluccaphase;
+	uint16_t shiphull;
+	uint16_t lbintro;
+	uint16_t lastcamp;
+	uint16_t lastreagent;
+	uint16_t lastmeditation;
+	uint16_t lastvirtue;
+	uint8_t dngx, dngy;
+	uint16_t orientation;
+	uint16_t dnglevel;
+	uint16_t location;
 } SaveGame;
 
 int saveGameMonstersWrite(SaveGameMonsterRecord *monsterTable, FILE *f);
