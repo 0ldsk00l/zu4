@@ -1,9 +1,9 @@
-/*
- * $Id: names.h 2475 2005-08-22 05:46:10Z andrewtaylor $
- */
-
 #ifndef NAMES_H
 #define NAMES_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "savegame.h"
 #include "direction.h"
@@ -21,5 +21,9 @@ const char *getVirtueAdjective(Virtue virtue);
 const char *getStoneName(Virtue virtue);
 const char *getItemName(Item item);
 const char *getDirectionName(Direction dir);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -29,6 +29,7 @@ CSRCS=\
 		src/lzw/u4decode.c \
 		src/error.c \
 		src/io.c \
+		src/names.c \
 		src/rle.c \
 		src/savegame.c \
 		src/u4_sdl.c \
@@ -81,7 +82,6 @@ CXXSRCS=\
 		src/movement.cpp \
 		src/music.cpp \
 		src/music_sdl.cpp \
-		src/names.cpp \
 		src/object.cpp \
 		src/person.cpp \
 		src/player.cpp \

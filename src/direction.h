@@ -5,7 +5,7 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
-enum Direction {
+typedef enum _Direction {
     DIR_NONE,
     DIR_WEST,
     DIR_NORTH,
@@ -13,7 +13,7 @@ enum Direction {
     DIR_SOUTH,
     DIR_ADVANCE,
     DIR_RETREAT
-};
+} Direction;
 
 #define MASK_DIR(dir) (1 << (dir))
 #define MASK_DIR_WEST (1 << DIR_WEST)
