@@ -23,6 +23,7 @@
 #include "object.h"
 #include "person.h"
 #include "player.h"
+#include "random.h"
 #include "screen.h"
 #include "settings.h"
 #include "stats.h"

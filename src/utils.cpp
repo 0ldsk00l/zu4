@@ -2,41 +2,10 @@
  * $Id: utils.cpp 3071 2014-07-26 18:01:08Z darren_janeczek $
  */
 
-
-#if (defined(__unix__) || defined(unix)) && !defined(USG)
-#include <sys/param.h>
-#endif
-
 #include "utils.h"
 #include <cctype>
 #include <cstdlib>
 #include <ctime>
-
-/**
- * Seed the random number generator.
- */
-void xu4_srandom() {
-#if (defined(BSD) && (BSD >= 199103))
-    srandom(time(NULL));
-#else
-    srand((unsigned int)time(NULL));
-#endif
-}
-
-/**
- * Generate a random number between 0 and (upperRange - 1).  This
- * routine uses the upper bits of the random number provided by rand()
- * to compensate for older generators that have low entropy in the
- * lower bits (e.g. MacOS X).
- */
-int xu4_random(int upperRange) {
-#if (defined(BSD) && (BSD >= 199103))
-    int r = random();
-#else
-    int r = rand();
-#endif
-    return (int) ((((double)upperRange) * r) / (RAND_MAX+1.0));
-}
 
 /**
  * Trims whitespace from a std::string

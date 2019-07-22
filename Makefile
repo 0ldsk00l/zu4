@@ -27,9 +27,11 @@ CSRCS=\
 		src/lzw/hash.c \
 		src/lzw/lzw.c \
 		src/lzw/u4decode.c \
+		src/direction.c \
 		src/error.c \
 		src/io.c \
 		src/names.c \
+		src/random.c \
 		src/rle.c \
 		src/savegame.c \
 		src/u4_sdl.c \
@@ -55,7 +57,6 @@ CXXSRCS=\
 		src/dialogueloader_hw.cpp \
 		src/dialogueloader_lb.cpp \
 		src/dialogueloader_tlk.cpp \
-		src/direction.cpp \
 		src/dungeon.cpp \
 		src/dungeonview.cpp \
 		src/event.cpp \

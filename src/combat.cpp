@@ -24,6 +24,7 @@
 #include "object.h"
 #include "player.h"
 #include "portal.h"
+#include "random.h"
 #include "screen.h"
 #include "settings.h"
 #include "spell.h"

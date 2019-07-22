@@ -14,6 +14,7 @@
 #include "location.h"
 #include "mapmgr.h"
 #include "names.h"
+#include "random.h"
 #include "tilemap.h"
 #include "tileset.h"
 #include "types.h"

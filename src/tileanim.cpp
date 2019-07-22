@@ -8,6 +8,7 @@
 #include "config.h"
 #include "direction.h"
 #include "image.h"
+#include "random.h"
 #include "screen.h"
 #include "tileanim.h"
 #include "u4.h"

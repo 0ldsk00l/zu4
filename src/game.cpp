@@ -48,6 +48,7 @@
 #include "sound.h"
 #include "spell.h"
 #include "stats.h"
+#include "random.h"
 #include "tilemap.h"
 #include "tileset.h"
 #include "utils.h"

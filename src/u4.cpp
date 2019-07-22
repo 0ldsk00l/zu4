@@ -20,6 +20,7 @@
 #include "music.h"
 #include "person.h"
 #include "progress_bar.h"
+#include "random.h"
 #include "screen.h"
 #include "settings.h"
 #include "sound.h"

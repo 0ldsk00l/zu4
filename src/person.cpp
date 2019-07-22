@@ -26,6 +26,7 @@
 #include "savegame.h"
 #include "settings.h"
 #include "stats.h"
+#include "random.h"
 #include "types.h"
 #include "u4file.h"
 #include "utils.h"

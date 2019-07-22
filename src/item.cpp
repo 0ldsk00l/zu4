@@ -18,6 +18,7 @@
 #include "names.h"
 #include "player.h"
 #include "portal.h"
+#include "random.h"
 #include "savegame.h"
 #include "screen.h"
 #include "tileset.h"

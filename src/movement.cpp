@@ -15,6 +15,7 @@
 #include "creature.h"
 #include "object.h"
 #include "player.h"
+#include "random.h"
 #include "savegame.h"
 #include "tile.h"
 #include "utils.h"

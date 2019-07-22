@@ -5,6 +5,8 @@
 #ifndef EVENT_H
 #define EVENT_H
 
+#ifdef __cplusplus // FIXME: Dirty hack to allow C files to know inputs
+
 #include <list>
 #include <string>
 #include <vector>
@@ -15,6 +17,7 @@
 using std::string;
 
 #define eventHandler (EventHandler::getInstance())
+#endif
 
 #define U4_UP           '['
 #define U4_DOWN         '/'
@@ -37,6 +40,8 @@ using std::string;
 #define U4_LEFT_ALT     308
 #define U4_RIGHT_META   309
 #define U4_LEFT_META    310
+
+#ifdef __cplusplus
 
 extern int eventTimerGranularity;
 
@@ -306,5 +311,5 @@ protected:
 private:
     static EventHandler *instance;
 };
-
+#endif // ifdef __cplusplus
 #endif

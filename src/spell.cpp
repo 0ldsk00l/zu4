@@ -22,6 +22,7 @@
 #include "creature.h"
 #include "moongate.h"
 #include "player.h"
+#include "random.h"
 #include "screen.h"
 #include "settings.h"
 #include "tile.h"

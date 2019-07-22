@@ -19,6 +19,7 @@
 #include "game.h"
 #include "music.h"
 #include "player.h"
+#include "random.h"
 #include "savegame.h"
 #include "screen.h"
 #include "settings.h"

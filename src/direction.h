@@ -1,18 +1,18 @@
-/*
- * $Id: direction.h 2475 2005-08-22 05:46:10Z andrewtaylor $
- */
-
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum _Direction {
-    DIR_NONE,
-    DIR_WEST,
-    DIR_NORTH,
-    DIR_EAST,
-    DIR_SOUTH,
-    DIR_ADVANCE,
-    DIR_RETREAT
+	DIR_NONE,
+	DIR_WEST,
+	DIR_NORTH,
+	DIR_EAST,
+	DIR_SOUTH,
+	DIR_ADVANCE,
+	DIR_RETREAT
 } Direction;
 
 #define MASK_DIR(dir) (1 << (dir))
@@ -36,6 +36,9 @@ int dirGetBroadsidesDirs(Direction dir);
 Direction dirRandomDir(int valid_directions_mask);
 Direction dirNormalize(Direction orientation, Direction dir);
 Direction keyToDirection(int key);
-int directionToKey(Direction dir);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

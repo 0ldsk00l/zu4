@@ -18,6 +18,7 @@
 #include "savegame.h"
 #include "screen.h"     /* FIXME: remove dependence on this */
 #include "settings.h"
+#include "random.h"
 #include "textcolor.h"  /* required to change the color of screen message text */
 #include "tileset.h"
 #include "utils.h"

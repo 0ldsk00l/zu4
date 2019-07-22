@@ -7,6 +7,7 @@
 #include "conversation.h"
 #include "debug.h"
 #include "person.h"
+#include "random.h"
 #include "script.h"
 
 /* Static variable initialization */
