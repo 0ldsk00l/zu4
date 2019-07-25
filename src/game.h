@@ -36,6 +36,9 @@ typedef enum {
     VIEW_MIXTURES
 } ViewMode;
 
+// Temporary function that returns a C string directly FIXME
+const char *gameGetInputC();
+
 /**
  * A controller to read a player number.
  */

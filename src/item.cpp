@@ -26,8 +26,6 @@
 #include "utils.h"
 #include "weapon.h"
 
-using std::string;
-
 DestroyAllCreaturesCallback destroyAllCreaturesCallback;
 
 void itemSetDestroyAllCreaturesCallback(DestroyAllCreaturesCallback callback) {
@@ -58,7 +56,7 @@ void useTelescope(int notused);
 bool isReagentInInventory(int reag);
 void putReagentInInventory(int reag);
 bool isAbyssOpened(const Portal *p);
-void itemHandleStones(const string &color);
+void itemHandleStones(const char *color);
 
 static const ItemLocation items[] = {
     { "Mandrake Root", NULL, "mandrake1",
@@ -307,7 +305,7 @@ void useStone(int item) {
                 /* see if we have all the stones, if not, get more names! */
                 if (attr && needStoneNames) {
                     screenMessage("\n%c:", 'E'-needStoneNames);
-                    itemHandleStones(gameGetInput());
+                    itemHandleStones(gameGetInputC());
                 }
                 /* all the stones have been entered, verify them! */
                 else {
@@ -367,13 +365,13 @@ void useStone(int item) {
             screenMessage("\n\nAs thou doth approach, a voice rings out: What virtue dost stem from %s?\n\n", getBaseVirtueName(virtueMask));
         else screenMessage("\n\nA voice rings out:  What virtue exists independently of Truth, Love, and Courage?\n\n");
 
-        string virtue = gameGetInput();
+        const char *virtue = gameGetInputC();
 
-        if (strncasecmp(virtue.c_str(), getVirtueName((Virtue)c->location->coords.z), 6) == 0) {
+        if (strncasecmp(virtue, getVirtueName((Virtue)c->location->coords.z), 6) == 0) {
             /* now ask for stone */
             screenMessage("\n\nThe Voice says: Use thy Stone.\n\nColor:\n");
             needStoneNames = 1;
-            itemHandleStones(gameGetInput());
+            itemHandleStones(gameGetInputC());
         }
         else {
             screenMessage("\nHmm...No effect!\n");
@@ -387,7 +385,7 @@ void useStone(int item) {
              coords.x == 5 && coords.y == 5) {
         needStoneNames = 4;
         screenMessage("\n\nThere are holes for 4 stones.\nWhat colors:\nA:");        
-        itemHandleStones(gameGetInput());
+        itemHandleStones(gameGetInputC());
     }
     else screenMessage("\nNo place to Use them!\n");
     // This used to say "\nNo place to Use them!\nHmm...No effect!\n"
@@ -514,13 +512,13 @@ const ItemLocation *itemAtLocation(const Map *map, const Coords &coords) {
 /**
  * Uses the item indicated by 'shortname'
  */
-void itemUse(const string &shortname) {
+void itemUse(const char *shortname) {
     unsigned int i;
     const ItemLocation *item = NULL;
 
     for (i = 0; i < N_ITEMS; i++) {
         if (items[i].shortname &&
-            strcasecmp(items[i].shortname, shortname.c_str()) == 0) {
+            strcasecmp(items[i].shortname, shortname) == 0) {
             
             item = &items[i];
 
@@ -562,14 +560,14 @@ bool isAbyssOpened(const Portal *p) {
 /**
  * Handles naming of stones when used
  */
-void itemHandleStones(const string &color) {
+void itemHandleStones(const char *color) {
     bool found = false;
 
     for (int i = 0; i < 8; i++) {        
-        if (strcasecmp(color.c_str(), getStoneName((Virtue)i)) == 0 &&
+        if (strcasecmp(color, getStoneName((Virtue)i)) == 0 &&
             isStoneInInventory(1<<i)) {
             found = true;
-            itemUse(color.c_str());
+            itemUse(color);
         }
     }
     

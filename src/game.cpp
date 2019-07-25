@@ -1451,6 +1451,12 @@ string gameGetInput(int maxlen) {
     return ReadStringController::get(maxlen, TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
 }
 
+const char *gameGetInputC() { // FIXME: this whole function is temporary
+    screenEnableCursor();
+    screenShowCursor();
+    return ReadStringController::get(32, TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line).c_str();
+}
+
 int gameGetPlayer(bool canBeDisabled, bool canBeActivePlayer) {
     int player;
     if (c->saveGame->members <= 1)
