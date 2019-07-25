@@ -30,6 +30,7 @@ CSRCS=\
 		src/direction.c \
 		src/error.c \
 		src/io.c \
+		src/miniz.c \
 		src/names.c \
 		src/random.c \
 		src/rle.c \
