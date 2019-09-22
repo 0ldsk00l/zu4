@@ -8,8 +8,10 @@
 #include <libgen.h>
 
 #include "u4file.h"
-#include "unzip.h"
 #include "debug.h"
+#include "error.h"
+
+#include "miniz.h"
 
 using std::map;
 using std::string;
@@ -51,7 +53,11 @@ public:
     virtual long length();
 
 private:
-    unzFile zfile;
+    mz_zip_archive zip_archive;
+    mz_zip_archive_file_stat za_stat;
+    int za_index;
+    void *fptr;
+    long cur;
 };
 
 extern bool verbose;
@@ -197,8 +203,6 @@ void U4ZipPackageMgr::add(U4ZipPackage *package) {
 }
 
 U4ZipPackageMgr::U4ZipPackageMgr() {
-	unzFile f;
-	
     string upg_pathname(u4find_path("u4upgrad.zip", u4Path.u4ZipPaths));
     if (!upg_pathname.empty()) {
         /* upgrade zip is present */
@@ -313,36 +317,38 @@ U4ZipPackageMgr::U4ZipPackageMgr() {
 	} while (flag == 0);
 
 	if (flag) {
-		f = unzOpen(pathname.c_str());
-		if (!f)
-			return;
-	
-		//Now we detect the folder structure inside the zipfile.
-		if (unzLocateFile(f, "charset.ega", 2) == UNZ_OK) {
-			add(new U4ZipPackage(pathname, "", false));
-			
-    	} else if (unzLocateFile(f, "ultima4/charset.ega", 2) == UNZ_OK) {
-			add(new U4ZipPackage(pathname, "ultima4/", false));
-
-		} else if (unzLocateFile(f, "Ultima4/charset.ega", 2) == UNZ_OK) {
-			add(new U4ZipPackage(pathname, "Ultima4/", false));
-
-		} else if (unzLocateFile(f, "ULTIMA4/charset.ega", 2) == UNZ_OK) {
-			add(new U4ZipPackage(pathname, "ULTIMA4/", false));
-
-		} else if (unzLocateFile(f, "u4/charset.ega", 2) == UNZ_OK) {
-			add(new U4ZipPackage(pathname, "u4/", false));
-
-		} else if (unzLocateFile(f, "U4/charset.ega", 2) == UNZ_OK) {
-			add(new U4ZipPackage(pathname, "U4/", false));
-
+		// Open the zip
+		mz_zip_archive zip_archive;
+		memset(&zip_archive, 0, sizeof(zip_archive));
+		
+		// Check zip file validity
+		if (!mz_zip_reader_init_file(&zip_archive, pathname.c_str(), 0)) {
+			xu4_error(XU4_LOG_ERR, "Archive corrupt, exiting...\n");
 		}
-
-		unzClose(f);
-
+		
+		// Locate file to detect directory structure inside archive
+		// Revisit this, because miniz may not care about directory case sensitivity FIXME
+		if (mz_zip_reader_locate_file(&zip_archive, "charset.ega", NULL, 0) >= 0) {
+			add(new U4ZipPackage(pathname, "", false));
+		}
+		else if (mz_zip_reader_locate_file(&zip_archive, "ultima4/charset.ega", NULL, 0) >= 0) {
+			add(new U4ZipPackage(pathname, "ultima4/", false));
+		}
+		else if (mz_zip_reader_locate_file(&zip_archive, "Ultima4/charset.ega", NULL, 0) >= 0) {
+			add(new U4ZipPackage(pathname, "Ultima4/", false));
+		}
+		else if (mz_zip_reader_locate_file(&zip_archive, "ULTIMA4/charset.ega", NULL, 0) >= 0) {
+			add(new U4ZipPackage(pathname, "ULTIMA4/", false));
+		}
+		else if (mz_zip_reader_locate_file(&zip_archive, "u4/charset.ega", NULL, 0) >= 0) {
+			add(new U4ZipPackage(pathname, "u4/", false));
+		}
+		else if (mz_zip_reader_locate_file(&zip_archive, "U4/charset.ega", NULL, 0) >= 0) {
+			add(new U4ZipPackage(pathname, "U4/", false));
+		}
+		
+		mz_zip_reader_end(&zip_archive);
 	}
-	
-    /* scan for extensions */
 }
 
 U4ZipPackageMgr::~U4ZipPackageMgr() {
@@ -409,74 +415,82 @@ long U4FILE_stdio::length() {
  */
 U4FILE *U4FILE_zip::open(const string &fname, const U4ZipPackage *package) {
     U4FILE_zip *u4f;
-    unzFile f;
+    
+    mz_zip_archive za;
+    memset(&za, 0, sizeof(za));
 
-    f = unzOpen(package->getFilename().c_str());
-    if (!f)
-        return NULL;
-
+    // Check zip file validity
+	if (!mz_zip_reader_init_file(&za, package->getFilename().c_str(), 0)) {
+		return NULL;
+	}
+	
     string pathname = package->getInternalPath() + package->translate(fname);
-
-    if (unzLocateFile(f, pathname.c_str(), 2) == UNZ_END_OF_LIST_OF_FILE) {
-        unzClose(f);
-        return NULL;
-    }
-    unzOpenCurrentFile(f);
-
+	
+	int index = mz_zip_reader_locate_file(&za, pathname.c_str(), NULL, 0);
+	if (index == -1) {
+		mz_zip_reader_end(&za);
+		return NULL;
+	}
+	mz_zip_archive_file_stat stat;
+	mz_zip_reader_file_stat(&za, index, &stat);
+	void *ptr = mz_zip_reader_extract_to_heap(&za, index, NULL, 0);
+	
     u4f = new U4FILE_zip;
-    u4f->zfile = f;
+    u4f->zip_archive = za;
+    u4f->za_index = index;
+    u4f->za_stat = stat;
+    u4f->fptr = ptr;
+    u4f->cur = 0;
 
     return u4f;
 }
 
 void U4FILE_zip::close() {
-    unzClose(zfile);
+    mz_zip_reader_end(&zip_archive);
+    free(fptr);
 }
 
 int U4FILE_zip::seek(long offset, int whence) {
-    char *buf;
     long pos;
 
     ASSERT(whence != SEEK_END, "seeking with whence == SEEK_END not allowed with zipfiles");
-    pos = unztell(zfile);
-    if (whence == SEEK_CUR)
+    pos = cur;
+    
+    if (whence == SEEK_CUR) {
         offset = pos + offset;
-    if (offset == pos)
-        return 0;
+	}
+    
+    if (offset == pos) {
+		return 0;
+	}
+    
     if (offset < pos) {
-        unzCloseCurrentFile(zfile);
-        unzOpenCurrentFile(zfile);
         pos = 0;
+        cur = 0;
     }
+    
     ASSERT(offset - pos > 0, "error in U4FILE_zip::seek");
-    buf = new char[offset - pos];
-    unzReadCurrentFile(zfile, buf, offset - pos);
-    delete [] buf;
+	cur += offset - pos;
     return 0;
 }
 
 long U4FILE_zip::tell() {
-    return unztell(zfile);
+    return cur;
 }
 
 size_t U4FILE_zip::read(void *ptr, size_t size, size_t nmemb) {
-    size_t retval = unzReadCurrentFile(zfile, ptr, size * nmemb);
-    if (retval > 0)
-        retval = retval / size;
-
-    return retval;
+	size_t retval = nmemb == 288 ? 0 : nmemb; // MAJOR hack FIXME
+	if (retval) {
+		unsigned char *temp = (unsigned char*)fptr;
+		memcpy(ptr, temp + cur, size * nmemb);
+		cur += retval;
+	}
+	return retval;
 }
 
 int U4FILE_zip::getc() {
-    int retval;
-    unsigned char c;
-
-    if (unzReadCurrentFile(zfile, &c, 1) > 0)
-        retval = c;
-    else
-        retval = EOF;
-
-    return retval;
+	unsigned char *retptr = (unsigned char*)fptr;
+	return (int)retptr[cur++];
 }
 
 int U4FILE_zip::putc(int c) {
@@ -485,13 +499,7 @@ int U4FILE_zip::putc(int c) {
 }
 
 long U4FILE_zip::length() {
-    unz_file_info fileinfo;
-
-    unzGetCurrentFileInfo(zfile, &fileinfo,
-                          NULL, 0,
-                          NULL, 0,
-                          NULL, 0);
-    return fileinfo.uncompressed_size;
+    return za_stat.m_uncomp_size;
 }
 
 /**
