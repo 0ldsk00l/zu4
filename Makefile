@@ -12,7 +12,7 @@ FEATURES=-DHAVE_BACKTRACE=1 -DHAVE_VARIADIC_MACROS=1
 #DEBUGCXXFLAGS=-ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
 CXXFLAGS=$(FEATURES) -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags) -DVERSION=\"$(VERSION)\" $(DEBUGCXXFLAGS)
 CFLAGS=$(CXXFLAGS)
-LIBS=$(UILIBS) $(shell xml2-config --libs) -lpng
+LIBS=$(UILIBS) $(shell xml2-config --libs)
 INSTALL=install
 
 ifeq ($(STATIC_GCC_LIBS),true)

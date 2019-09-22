@@ -10,6 +10,7 @@
 #include "error.h"
 #include "image.h"
 #include "imageloader.h"
+#include "imageloader_png.h"
 #include "imagemgr.h"
 #include "intro.h"
 #include "settings.h"
@@ -592,22 +593,31 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
     if (file) {
         TRACE(*logger, string("loading image from file '") + info->filename + string("'"));
 
-        if (info->filetype.empty())
+        if (info->filetype.empty()) {
             info->filetype = guessFileType(info->filename);
+		}
+		
         string filetype = info->filetype;
-        ImageLoader *loader = ImageLoader::getLoader(filetype);
-        if (loader == NULL)
-            xu4_error(XU4_LOG_WRN, "can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
-        else
-        {
-			unscaled = loader->load(file, info->width, info->height, info->depth);
-			if (info->width == -1) {
-				// Write in the values for later use.
-				info->width = unscaled->width();
-				info->height = unscaled->height();
-	// ###            info->depth = ???
+		
+        if (filetype == "image/png") {
+			unscaled = xu4_png_load(info->filename.c_str(), &info->width, &info->height);
+		}
+        else {
+			ImageLoader *loader = ImageLoader::getLoader(filetype);
+			
+			if (loader == NULL) {
+				xu4_error(XU4_LOG_WRN, "can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
 			}
-        }
+			else {
+				unscaled = loader->load(file, info->width, info->height, info->depth);
+				if (info->width == -1) {
+					// Write in the values for later use.
+					info->width = unscaled->width();
+					info->height = unscaled->height();
+					// ###            info->depth = ???
+				}
+			}
+		}
         u4fclose(file);
     }
     else
