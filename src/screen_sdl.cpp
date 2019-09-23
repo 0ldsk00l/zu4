@@ -75,9 +75,7 @@ void screenInit_sys() {
         SDL_ShowCursor(SDL_DISABLE);
     }
 
-    filterScaler = scalerGet(settings.filter);
-    if (!filterScaler)
-        xu4_error(XU4_LOG_ERR, "%s is not a valid filter", settings.filter.c_str());
+    filterScaler = scalerGet("point");
 
     screenRefreshThreadInit();
 }
@@ -284,11 +282,6 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
 		dest = (*filterScaler)(src, 2, n);
 		src = dest;
 		scale /= 2;
-	}
-	if (scale == 3 && scaler3x(settings.filter)) {
-		dest = (*filterScaler)(src, 3, n);
-		src = dest;
-		scale /= 3;
 	}
 
 	if (scale != 1)

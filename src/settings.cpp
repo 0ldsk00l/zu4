@@ -29,9 +29,6 @@ bool SettingsData::operator==(const SettingsData &s) const {
     intptr_t offset = (intptr_t)&end_of_bitwise_comparators - (intptr_t)this;
     if (memcmp(this, &s, offset) != 0)
         return false;
-
-    if (filter != s.filter)
-        return false;
     if (gemLayout != s.gemLayout)
         return false;
     if (lineOfSight != s.lineOfSight)
@@ -114,7 +111,6 @@ bool Settings::read() {
     /* default settings */
     scale                 = DEFAULT_SCALE;
     fullscreen            = DEFAULT_FULLSCREEN;
-    filter                = DEFAULT_FILTER;
     videoType             = DEFAULT_VIDEO_TYPE;
     gemLayout             = DEFAULT_GEM_LAYOUT;
     lineOfSight           = DEFAULT_LINEOFSIGHT;
@@ -181,8 +177,6 @@ bool Settings::read() {
             scale = (unsigned int) strtoul(buffer + strlen("scale="), NULL, 0);
         else if (strstr(buffer, "fullscreen=") == buffer)
             fullscreen = (int) strtoul(buffer + strlen("fullscreen="), NULL, 0);
-        else if (strstr(buffer, "filter=") == buffer)
-            filter = buffer + strlen("filter=");
         else if (strstr(buffer, "video=") == buffer)
             videoType = buffer + strlen("video=");
         else if (strstr(buffer, "gemLayout=") == buffer)
@@ -323,7 +317,6 @@ bool Settings::write() {
     fprintf(settingsFile, 
             "scale=%d\n"
             "fullscreen=%d\n"
-            "filter=%s\n"
             "video=%s\n"
             "gemLayout=%s\n"
             "lineOfSight=%s\n"
@@ -369,7 +362,6 @@ bool Settings::write() {
             "transparentTileShadowSize=%d\n",
             scale,
             fullscreen,
-            filter.c_str(),
             videoType.c_str(),
             gemLayout.c_str(),
             lineOfSight.c_str(),

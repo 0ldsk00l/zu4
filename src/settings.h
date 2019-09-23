@@ -28,7 +28,6 @@ using std::string;
 
 #define DEFAULT_SCALE                   4
 #define DEFAULT_FULLSCREEN              0
-#define DEFAULT_FILTER                  "point"
 #define DEFAULT_VIDEO_TYPE              "VGA"
 #define DEFAULT_GEM_LAYOUT              "Standard"
 #define DEFAULT_LINEOFSIGHT             "DOS"
@@ -134,7 +133,6 @@ public:
      */ 
     long                end_of_bitwise_comparators;
 
-    string              filter;
     string              gemLayout;
     string              lineOfSight;
     string              videoType;

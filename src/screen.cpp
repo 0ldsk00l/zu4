@@ -90,9 +90,6 @@ extern void screenDelete_sys();
 void screenInit() {
     filterNames.clear();
     filterNames.push_back("point");
-    filterNames.push_back("2xBi");
-    filterNames.push_back("2xSaI");
-    filterNames.push_back("Scale2x");
     
     lineOfSightStyles.clear();
     lineOfSightStyles.push_back("DOS");
@@ -102,9 +99,6 @@ void screenInit() {
     gemTilesInfo = NULL;
     
     screenLoadGraphicsFromConf();
-    
-    if (verbose)
-        printf("using %s scaler\n", settings.filter.c_str());
       
     screenInit_sys();
     

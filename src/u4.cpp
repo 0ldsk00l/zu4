@@ -88,19 +88,7 @@ int main(int argc, char *argv[]) {
 
     /* update the settings based upon command-line arguments */
     for (i = 1; i < (unsigned int)argc; i++) {
-        if (strcmp(argv[i], "-filter") == 0
-          || strcmp(argv[i], "--filter") == 0)
-        {
-            if ((unsigned int)argc > i + 1)
-            {
-                settings.filter = argv[i+1];
-                i++;
-            }
-            else
-                xu4_error(XU4_LOG_ERR, "%s is invalid alone: Requires a string for input. See --help for more detail.\n", argv[i]);
-
-        }
-        else if (strcmp(argv[i], "-s") == 0
+        if (strcmp(argv[i], "-s") == 0
                || strcmp(argv[i], "-scale") == 0
                || strcmp(argv[i], "--scale") == 0)
         {
