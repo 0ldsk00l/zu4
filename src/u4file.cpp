@@ -488,10 +488,10 @@ long U4FILE_zip::tell() {
 }
 
 size_t U4FILE_zip::read(void *ptr, size_t size, size_t nmemb) {
-	size_t retval = nmemb == 288 ? 0 : nmemb; // MAJOR hack FIXME
+	size_t retval = nmemb * size;
 	if (retval) {
 		unsigned char *temp = (unsigned char*)fptr;
-		memcpy(ptr, temp + cur, size * nmemb);
+		memcpy(ptr, temp + cur, retval);
 		cur += retval;
 	}
 	return retval;
