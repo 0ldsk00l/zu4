@@ -600,7 +600,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         string filetype = info->filetype;
 		
         if (filetype == "image/png") {
-			unscaled = xu4_png_load(info->filename.c_str(), &info->width, &info->height);
+			unscaled = xu4_png_load(u4find_graphics(info->filename).c_str(), &info->width, &info->height);
 		}
         else {
 			ImageLoader *loader = ImageLoader::getLoader(filetype);

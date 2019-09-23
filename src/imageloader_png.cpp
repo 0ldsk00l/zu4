@@ -43,15 +43,9 @@ static void setFromRawData(Image *image, int width, int height, unsigned char *r
 }
 
 Image* xu4_png_load(const char *filename, int *x, int *y) {
-	char fullpath[128];
-	snprintf(fullpath, sizeof(fullpath), "graphics/%s", filename);
-	
-	int bpp = 0;
-	unsigned char *pixels = stbi_load(fullpath, x, y, &bpp, STBI_rgb_alpha);
+	unsigned char *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
 	Image *image = Image::create(*x, *y, 0, Image::HARDWARE);
-	
 	setFromRawData(image, *x, *y, pixels); // Always 32 with this method
-	
 	stbi_image_free(pixels);
 	return image;
 }
