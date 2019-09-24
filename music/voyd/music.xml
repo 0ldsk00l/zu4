@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<music>
+    <track file="voyd/voyd-wander.ogg"/>
+    <track file="voyd/voyd-towns.ogg"/>
+    <track file="voyd/voyd-shrines.ogg"/>
+    <track file="voyd/voyd-shopping.ogg"/>
+    <track file="voyd/voyd-rulebritannia.ogg"/>
+    <track file="voyd/voyd-fanfare.ogg"/>
+    <track file="voyd/voyd-dungeon.ogg"/>
+    <track file="voyd/voyd-combat.ogg"/>
+    <track file="voyd/voyd-castles.ogg"/>
+</music>
