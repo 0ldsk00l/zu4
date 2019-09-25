@@ -27,6 +27,7 @@ CSRCS=\
 		src/lzw/hash.c \
 		src/lzw/lzw.c \
 		src/lzw/u4decode.c \
+		src/cmixer.c \
 		src/direction.c \
 		src/error.c \
 		src/io.c \
@@ -35,6 +36,7 @@ CSRCS=\
 		src/random.c \
 		src/rle.c \
 		src/savegame.c \
+		src/stb_vorbis.c \
 		src/u4_sdl.c
 
 CXXSRCS=\
@@ -198,4 +200,3 @@ all.static_gcc_libs:
 	rm -f libstdc++.a
 
 -include .depends
-
