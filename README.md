@@ -14,6 +14,6 @@ make
 * Greatly simplify the codebase
 * Update to use modern libraries
 * Convert from ugly C++ to beautiful C
-* Render to a texture instead of use SDL directly
 * Interally generate all audio instead of using SDL
 * Make it "Just Work"
+* Come up with a new name to avoid confusion
