@@ -121,12 +121,10 @@ void xu4_music_stop() {
 
 void xu4_music_fadeout(int msecs) {
 	// fade the music out even if 'on' is false
-	if (!functional)
-		return;
+	if (!functional) { return; }
 
 	if (xu4_music_playing()) {
-		if (!settings.volumeFades)
-			xu4_music_stop();
+		if (!settings.volumeFades) { xu4_music_stop(); }
 		else {
 			if (Mix_FadeOutMusic(msecs) == -1) {
 				xu4_error(XU4_LOG_WRN, "Mix_FadeOutMusic: %s\n", Mix_GetError());
@@ -136,16 +134,17 @@ void xu4_music_fadeout(int msecs) {
 }
 
 void xu4_music_fadein(int msecs, bool loadFromMap) {
-	if (!functional || !on)
-		return;
+	if (!functional || !on) { return; }
 
 	if (!xu4_music_playing()) {
 		/* make sure we've got something loaded to play */
-		if (loadFromMap || !playing)
+		if (loadFromMap || !playing) {
 			xu4_music_load(c->location->map->music);
+		}
 
-		if (!settings.volumeFades)
+		if (!settings.volumeFades) {
 			xu4_music_play();
+		}
 		else {
 			if (Mix_FadeInMusic(playing, NLOOPS, msecs) == -1) {
 				xu4_error(XU4_LOG_WRN, "Mix_FadeInMusic: %s\n", Mix_GetError());
@@ -159,18 +158,14 @@ void xu4_music_vol(int volume) {
 }
 
 int xu4_music_vol_inc() {
-    if (++settings.musicVol > MAX_VOLUME)
-        settings.musicVol = MAX_VOLUME;
-    else
-        xu4_music_vol(settings.musicVol);
+    if (++settings.musicVol > MAX_VOLUME) { settings.musicVol = MAX_VOLUME; }
+    else { xu4_music_vol(settings.musicVol); }
     return (settings.musicVol * 100 / MAX_VOLUME);  // percentage
 }
 
 int xu4_music_vol_dec() {
-    if (--settings.musicVol < 0)
-        settings.musicVol = 0;
-    else
-        xu4_music_vol(settings.musicVol);
+    if (--settings.musicVol < 0) { settings.musicVol = 0; }
+    else { xu4_music_vol(settings.musicVol); }
     return (settings.musicVol * 100 / MAX_VOLUME);  // percentage
 }
 
@@ -180,33 +175,19 @@ void xu4_snd_vol(int volume) {
 }
 
 int xu4_snd_vol_inc() {
-    if (++settings.soundVol > MAX_VOLUME)
-        settings.soundVol = MAX_VOLUME;
-    else
-        xu4_snd_vol(settings.soundVol);
+    if (++settings.soundVol > MAX_VOLUME) { settings.soundVol = MAX_VOLUME; }
+    else { xu4_snd_vol(settings.soundVol); }
     return (settings.soundVol * 100 / MAX_VOLUME);  // percentage
 }
 
 int xu4_snd_vol_dec() {
-    if (--settings.soundVol < 0)
-        settings.soundVol = 0;
-    else
-        xu4_snd_vol(settings.soundVol);
+    if (--settings.soundVol < 0) { settings.soundVol = 0; }
+    else { xu4_snd_vol(settings.soundVol); }
     return (settings.soundVol * 100 / MAX_VOLUME);  // percentage
-}
-
-// Ensures that the music is playing if it is supposed to be, or off
-// if it is supposed to be turned off.
-static void xu4_music_callback(void *data) {    
-	eventHandler->getTimer()->remove(&xu4_music_callback);
-	if (on && !xu4_music_playing()) { xu4_music_play(); }
-	else if (!on && xu4_music_playing()) { xu4_music_stop(); }
 }
 
 // Toggle the music on/off (usually by pressing 'v')
 bool xu4_music_toggle() {
-    eventHandler->getTimer()->remove(&xu4_music_callback);
-	
     on = !on;
     if (!on) {
         xu4_music_fadeout(1000);
@@ -214,8 +195,6 @@ bool xu4_music_toggle() {
     else {
         xu4_music_fadein(1000, true);
 	}
-	
-    eventHandler->getTimer()->add(&xu4_music_callback, settings.gameCyclesPerSecond);
     return on;    
 }
 
@@ -244,7 +223,4 @@ void xu4_music_init() {
 	xu4_snd_vol(settings.soundVol);
 }
 
-void xu4_music_deinit() {
-    eventHandler->getTimer()->remove(&xu4_music_callback);
-	xu4_music_destroy_sys();
-}
+void xu4_music_deinit() { xu4_music_destroy_sys(); }
