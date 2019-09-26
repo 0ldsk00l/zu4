@@ -1,15 +1,13 @@
 /*
  * $Id: music.cpp 3019 2012-03-18 11:31:13Z daniel_santos $
  */
-
-
-/* FIXME: should this file have all SDL-related stuff extracted and put in music_sdl.c? */
-// Yes! :)
-
-
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include "u4_sdl.h"
 
 #include "music.h"
 #include "sound.h"
@@ -27,203 +25,226 @@
 using std::string;
 using std::vector;
 
-/*
- * Static variables
- */
-Music *Music::instance = NULL;
-bool Music::fading = false;
-bool Music::on = false;
-bool Music::functional = true;
+// C-like stuff
+static char musicfiles[TRACK_MAX][128] = {{0}};
+static int current;
+static bool on = false;
+static bool functional = true;
 
-/*
- * Constructors/Destructors
- */
+OSMusicMixer *playing = NULL;
 
-/**
- * Initiliaze the music
- */
-Music::Music() : introMid(TOWNS), current(NONE), playing(NULL), logger(new Debug("debug/music.txt", "Music")) {
-    filenames.reserve(MAX);
-    filenames.push_back("");    // filename for MUSIC_NONE;
+static void xu4_music_create_sys() {
+	// initialize sound subsystem
+	int audio_rate = 44100;
+	int audio_format = AUDIO_S16SYS;
+	int audio_channels = 2;
+	int audio_buffers = 1024;
 
-    TRACE(*logger, "Initializing music");
+	if (u4_SDL_InitSubSystem(SDL_INIT_AUDIO) == -1) {
+		xu4_error(XU4_LOG_WRN, "unable to init SDL audio subsystem: %s", SDL_GetError());
+		functional = false;
+		return;
+	}
 
-    /*
-     * load music track filenames from xml config file
-     */
-    const Config *config = Config::getInstance();
+	if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
+		fprintf(stderr, "Unable to open audio!\n");
+		functional = false;
+		return;
+	}
+	functional = true;
 
-    TRACE_LOCAL(*logger, "Loading music tracks");
-
-    vector<ConfigElement> musicConfs = config->getElement("music").getChildren();
-    std::vector<ConfigElement>::const_iterator i = musicConfs.begin();
-    std::vector<ConfigElement>::const_iterator theEnd = musicConfs.end();
-    for (; i != theEnd; ++i) {
-        if (i->getName() != "track")
-            continue;
-
-        filenames.push_back(i->getString("file"));
-        TRACE_LOCAL(*logger, string("\tTrack file: ") + filenames.back());
-    }
-
-	create_sys(); // Call the Sound System specific creation file.
-
-	// Set up the volume.
-    on = settings.musicVol;
-    setMusicVolume(settings.musicVol);
-    setSoundVolume(settings.soundVol);
-    TRACE(*logger, string("Music initialized: volume is ") + (on ? "on" : "off"));
+	Mix_AllocateChannels(16);
 }
 
-/**
- * Stop playing the music and cleanup
- */
-Music::~Music() {
-    TRACE(*logger, "Uninitializing music");
-    eventHandler->getTimer()->remove(&Music::callback);
-	destroy_sys(); // Call the Sound System specific destruction file.
-
-    TRACE(*logger, "Music uninitialized");
-    delete logger;
-}
-
-
-bool Music::load(Type music) {
-    ASSERT(music < MAX, "Attempted to load an invalid piece of music in Music::load()");
-
-    /* music already loaded */
-    if (music == current) {
-        /* tell calling function it didn't load correctly (because it's already playing) */
-        if (isPlaying())
-            return false;
-        /* it loaded correctly */
-        else 
-            return true;
+static void xu4_music_destroy_sys() {
+    if (playing) {
+        Mix_FreeMusic(playing);
+        playing = NULL;
     }
 
-    string pathname(u4find_music(filenames[music]));
-    if (!pathname.empty()) {
-		bool status = load_sys(pathname);
-		if (status)
-			current = music;
+    Mix_CloseAudio();
+    u4_SDL_QuitSubSystem(SDL_INIT_AUDIO);
+}
+
+static bool xu4_music_load_sys(const char *pathname) {
+	if (playing) {
+		Mix_FreeMusic(playing);
+		playing = NULL;
+	}
+
+	playing = Mix_LoadMUS(pathname);
+	if (!playing) {
+		xu4_error(XU4_LOG_WRN, "unable to load music file %s: %s", pathname, Mix_GetError());
+		return false;
+	}
+	return true;
+}
+
+bool xu4_music_load(int music) {
+	ASSERT(music < TRACK_MAX, "Attempted to load an invalid piece of music in Music::load()");
+	
+	// music already loaded
+	if (music == current) { return !xu4_music_playing(); }
+	
+	string pathname(u4find_music(musicfiles[music]));
+	if (!pathname.empty()) {
+		bool status = xu4_music_load_sys(pathname.c_str());
+		if (status) { current = music; }
 		return status;
-    }
-    return false;
+	}
+	return false;
 }
 
-/**
- * Ensures that the music is playing if it is supposed to be, or off
- * if it is supposed to be turned off.
- */
-void Music::callback(void *data) {    
-    eventHandler->getTimer()->remove(&Music::callback);
-
-    if (musicMgr->on && !isPlaying())
-        musicMgr->play();
-    else if (!musicMgr->on && isPlaying())
-        musicMgr->stop();
-}
-    
-/**
- * Main music loop
- */
-void Music::play() {
-    playMid(c->location->map->music);
+bool xu4_music_functional() {
+	return functional;
 }
 
-/**
- * Cycle through the introduction music
- */
-void Music::introSwitch(int n) {
-    if (n > NONE && n < MAX) {
-        introMid = static_cast<Type>(n);
-        intro();
+bool xu4_music_playing() {
+	return Mix_PlayingMusic();
+}
+
+void xu4_music_play_track(int music) {
+    if (!functional || !on) { return; }
+	
+    if (xu4_music_load(music)) {
+        Mix_PlayMusic(playing, NLOOPS);
     }
 }
 
-/**
- * Toggle the music on/off (usually by pressing 'v')
- */
-bool Music::toggle() {
-    eventHandler->getTimer()->remove(&Music::callback);
-
-    on = !on;
-    if (!on)
-        fadeOut(1000);
-    else
-        fadeIn(1000, true);
-
-    eventHandler->getTimer()->add(&Music::callback, settings.gameCyclesPerSecond);
-    return on;    
+void xu4_music_play() {
+    xu4_music_play_track(c->location->map->music);
 }
 
-/**
- * Fade out the music
- */
-void Music::fadeOut(int msecs) {
+void xu4_music_stop() {
+    Mix_HaltMusic();
+}
+
+void xu4_music_fadeout(int msecs) {
 	// fade the music out even if 'on' is false
 	if (!functional)
 		return;
 
-	if (isPlaying()) {
+	if (xu4_music_playing()) {
 		if (!settings.volumeFades)
-			stop();
+			xu4_music_stop();
 		else {
-			fadeOut_sys(msecs);
+			if (Mix_FadeOutMusic(msecs) == -1) {
+				xu4_error(XU4_LOG_WRN, "Mix_FadeOutMusic: %s\n", Mix_GetError());
+			}
 		}
 	}
 }
 
-/**
- * Fade in the music
- */
-void Music::fadeIn(int msecs, bool loadFromMap) {
+void xu4_music_fadein(int msecs, bool loadFromMap) {
 	if (!functional || !on)
 		return;
 
-	if (!isPlaying()) {
+	if (!xu4_music_playing()) {
 		/* make sure we've got something loaded to play */
 		if (loadFromMap || !playing)
-			load(c->location->map->music);
+			xu4_music_load(c->location->map->music);
 
 		if (!settings.volumeFades)
-			play();
+			xu4_music_play();
 		else {
-			fadeIn_sys(msecs, loadFromMap);
+			if (Mix_FadeInMusic(playing, NLOOPS, msecs) == -1) {
+				xu4_error(XU4_LOG_WRN, "Mix_FadeInMusic: %s\n", Mix_GetError());
+			}
 		}
 	}
 }
 
-int Music::increaseMusicVolume() {
+void xu4_music_vol(int volume) {
+    Mix_VolumeMusic(int((float)MIX_MAX_VOLUME / MAX_VOLUME * volume));
+}
+
+int xu4_music_vol_inc() {
     if (++settings.musicVol > MAX_VOLUME)
         settings.musicVol = MAX_VOLUME;
     else
-        setMusicVolume(settings.musicVol);
+        xu4_music_vol(settings.musicVol);
     return (settings.musicVol * 100 / MAX_VOLUME);  // percentage
 }
 
-int Music::decreaseMusicVolume() {
+int xu4_music_vol_dec() {
     if (--settings.musicVol < 0)
         settings.musicVol = 0;
     else
-        setMusicVolume(settings.musicVol);
+        xu4_music_vol(settings.musicVol);
     return (settings.musicVol * 100 / MAX_VOLUME);  // percentage
 }
 
+void xu4_snd_vol(int volume) {
+    // Use Channel 1 for sound effects
+    Mix_Volume(1, int((float)MIX_MAX_VOLUME / MAX_VOLUME * volume));
+}
 
-
-int Music::increaseSoundVolume() {
+int xu4_snd_vol_inc() {
     if (++settings.soundVol > MAX_VOLUME)
         settings.soundVol = MAX_VOLUME;
     else
-        setSoundVolume(settings.soundVol);
+        xu4_snd_vol(settings.soundVol);
     return (settings.soundVol * 100 / MAX_VOLUME);  // percentage
 }
 
-int Music::decreaseSoundVolume() {
+int xu4_snd_vol_dec() {
     if (--settings.soundVol < 0)
         settings.soundVol = 0;
     else
-        setSoundVolume(settings.soundVol);
+        xu4_snd_vol(settings.soundVol);
     return (settings.soundVol * 100 / MAX_VOLUME);  // percentage
+}
+
+// Ensures that the music is playing if it is supposed to be, or off
+// if it is supposed to be turned off.
+static void xu4_music_callback(void *data) {    
+	eventHandler->getTimer()->remove(&xu4_music_callback);
+	if (on && !xu4_music_playing()) { xu4_music_play(); }
+	else if (!on && xu4_music_playing()) { xu4_music_stop(); }
+}
+
+// Toggle the music on/off (usually by pressing 'v')
+bool xu4_music_toggle() {
+    eventHandler->getTimer()->remove(&xu4_music_callback);
+	
+    on = !on;
+    if (!on) {
+        xu4_music_fadeout(1000);
+	}
+    else {
+        xu4_music_fadein(1000, true);
+	}
+	
+    eventHandler->getTimer()->add(&xu4_music_callback, settings.gameCyclesPerSecond);
+    return on;    
+}
+
+// Initiliaze the music
+void xu4_music_init() {
+	current = TRACK_NONE;
+	playing = NULL;
+	
+	// load music track filenames from xml config file
+	const Config *config = Config::getInstance();
+	
+	vector<ConfigElement> musicConfs = config->getElement("music").getChildren();
+	std::vector<ConfigElement>::const_iterator i = musicConfs.begin();
+	std::vector<ConfigElement>::const_iterator theEnd = musicConfs.end();
+	for (; i != theEnd; ++i) {
+		if (i->getName() != "track") continue;
+		int j = (i - musicConfs.begin()) + 1; // major hack while converting away from C++
+		snprintf(musicfiles[j], sizeof(musicfiles[j]), "%s", i->getString("file").c_str());
+	}
+	
+	xu4_music_create_sys(); // Call the Sound System specific creation file.
+	
+	// Set up the volume.
+	on = settings.musicVol;
+	xu4_music_vol(settings.musicVol);
+	xu4_snd_vol(settings.soundVol);
+}
+
+void xu4_music_deinit() {
+    eventHandler->getTimer()->remove(&xu4_music_callback);
+	xu4_music_destroy_sys();
 }

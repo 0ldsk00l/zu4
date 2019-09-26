@@ -226,6 +226,6 @@ void Shrine::showVision(bool elevated) {
 
 void Shrine::eject() {
     game->exitToParentMap();
-    musicMgr->play();
+    xu4_music_play();
     c->location->turnCompleter->finishTurn();
 }

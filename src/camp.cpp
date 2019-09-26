@@ -60,7 +60,7 @@ void CampController::begin() {
 
     CombatController::begin();
 
-    musicMgr->camp();
+    xu4_music_fadeout(CAMP_FADE_OUT_TIME);
 
     screenMessage("Resting...\n");
     screenDisableCursor();
@@ -73,7 +73,7 @@ void CampController::begin() {
     if (settings.campingAlwaysCombat || (xu4_random(8) == 0)) {        
         const Creature *m = creatureMgr->randomAmbushing();
                 
-        musicMgr->play();        
+        xu4_music_play();
         screenMessage("Ambushed!\n");
         
         /* create an ambushing creature (so it leaves a chest) */
@@ -101,7 +101,7 @@ void CampController::begin() {
     
         eventHandler->popController();
         game->exitToParentMap();
-        musicMgr->fadeIn(CAMP_FADE_IN_TIME, true);
+        xu4_music_fadein(CAMP_FADE_IN_TIME, true);
         delete this;
     }
 }
@@ -141,7 +141,7 @@ void InnController::begin() {
 
     /* in the original, the vendor music plays straight through sleeping */
     if (settings.enhancements)
-        musicMgr->fadeOut(INN_FADE_OUT_TIME); /* Fade volume out to ease into rest */
+        xu4_music_fadeout(INN_FADE_OUT_TIME); /* Fade volume out to ease into rest */
     
     EventHandler::wait_msecs(INN_FADE_OUT_TIME);
 
@@ -179,7 +179,7 @@ void InnController::begin() {
     screenMessage("\nMorning!\n");
     screenPrompt();
 
-    musicMgr->fadeIn(INN_FADE_IN_TIME, true);
+    xu4_music_fadein(INN_FADE_IN_TIME, true);
 }
 
 bool InnController::heal() {

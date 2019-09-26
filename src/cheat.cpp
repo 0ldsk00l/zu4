@@ -319,7 +319,7 @@ bool CheatMenuController::keyPressed(int key) {
         screenMessage("\nX-it!\n");        
         if (!game->exitToParentMap())
             screenMessage("Not Here!\n");
-        musicMgr->play();
+        xu4_music_play();
         break;
 
     case 'y':
@@ -329,7 +329,7 @@ bool CheatMenuController::keyPressed(int key) {
         else {
             screenMessage("Leaving...\n");
             game->exitToParentMap();
-            musicMgr->play();
+            xu4_music_play();
         }
         break;
 

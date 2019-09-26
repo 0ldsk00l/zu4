@@ -184,7 +184,7 @@ void GameController::initScreen()
 
 void GameController::initScreenWithoutReloadingState()
 {
-    musicMgr->play();
+    xu4_music_play();
     imageMgr->get(BKGD_BORDERS)->image->draw(0, 0);
     c->stats->update(); /* draw the party stats */
 
@@ -1031,25 +1031,25 @@ bool GameController::keyPressed(int key) {
         /* handle music volume adjustments */
         case ',':
             // decrease the volume if possible
-            screenMessage("Music: %d%s\n", musicMgr->decreaseMusicVolume(), "%");
+            screenMessage("Music: %d%s\n", xu4_music_vol_dec(), "%");
             endTurn = false;
             break;
         case '.':
             // increase the volume if possible
-            screenMessage("Music: %d%s\n", musicMgr->increaseMusicVolume(), "%");
+            screenMessage("Music: %d%s\n", xu4_music_vol_inc(), "%");
             endTurn = false;
             break;
 
         /* handle sound volume adjustments */
         case '<':
             // decrease the volume if possible
-            screenMessage("Sound: %d%s\n", musicMgr->decreaseSoundVolume(), "%");
+            screenMessage("Sound: %d%s\n", xu4_snd_vol_dec(), "%");
             soundPlay(SOUND_FLEE);
             endTurn = false;
             break;
         case '>':
             // increase the volume if possible
-            screenMessage("Sound: %d%s\n", musicMgr->increaseSoundVolume(), "%");
+            screenMessage("Sound: %d%s\n", xu4_snd_vol_inc(), "%");
             soundPlay(SOUND_FLEE);
             endTurn = false;
             break;
@@ -1216,7 +1216,7 @@ bool GameController::keyPressed(int key) {
 		}
 
         case 'v':
-            if (musicMgr->toggle())
+            if (xu4_music_toggle())
                 screenMessage("Volume On!\n");
             else
                 screenMessage("Volume Off!\n");
@@ -1365,7 +1365,7 @@ bool GameController::keyPressed(int key) {
 
                 // Fade out the music and hide the cursor
                 //before returning to the menu.
-                musicMgr->fadeOut(1000);
+                xu4_music_fadeout(1000);
                 screenHideCursor();
 
                 intro->init();
@@ -2249,7 +2249,7 @@ void GameController::avatarMoved(MoveEvent &event) {
     if (event.result & MOVE_EXIT_TO_PARENT) {
         screenMessage("%cLeaving...%c\n", FG_GREY, FG_WHITE);
         exitToParentMap();
-        musicMgr->play();
+        xu4_music_play();
     }
 
     /* things that happen while not on board the balloon */
@@ -2289,7 +2289,7 @@ void GameController::avatarMovedInDungeon(MoveEvent &event) {
     if (event.result & MOVE_EXIT_TO_PARENT) {
         screenMessage("%cLeaving...%c\n", FG_GREY, FG_WHITE);
         exitToParentMap();
-        musicMgr->play();
+        xu4_music_play();
     }
 
     /* check to see if we're entering a dungeon room */
@@ -3074,7 +3074,7 @@ bool GameController::checkMoongates() {
                 return true;
             
             setMap(shrine_spirituality, 1, NULL);
-            musicMgr->play();
+            xu4_music_play();
 
             shrine_spirituality->enter();
         }

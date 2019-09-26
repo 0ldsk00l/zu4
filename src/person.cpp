@@ -371,13 +371,13 @@ void Person::runCommand(Conversation *cnv, const ResponsePart &command) {
         cnv->state = Conversation::CONFIRMATION;
     }
     else if (command == ResponsePart::STARTMUSIC_LB) {
-        musicMgr->lordBritish();
+        xu4_music_play_track(TRACK_RULEBRIT);
     }
     else if (command == ResponsePart::STARTMUSIC_HW) {
-        musicMgr->hawkwind();
+        xu4_music_play_track(TRACK_SHOPPING);
     }
     else if (command == ResponsePart::STOPMUSIC) {
-        musicMgr->play();
+        xu4_music_play();
     }
     else if (command == ResponsePart::HAWKWIND) {
         c->party->adjustKarma(KA_HAWKWIND);

@@ -1,16 +1,5 @@
-/*
- * $Id: music.h 3036 2012-06-10 13:59:33Z twschulz $
- */
-
 #ifndef MUSIC_H
 #define MUSIC_H
-
-#include <string>
-#include <vector>
-
-#include "debug.h"
-
-#define musicMgr   (Music::getInstance())
 
 #define CAMP_FADE_OUT_TIME          1000
 #define CAMP_FADE_IN_TIME           0
@@ -18,105 +7,41 @@
 #define INN_FADE_IN_TIME            5000
 #define NLOOPS -1
 
+enum MusicTrack {
+	TRACK_NONE,
+	TRACK_OUTSIDE,
+	TRACK_TOWNS,
+	TRACK_SHRINES,
+	TRACK_SHOPPING,
+	TRACK_RULEBRIT,
+	TRACK_FANFARE,
+	TRACK_DUNGEON,
+	TRACK_COMBAT,
+	TRACK_CASTLES,
+	TRACK_MAX
+};
+
+bool xu4_music_load(int);
+bool xu4_music_functional();
+bool xu4_music_playing();
+void xu4_music_play_track(int);
+void xu4_music_play();
+void xu4_music_stop();
+void xu4_music_fadeout(int);
+void xu4_music_fadein(int, bool);
+void xu4_music_vol(int);
+int xu4_music_vol_dec();
+int xu4_music_vol_inc();
+void xu4_snd_vol(int);
+int xu4_snd_vol_dec();
+int xu4_snd_vol_inc();
+bool xu4_music_toggle();
+
+void xu4_music_init();
+void xu4_music_deinit();
+
 // SDL
 struct _Mix_Music;
 typedef _Mix_Music OSMusicMixer;
-
-
-
-class Music {
-public:
-    enum Type {
-        NONE,
-        OUTSIDE,
-        TOWNS,
-        SHRINES,
-        SHOPPING,
-        RULEBRIT,
-        FANFARE,
-        DUNGEON,
-        COMBAT,
-        CASTLES,
-        MAX
-    };
-    Music();
-    ~Music();
-    
-
-    /** Returns an instance of the Music class */
-    static Music *getInstance() {
-        if (!instance)
-            instance = new Music();
-        return instance;
-    }
-
-    /** Returns true if the mixer is playing any audio. */
-    static bool isPlaying() {return getInstance()->isPlaying_sys();}
-    static void callback(void *);    
-
-    void init() {}
-    void play();
-    void stop()         {on = false; stopMid();} /**< Stop playing music */
-    void fadeOut(int msecs);
-    void fadeIn(int msecs, bool loadFromMap);
-    void lordBritish()  {playMid(RULEBRIT); } /**< Music when you talk to Lord British */
-    void hawkwind()     {playMid(SHOPPING); } /**< Music when you talk to Hawkwind */
-    void camp()         {fadeOut(1000);     } /**< Music that plays while camping */
-    void shopping()     {playMid(SHOPPING); } /**< Music when talking to a vendor */
-    void intro()        
-    {
-        playMid(introMid);
-    } /**< Play the introduction music on title loadup */
-    void introSwitch(int n);
-    bool toggle();
-
-    int decreaseMusicVolume();
-    int increaseMusicVolume();
-    void setMusicVolume(int volume) {setMusicVolume_sys(volume);}
-    int decreaseSoundVolume();
-    int increaseSoundVolume();
-    void setSoundVolume(int volume) {setSoundVolume_sys(volume);}
-
-
-    /*
-     * Static variables
-     */
-private:
-    void create_sys();
-    void destroy_sys();
-    void setMusicVolume_sys(int volume);
-    void setSoundVolume_sys(int volume);
-    void fadeOut_sys(int msecs);
-    void fadeIn_sys(int msecs, bool loadFromMap);
-    bool isPlaying_sys();
-
-    static Music *instance;
-    static bool fading;
-    static bool on;
-
-
-    bool load_sys(const string &pathname);
-    void playMid(Type music);
-    void stopMid();
-
-    bool load(Type music);
-
-public:
-    static bool functional;
-
-    /*
-     * Properties
-     */
-    std::vector<std::string> filenames;
-    Type introMid;
-    Type current;
-    OSMusicMixer *playing;
-    Debug *logger;
-};
-
-
-
-
-
 
 #endif

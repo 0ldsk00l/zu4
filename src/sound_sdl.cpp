@@ -43,7 +43,7 @@ void SoundManager::play_sys(Sound sound, bool onlyOnce, int specificDurationInTi
 void SoundManager::stop_sys(int channel)
 {
     // If music didn't initialize correctly, then we shouldn't try to stop it
-    if (!musicMgr->functional || !settings.soundVol)
+    if (!xu4_music_functional() || !settings.soundVol)
         return;
 
     if (Mix_Playing(channel))

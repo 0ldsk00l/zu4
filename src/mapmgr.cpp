@@ -177,7 +177,8 @@ Map *MapMgr::initMapFromConf(const ConfigElement &mapConf) {
     if (mapConf.getBool("firstperson"))
         map->flags |= FIRST_PERSON;
 
-    map->music = static_cast<Music::Type>(mapConf.getInt("music"));
+    map->music = mapConf.getInt("music");
+    //printf("id: %d\t music: %d\tname: %s\n", map->id, map->music, map->fname.c_str());
     map->tileset = Tileset::get(mapConf.getString("tileset"));
     map->tilemap = TileMap::get(mapConf.getString("tilemap"));
 

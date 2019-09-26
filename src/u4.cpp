@@ -195,6 +195,9 @@ int main(int argc, char *argv[]) {
     ++pb;
 
     intro = new IntroController();
+    
+    xu4_music_init();
+    
     if (!skipIntro)
     {
         /* do the intro */
@@ -206,11 +209,6 @@ int main(int argc, char *argv[]) {
         perf.start();
         intro->preloadMap();
         perf.end("intro->preloadMap()");
-        ++pb;
-
-        perf.start();
-        musicMgr->init();
-        perf.end("musicMgr->init()");
         ++pb;
 
         /* give a performance report */
@@ -245,7 +243,7 @@ int main(int argc, char *argv[]) {
 
     Tileset::unloadAll();
 
-    delete musicMgr;
+    xu4_music_deinit();
     soundDelete();
     screenDelete();
 

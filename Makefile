@@ -84,7 +84,6 @@ CXXSRCS=\
 		src/moongate.cpp \
 		src/movement.cpp \
 		src/music.cpp \
-		src/music_sdl.cpp \
 		src/object.cpp \
 		src/person.cpp \
 		src/player.cpp \

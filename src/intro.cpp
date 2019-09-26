@@ -297,7 +297,7 @@ bool IntroController::init() {
         mode = INTRO_MENU;
         beastiesVisible = true;
         beastieOffset = 0;
-        musicMgr->intro();
+        xu4_music_play_track(TRACK_TOWNS);
     }
     else
     {
@@ -410,7 +410,7 @@ bool IntroController::keyPressed(int key) {
         case '7':
         case '8':
         case '9':
-            musicMgr->introSwitch(key - '0');
+            xu4_music_play_track(key - '0');
             break;
         default:
             valid = false;
@@ -1008,7 +1008,7 @@ void IntroController::timerFired() {
             // setup the map screen
             mode = INTRO_MAP;
             beastiesVisible = true;
-            musicMgr->intro();
+            xu4_music_play_track(TRACK_TOWNS);
             updateScreen();
         }
 
@@ -1168,21 +1168,21 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
 
         switch(event.getMenuItem()->getId()) {
             case MI_SOUND_01:
-                musicMgr->setMusicVolume(settingsChanged.musicVol);
+                xu4_music_vol(settingsChanged.musicVol);
                 break;
             case MI_SOUND_02:
-                musicMgr->setSoundVolume(settingsChanged.soundVol);
+                xu4_snd_vol(settingsChanged.soundVol);
                 soundPlay(SOUND_FLEE);
                 break;
             case USE_SETTINGS:
                 // save settings
                 settings.setData(settingsChanged);
                 settings.write();
-                musicMgr->intro();
+                xu4_music_play_track(TRACK_TOWNS);
                 break;
             case CANCEL:
-                musicMgr->setMusicVolume(settings.musicVol);
-                musicMgr->setSoundVolume(settings.soundVol);
+                xu4_music_vol(settings.musicVol);
+                xu4_snd_vol(settings.soundVol);
                 // discard settings
                 settingsChanged = settings;
                 break;
