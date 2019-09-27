@@ -142,7 +142,7 @@ void gameUpdateScreen(void);
 
 /* spell functions */
 void castSpell(int player = -1);
-void gameSpellEffect(int spell, int player, Sound sound);
+void gameSpellEffect(int spell, int player, int sound);
 
 /* action functions */
 void destroy();

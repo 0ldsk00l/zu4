@@ -101,18 +101,6 @@ int xu4_music_vol_dec() {
 	return (settings.musicVol * MAX_VOLUME);
 }
 
-void xu4_snd_vol(double volume) {
-
-}
-
-int xu4_snd_vol_inc() {
-    return 100;
-}
-
-int xu4_snd_vol_dec() {
-    return 100;
-}
-
 bool xu4_music_toggle() {
 	music_enabled = !music_enabled;
 	music_enabled ? xu4_music_fadein(1000, true) : xu4_music_fadeout(1000);
@@ -170,7 +158,6 @@ void xu4_music_init() {
 	music_enabled = settings.musicVol;
 	
 	xu4_music_vol((double)settings.musicVol / MAX_VOLUME);
-	xu4_snd_vol(settings.soundVol / MAX_VOLUME);
 	
 	SDL_PauseAudio(0);
 }

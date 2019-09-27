@@ -180,7 +180,8 @@ int main(int argc, char *argv[]) {
     ++pb;
 
     perf.start();
-    soundInit();
+    xu4_music_init();
+    xu4_snd_init();
     perf.end("Misc Initialization");
     ++pb;
 
@@ -195,8 +196,6 @@ int main(int argc, char *argv[]) {
     ++pb;
 
     intro = new IntroController();
-    
-    xu4_music_init();
     
     if (!skipIntro)
     {
@@ -243,11 +242,9 @@ int main(int argc, char *argv[]) {
 
     Tileset::unloadAll();
 
+    xu4_snd_deinit();
     xu4_music_deinit();
-    soundDelete();
     screenDelete();
 
     return 0;
 }
-
-

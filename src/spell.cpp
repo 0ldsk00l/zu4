@@ -316,7 +316,7 @@ bool spellCast(unsigned int spell, int character, int param, SpellCastError *err
 		float MP_OF_LARGEST_SPELL = 45;
 		int spellMp = spells[spell].mp;
 		time = int(10000.0 / settings.spellEffectSpeed  *  spellMp / MP_OF_LARGEST_SPELL);
-		soundPlay(SOUND_PREMAGIC_MANA_JUMBLE, false, time);
+		xu4_snd_play(SOUND_PREMAGIC_MANA_JUMBLE, false, time);
 		EventHandler::wait_msecs(time);
 
         (*spellEffectCallback)(spell + 'a', subject, SOUND_MAGIC);
@@ -370,7 +370,7 @@ bool spellMagicAttackAt(const Coords &coords, MapTile attackTile, int attackDama
         objectHit = true;
 
         /* show the 'hit' tile */
-        soundPlay(SOUND_NPC_STRUCK);
+        xu4_snd_play(SOUND_NPC_STRUCK);
         GameController::flashTile(coords, attackTile, 3);
 
 
@@ -651,12 +651,12 @@ static int spellSleep(int unused) {
         if ((m->getResists() != EFFECT_SLEEP) &&
             xu4_random(0xFF) >= m->getHp())
         {
-        	soundPlay(SOUND_POISON_EFFECT);
+        	xu4_snd_play(SOUND_POISON_EFFECT);
             m->putToSleep();
             GameController::flashTile(coords, "sleep_field", 3);
         }
         else
-        	soundPlay(SOUND_EVADE);
+        	xu4_snd_play(SOUND_EVADE);
     }
 
     return 1;
@@ -676,26 +676,26 @@ static int spellTremor(int unused) {
 
         /* creatures with over 192 hp are unaffected */
         if (m->getHp() > 192) {
-            soundPlay(SOUND_EVADE);
+            xu4_snd_play(SOUND_EVADE);
             continue;
         }
         else {
             /* Deal maximum damage to creature */
             if (xu4_random(2) == 0) {
-                soundPlay(SOUND_NPC_STRUCK);
+                xu4_snd_play(SOUND_NPC_STRUCK);
                 GameController::flashTile(coords, "hit_flash", 3);
                 ct->getCurrentPlayer()->dealDamage(m, 0xFF);
             }
             /* Deal enough damage to creature to make it flee */
             else if (xu4_random(2) == 0) {
-                soundPlay(SOUND_NPC_STRUCK);
+                xu4_snd_play(SOUND_NPC_STRUCK);
                 GameController::flashTile(coords, "hit_flash", 2);
                 if (m->getHp() > 23)
                     ct->getCurrentPlayer()->dealDamage(m, m->getHp()-23);
             }
             else
             {
-                soundPlay(SOUND_EVADE);
+                xu4_snd_play(SOUND_EVADE);
             }
         }
     }

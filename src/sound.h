@@ -5,7 +5,7 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-enum Sound {
+enum SoundEffect {
 	SOUND_TITLE_FADE,       // the intro title fade
 	SOUND_WALK_NORMAL,      // walk, world and town
 	SOUND_WALK_SLOWED,      // walk, slow progress
@@ -32,15 +32,20 @@ enum Sound {
 	SOUND_MAGIC,
 	SOUND_WHIRLPOOL,
 	SOUND_STORM,
-	//    SOUND_MISSED,
-	//    SOUND_CREATUREATTACK,
-	//    SOUND_PLAYERHIT,
+	//	SOUND_MISSED,
+	//	SOUND_CREATUREATTACK,
+	//	SOUND_PLAYERHIT,
 	SOUND_MAX
 };
 
-int soundInit();
-void soundDelete();
-void soundPlay(Sound sound, bool onlyOnce = true, int specificDurationInTicks = -1);
-void soundStop(int channel = 1);
+void xu4_snd_play(int sound, bool onlyOnce = true, int specificDurationInTicks = -1);
+
+void xu4_snd_stop();
+void xu4_snd_vol(double);
+int xu4_snd_vol_dec();
+int xu4_snd_vol_inc();
+
+void xu4_snd_init();
+void xu4_snd_deinit();
 
 #endif /* SOUND_H */

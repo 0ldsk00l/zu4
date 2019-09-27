@@ -1171,8 +1171,8 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
                 xu4_music_vol((double)settingsChanged.musicVol / MAX_VOLUME);
                 break;
             case MI_SOUND_02:
-                xu4_snd_vol(settingsChanged.soundVol);
-                soundPlay(SOUND_FLEE);
+                xu4_snd_vol((double)settingsChanged.soundVol / MAX_VOLUME);
+                xu4_snd_play(SOUND_FLEE);
                 break;
             case USE_SETTINGS:
                 // save settings
@@ -1182,7 +1182,7 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
                 break;
             case CANCEL:
                 xu4_music_vol((double)settings.musicVol / MAX_VOLUME);
-                xu4_snd_vol(settings.soundVol);
+                xu4_snd_vol((double)settings.soundVol / MAX_VOLUME);
                 // discard settings
                 settingsChanged = settings;
                 break;
@@ -1763,7 +1763,7 @@ bool IntroController::updateTitle()
         if (title->method == TITLE)
         {
             // assume this is the first frame of "Ultima IV" and begin sound
-            soundPlay(SOUND_TITLE_FADE);
+            xu4_snd_play(SOUND_TITLE_FADE);
         }
     }
 
@@ -2093,5 +2093,5 @@ void IntroController::drawTitle()
 void IntroController::skipTitles()
 {
     bSkipTitles = true;
-    soundStop();
+    xu4_snd_stop();
 }

@@ -557,7 +557,7 @@ bool CombatController::attackAt(const Coords &coords, PartyMember *attacker, int
 
         /* show the 'hit' tile */
     	GameController::flashTile(coords, misstile, 1);
-        soundPlay(SOUND_NPC_STRUCK, false,-1);                                    // NPC_STRUCK, melee hit
+        xu4_snd_play(SOUND_NPC_STRUCK, false,-1);                                    // NPC_STRUCK, melee hit
         GameController::flashTile(coords, hittile, 3);
 
         /* apply the damage to the creature */
@@ -597,7 +597,7 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
         
     case EFFECT_ELECTRICITY:
         /* FIXME: are there any special effects here? */
-        soundPlay(SOUND_PC_STRUCK, false);
+        xu4_snd_play(SOUND_PC_STRUCK, false);
         screenMessage("\n%s %cElectrified%c!\n", target->getName().c_str(), FG_BLUE, FG_WHITE);
         attacker->dealDamage(target, attacker->getDamage());
         break;
@@ -608,7 +608,7 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
         if ((xu4_random(2) == 0) && (target->getStatus() != STAT_POISONED))
         {
             // POISON_EFFECT, ranged hit
-            soundPlay(SOUND_POISON_EFFECT, false);
+            xu4_snd_play(SOUND_POISON_EFFECT, false);
             screenMessage("\n%s %cPoisoned%c!\n", target->getName().c_str(), FG_GREEN, FG_WHITE);
             target->addStatus(STAT_POISONED);
         }
@@ -620,7 +620,7 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
         if (xu4_random(2) == 0)
         {
             // SLEEP, ranged hit, plays even if sleep failed or PC already asleep
-            soundPlay(SOUND_SLEEP, false);
+            xu4_snd_play(SOUND_SLEEP, false);
             screenMessage("\n%s %cSlept%c!\n", target->getName().c_str(), FG_PURPLE, FG_WHITE);
             target->putToSleep();
         }
@@ -630,7 +630,7 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
     case EFFECT_LAVA:
     case EFFECT_FIRE:
         /* FIXME: are there any special effects here? */
-        soundPlay(SOUND_PC_STRUCK, false);
+        xu4_snd_play(SOUND_PC_STRUCK, false);
         screenMessage("\n%s %c%s Hit%c!\n", target->getName().c_str(), FG_RED,
                       effect == EFFECT_LAVA ? "Lava" : "Fiery", FG_WHITE);
         attacker->dealDamage(target, attacker->getDamage());
@@ -638,7 +638,7 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
 
     default: 
         /* show the appropriate 'hit' message */
-        // soundPlay(SOUND_PC_STRUCK, false);
+        // xu4_snd_play(SOUND_PC_STRUCK, false);
         if (hittile == Tileset::findTileByName("magic_flash")->getId())
             screenMessage("\n%s %cMagical Hit%c!\n", target->getName().c_str(), FG_BLUE, FG_WHITE);
         else screenMessage("\n%s Hit!\n", target->getName().c_str());
@@ -798,22 +798,22 @@ void CombatController::movePartyMember(MoveEvent &event) {
 
     screenMessage("%s\n", getDirectionName(event.dir));
     if (event.result & MOVE_MUST_USE_SAME_EXIT) {
-        soundPlay(SOUND_ERROR);                                                // ERROR move, all PCs must use the same exit
+        xu4_snd_play(SOUND_ERROR);                                                // ERROR move, all PCs must use the same exit
         screenMessage("All must use same exit!\n");
     }
     else if (event.result & MOVE_BLOCKED) {
-        soundPlay(SOUND_BLOCKED);                                              // BLOCKED move
+        xu4_snd_play(SOUND_BLOCKED);                                              // BLOCKED move
         screenMessage("%cBlocked!%c\n", FG_GREY, FG_WHITE);
     }
     else if (event.result & MOVE_SLOWED) {
-        soundPlay(SOUND_WALK_SLOWED);                                          // WALK_SLOWED move
+        xu4_snd_play(SOUND_WALK_SLOWED);                                          // WALK_SLOWED move
         screenMessage("%cSlow progress!%c\n", FG_GREY, FG_WHITE);
     }
     else if (winOrLose && getCreature()->isEvil() && (event.result & (MOVE_EXIT_TO_PARENT | MOVE_MAP_CHANGE))) {
-        soundPlay(SOUND_FLEE);                                                 // FLEE move
+        xu4_snd_play(SOUND_FLEE);                                                 // FLEE move
     }
     else {
-        soundPlay(SOUND_WALK_COMBAT);                                          // WALK_COMBAT move
+        xu4_snd_play(SOUND_WALK_COMBAT);                                          // WALK_COMBAT move
     }
 }
 
@@ -894,13 +894,13 @@ bool CombatController::keyPressed(int key) {
     case '<':
         // decrease the volume if possible
         screenMessage("Sound: %d%s\n", xu4_snd_vol_dec(), "%");
-        soundPlay(SOUND_FLEE);
+        xu4_snd_play(SOUND_FLEE);
         endTurn = false;
         break;
     case '>':
         // increase the volume if possible
         screenMessage("Sound: %d%s\n", xu4_snd_vol_inc(), "%");
-        soundPlay(SOUND_FLEE);
+        xu4_snd_play(SOUND_FLEE);
         endTurn = false;
         break;
 
@@ -1072,7 +1072,7 @@ void CombatController::attack() {
 
     // the attack was already made, even if there is no valid target
     // so play the attack sound
-    soundPlay(SOUND_PC_ATTACK, false);                                        // PC_ATTACK, melee and ranged
+    xu4_snd_play(SOUND_PC_ATTACK, false);                                        // PC_ATTACK, melee and ranged
 
 
     vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, 

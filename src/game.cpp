@@ -747,7 +747,7 @@ void GameController::update(Location *location, MoveEvent &event) {
     }    
 }
 
-void gameSpellEffect(int spell, int player, Sound sound) {
+void gameSpellEffect(int spell, int player, int sound) {
 
 	int time;
     Spell::SpecialEffects effect = Spell::SFX_INVERT;
@@ -756,7 +756,7 @@ void gameSpellEffect(int spell, int player, Sound sound) {
         c->stats->highlightPlayer(player);
 
     time = settings.spellEffectSpeed * 800 / settings.gameCyclesPerSecond;
-    soundPlay(sound, false, time);
+    xu4_snd_play(sound, false, time);
 
     ///The following effect multipliers are not accurate
     switch(spell)
@@ -786,7 +786,7 @@ void gameSpellEffect(int spell, int player, Sound sound) {
 
         if (effect == Spell::SFX_TREMOR) {
             gameUpdateScreen();
-            soundPlay(SOUND_RUMBLE, false);
+            xu4_snd_play(SOUND_RUMBLE, false);
             screenShake(8);
 
         }
@@ -1044,13 +1044,13 @@ bool GameController::keyPressed(int key) {
         case '<':
             // decrease the volume if possible
             screenMessage("Sound: %d%s\n", xu4_snd_vol_dec(), "%");
-            soundPlay(SOUND_FLEE);
+            xu4_snd_play(SOUND_FLEE);
             endTurn = false;
             break;
         case '>':
             // increase the volume if possible
             screenMessage("Sound: %d%s\n", xu4_snd_vol_inc(), "%");
-            soundPlay(SOUND_FLEE);
+            xu4_snd_play(SOUND_FLEE);
             endTurn = false;
             break;
 
@@ -2229,18 +2229,18 @@ void GameController::avatarMoved(MoveEvent &event) {
 
             /* if we're still blocked */
             if ((event.result & MOVE_BLOCKED) && !settings.filterMoveMessages) {
-                soundPlay(SOUND_BLOCKED, false);
+                xu4_snd_play(SOUND_BLOCKED, false);
                 screenMessage("%cBlocked!%c\n", FG_GREY, FG_WHITE);
             }
         }
         else if (c->transportContext == TRANSPORT_FOOT || c->transportContext == TRANSPORT_HORSE) {
             /* movement was slowed */
             if (event.result & MOVE_SLOWED) {
-                soundPlay(SOUND_WALK_SLOWED);
+                xu4_snd_play(SOUND_WALK_SLOWED);
                 screenMessage("%cSlow progress!%c\n", FG_GREY, FG_WHITE);
             }
             else {
-                soundPlay(SOUND_WALK_NORMAL);
+                xu4_snd_play(SOUND_WALK_NORMAL);
             }
         }
     }

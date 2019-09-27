@@ -513,10 +513,10 @@ void Creature::act(CombatController *controller) {
 
     switch(action) {
     case CA_ATTACK:
-        soundPlay(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, melee
+        xu4_snd_play(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, melee
 
         if (controller->attackHit(this, target)) {
-            soundPlay(SOUND_PC_STRUCK, false);                                 // PC_STRUCK, melee and ranged
+            xu4_snd_play(SOUND_PC_STRUCK, false);                                 // PC_STRUCK, melee and ranged
             GameController::flashTile(target->getCoords(), "hit_flash", 4);
 
 
@@ -526,13 +526,13 @@ void Creature::act(CombatController *controller) {
             if (target && isPartyMember(target)) {
                 /* steal gold if the creature steals gold */
                 if (stealsGold() && xu4_random(4) == 0) {
-                    soundPlay(SOUND_ITEM_STOLEN, false);                       // ITEM_STOLEN, gold
+                    xu4_snd_play(SOUND_ITEM_STOLEN, false);                       // ITEM_STOLEN, gold
                     c->party->adjustGold(-(xu4_random(0x3f)));
                 }
             
                 /* steal food if the creature steals food */
                 if (stealsFood()) {
-                    soundPlay(SOUND_ITEM_STOLEN, false);                       // ITEM_STOLEN, food
+                    xu4_snd_play(SOUND_ITEM_STOLEN, false);                       // ITEM_STOLEN, food
                     c->party->adjustFood(-2500);
                 }
             }
@@ -544,7 +544,7 @@ void Creature::act(CombatController *controller) {
     case CA_CAST_SLEEP: {            
         screenMessage("\nSleep!\n");
 
-        gameSpellEffect('s', -1, static_cast<Sound>(SOUND_MAGIC)); /* show the sleep spell effect */
+        gameSpellEffect('s', -1, static_cast<int>(SOUND_MAGIC)); /* show the sleep spell effect */
         
         /* Apply the sleep spell to party members still in combat */
         if (!isPartyMember(this)) {
@@ -597,7 +597,7 @@ void Creature::act(CombatController *controller) {
         // figure out which direction to fire the weapon
         int dir = m_coords.getRelativeDirection(p_coords);
 
-        soundPlay(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, ranged
+        xu4_snd_play(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, ranged
 
         vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, m_coords,
                                                            1, 11, &Tile::canAttackOverTile, false);
