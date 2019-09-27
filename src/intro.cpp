@@ -1168,7 +1168,7 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
 
         switch(event.getMenuItem()->getId()) {
             case MI_SOUND_01:
-                xu4_music_vol(settingsChanged.musicVol);
+                xu4_music_vol((double)settingsChanged.musicVol / MAX_VOLUME);
                 break;
             case MI_SOUND_02:
                 xu4_snd_vol(settingsChanged.soundVol);
@@ -1181,7 +1181,7 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
                 xu4_music_play_track(TRACK_TOWNS);
                 break;
             case CANCEL:
-                xu4_music_vol(settings.musicVol);
+                xu4_music_vol((double)settings.musicVol / MAX_VOLUME);
                 xu4_snd_vol(settings.soundVol);
                 // discard settings
                 settingsChanged = settings;
