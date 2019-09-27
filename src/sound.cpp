@@ -1,8 +1,9 @@
+#include "sound.h"
 /*
  * $Id: sound.cpp 3019 2012-03-18 11:31:13Z daniel_santos $
  */
 
-#include <SDL.h>
+/*#include <SDL.h>
 #include <SDL_mixer.h>
 
 #include "sound.h"
@@ -44,11 +45,11 @@ static bool load(Sound sound) {
 		}
     }
     return true;    
-}
+}*/
 
 int soundInit() {
 	// load sound track filenames from xml config file
-	const Config *config = Config::getInstance();
+	/*const Config *config = Config::getInstance();
 	soundChunk.resize(SOUND_MAX, NULL);
 	
 	vector<ConfigElement> soundConfs = config->getElement("sound").getChildren();
@@ -58,18 +59,18 @@ int soundInit() {
 		if (i->getName() != "track") { continue; }
 		int j = (i - soundConfs.begin()); // major hack while converting away from C++
 		snprintf(sndfiles[j], sizeof(sndfiles[j]), "%s", i->getString("file").c_str());
-	}
+	}*/
 	return 1;
 }
 
 void soundDelete() {
-	for (int i = 0; i < SOUND_MAX; i++) {
+	/*for (int i = 0; i < SOUND_MAX; i++) {
 		if (soundChunk[i]) { Mix_FreeChunk(soundChunk[i]); }
-	}
+	}*/
 }
 
 void soundPlay(Sound sound, bool onlyOnce, int specificDurationInTicks) {
-	ASSERT(sound < SOUND_MAX, "Attempted to play an invalid sound in soundPlay()");
+	/*ASSERT(sound < SOUND_MAX, "Attempted to play an invalid sound in soundPlay()");
 	
 	// If music didn't initialize correctly, then we can't play it anyway
 	if (!xu4_music_functional() || !settings.soundVol) { return; }
@@ -83,11 +84,11 @@ void soundPlay(Sound sound, bool onlyOnce, int specificDurationInTicks) {
 		if (Mix_PlayChannelTimed(1, soundChunk[sound], specificDurationInTicks == -1 ? 0 : -1, specificDurationInTicks) == -1) {
 			xu4_error(XU4_LOG_WRN, "Error playing sound %d: %s\n", sound, Mix_GetError());
 		}
-	}
+	}*/
 }
 
 void soundStop(int channel) {
 	// If music didn't initialize correctly, then we shouldn't try to stop it
-	if (!xu4_music_functional() || !settings.soundVol) { return; }
-	if (Mix_Playing(channel)) { Mix_HaltChannel(channel); }
+	/*if (!xu4_music_functional() || !settings.soundVol) { return; }
+	if (Mix_Playing(channel)) { Mix_HaltChannel(channel); }*/
 }
