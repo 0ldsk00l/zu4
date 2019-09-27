@@ -57,18 +57,17 @@ static void lock_handler(cm_Event *e) {
 }
 
 void xu4_music_play_track(int music) {
-    if (curtrack == music) { return; }
-    xu4_music_stop();
-    curtrack = music;
-    cm_play(track[curtrack]);
+	xu4_music_stop();
+	curtrack = music;
+	if (music_enabled) { cm_play(track[curtrack]); }
 }
 
 void xu4_music_play() {
-    xu4_music_play_track(c->location->map->music);
+	xu4_music_play_track(c->location->map->music);
 }
 
 void xu4_music_stop() {
-    if (curtrack && (cm_get_state(track[curtrack]) != CM_STATE_STOPPED)) {
+	if (curtrack && (cm_get_state(track[curtrack]) != CM_STATE_STOPPED)) {
 		cm_stop(track[curtrack]);
 	}
 	curtrack = TRACK_NONE;
@@ -83,8 +82,8 @@ void xu4_music_fadein(int msecs, bool loadFromMap) { // Implement later
 }
 
 void xu4_music_vol(double volume) {
-    // Every source has to be done independently
-    for (int i = 1; i < TRACK_MAX; i++) {
+	// Every source has to be done independently
+	for (int i = 1; i < TRACK_MAX; i++) {
 		cm_set_gain(track[i], volume);
 	}
 }
