@@ -57,9 +57,14 @@ static void lock_handler(cm_Event *e) {
 }
 
 void xu4_music_play_track(int music) {
-	xu4_music_stop();
-	curtrack = music;
-	if (music_enabled) { cm_play(track[curtrack]); }
+	if (music_enabled) {
+		if (curtrack == music) { return; }
+		else {
+			xu4_music_stop();
+			curtrack = music;
+			cm_play(track[curtrack]);
+		}
+	}
 }
 
 void xu4_music_play() {
