@@ -96,7 +96,6 @@ CXXSRCS=\
 		src/settings.cpp \
 		src/shrine.cpp \
 		src/sound.cpp \
-		src/sound_sdl.cpp \
 		src/spell.cpp \
 		src/stats.cpp \
 		src/textview.cpp \

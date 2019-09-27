@@ -16,8 +16,6 @@
 #include "context.h"
 #include "debug.h"
 #include "error.h"
-#include "event.h"
-#include "location.h"
 #include "settings.h"
 #include "u4.h"
 #include "u4file.h"
@@ -25,13 +23,11 @@
 using std::string;
 using std::vector;
 
-// C-like stuff
 static char musicfiles[TRACK_MAX][128] = {{0}};
 static int current;
 static bool on = false;
 static bool functional = true;
-
-OSMusicMixer *playing = NULL;
+static OSMusicMixer *playing = NULL;
 
 static void xu4_music_create_sys() {
 	// initialize sound subsystem
@@ -210,7 +206,7 @@ void xu4_music_init() {
 	std::vector<ConfigElement>::const_iterator i = musicConfs.begin();
 	std::vector<ConfigElement>::const_iterator theEnd = musicConfs.end();
 	for (; i != theEnd; ++i) {
-		if (i->getName() != "track") continue;
+		if (i->getName() != "track") { continue; }
 		int j = (i - musicConfs.begin()) + 1; // major hack while converting away from C++
 		snprintf(musicfiles[j], sizeof(musicfiles[j]), "%s", i->getString("file").c_str());
 	}
