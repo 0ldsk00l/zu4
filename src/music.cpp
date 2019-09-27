@@ -6,15 +6,12 @@
 #include <vector>
 
 #include <SDL.h>
-#include <SDL_mixer.h>
-#include "u4_sdl.h"
 
 #include "music.h"
 #include "sound.h"
 
 #include "config.h"
 #include "context.h"
-#include "debug.h"
 #include "error.h"
 #include "settings.h"
 #include "u4.h"
@@ -27,8 +24,8 @@ static char musicfiles[TRACK_MAX][128] = {{0}};
 static int current;
 static bool on = false;
 static bool functional = true;
-static OSMusicMixer *playing = NULL;
-
+//static OSMusicMixer *playing = NULL;
+/*
 static void xu4_music_create_sys() {
 	// initialize sound subsystem
 	int audio_rate = 44100;
@@ -74,10 +71,10 @@ static bool xu4_music_load_sys(const char *pathname) {
 		return false;
 	}
 	return true;
-}
+}*/
 
 bool xu4_music_load(int music) {
-	ASSERT(music < TRACK_MAX, "Attempted to load an invalid piece of music in Music::load()");
+	/*ASSERT(music < TRACK_MAX, "Attempted to load an invalid piece of music in Music::load()");
 	
 	// music already loaded
 	if (music == current) { return !xu4_music_playing(); }
@@ -88,36 +85,39 @@ bool xu4_music_load(int music) {
 		if (status) { current = music; }
 		return status;
 	}
-	return false;
+	return false;*/
+	return true;
 }
 
 bool xu4_music_functional() {
-	return functional;
+	//return functional;
+	return true;
 }
 
 bool xu4_music_playing() {
-	return Mix_PlayingMusic();
+	//return Mix_PlayingMusic();
+	return true;
 }
 
 void xu4_music_play_track(int music) {
-    if (!functional || !on) { return; }
+    /*if (!functional || !on) { return; }
 	
     if (xu4_music_load(music)) {
         Mix_PlayMusic(playing, NLOOPS);
-    }
+    }*/
 }
 
 void xu4_music_play() {
-    xu4_music_play_track(c->location->map->music);
+    //xu4_music_play_track(c->location->map->music);
 }
 
 void xu4_music_stop() {
-    Mix_HaltMusic();
+    //Mix_HaltMusic();
 }
 
 void xu4_music_fadeout(int msecs) {
 	// fade the music out even if 'on' is false
-	if (!functional) { return; }
+	/*if (!functional) { return; }
 
 	if (xu4_music_playing()) {
 		if (!settings.volumeFades) { xu4_music_stop(); }
@@ -126,14 +126,14 @@ void xu4_music_fadeout(int msecs) {
 				xu4_error(XU4_LOG_WRN, "Mix_FadeOutMusic: %s\n", Mix_GetError());
 			}
 		}
-	}
+	}*/
 }
 
 void xu4_music_fadein(int msecs, bool loadFromMap) {
-	if (!functional || !on) { return; }
+	/*if (!functional || !on) { return; }
 
 	if (!xu4_music_playing()) {
-		/* make sure we've got something loaded to play */
+		// make sure we've got something loaded to play
 		if (loadFromMap || !playing) {
 			xu4_music_load(c->location->map->music);
 		}
@@ -146,57 +146,62 @@ void xu4_music_fadein(int msecs, bool loadFromMap) {
 				xu4_error(XU4_LOG_WRN, "Mix_FadeInMusic: %s\n", Mix_GetError());
 			}
 		}
-	}
+	}*/
 }
 
 void xu4_music_vol(int volume) {
-    Mix_VolumeMusic(int((float)MIX_MAX_VOLUME / MAX_VOLUME * volume));
+    //Mix_VolumeMusic(int((float)MIX_MAX_VOLUME / MAX_VOLUME * volume));
 }
 
 int xu4_music_vol_inc() {
-    if (++settings.musicVol > MAX_VOLUME) { settings.musicVol = MAX_VOLUME; }
+    /*if (++settings.musicVol > MAX_VOLUME) { settings.musicVol = MAX_VOLUME; }
     else { xu4_music_vol(settings.musicVol); }
-    return (settings.musicVol * 100 / MAX_VOLUME);  // percentage
+    return (settings.musicVol * 100 / MAX_VOLUME);  // percentage*/
+    return 100;
 }
 
 int xu4_music_vol_dec() {
-    if (--settings.musicVol < 0) { settings.musicVol = 0; }
+    /*if (--settings.musicVol < 0) { settings.musicVol = 0; }
     else { xu4_music_vol(settings.musicVol); }
-    return (settings.musicVol * 100 / MAX_VOLUME);  // percentage
+    return (settings.musicVol * 100 / MAX_VOLUME);  // percentage*/
+    return 100;
 }
 
 void xu4_snd_vol(int volume) {
     // Use Channel 1 for sound effects
-    Mix_Volume(1, int((float)MIX_MAX_VOLUME / MAX_VOLUME * volume));
+    //Mix_Volume(1, int((float)MIX_MAX_VOLUME / MAX_VOLUME * volume));
 }
 
 int xu4_snd_vol_inc() {
-    if (++settings.soundVol > MAX_VOLUME) { settings.soundVol = MAX_VOLUME; }
+    /*if (++settings.soundVol > MAX_VOLUME) { settings.soundVol = MAX_VOLUME; }
     else { xu4_snd_vol(settings.soundVol); }
-    return (settings.soundVol * 100 / MAX_VOLUME);  // percentage
+    return (settings.soundVol * 100 / MAX_VOLUME);  // percentage*/
+    return 100;
 }
 
 int xu4_snd_vol_dec() {
-    if (--settings.soundVol < 0) { settings.soundVol = 0; }
+    /*if (--settings.soundVol < 0) { settings.soundVol = 0; }
     else { xu4_snd_vol(settings.soundVol); }
-    return (settings.soundVol * 100 / MAX_VOLUME);  // percentage
+    return (settings.soundVol * 100 / MAX_VOLUME);  // percentage*/
+    return 100;
 }
 
 // Toggle the music on/off (usually by pressing 'v')
 bool xu4_music_toggle() {
-    on = !on;
+    /*on = !on;
     if (!on) {
         xu4_music_fadeout(1000);
 	}
     else {
         xu4_music_fadein(1000, true);
 	}
-    return on;    
+    return on;*/
+    return true;
 }
 
 // Initiliaze the music
 void xu4_music_init() {
-	current = TRACK_NONE;
+	/*current = TRACK_NONE;
 	playing = NULL;
 	
 	// load music track filenames from xml config file
@@ -216,7 +221,9 @@ void xu4_music_init() {
 	// Set up the volume.
 	on = settings.musicVol;
 	xu4_music_vol(settings.musicVol);
-	xu4_snd_vol(settings.soundVol);
+	xu4_snd_vol(settings.soundVol);*/
 }
 
-void xu4_music_deinit() { xu4_music_destroy_sys(); }
+void xu4_music_deinit() {
+	//xu4_music_destroy_sys();
+}

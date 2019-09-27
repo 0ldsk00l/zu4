@@ -5,7 +5,7 @@ bindir=$(prefix)/bin
 libdir=$(prefix)/lib
 datadir=$(prefix)/share
 
-UILIBS=$(shell sdl-config --libs) -lSDL_mixer
+UILIBS=$(shell sdl-config --libs)
 UIFLAGS=$(shell sdl-config --cflags)
 
 FEATURES=-DHAVE_BACKTRACE=1 -DHAVE_VARIADIC_MACROS=1

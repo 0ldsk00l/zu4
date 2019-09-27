@@ -21,7 +21,7 @@ enum MusicTrack {
 	TRACK_MAX
 };
 
-bool xu4_music_load(int);
+//bool xu4_music_load(int);
 bool xu4_music_functional();
 bool xu4_music_playing();
 void xu4_music_play_track(int);
@@ -41,7 +41,7 @@ void xu4_music_init();
 void xu4_music_deinit();
 
 // SDL
-struct _Mix_Music;
-typedef _Mix_Music OSMusicMixer;
+//struct _Mix_Music;
+//typedef _Mix_Music OSMusicMixer;
 
 #endif
