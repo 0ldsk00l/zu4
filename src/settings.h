@@ -28,7 +28,7 @@ using std::string;
 
 #define DEFAULT_SCALE                   4
 #define DEFAULT_FULLSCREEN              0
-#define DEFAULT_VIDEO_TYPE              "VGA"
+#define DEFAULT_VIDEO_TYPE              "EGA"
 #define DEFAULT_GEM_LAYOUT              "Standard"
 #define DEFAULT_LINEOFSIGHT             "DOS"
 #define DEFAULT_SCREEN_SHAKES           1
@@ -37,7 +37,7 @@ using std::string;
 #define DEFAULT_SOUND_VOLUME            10
 #define DEFAULT_VOLUME_FADES            1
 #define DEFAULT_SHORTCUT_COMMANDS       0
-#define DEFAULT_KEY_DELAY               500
+#define DEFAULT_KEY_DELAY               300
 #define DEFAULT_KEY_INTERVAL            30
 #define DEFAULT_FILTER_MOVE_MESSAGES    0
 #define DEFAULT_BATTLE_SPEED            5

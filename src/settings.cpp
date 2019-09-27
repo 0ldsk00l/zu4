@@ -145,14 +145,14 @@ bool Settings::read() {
     enhancementsOptions.activePlayer     = true;
     enhancementsOptions.u5spellMixing    = true;
     enhancementsOptions.u5shrines        = true;
-    enhancementsOptions.slimeDivides     = true;
+    enhancementsOptions.slimeDivides     = false;
     enhancementsOptions.gazerSpawnsInsects = true;
     enhancementsOptions.textColorization = false;
     enhancementsOptions.c64chestTraps    = true;
     enhancementsOptions.smartEnterKey    = true;
     enhancementsOptions.peerShowsObjects = false;
     enhancementsOptions.u5combat         = false;
-    enhancementsOptions.u4TileTransparencyHack = true;
+    enhancementsOptions.u4TileTransparencyHack = false;
     enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity = DEFAULT_SHADOW_PIXEL_OPACITY;
     enhancementsOptions.u4TrileTransparencyHackShadowBreadth = DEFAULT_SHADOW_PIXEL_SIZE;
 
