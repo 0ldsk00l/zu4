@@ -4,7 +4,7 @@ This is a cleaned up, modernized fork of "xu4".
 
 #### How to Compile
 Currently, the following dependencies are required:
-libxml2, libsdl1.2, libsdlmixer1.2
+libxml2, libsdl1.2
 ```
 make
 ```
