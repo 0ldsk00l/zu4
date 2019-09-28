@@ -2239,8 +2239,21 @@ void GameController::avatarMoved(MoveEvent &event) {
                 xu4_snd_play(SOUND_WALK_SLOWED);
                 screenMessage("%cSlow progress!%c\n", FG_GREY, FG_WHITE);
             }
+            else if (c->horseSpeed == 1) {
+                switch(xu4_random(4)) {
+                    case 1: xu4_snd_play(SOUND_HORSE_NORMAL_1); break;
+                    case 2: xu4_snd_play(SOUND_HORSE_NORMAL_2); break;
+                    case 3: xu4_snd_play(SOUND_HORSE_NORMAL_3); break;
+                    default: xu4_snd_play(SOUND_HORSE_NORMAL_4); break;
+				}
+            }
             else {
-                xu4_snd_play(SOUND_WALK_NORMAL);
+                switch(xu4_random(4)) {
+                    case 1: xu4_snd_play(SOUND_WALK_NORMAL_1); break;
+                    case 2: xu4_snd_play(SOUND_WALK_NORMAL_2); break;
+                    case 3: xu4_snd_play(SOUND_WALK_NORMAL_3); break;
+                    default: xu4_snd_play(SOUND_WALK_NORMAL_4); break;
+				}
             }
         }
     }
