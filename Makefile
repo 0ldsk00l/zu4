@@ -1,27 +1,22 @@
-#CC=clang
-#CXX=clang++
-prefix=/usr/local
-bindir=$(prefix)/bin
-libdir=$(prefix)/lib
-datadir=$(prefix)/share
+CC := cc
+CXX := c++
+prefix := /usr/local
+bindir = $(prefix)/bin
+libdir = $(prefix)/lib
+datadir = $(prefix)/share
 
-UILIBS=$(shell sdl-config --libs)
-UIFLAGS=$(shell sdl-config --cflags)
+UILIBS = $(shell sdl-config --libs)
+UIFLAGS = $(shell sdl-config --cflags)
 
-FEATURES=-DHAVE_BACKTRACE=1 -DHAVE_VARIADIC_MACROS=1
-#DEBUGCXXFLAGS=-ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
-CXXFLAGS=$(FEATURES) -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags) -DVERSION=\"$(VERSION)\" $(DEBUGCXXFLAGS)
-CFLAGS=$(CXXFLAGS)
-LIBS=$(UILIBS) $(shell xml2-config --libs)
-INSTALL=install
+CXXFLAGS = -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags) -DVERSION=\"$(VERSION)\"
+#CXXFLAGS += -ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
+CFLAGS = $(CXXFLAGS)
+LIBS = $(UILIBS) $(shell xml2-config --libs)
+INSTALL = install
 
-ifeq ($(STATIC_GCC_LIBS),true)
-	LDFLAGS+=-L. -static-libgcc
-endif
+MAIN = u4
 
-MAIN=u4
-
-VERSION=1.1-git
+VERSION = 1.1-git
 
 CSRCS=\
 		src/lzw/hash.c \
@@ -150,7 +145,6 @@ cleanutil::
 TAGS: $(CSRCS) $(CXXSRCS)
 	etags *.h $(CSRCS) $(CXXSRCS)
 
-
 install::
 	$(INSTALL) -D $(MAIN) $(bindir)/$(MAIN)
 	$(INSTALL) -D graphics/u4.png $(datadir)/pixmaps/u4.png
@@ -183,18 +177,3 @@ install::
 	$(INSTALL) graphics/vga2/*.png $(libdir)/u4/graphics/vga2
 	$(INSTALL) graphics/new/* $(libdir)/u4/graphics/new
 	$(INSTALL) -D u4.desktop $(datadir)/applications/u4.desktop
-
-
-# use GCC's automatic dependency generation
-.depends::
-	rm -f .depends
-	$(CC) $(CFLAGS) -MM $(CSRCS) >> .depends
-	$(CXX) $(CXXFLAGS) -MM $(CXXSRCS) >> .depends
-
-# a target to build without dependencies on libstdc++, libgcc_s
-all.static_gcc_libs:
-	ln -s `$(CXX) -print-file-name=libstdc++.a` .
-	$(MAKE) STATIC_GCC_LIBS=true
-	rm -f libstdc++.a
-
--include .depends
