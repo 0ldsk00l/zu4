@@ -4,13 +4,14 @@
 
 
 #include <vector>
+#include <iostream>
 
 #include "config.h"
 #include "debug.h"
 #include "error.h"
 #include "image.h"
-#include "imageloader.h"
 #include "imageloader_png.h"
+#include "imageloader_u4.h"
 #include "imagemgr.h"
 #include "intro.h"
 #include "settings.h"
@@ -216,91 +217,89 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
 
     sigData = intro->getSigData();
     im->alphaOff();
-    if (settings.videoType != "VGA-ALLPNG" && settings.videoType != "new") {
-        /* ----------------------------
-         * update the position of "and"
-         * ---------------------------- */
-        im->drawSubRectOn(im, 148 * prescale, 17 * prescale,
-                          153 * prescale,
-                          17 * prescale,
-                          11 * prescale,
-                          4 * prescale);
-        im->drawSubRectOn(im, 159 * prescale, 17 * prescale,
-                          165 * prescale,
-                          18 * prescale,
-                          1 * prescale,
-                          4 * prescale);
-        im->drawSubRectOn(im, 160 * prescale, 17 * prescale,
-                          164 * prescale,
-                          17 * prescale,
-                          16 * prescale,
-                          4 * prescale);
-        /* ---------------------------------------------
-         * update the position of "Origin Systems, Inc."
-         * --------------------------------------------- */
-        im->drawSubRectOn(im, 86 * prescale, 21 * prescale,
-                          88 * prescale,
-                          21 * prescale,
-                          114 * prescale,
-                          9 * prescale);
-        im->drawSubRectOn(im, 199 * prescale, 21 * prescale,
-                          202 * prescale,
-                          21 * prescale,
-                          6 * prescale,
-                          9 * prescale);
-        im->drawSubRectOn(im, 207 * prescale, 21 * prescale,
-                          208 * prescale,
-                          21 * prescale,
-                          28 * prescale,
-                          9 * prescale);
-        /* ---------------------------------------------
-         * update the position of "Ultima IV"
-         * --------------------------------------------- */
-        // move this *prior* to moving "present"
-        im->drawSubRectOn(im, 59 * prescale, 33 * prescale,
-                          61 * prescale,
-                          33 * prescale,
-                          204 * prescale,
-                          46 * prescale);
-        /* ---------------------------------------------
-         * update the position of "Quest of the Avatar"
-         * --------------------------------------------- */
-        im->drawSubRectOn(im, 69 * prescale, 80 * prescale,     // quEst
-                          70 * prescale,
-                          80 * prescale,
-                          11 * prescale,
-                          13 * prescale);
-        im->drawSubRectOn(im, 82 * prescale, 80 * prescale,     // queST
-                          84 * prescale,
-                          80 * prescale,
-                          27 * prescale,
-                          13 * prescale);
-        im->drawSubRectOn(im, 131 * prescale, 80 * prescale,    // oF
-                          132 * prescale,
-                          80 * prescale,
-                          11 * prescale,
-                          13 * prescale);
-        im->drawSubRectOn(im, 150 * prescale, 80 * prescale,    // THE
-                          149 * prescale,
-                          80 * prescale,
-                          40 * prescale,
-                          13 * prescale);
-        im->drawSubRectOn(im, 166 * prescale, 80 * prescale,    // tHe
-                          165 * prescale,
-                          80 * prescale,
-                          11 * prescale,
-                          13 * prescale);
-        im->drawSubRectOn(im, 200 * prescale, 80 * prescale,    // AVATAR
-                          201 * prescale,
-                          80 * prescale,
-                          81 * prescale,
-                          13 * prescale);
-        im->drawSubRectOn(im, 227 * prescale, 80 * prescale,    // avAtar
-                          228 * prescale,
-                          80 * prescale,
-                          11 * prescale,
-                          13 * prescale);
-    }
+    /* ----------------------------
+     * update the position of "and"
+     * ---------------------------- */
+    im->drawSubRectOn(im, 148 * prescale, 17 * prescale,
+                      153 * prescale,
+                      17 * prescale,
+                      11 * prescale,
+                      4 * prescale);
+    im->drawSubRectOn(im, 159 * prescale, 17 * prescale,
+                      165 * prescale,
+                      18 * prescale,
+                      1 * prescale,
+                      4 * prescale);
+    im->drawSubRectOn(im, 160 * prescale, 17 * prescale,
+                      164 * prescale,
+                      17 * prescale,
+                      16 * prescale,
+                      4 * prescale);
+    /* ---------------------------------------------
+     * update the position of "Origin Systems, Inc."
+     * --------------------------------------------- */
+    im->drawSubRectOn(im, 86 * prescale, 21 * prescale,
+                      88 * prescale,
+                      21 * prescale,
+                      114 * prescale,
+                      9 * prescale);
+    im->drawSubRectOn(im, 199 * prescale, 21 * prescale,
+                      202 * prescale,
+                      21 * prescale,
+                      6 * prescale,
+                      9 * prescale);
+    im->drawSubRectOn(im, 207 * prescale, 21 * prescale,
+                      208 * prescale,
+                      21 * prescale,
+                      28 * prescale,
+                      9 * prescale);
+    /* ---------------------------------------------
+     * update the position of "Ultima IV"
+     * --------------------------------------------- */
+    // move this *prior* to moving "present"
+    im->drawSubRectOn(im, 59 * prescale, 33 * prescale,
+                      61 * prescale,
+                      33 * prescale,
+                      204 * prescale,
+                      46 * prescale);
+    /* ---------------------------------------------
+     * update the position of "Quest of the Avatar"
+     * --------------------------------------------- */
+    im->drawSubRectOn(im, 69 * prescale, 80 * prescale,     // quEst
+                      70 * prescale,
+                      80 * prescale,
+                      11 * prescale,
+                      13 * prescale);
+    im->drawSubRectOn(im, 82 * prescale, 80 * prescale,     // queST
+                      84 * prescale,
+                      80 * prescale,
+                      27 * prescale,
+                      13 * prescale);
+    im->drawSubRectOn(im, 131 * prescale, 80 * prescale,    // oF
+                      132 * prescale,
+                      80 * prescale,
+                      11 * prescale,
+                      13 * prescale);
+    im->drawSubRectOn(im, 150 * prescale, 80 * prescale,    // THE
+                      149 * prescale,
+                      80 * prescale,
+                      40 * prescale,
+                      13 * prescale);
+    im->drawSubRectOn(im, 166 * prescale, 80 * prescale,    // tHe
+                      165 * prescale,
+                      80 * prescale,
+                      11 * prescale,
+                      13 * prescale);
+    im->drawSubRectOn(im, 200 * prescale, 80 * prescale,    // AVATAR
+                      201 * prescale,
+                      80 * prescale,
+                      81 * prescale,
+                      13 * prescale);
+    im->drawSubRectOn(im, 227 * prescale, 80 * prescale,    // avAtar
+                      228 * prescale,
+                      80 * prescale,
+                      11 * prescale,
+                      13 * prescale);
     /* -----------------------------------------------------------------------------
      * copy "present" to new location between "Origin Systems, Inc." and "Ultima IV"
      * ----------------------------------------------------------------------------- */
@@ -598,25 +597,34 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 		}
 		
         string filetype = info->filetype;
+        std::cout << "filetype: " << filetype << "\n";
 		
         if (filetype == "image/png") {
 			unscaled = xu4_png_load(u4find_graphics(info->filename).c_str(), &info->width, &info->height);
 		}
+		else if (filetype == "image/x-u4raw") {
+			unscaled = xu4_u4raw_load(file, info->width, info->height, info->depth);
+			if (info->width == -1) {
+				info->width = unscaled->width();
+				info->height = unscaled->height();
+			}
+		}
+		else if (filetype == "image/x-u4lzw") {
+			unscaled = xu4_u4lzw_load(file, info->width, info->height, info->depth);
+			if (info->width == -1) {
+				info->width = unscaled->width();
+				info->height = unscaled->height();
+			}
+		}
+		else if (filetype == "image/x-u4rle") {
+			unscaled = xu4_u4rle_load(file, info->width, info->height, info->depth);
+			if (info->width == -1) {
+				info->width = unscaled->width();
+				info->height = unscaled->height();
+			}
+		}
         else {
-			ImageLoader *loader = ImageLoader::getLoader(filetype);
-			
-			if (loader == NULL) {
-				xu4_error(XU4_LOG_WRN, "can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
-			}
-			else {
-				unscaled = loader->load(file, info->width, info->height, info->depth);
-				if (info->width == -1) {
-					// Write in the values for later use.
-					info->width = unscaled->width();
-					info->height = unscaled->height();
-					// ###            info->depth = ???
-				}
-			}
+			xu4_error(XU4_LOG_WRN, "can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
 		}
         u4fclose(file);
     }

@@ -1,11 +1,5 @@
-/*
- * $Id: imageloader_u4.h 2885 2011-04-03 19:18:32Z andrewtaylor $
- */
-
 #ifndef IMAGELOADER_U4_H
 #define IMAGELOADER_U4_H
-
-#include "imageloader.h"
 
 struct RGBA;
 
@@ -15,13 +9,8 @@ struct RGBA;
  * charset.ega).  This loader handles the original 4-bit images, as
  * well as the 8-bit VGA upgrade images.
  */
-class U4RawImageLoader : public ImageLoader {
-    static ImageLoader *instance;
+Image* xu4_u4raw_load(U4FILE *file, int width, int height, int bpp);
 
-public:
-    virtual Image *load(U4FILE *file, int width, int height, int bpp);
-
-};
 
 /**
  * Loader for U4 images with RLE compression.  Like raw images, the
@@ -29,13 +18,7 @@ public:
  * (e.g. start.ega, rune_*.ega).  This loader handles the original
  * 4-bit images, as well as the 8-bit VGA upgrade images.
  */
-class U4RleImageLoader : public ImageLoader {
-    static ImageLoader *instance;
-
-public:
-    virtual Image *load(U4FILE *file, int width, int height, int bpp);
-    
-};
+Image* xu4_u4rle_load(U4FILE *file, int width, int height, int bpp);
 
 /**
  * Loader for U4 images with LZW compression.  Like raw images, the
@@ -43,23 +26,6 @@ public:
  * (e.g. title.ega, tree.ega).  This loader handles the original 4-bit
  * images, as well as the 8-bit VGA upgrade images.
  */
-class U4LzwImageLoader : public ImageLoader {
-    static ImageLoader *instance;
-
-public:
-    virtual Image *load(U4FILE *file, int width, int height, int bpp);
-    
-};
-
-class U4PaletteLoader {
-    static RGBA *bwPalette;
-    static RGBA *egaPalette;
-    static RGBA *vgaPalette;
-
-public:
-    RGBA *loadBWPalette();
-    RGBA *loadEgaPalette();
-    RGBA *loadVgaPalette();
-};
+Image* xu4_u4lzw_load(U4FILE *file, int width, int height, int bpp);
 
 #endif /* IMAGELOADER_U4_H */
