@@ -4,7 +4,6 @@
 
 
 #include <vector>
-#include <iostream>
 
 #include "config.h"
 #include "debug.h"
@@ -597,7 +596,6 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 		}
 		
         string filetype = info->filetype;
-        std::cout << "filetype: " << filetype << "\n";
 		
         if (filetype == "image/png") {
 			unscaled = xu4_png_load(u4find_graphics(info->filename).c_str(), &info->width, &info->height);
