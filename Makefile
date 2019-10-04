@@ -64,8 +64,6 @@ CXXSRCS=\
 		src/imageloader.cpp \
 		src/imageloader_png.cpp \
 		src/imageloader_u4.cpp \
-		src/imageloader_u5.cpp \
-		src/imageloader_fmtowns.cpp \
 		src/imagemgr.cpp \
 		src/imageview.cpp \
 		src/intro.cpp \
