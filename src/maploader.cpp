@@ -2,8 +2,6 @@
  * $Id: maploader.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-
-#include <ctime>
 #include <string>
 #include "u4.h"
 
@@ -75,11 +73,6 @@ bool MapLoader::loadData(Map *map, U4FILE *f) {
     if (map->chunk_width == 0)
         map->chunk_width = map->width;
 
-    clock_t total = 0;
-#ifndef NPERF
-    clock_t start = clock();
-#endif
-
     u4fseek(f, map->offset, SEEK_CUR);
 
     for(ych = 0; ych < (map->height / map->chunk_height); ++ych) {
@@ -96,28 +89,15 @@ bool MapLoader::loadData(Map *map, U4FILE *f) {
                 for(y = 0; y < map->chunk_height; ++y) {
                     for(x = 0; x < map->chunk_width; ++x) {                    
                         int c = u4fgetc(f);
-                        if (c == EOF)
-                            return false;
-                      
-                        clock_t s = clock();
+                        if (c == EOF) { return false; }
+                        
                         MapTile mt = map->translateFromRawTileIndex(c);
-                        total += clock() - s;
-
                         map->data[x + (y * map->width) + (xch * map->chunk_width) + (ych * map->chunk_height * map->width)] = mt;
                     }
                 }
             }
         }
     }
-    
-#ifndef NPERF
-    clock_t end = clock();
-    FILE *file = FileSystem::openFile("debug/mapLoadData.txt", "wt");
-    if (file) {
-        fprintf(file, "%d msecs total\n%d msecs used by Tile::translate()", int(end - start), int(total));
-        fclose(file);
-    }
-#endif
 
     return true;
 }
