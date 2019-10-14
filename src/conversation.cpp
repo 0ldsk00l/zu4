@@ -2,10 +2,9 @@
  * $Id: conversation.cpp 3048 2012-06-23 11:50:23Z twschulz $
  */
 
-
-#include <cstring>
+#include <string.h>
 #include "conversation.h"
-#include "debug.h"
+#include "error.h"
 #include "person.h"
 #include "random.h"
 #include "script.h"
@@ -213,12 +212,10 @@ string Dialogue::dump(const string &arg) {
  * Conversation class 
  */ 
 
-Conversation::Conversation() : logger(0), state(INTRO), script(new Script()) {
-    logger = new Debug("debug/conversation.txt", "Conversation"); 
+Conversation::Conversation() : state(INTRO), script(new Script()) {
 }
 
 Conversation::~Conversation() {
-    delete logger;
     delete script;
 }
 
@@ -268,7 +265,7 @@ Conversation::InputType Conversation::getInputRequired(int *bufferlen) {
         return INPUT_NONE;
     }
 
-    ASSERT(0, "invalid state: %d", state);
+    xu4_assert(0, "invalid state: %d", state);
     return INPUT_NONE;
 }
 

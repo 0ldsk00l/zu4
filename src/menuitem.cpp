@@ -3,7 +3,6 @@
  */
 
 
-#include "debug.h"
 #include "error.h"
 #include "menu.h"
 #include "menuitem.h"
@@ -24,7 +23,7 @@ MenuItem::MenuItem(string t, short xpos, short ypos, int sc) :
     closesMenu(false)
 {
     // if the sc/scOffset is outside the range of the text string, assert
-    ASSERT(sc==-1 || (sc >= 0 && sc <= (int)text.length()), "sc value of %d out of range!", sc);
+    xu4_assert(sc==-1 || (sc >= 0 && sc <= (int)text.length()), "sc value of %d out of range!", sc);
     if (sc != -1) addShortcutKey(tolower(text[sc]));
 }
 

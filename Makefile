@@ -49,7 +49,6 @@ CXXSRCS=\
 		src/conversation.cpp \
 		src/creature.cpp \
 		src/death.cpp \
-		src/debug.cpp \
 		src/dialogueloader.cpp \
 		src/dialogueloader_hw.cpp \
 		src/dialogueloader_lb.cpp \

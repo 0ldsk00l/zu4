@@ -6,7 +6,6 @@
 #include "annotation.h"
 
 #include "context.h"
-#include "debug.h"
 #include "error.h"
 #include "event.h"
 #include "map.h"

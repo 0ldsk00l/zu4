@@ -1,19 +1,16 @@
 /*
  * $Id: spell.cpp 3071 2014-07-26 18:01:08Z darren_janeczek $
  */
-
+#include <string.h>
 
 #include "u4.h"
-
 #include "spell.h"
-
-#include <cstring>
 #include "annotation.h"
 #include "combat.h"
 #include "context.h"
-#include "debug.h"
 #include "direction.h"
 #include "dungeon.h"
+#include "error.h"
 #include "event.h"
 #include "game.h"
 #include "location.h"
@@ -131,7 +128,7 @@ Ingredients::Ingredients() {
 }
 
 bool Ingredients::addReagent(Reagent reagent) {
-    ASSERT(reagent < REAG_MAX, "invalid reagent: %d", reagent);    
+    xu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);    
     if (c->party->getReagent(reagent) < 1)
         return false;
     c->party->adjustReagent(reagent, -1);    
@@ -140,7 +137,7 @@ bool Ingredients::addReagent(Reagent reagent) {
 }
 
 bool Ingredients::removeReagent(Reagent reagent) {
-    ASSERT(reagent < REAG_MAX, "invalid reagent: %d", reagent);
+    xu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);
     if (reagents[reagent] == 0)
         return false;
     c->party->adjustReagent(reagent, 1);    
@@ -149,7 +146,7 @@ bool Ingredients::removeReagent(Reagent reagent) {
 }
 
 int Ingredients::getReagent(Reagent reagent) const {
-    ASSERT(reagent < REAG_MAX, "invalid reagent: %d", reagent);
+    xu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);
     return reagents[reagent];
 }
 
@@ -173,7 +170,7 @@ bool Ingredients::checkMultiple(int batches) const {
 }
 
 void Ingredients::multiply(int batches) {
-    ASSERT(checkMultiple(batches), "not enough reagents to multiply ingredients by %d\n", batches);
+    xu4_assert(checkMultiple(batches), "not enough reagents to multiply ingredients by %d\n", batches);
     for (int i = 0; i < REAG_MAX; i++) {
         if (reagents[i] > 0) {
             c->saveGame->reagents[i] -= batches - 1;
@@ -183,25 +180,25 @@ void Ingredients::multiply(int batches) {
 }
 
 const char *spellGetName(unsigned int spell) {
-    ASSERT(spell < N_SPELLS, "invalid spell: %d", spell);
+    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     return spells[spell].name;
 }
 
 int spellGetRequiredMP(unsigned int spell) {
-    ASSERT(spell < N_SPELLS, "invalid spell: %d", spell);
+    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
     
     return spells[spell].mp;
 }
 
 LocationContext spellGetContext(unsigned int spell) {
-    ASSERT(spell < N_SPELLS, "invalid spell: %d", spell);
+    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     return spells[spell].context;
 }
 
 TransportContext spellGetTransportContext(unsigned int spell) {
-    ASSERT(spell < N_SPELLS, "invalid spell: %d", spell);
+    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     return spells[spell].transportContext;
 }
@@ -236,7 +233,7 @@ string spellGetErrorMessage(unsigned int spell, SpellCastError error) {
 int spellMix(unsigned int spell, const Ingredients *ingredients) {
     int regmask, reg;
 
-    ASSERT(spell < N_SPELLS, "invalid spell: %d", spell);
+    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     regmask = 0;
     for (reg = 0; reg < REAG_MAX; reg++) {
@@ -253,7 +250,7 @@ int spellMix(unsigned int spell, const Ingredients *ingredients) {
 }
 
 Spell::Param spellGetParamType(unsigned int spell) {
-    ASSERT(spell < N_SPELLS, "invalid spell: %d", spell);
+    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     return spells[spell].paramType;
 }
@@ -264,8 +261,8 @@ Spell::Param spellGetParamType(unsigned int spell) {
  * character doesn't have enough magic points.
  */
 SpellCastError spellCheckPrerequisites(unsigned int spell, int character) {
-    ASSERT(spell < N_SPELLS, "invalid spell: %d", spell);
-    ASSERT(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
+    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    xu4_assert(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
 
     if (c->saveGame->mixtures[spell] == 0)
         return CASTERR_NOMIX;
@@ -290,8 +287,8 @@ bool spellCast(unsigned int spell, int character, int param, SpellCastError *err
     int subject = (spells[spell].paramType == Spell::PARAM_PLAYER) ? param : -1;
     PartyMember *p = c->party->member(character);
     
-    ASSERT(spell < N_SPELLS, "invalid spell: %d", spell);
-    ASSERT(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
+    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    xu4_assert(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
 
     *error = spellCheckPrerequisites(spell, character);
 
@@ -384,7 +381,7 @@ bool spellMagicAttackAt(const Coords &coords, MapTile attackTile, int attackDama
 }
 
 static int spellAwaken(int player) {
-    ASSERT(player < 8, "player out of range: %d", player);
+    xu4_assert(player < 8, "player out of range: %d", player);
     PartyMember *p = c->party->member(player);
 
     if ((player < c->party->size()) && (p->getStatus() == STAT_SLEEPING)) {
@@ -445,7 +442,7 @@ static int spellBlink(int dir) {
 }
 
 static int spellCure(int player) {
-    ASSERT(player < 8, "player out of range: %d", player);
+    xu4_assert(player < 8, "player out of range: %d", player);
 
     GameController::flashTile(c->party->member(player)->getCoords(), "wisp", 1);
     return c->party->member(player)->heal(HT_CURE);
@@ -579,7 +576,7 @@ static int spellGate(int phase) {
 }
 
 static int spellHeal(int player) {
-    ASSERT(player < 8, "player out of range: %d", player);
+    xu4_assert(player < 8, "player out of range: %d", player);
 
     GameController::flashTile(c->party->member(player)->getCoords(), "wisp", 1);
     c->party->member(player)->heal(HT_HEAL);
@@ -627,7 +624,7 @@ static int spellProtect(int unused) {
 }
 
 static int spellRez(int player) {
-    ASSERT(player < 8, "player out of range: %d", player);
+    xu4_assert(player < 8, "player out of range: %d", player);
 
     return c->party->member(player)->heal(HT_RESURRECT);
 }

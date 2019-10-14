@@ -2,15 +2,14 @@
  * $Id: item.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-
 #include "item.h"
 
 #include "annotation.h"
 #include "codex.h"
 #include "combat.h"
 #include "context.h"
-#include "debug.h"
 #include "dungeon.h"
+#include "error.h"
 #include "game.h"
 #include "location.h"
 #include "map.h"
@@ -300,7 +299,7 @@ void useStone(int item) {
                         return;
                     }
                 }
-                else ASSERT(0, "Not in an altar room!");
+                else xu4_assert(0, "Not in an altar room!");
 
                 /* see if we have all the stones, if not, get more names! */
                 if (attr && needStoneNames) {
@@ -412,7 +411,7 @@ bool isMysticInInventory(int mystic) {
     else if (mystic == ARMR_MYSTICROBES)
         return c->saveGame->armor[ARMR_MYSTICROBES] > 0;
     else
-        ASSERT(0, "Invalid mystic item was tested in isMysticInInventory()");    
+        xu4_assert(0, "Invalid mystic item was tested in isMysticInInventory()");    
     return false;
 }
 
@@ -424,7 +423,7 @@ void putMysticInInventory(int mystic) {
     else if (mystic == ARMR_MYSTICROBES)
         c->saveGame->armor[ARMR_MYSTICROBES] += 8;
     else
-        ASSERT(0, "Invalid mystic item was added in putMysticInInventory()");        
+        xu4_assert(0, "Invalid mystic item was added in putMysticInInventory()");        
     c->saveGame->lastreagent = c->saveGame->moves & 0xF0;
 }
 

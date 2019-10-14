@@ -2,7 +2,6 @@
  * $Id: mapmgr.cpp 2994 2011-12-03 22:40:57Z twschulz $
  */
 
-
 #include <vector>
 
 #include "u4.h"
@@ -10,7 +9,6 @@
 #include "annotation.h"
 #include "city.h"
 #include "combat.h"
-#include "debug.h"
 #include "dungeon.h"
 #include "error.h"
 #include "map.h"
@@ -48,8 +46,7 @@ void MapMgr::destroy() {
 }
 
 MapMgr::MapMgr() {
-    logger = new Debug("debug/mapmgr.txt", "MapMgr"); 
-    TRACE(*logger, "creating MapMgr");
+    xu4_error(XU4_LOG_DBG, "Creating MapMgr");
 
     const Config *config = Config::getInstance();
     Map *map;
@@ -66,8 +63,6 @@ MapMgr::MapMgr() {
 MapMgr::~MapMgr() {
     for (std::vector<Map *>::iterator i = mapList.begin(); i != mapList.end(); i++)
         delete *i;
-
-    delete logger;
 }
 
 void MapMgr::unloadMap(MapId id) {
@@ -122,9 +117,9 @@ Map *MapMgr::get(MapId id) {
     if (!mapList[id]->data.size()) {
         MapLoader *loader = MapLoader::getLoader(mapList[id]->type);
         if (loader == NULL)
-            xu4_error(XU4_LOG_ERR, "can't load map of type \"%d\"", mapList[id]->type);
+            xu4_error(XU4_LOG_ERR, "Can't load map of type: %d", mapList[id]->type);
 
-        TRACE_LOCAL(*logger, string("loading map data for map \'") + mapList[id]->fname + "\'");
+        xu4_error(XU4_LOG_DBG, "Loading map data for map: %s", mapList[id]->fname.c_str());
 
         loader->load(mapList[id]);
     }
@@ -166,7 +161,7 @@ Map *MapMgr::initMapFromConf(const ConfigElement &mapConf) {
         cm->setContextual(mapConf.getBool("contextual"));
     }
 
-    TRACE_LOCAL(*logger, string("loading configuration for map \'") + map->fname + "\'");
+    xu4_error(XU4_LOG_DBG, "Loading configuration for map: %s", map->fname.c_str());
 
     if (mapConf.getBool("showavatar"))
         map->flags |= SHOW_AVATAR;

@@ -14,7 +14,6 @@
 
 #include "cursors.h"
 
-#include "debug.h"
 #include "dungeonview.h"
 #include "error.h"
 #include "event.h"
@@ -95,101 +94,6 @@ void screenDelete_sys() {
 void screenIconify() {
     SDL_WM_IconifyWindow();
 }
-
-#if 0
-void screenDeinterlaceCga(unsigned char *data, int width, int height, int tiles, int fudge) {
-    unsigned char *tmp;
-    int t, x, y;
-    int tileheight = height / tiles;
-
-    tmp = new unsigned char[width * tileheight / 4];
-
-    for (t = 0; t < tiles; t++) {
-        unsigned char *base;
-        base = &(data[t * (width * tileheight / 4)]);
-        
-        for (y = 0; y < (tileheight / 2); y++) {
-            for (x = 0; x < width; x+=4) {
-                tmp[((y * 2) * width + x) / 4] = base[(y * width + x) / 4];
-            }
-        }
-        for (y = tileheight / 2; y < tileheight; y++) {
-            for (x = 0; x < width; x+=4) {
-                tmp[(((y - (tileheight / 2)) * 2 + 1) * width + x) / 4] = base[(y * width + x) / 4 + fudge];
-            }
-        }
-        for (y = 0; y < tileheight; y++) {
-            for (x = 0; x < width; x+=4) {
-                base[(y * width + x) / 4] = tmp[(y * width + x) / 4];
-            }
-        }
-    }
-
-    delete [] tmp;
-}
-
-/**
- * Load an image from an ".pic" CGA image file.
- */
-int screenLoadImageCga(Image **image, int width, int height, U4FILE *file, CompressionType comp, int tiles) {
-    Image *img;
-    int x, y;
-    unsigned char *compressed_data, *decompressed_data = NULL;
-    long inlen, decompResult;
-
-    inlen = u4flength(file);
-    compressed_data = (Uint8 *) malloc(inlen);
-    u4fread(compressed_data, 1, inlen, file);
-
-    switch(comp) {
-    case COMP_NONE:
-        decompressed_data = compressed_data;
-        decompResult = inlen;
-        break;
-    case COMP_RLE:
-        decompResult = rleDecompressMemory(compressed_data, inlen, (void **) &decompressed_data);
-        free(compressed_data);
-        break;
-    case COMP_LZW:
-        decompResult = decompress_u4_memory(compressed_data, inlen, (void **) &decompressed_data);
-        free(compressed_data);
-        break;
-    default:
-        ASSERT(0, "invalid compression type %d", comp);
-    }
-
-    if (decompResult == -1) {
-        if (decompressed_data)
-            free(decompressed_data);
-        return 0;
-    }
-
-    screenDeinterlaceCga(decompressed_data, width, height, tiles, 0);
-
-    img = Image::create(width, height, true, Image::HARDWARE);
-    if (!img) {
-        if (decompressed_data)
-            free(decompressed_data);
-        return 0;
-    }
-
-    img->setPalette(egaPalette, 16);
-
-    for (y = 0; y < height; y++) {
-        for (x = 0; x < width; x+=4) {
-            img->putPixelIndex(x, y, decompressed_data[(y * width + x) / 4] >> 6);
-            img->putPixelIndex(x + 1, y, (decompressed_data[(y * width + x) / 4] >> 4) & 0x03);
-            img->putPixelIndex(x + 2, y, (decompressed_data[(y * width + x) / 4] >> 2) & 0x03);
-            img->putPixelIndex(x + 3, y, (decompressed_data[(y * width + x) / 4]) & 0x03);
-        }
-    }
-    free(decompressed_data);
-
-    (*image) = img;
-
-    return 1;
-}
-#endif
 
 /**
  * Force a redraw.

@@ -13,7 +13,6 @@
 #include "combat.h"
 #include "conversation.h"
 #include "dialogueloader.h"
-#include "debug.h"
 #include "dungeon.h"
 #include "error.h"
 #include "filesystem.h"
@@ -42,7 +41,7 @@ MapLoader *WorldMapLoader::instance = MapLoader::registerLoader(new WorldMapLoad
  * Gets a map loader for the given map type.
  */
 MapLoader *MapLoader::getLoader(Map::Type type) {
-    ASSERT(loaderMap != NULL, "ImageLoader::getLoader loaderMap not initialized");
+    xu4_assert(loaderMap != NULL, "ImageLoader::getLoader loaderMap not initialized");
     if (loaderMap->find(type) == loaderMap->end())
         return NULL;
     return (*loaderMap)[type];
@@ -150,8 +149,8 @@ bool CityMapLoader::load(Map *map) {
         xu4_error(XU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 32x32 to be read from an .ULT file */
-    ASSERT(city->width == CITY_WIDTH, "map width is %d, should be %d", city->width, CITY_WIDTH);
-    ASSERT(city->height == CITY_HEIGHT, "map height is %d, should be %d", city->height, CITY_HEIGHT);
+    xu4_assert(city->width == CITY_WIDTH, "map width is %d, should be %d", city->width, CITY_WIDTH);
+    xu4_assert(city->height == CITY_HEIGHT, "map height is %d, should be %d", city->height, CITY_HEIGHT);
 
     if (!loadData(city, ult))
         return false;
@@ -265,8 +264,8 @@ bool ConMapLoader::load(Map *map) {
         xu4_error(XU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 11x11 to be read from an .CON file */
-    ASSERT(map->width == CON_WIDTH, "map width is %d, should be %d", map->width, CON_WIDTH);
-    ASSERT(map->height == CON_HEIGHT, "map height is %d, should be %d", map->height, CON_HEIGHT);
+    xu4_assert(map->width == CON_WIDTH, "map width is %d, should be %d", map->width, CON_WIDTH);
+    xu4_assert(map->height == CON_HEIGHT, "map height is %d, should be %d", map->height, CON_HEIGHT);
 
     if (map->type != Map::SHRINE) {
         CombatMap *cm = getCombatMap(map);
@@ -305,8 +304,8 @@ bool DngMapLoader::load(Map *map) {
         xu4_error(XU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 11x11 to be read from an .CON file */
-    ASSERT(dungeon->width == DNG_WIDTH, "map width is %d, should be %d", dungeon->width, DNG_WIDTH);
-    ASSERT(dungeon->height == DNG_HEIGHT, "map height is %d, should be %d", dungeon->height, DNG_HEIGHT);
+    xu4_assert(dungeon->width == DNG_WIDTH, "map width is %d, should be %d", dungeon->width, DNG_WIDTH);
+    xu4_assert(dungeon->height == DNG_HEIGHT, "map height is %d, should be %d", dungeon->height, DNG_HEIGHT);
 
     /* load the dungeon map */
     unsigned int i, j;

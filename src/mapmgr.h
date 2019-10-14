@@ -12,7 +12,6 @@
 
 class City;
 class ConfigElement;
-class Debug;
 class Dungeon;
 struct PersonRole;
 struct Portal;
@@ -112,7 +111,6 @@ private:
 
     static MapMgr *instance;
     std::vector<Map *> mapList;
-    Debug *logger;
 };
 
 #define mapMgr (MapMgr::getInstance())

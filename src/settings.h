@@ -52,7 +52,6 @@ using std::string;
 #define DEFAULT_SHRINE_TIME             16
 #define DEFAULT_SHAKE_INTERVAL          100
 #define DEFAULT_BATTLE_DIFFICULTY       "Normal"
-#define DEFAULT_LOGGING                 ""
 #define DEFAULT_TITLE_SPEED_RANDOM      150
 #define DEFAULT_TITLE_SPEED_OTHER       30
 
@@ -137,7 +136,6 @@ public:
     string              lineOfSight;
     string              videoType;
     string              battleDiff;
-    string              logging;
     string              game;
 };
 

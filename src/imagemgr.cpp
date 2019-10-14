@@ -2,11 +2,9 @@
  * $Id: imagemgr.cpp 3048 2012-06-23 11:50:23Z twschulz $
  */
 
-
 #include <vector>
 
 #include "config.h"
-#include "debug.h"
 #include "error.h"
 #include "image.h"
 #include "imageloader_png.h"
@@ -56,24 +54,18 @@ void ImageMgr::destroy() {
 }
 
 ImageMgr::ImageMgr() {
-    logger = new Debug("debug/imagemgr.txt", "ImageMgr");
-    TRACE(*logger, "creating ImageMgr");
-
+    xu4_error(XU4_LOG_DBG, "Creating ImageMgr");
     settings.addObserver(this);
 }
 
 ImageMgr::~ImageMgr() {
     settings.deleteObserver(this);
-
     for (std::map<string, ImageSet *>::iterator i = imageSets.begin(); i != imageSets.end(); i++)
         delete i->second;
-
-    delete logger;
 }
 
 void ImageMgr::init() {
-    TRACE(*logger, "initializing ImageMgr");
-
+    xu4_error(XU4_LOG_DBG, "Initializing ImageMgr");
     /*
      * register the "screen" image representing the entire screen
      */
@@ -124,7 +116,7 @@ ImageSet *ImageMgr::loadImageSetFromConf(const ConfigElement &conf) {
     set->location = conf.getString("location");
     set->extends = conf.getString("extends");
 
-    TRACE(*logger, string("loading image set ") + set->name);
+    xu4_error(XU4_LOG_DBG, "Loading image set: %s", set->name.c_str());
 
     vector<ConfigElement> children = conf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
@@ -589,7 +581,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
     U4FILE *file = getImageFile(info);
     Image *unscaled = NULL;
     if (file) {
-        TRACE(*logger, string("loading image from file '") + info->filename + string("'"));
+        xu4_error(XU4_LOG_DBG, "Loading image from file: %s", info->filename.c_str());
 
         if (info->filetype.empty()) {
             info->filetype = guessFileType(info->filename);
@@ -748,11 +740,8 @@ const vector<string> &ImageMgr::getSetNames() {
  */
 void ImageMgr::update(Settings *newSettings) {
     string setname;
-
     setname = newSettings->videoType;
-
-    TRACE(*logger, string("base image set is '") + setname + string("'"));
-
+    xu4_error(XU4_LOG_DBG, "Base image set is: %s", setname.c_str());
     baseSet = getSet(setname);
 }
 

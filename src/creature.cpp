@@ -9,7 +9,6 @@
 #include "combat.h"
 #include "config.h"
 #include "context.h"
-#include "debug.h"
 #include "error.h"
 #include "game.h"       /* required by specialAction and specialEffect functions */
 #include "location.h"
@@ -1059,6 +1058,6 @@ Creature *CreatureMgr::randomAmbushing() {
         }
     }
 
-    ASSERT(0, "failed to find an ambushing creature");
+    xu4_assert(0, "failed to find an ambushing creature");
     return NULL;
 }

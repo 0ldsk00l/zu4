@@ -3,7 +3,6 @@
  */
 
 
-#include "debug.h"
 #include "error.h"
 #include "image.h"
 #include "imagemgr.h"

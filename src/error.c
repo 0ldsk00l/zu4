@@ -25,6 +25,21 @@
 
 #include "error.h"
 
+void xu4_assert(bool exp, const char *fmt, ...) {
+	// Handle assertions
+	va_list va;
+	char buffer[256] = {0};
+	
+	va_start(va, fmt);
+	vsnprintf(buffer, sizeof(buffer), fmt, va);
+	va_end(va);
+	if (!exp) {
+		fprintf(stderr, "Assertion failed: %s\n", buffer);
+		fflush(stderr);
+		abort();
+	}
+}
+
 void xu4_error(int level, const char *fmt, ...) {
 	// Handle and log errors
 	va_list va;

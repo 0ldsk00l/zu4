@@ -3,17 +3,15 @@
  */
 
 
-#include <ctime>
+#include <time.h>
 #include "u4.h"
-
 #include "combat.h"
-
 #include "annotation.h"
 #include "context.h"
 #include "creature.h"
 #include "death.h"
-#include "debug.h"
 #include "dungeon.h"
+#include "error.h"
 #include "event.h"
 #include "game.h"
 #include "item.h"
@@ -135,7 +133,7 @@ void CombatController::initDungeonRoom(int room, Direction from) {
     int offset, i;
     init(NULL);
 
-    ASSERT(c->location->prev->context & CTX_DUNGEON, "Error: called initDungeonRoom from non-dungeon context");
+    xu4_assert(c->location->prev->context & CTX_DUNGEON, "Error: called initDungeonRoom from non-dungeon context");
     {
         Dungeon *dng = dynamic_cast<Dungeon*>(c->location->prev->map);
         unsigned char
@@ -176,7 +174,7 @@ void CombatController::initDungeonRoom(int room, Direction from) {
         case DIR_ADVANCE:
         case DIR_RETREAT:
         default: 
-            ASSERT(0, "Invalid 'from' direction passed to initDungeonRoom()");
+            xu4_assert(0, "Invalid 'from' direction passed to initDungeonRoom()");
         }
 
         for (i = 0; i < AREA_PLAYERS; i++) {
@@ -299,7 +297,7 @@ void CombatController::end(bool adjustKarma) {
                 case DIR_NONE:  break;
                 case DIR_ADVANCE:
                 case DIR_RETREAT:
-                default: ASSERT(0, "Invalid exit dir %d", exitDir); break;
+                default: xu4_assert(0, "Invalid exit dir %d", exitDir); break;
                 }
 
                 if (action != ACTION_NONE)
@@ -514,8 +512,8 @@ void CombatController::awardLoot() {
 }
 
 bool CombatController::attackHit(Creature *attacker, Creature *defender) {
-    ASSERT(attacker != NULL, "attacker must not be NULL");
-    ASSERT(defender != NULL, "defender must not be NULL");
+    xu4_assert(attacker != NULL, "attacker must not be NULL");
+    xu4_assert(defender != NULL, "defender must not be NULL");
 
     int attackValue = xu4_random(0x100) + attacker->getAttackBonus();
     int defenseValue = defender->getDefense();

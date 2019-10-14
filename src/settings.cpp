@@ -9,7 +9,6 @@
 
 #include "settings.h"
 
-#include "debug.h"
 #include "error.h"
 #include "event.h"
 #include "filesystem.h"
@@ -36,8 +35,6 @@ bool SettingsData::operator==(const SettingsData &s) const {
     if (videoType != s.videoType)
         return false;
     if (battleDiff != s.battleDiff)
-        return false;
-    if (logging != s.logging)
         return false;
     if (game != s.game)
         return false;
@@ -162,7 +159,6 @@ bool Settings::read() {
     /* mouse defaults to on */
     mouseOptions.enabled = 1;
 
-    logging = DEFAULT_LOGGING;
     game = "Ultima IV";
     
     settingsFile = fopen(filename.c_str(), "rt");    
@@ -259,8 +255,6 @@ bool Settings::read() {
         /* mouse options */
         else if (strstr(buffer, "mouseEnabled=") == buffer)
             mouseOptions.enabled = (int) strtoul(buffer + strlen("mouseEnabled="), NULL, 0);
-        else if (strstr(buffer, "logging=") == buffer)
-            logging = buffer + strlen("logging=");
         else if (strstr(buffer, "game=") == buffer)
             game = buffer + strlen("game=");
 
@@ -355,7 +349,6 @@ bool Settings::write() {
             "innAlwaysCombat=%d\n"
             "campingAlwaysCombat=%d\n"
             "mouseEnabled=%d\n"
-            "logging=%s\n"
             "game=%s\n"
             "renderTileTransparency=%d\n"
             "transparentTilePixelShadowOpacity=%d\n"
@@ -400,7 +393,6 @@ bool Settings::write() {
             innAlwaysCombat,
             campingAlwaysCombat,
             mouseOptions.enabled,
-            logging.c_str(),
             game.c_str(),
             enhancementsOptions.u4TileTransparencyHack,
             enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity,

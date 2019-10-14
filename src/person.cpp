@@ -2,20 +2,16 @@
  * $Id: person.cpp 3064 2014-07-19 15:44:38Z darren_janeczek $
  */
 
-
-#include <cctype>
-#include <string>
-#include <cstring>
+#include <string.h>
+#include <string.h>
 #include <vector>
 
 #include "u4.h"
-
 #include "person.h"
-
 #include "city.h"
 #include "context.h"
 #include "conversation.h"
-#include "debug.h"
+#include "error.h"
 #include "event.h"
 #include "game.h"   // Included for ReadPlayerController
 #include "io.h"
@@ -138,7 +134,7 @@ void Person::setDialogue(Dialogue *d) {
 
 void Person::setNpcType(PersonNpcType t) {
     npcType = t;
-    ASSERT(!isVendor() || dialogue == NULL, "vendor has dialogue");
+    xu4_assert(!isVendor() || dialogue == NULL, "vendor has dialogue");
 }
 
 list<string> Person::getConversationText(Conversation *cnv, const char *inquiry) {
@@ -241,18 +237,18 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
             break;
 
         case Conversation::CONFIRMATION:
-            ASSERT(npcType == NPC_LORD_BRITISH, "invalid state: %d", cnv->state);
+            xu4_assert(npcType == NPC_LORD_BRITISH, "invalid state: %d", cnv->state);
             text += lordBritishGetQuestionResponse(cnv, inquiry);
             break;
 
         case Conversation::ASK:
         case Conversation::ASKYESNO:
-            ASSERT(npcType != NPC_HAWKWIND, "invalid state for hawkwind conversation");            
+            xu4_assert(npcType != NPC_HAWKWIND, "invalid state for hawkwind conversation");            
             text += talkerGetQuestionResponse(cnv, inquiry) + "\n";
             break;
 
         case Conversation::GIVEBEGGAR:
-            ASSERT(npcType == NPC_TALKER_BEGGAR, "invalid npc type: %d", npcType);
+            xu4_assert(npcType == NPC_TALKER_BEGGAR, "invalid npc type: %d", npcType);
             text = beggarGetQuantityResponse(cnv, inquiry);
             break;
 
@@ -262,7 +258,7 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
             break;
 
         default:
-            ASSERT(0, "invalid state: %d", cnv->state);
+            xu4_assert(0, "invalid state: %d", cnv->state);
         }
     }
 
@@ -305,7 +301,7 @@ const char *Person::getChoices(Conversation *cnv) {
         return "012345678\015 \033";
 
     default:
-        ASSERT(0, "invalid state: %d", cnv->state);
+        xu4_assert(0, "invalid state: %d", cnv->state);
     }
 
     return NULL;
@@ -383,7 +379,7 @@ void Person::runCommand(Conversation *cnv, const ResponsePart &command) {
         c->party->adjustKarma(KA_HAWKWIND);
     }
     else {
-        ASSERT(0, "unknown command trigger in dialogue response: %s\n", string(command).c_str());
+        xu4_assert(0, "unknown command trigger in dialogue response: %s\n", string(command).c_str());
     }
 } 
 

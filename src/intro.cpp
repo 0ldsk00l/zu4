@@ -10,7 +10,6 @@
 
 #include "intro.h"
 
-#include "debug.h"
 #include "error.h"
 #include "event.h"
 #include "imagemgr.h"
@@ -347,7 +346,7 @@ void IntroController::deleteIntro() {
 }
 
 unsigned char *IntroController::getSigData() {
-    ASSERT(binData->sigData != NULL, "intro sig data not loaded");
+    xu4_assert(binData->sigData != NULL, "intro sig data not loaded");
     return binData->sigData;
 }
 
@@ -419,7 +418,7 @@ bool IntroController::keyPressed(int key) {
         break;
 
     default:
-        ASSERT(0, "key handler called in wrong mode");
+        xu4_assert(0, "key handler called in wrong mode");
         return true;
     }
 
@@ -559,7 +558,7 @@ void IntroController::drawBeastie(int beast, int vertoffset, int frame) {
     char buffer[128];
     int destx;
 
-    ASSERT(beast == 0 || beast == 1, "invalid beast: %d", beast);
+    xu4_assert(beast == 0 || beast == 1, "invalid beast: %d", beast);
 
     sprintf(buffer, "beast%dframe%02d", beast, frame);
 
@@ -588,8 +587,8 @@ void IntroController::drawCard(int pos, int card) {
         "sacrificecard", "honorcard", "spiritualitycard", "humilitycard" 
     };
 
-    ASSERT(pos == 0 || pos == 1, "invalid pos: %d", pos);
-    ASSERT(card < 8, "invalid card: %d", card);
+    xu4_assert(pos == 0 || pos == 1, "invalid pos: %d", pos);
+    xu4_assert(card < 8, "invalid card: %d", card);
 
     backgroundArea.draw(cardNames[card], pos ? 218 : 12, 12);
 }
@@ -598,9 +597,9 @@ void IntroController::drawCard(int pos, int card) {
  * Draws the beads in the abacus during the character creation sequence
  */
 void IntroController::drawAbacusBeads(int row, int selectedVirtue, int rejectedVirtue) {
-    ASSERT(row >= 0 && row < 7, "invalid row: %d", row);
-    ASSERT(selectedVirtue < 8 && selectedVirtue >= 0, "invalid virtue: %d", selectedVirtue);
-    ASSERT(rejectedVirtue < 8 && rejectedVirtue >= 0, "invalid virtue: %d", rejectedVirtue);
+    xu4_assert(row >= 0 && row < 7, "invalid row: %d", row);
+    xu4_assert(selectedVirtue < 8 && selectedVirtue >= 0, "invalid virtue: %d", selectedVirtue);
+    xu4_assert(rejectedVirtue < 8 && rejectedVirtue >= 0, "invalid virtue: %d", rejectedVirtue);
     
     backgroundArea.draw("whitebead", 128 + (selectedVirtue * 9), 24 + (row * 15));
     backgroundArea.draw("blackbead", 128 + (rejectedVirtue * 9), 24 + (row * 15));
@@ -656,7 +655,7 @@ void IntroController::updateScreen() {
         break;
 
     default:
-        ASSERT(0, "bad mode in updateScreen");
+        xu4_assert(0, "bad mode in updateScreen");
     }
 
     screenUpdateCursor();
@@ -876,7 +875,7 @@ string IntroController::getQuestion(int v1, int v2) {
     int i = 0;
     int d = 7;
 
-    ASSERT(v1 < v2, "first virtue must be smaller (v1 = %d, v2 = %d)", v1, v2);
+    xu4_assert(v1 < v2, "first virtue must be smaller (v1 = %d, v2 = %d)", v1, v2);
 
     while (v1 > 0) {
         i += d;
@@ -885,7 +884,7 @@ string IntroController::getQuestion(int v1, int v2) {
         v2--;
     }
 
-    ASSERT((i + v2 - 1) < 28, "calculation failed");
+    xu4_assert((i + v2 - 1) < 28, "calculation failed");
 
     return binData->introQuestions[i + v2 - 1];
 }
@@ -1405,7 +1404,7 @@ void IntroController::initPlayers(SaveGame *saveGame) {
 
     saveGame->players[0].klass = static_cast<ClassType>(questionTree[14]);
 
-    //ASSERT(saveGame->players[0].klass < 8, "bad class: %d", saveGame->players[0].klass);
+    //xu4_assert(saveGame->players[0].klass < 8, "bad class: %d", saveGame->players[0].klass);
 
     saveGame->players[0].weapon = initValuesForClass[saveGame->players[0].klass].weapon;
     saveGame->players[0].armor = initValuesForClass[saveGame->players[0].klass].armor;

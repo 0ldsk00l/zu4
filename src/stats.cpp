@@ -1,17 +1,14 @@
 /*
  * $Id: stats.cpp 3019 2012-03-18 11:31:13Z daniel_santos $
  */
-
+#include <string.h>
 
 #include "u4.h"
-
 #include "stats.h"
-
-#include <cstring>
 
 #include "armor.h"
 #include "context.h"
-#include "debug.h"
+#include "error.h"
 #include "menu.h"
 #include "names.h"
 #include "player.h"
@@ -164,7 +161,7 @@ void StatsArea::update(Aura *aura) {
 }
 
 void StatsArea::highlightPlayer(int player) {
-    ASSERT(player < c->party->size(), "player number out of range: %d", player);
+    xu4_assert(player < c->party->size(), "player number out of range: %d", player);
     mainArea.highlight(0, player * CHAR_HEIGHT, STATS_AREA_WIDTH * CHAR_WIDTH, CHAR_HEIGHT);
 }
 
@@ -202,7 +199,7 @@ void StatsArea::showPartyView(bool avatarOnly) {
     PartyMember *p = NULL;
     int activePlayer = c->party->getActivePlayer();
 
-    ASSERT(c->party->size() <= 8, "party members out of range: %d", c->party->size());
+    xu4_assert(c->party->size() <= 8, "party members out of range: %d", c->party->size());
 
     if (!avatarOnly) {
         for (int i = 0; i < c->party->size(); i++) {
@@ -222,7 +219,7 @@ void StatsArea::showPartyView(bool avatarOnly) {
 void StatsArea::showPlayerDetails() {
     int player = view - STATS_CHAR1;
 
-    ASSERT(player < 8, "character number out of range: %d", player);
+    xu4_assert(player < 8, "character number out of range: %d", player);
 
     PartyMember *p = c->party->member(player);
     setTitle(p->getName());

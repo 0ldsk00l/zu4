@@ -16,7 +16,6 @@ using std::list;
 using std::string;
 using std::vector;
 
-class Debug;
 class Person;
 class Script;
 
@@ -246,8 +245,6 @@ public:
     /* Static variables */
     static const unsigned int BUFFERLEN;    /**< The default maxixum length of input */
     
-private:
-    Debug *logger;
 public:    
     State state;                /**< The state of the conversation */
     string playerInput;         /**< A string holding the text the player inputs */

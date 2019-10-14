@@ -3,7 +3,6 @@
  */
 
 
-#include "debug.h"
 #include "image.h"
 #include "imagemgr.h"
 #include "settings.h"
@@ -67,8 +66,8 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
     Tile *tile = tileset->get(mapTile.id);
     Image *image = tile->getImage();
 
-    ASSERT(x < columns, "x value of %d out of range", x);
-    ASSERT(y < rows, "y value of %d out of range", y);
+    xu4_assert(x < columns, "x value of %d out of range", x);
+    xu4_assert(y < rows, "y value of %d out of range", y);
 
     //Blank scratch pad
 	animated->fillRect(0,0,SCALED(tileWidth),SCALED(tileHeight),0,0,0, 255);
@@ -108,8 +107,8 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
 }
 
 void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
-	ASSERT(x < columns, "x value of %d out of range", x);
-	ASSERT(y < rows, "y value of %d out of range", y);
+	xu4_assert(x < columns, "x value of %d out of range", x);
+	xu4_assert(y < rows, "y value of %d out of range", y);
 
 	animated->fillRect(0,0,SCALED(tileWidth),SCALED(tileHeight),0,0,0, 255);
 	animated->drawSubRect(SCALED(x * tileWidth + this->x),
@@ -170,8 +169,8 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
  * Draw a focus rectangle around the tile
  */
 void TileView::drawFocus(int x, int y) {
-    ASSERT(x < columns, "x value of %d out of range", x);
-    ASSERT(y < rows, "y value of %d out of range", y);
+    xu4_assert(x < columns, "x value of %d out of range", x);
+    xu4_assert(y < rows, "y value of %d out of range", y);
 
     /*
      * draw the focus rectangle around the tile

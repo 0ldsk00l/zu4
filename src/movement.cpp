@@ -2,14 +2,12 @@
  * $Id: movement.cpp 3014 2012-03-05 21:24:47Z twschulz $
  */
 
-
 #include "movement.h"
-
 #include "annotation.h"
 #include "combat.h"
 #include "context.h"
-#include "debug.h"
 #include "dungeon.h"
+#include "error.h"
 #include "event.h"
 #include "location.h"
 #include "creature.h"
@@ -123,7 +121,7 @@ void moveAvatarInDungeon(MoveEvent &event) {
     MapTile *tile;
     
     /* we're not in a dungeon, failed! */
-    ASSERT(c->location->context & CTX_DUNGEON, "moveAvatarInDungeon() called outside of dungeon, failed!");    
+    xu4_assert(c->location->context & CTX_DUNGEON, "moveAvatarInDungeon() called outside of dungeon, failed!");    
         
     /* you must turn first! */
     if (!advancing && !retreating) {        
@@ -270,7 +268,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
         dir = new_coords.pathAway(target, valid_dirs);
     
     } else {
-        ASSERT(action == CA_ADVANCE, "action must be CA_ADVANCE or CA_FLEE");
+        xu4_assert(action == CA_ADVANCE, "action must be CA_ADVANCE or CA_FLEE");
         // If they're not fleeing, make sure they don't flee on accident
         if (new_coords.x == 0)
             valid_dirs = DIR_REMOVE_FROM_MASK(DIR_WEST, valid_dirs);

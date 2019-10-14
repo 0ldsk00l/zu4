@@ -12,7 +12,6 @@
 #include "camp.h"
 #include "context.h"
 #include "conversation.h"
-#include "debug.h"
 #include "error.h"
 #include "event.h"
 #include "filesystem.h"

@@ -2,13 +2,11 @@
  * $Id: dungeon.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-
 #include <string>
 #include "dungeon.h"
-
+#include "error.h"
 #include "annotation.h"
 #include "context.h"
-#include "debug.h"
 #include "game.h"
 #include "item.h"
 #include "location.h"
@@ -197,7 +195,7 @@ void dungeonDrinkFountain() {
         break;
 
     default:
-        ASSERT(0, "Invalid call to dungeonDrinkFountain: no fountain at current location");
+        xu4_assert(0, "Invalid call to dungeonDrinkFountain: no fountain at current location");
     }
 }
 

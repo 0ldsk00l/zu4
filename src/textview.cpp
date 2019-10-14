@@ -2,11 +2,10 @@
  * $Id: textview.cpp 3014 2012-03-05 21:24:47Z twschulz $
  */
 
-
 #include <stdarg.h>
-#include <cstring>
+#include <string.h>
 
-#include "debug.h"
+#include "error.h"
 #include "event.h"
 #include "image.h"
 #include "imagemgr.h"
@@ -41,8 +40,8 @@ void TextView::reinit() {
  * Draw a character from the charset onto the view.
  */
 void TextView::drawChar(int chr, int x, int y) {
-    ASSERT(x < columns, "x value of %d out of range", x);
-    ASSERT(y < rows, "y value of %d out of range", y);
+    xu4_assert(x < columns, "x value of %d out of range", x);
+    xu4_assert(y < rows, "y value of %d out of range", y);
 
     charset->drawSubRect(SCALED(this->x + (x * CHAR_WIDTH)),
                          SCALED(this->y + (y * CHAR_HEIGHT)),
@@ -212,7 +211,7 @@ void TextView::setCursorPos(int x, int y, bool clearOld) {
         x -= columns;
         y++;
     }
-    ASSERT(y < rows, "y value of %d out of range", y);
+    xu4_assert(y < rows, "y value of %d out of range", y);
 
     if (clearOld && cursorEnabled) {
         drawChar(' ', cursorX, cursorY);
@@ -237,7 +236,7 @@ void TextView::disableCursor() {
 }
 
 void TextView::drawCursor() {
-    ASSERT(cursorPhase >= 0 && cursorPhase < 4, "invalid cursor phase: %d", cursorPhase);
+    xu4_assert(cursorPhase >= 0 && cursorPhase < 4, "invalid cursor phase: %d", cursorPhase);
 
     if (!cursorEnabled)
         return;

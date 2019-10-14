@@ -17,12 +17,10 @@
 #include "cheat.h"
 #include "city.h"
 #include "conversation.h"
-#include "debug.h"
 #include "dungeon.h"
 #include "combat.h"
 #include "context.h"
 #include "death.h"
-#include "debug.h"
 #include "direction.h"
 #include "error.h"
 #include "event.h"
@@ -107,8 +105,6 @@ void gameCreatureAttack(Creature *obj);
 
 //extern Object *party[8];
 Context *c = NULL;
-
-Debug gameDbg("debug/game.txt", "Game");
 
 MouseArea mouseAreas[] = {
     { 3, { { 8, 8 }, { 8, 184 }, { 96, 96 } }, MC_WEST, { U4_ENTER, 0, U4_LEFT } },
@@ -200,7 +196,7 @@ void GameController::initScreenWithoutReloadingState()
 void GameController::init() {
     FILE *saveGameFile, *monstersFile;    
 
-    TRACE(gameDbg, "gameInit() running.");
+    xu4_error(XU4_LOG_DBG, "gameInit() running.");
 
     initScreen();
 
@@ -215,7 +211,7 @@ void GameController::init() {
     c = new Context;
     c->saveGame = new SaveGame;
 
-    TRACE_LOCAL(gameDbg, "Global context initialized.");
+    xu4_error(XU4_LOG_DBG, "Global context initialized.");
 
     /* initialize conversation and game state variables */    
     c->line = TEXT_AREA_H - 1;
@@ -240,7 +236,7 @@ void GameController::init() {
     } else
         xu4_error(XU4_LOG_ERR, "no savegame found!");
 
-    TRACE_LOCAL(gameDbg, "Save game loaded."); ++pb;
+    xu4_error(XU4_LOG_DBG, "Save game loaded."); ++pb;
 
     /* initialize our party */
     c->party = new Party(c->saveGame);
@@ -250,11 +246,11 @@ void GameController::init() {
     setMap(mapMgr->get(MAP_WORLD), 0, NULL);  
     c->location->map->clearObjects();
 
-    TRACE_LOCAL(gameDbg, "World map set."); ++pb;
+    xu4_error(XU4_LOG_DBG, "World map set."); ++pb;
 
     /* initialize our start location */
     Map *map = mapMgr->get(MapId(c->saveGame->location));
-    TRACE_LOCAL(gameDbg, "Initializing start location.");
+    xu4_error(XU4_LOG_DBG, "Initializing start location.");
 
     /* if our map is not the world map, then load our map */
     if (map->type != Map::WORLD)
@@ -283,7 +279,7 @@ void GameController::init() {
     if (MAP_IS_OOB(c->location->map, c->location->coords))
         c->location->coords.putInBounds(c->location->map);    
 
-    TRACE_LOCAL(gameDbg, "Loading monsters."); ++pb;
+    xu4_error(XU4_LOG_DBG, "Loading monsters."); ++pb;
 
     /* load in creatures.sav */
     monstersFile = fopen((settings.getUserPath() + MONSTERS_SAV_BASE_FILENAME).c_str(), "rb");
@@ -308,7 +304,7 @@ void GameController::init() {
 
     ++pb;
 
-    TRACE_LOCAL(gameDbg, "Settings up reagent menu."); 
+    xu4_error(XU4_LOG_DBG, "Settings up reagent menu."); 
     c->stats->resetReagentsMenu();
 
     /* add some observers */
@@ -316,7 +312,7 @@ void GameController::init() {
     c->party->addObserver(c->stats);
 
     initScreenWithoutReloadingState();
-    TRACE(gameDbg, "gameInit() completed successfully."); 
+    xu4_error(XU4_LOG_DBG, "gameInit() completed successfully."); 
 }
 
 /**
@@ -494,7 +490,7 @@ void gameUpdateScreen() {
     case VIEW_MIXTURES: /* still testing */
         break;
     default:
-        ASSERT(0, "invalid view mode: %d", c->location->viewMode);
+        xu4_assert(0, "invalid view mode: %d", c->location->viewMode);
     }
 }
 
@@ -696,7 +692,7 @@ void GameController::flashTile(const Coords &coords, MapTile tile, int frames) {
 
 void GameController::flashTile(const Coords &coords, const string &tilename, int timeFactor) {
     Tile *tile = c->location->map->tileset->getByName(tilename);
-    ASSERT(tile, "no tile named '%s' found in tileset", tilename.c_str());
+    xu4_assert(tile, "no tile named '%s' found in tileset", tilename.c_str());
     flashTile(coords, tile->getId(), timeFactor);
 }
 
@@ -1234,7 +1230,7 @@ bool GameController::keyPressed(int key) {
                     c->lastShip = obj;
 
                 Tile *avatar = c->location->map->tileset->getByName("avatar");
-                ASSERT(avatar, "no avatar tile found in tileset");
+                xu4_assert(avatar, "no avatar tile found in tileset");
                 c->party->setTransport(avatar->getId());
                 c->horseSpeed = 0;
                 screenMessage("X-it\n");
@@ -1495,7 +1491,7 @@ int gameGetPlayer(bool canBeDisabled, bool canBeActivePlayer) {
         return -1;
     }
 
-    ASSERT(player < c->party->size(), "player %d, but only %d members\n", player, c->party->size());
+    xu4_assert(player < c->party->size(), "player %d, but only %d members\n", player, c->party->size());
     return player;
 }
 
@@ -2073,9 +2069,9 @@ void GameController::initMoons()
     int trammelphase = c->saveGame->trammelphase,
         feluccaphase = c->saveGame->feluccaphase;        
 
-    ASSERT(c != NULL, "Game context doesn't exist!");
-    ASSERT(c->saveGame != NULL, "Savegame doesn't exist!");
-    //ASSERT(mapIsWorldMap(c->location->map) && c->location->viewMode == VIEW_NORMAL, "Can only call gameInitMoons() from the world map!");
+    xu4_assert(c != NULL, "Game context doesn't exist!");
+    xu4_assert(c->saveGame != NULL, "Savegame doesn't exist!");
+    //xu4_assert(mapIsWorldMap(c->location->map) && c->location->viewMode == VIEW_NORMAL, "Can only call gameInitMoons() from the world map!");
 
     c->saveGame->trammelphase = c->saveGame->feluccaphase = 0;
     c->moonPhase = 0;
@@ -2200,7 +2196,7 @@ void GameController::avatarMoved(MoveEvent &event) {
                     screenMessage("%cDrift Only!%c\n", FG_GREY, FG_WHITE);
                     break;
                 default:
-                    ASSERT(0, "bad transportContext %d in avatarMoved()", c->transportContext);
+                    xu4_assert(0, "bad transportContext %d in avatarMoved()", c->transportContext);
             }
         }
 
@@ -2359,7 +2355,7 @@ bool jimmyAt(const Coords &coords) {
         
     if (c->saveGame->keys) {
         Tile *door = c->location->map->tileset->getByName("door");
-        ASSERT(door, "no door tile found in tileset");
+        xu4_assert(door, "no door tile found in tileset");
         c->saveGame->keys--;
         c->location->map->annotations->add(coords, door->getId());
         screenMessage("\nUnlocked!\n");
@@ -2411,7 +2407,7 @@ bool openAt(const Coords &coords) {
     }
     
     Tile *floor = c->location->map->tileset->getByName("brick_floor");
-    ASSERT(floor, "no floor tile found in tileset");
+    xu4_assert(floor, "no floor tile found in tileset");
     c->location->map->annotations->add(coords, floor->getId(), false, true)->setTTL(4);
 
     screenMessage("\nOpened!\n");
@@ -2754,7 +2750,7 @@ bool talkAt(const Coords &coords) {
     }
 
     Conversation conv;
-    TRACE_LOCAL(gameDbg, "Setting up script information providers.");
+    xu4_error(XU4_LOG_DBG, "Setting up script information providers.");
     conv.script->addProvider("party", c->party);
     conv.script->addProvider("context", c);
 
@@ -3556,7 +3552,7 @@ bool GameController::createBalloon(Map *map) {
     }
     
     const Tile *balloon = map->tileset->getByName("balloon");
-    ASSERT(balloon, "no balloon tile found in tileset");
+    xu4_assert(balloon, "no balloon tile found in tileset");
     map->addObject(balloon->getId(), balloon->getId(), map->getLabel("balloon"));
     return true;
 }

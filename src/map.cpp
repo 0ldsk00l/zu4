@@ -2,15 +2,12 @@
  * $Id: map.cpp 3066 2014-07-21 00:18:48Z darren_janeczek $
  */
 
-
 #include "u4.h"
-
 #include "map.h"
-
 #include "annotation.h"
 #include "context.h"
-#include "debug.h"
 #include "direction.h"
+#include "error.h"
 #include "location.h"
 #include "movement.h"
 #include "object.h"
@@ -843,7 +840,7 @@ bool Map::fillMonsterTable() {
 }
 
 MapTile Map::translateFromRawTileIndex(int raw) const {
-    ASSERT(tilemap != NULL, "tilemap hasn't been set");
+    xu4_assert(tilemap != NULL, "tilemap hasn't been set");
 
     return tilemap->translate(raw);
 }

@@ -9,7 +9,6 @@
 #include "event.h"
 
 #include "context.h"
-#include "debug.h"
 #include "location.h"
 #include "savegame.h"
 #include "screen.h"

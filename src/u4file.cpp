@@ -25,7 +25,6 @@
 #include <libgen.h>
 
 #include "u4file.h"
-#include "debug.h"
 #include "error.h"
 
 #include "miniz.h"
@@ -462,7 +461,7 @@ void U4FILE_zip::close() {
 int U4FILE_zip::seek(long offset, int whence) {
 	long pos;
 	
-	ASSERT(whence != SEEK_END, "seeking with whence == SEEK_END not allowed with zipfiles");
+	xu4_assert(whence != SEEK_END, "seeking with whence == SEEK_END not allowed with zipfiles");
 	pos = cur;
 	
 	if (whence == SEEK_CUR) {
@@ -478,7 +477,7 @@ int U4FILE_zip::seek(long offset, int whence) {
 		cur = 0;
 	}
 	
-	ASSERT(offset - pos > 0, "error in U4FILE_zip::seek");
+	xu4_assert(offset - pos > 0, "error in U4FILE_zip::seek");
 	cur += offset - pos;
 	return 0;
 }
@@ -503,7 +502,7 @@ int U4FILE_zip::getc() {
 }
 
 int U4FILE_zip::putc(int c) {
-	ASSERT(0, "zipfiles must be read-only!");
+	xu4_assert(0, "zipfiles must be read-only!");
 	return c;
 }
 
@@ -637,7 +636,7 @@ vector<string> u4read_stringtable(U4FILE *f, long offset, int nstrings) {
 	int i;
 	vector<string> strs;
 
-	ASSERT(offset < u4flength(f), "offset begins beyond end of file");
+	xu4_assert(offset < u4flength(f), "offset begins beyond end of file");
 	
 	if (offset != -1) { f->seek(offset, SEEK_SET); }
 	

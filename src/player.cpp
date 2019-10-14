@@ -2,14 +2,12 @@
  * $Id: player.cpp 3075 2014-07-30 00:02:28Z darren_janeczek $
  */
 
-
 #include "player.h"
-
 #include "annotation.h"
 #include "armor.h"
 #include "combat.h"
 #include "context.h"
-#include "debug.h"
+#include "error.h"
 #include "game.h"
 #include "location.h"
 #include "mapmgr.h"
@@ -150,7 +148,7 @@ int PartyMember::getMaxMp() const {
         break;
 
     default:
-        ASSERT(0, "invalid player class: %d", player->klass);
+        xu4_assert(0, "invalid player class: %d", player->klass);
     }
 
     /* mp always maxes out at 99 */
@@ -271,7 +269,7 @@ void PartyMember::applyEffect(TileEffect effect) {
         break;
     case EFFECT_ELECTRICITY: break;
     default:
-        ASSERT(0, "invalid effect: %d", effect);
+        xu4_assert(0, "invalid effect: %d", effect);
     }
 
     if (effect != EFFECT_NONE)
@@ -579,11 +577,11 @@ MapTile PartyMember::tileForClass(int klass) {
         name = "shepherd";
         break;
     default:
-        ASSERT(0, "invalid class %d in tileForClass", klass);
+        xu4_assert(0, "invalid class %d in tileForClass", klass);
     }
 
     const Tile *tile = Tileset::get("base")->getByName(name);
-    ASSERT(tile, "no tile found for class %d", klass);
+    xu4_assert(tile != nullptr, "no tile found for class %d", klass);
     return tile->getId();
 }
 
@@ -1174,7 +1172,7 @@ MapTile Party::getTransport() const {
 void Party::setTransport(MapTile tile) {
     // transport value stored in savegame hardcoded to index into base tilemap
     saveGame->transport = TileMap::get("base")->untranslate(tile);
-    ASSERT(saveGame->transport != 0, "could not generate valid savegame transport for tile with id %d\n", tile.id);
+    xu4_assert(saveGame->transport != 0, "could not generate valid savegame transport for tile with id %d\n", tile.id);
 
     transport = tile;
     
@@ -1236,8 +1234,8 @@ int Party::getActivePlayer() const {
 }
 
 void Party::swapPlayers(int p1, int p2) {
-    ASSERT(p1 < saveGame->members, "p1 out of range: %d", p1);
-    ASSERT(p2 < saveGame->members, "p2 out of range: %d", p2);
+    xu4_assert(p1 < saveGame->members, "p1 out of range: %d", p1);
+    xu4_assert(p2 < saveGame->members, "p2 out of range: %d", p2);
 
     SaveGamePlayerRecord tmp = saveGame->players[p1];
     saveGame->players[p1] = c->saveGame->players[p2];

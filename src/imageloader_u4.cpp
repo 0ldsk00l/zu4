@@ -24,7 +24,6 @@
 #include <vector>
 
 #include "config.h"
-#include "debug.h"
 #include "error.h"
 #include "image.h"
 #include "imageloader_u4.h"
@@ -155,7 +154,7 @@ static void setFromRawData(Image *image, int width, int height, int bpp, unsigne
         break;
 
     default:
-        ASSERT(0, "invalid bits-per-pixel (bpp): %d", bpp);
+        xu4_assert(0, "invalid bits-per-pixel (bpp): %d", bpp);
     }
 }
 
@@ -165,7 +164,7 @@ Image* xu4_u4raw_load(U4FILE *file, int width, int height, int bpp) {
           xu4_error(XU4_LOG_ERR, "dimensions not set for u4raw image");
     }
 
-    ASSERT(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
+    xu4_assert(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
 
     long rawLen = file->length();
     unsigned char *raw = (unsigned char *) malloc(rawLen);
@@ -201,7 +200,7 @@ Image* xu4_u4rle_load(U4FILE *file, int width, int height, int bpp) {
           xu4_error(XU4_LOG_ERR, "dimensions not set for u4rle image");
     }
 
-    ASSERT(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
+    xu4_assert(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
 
     long compressedLen = file->length();
     unsigned char *compressed = (unsigned char *) malloc(compressedLen);
@@ -239,7 +238,7 @@ Image* xu4_u4lzw_load(U4FILE *file, int width, int height, int bpp) {
           xu4_error(XU4_LOG_ERR, "dimensions not set for u4lzw image");
     }
 
-    ASSERT(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
+    xu4_assert(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
 
     long compressedLen = file->length();
     unsigned char *compressed = (unsigned char *) malloc(compressedLen);

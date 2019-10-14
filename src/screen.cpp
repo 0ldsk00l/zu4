@@ -12,7 +12,6 @@
 
 #include "config.h"
 #include "context.h"
-#include "debug.h"
 #include "dungeonview.h"
 #include "error.h"
 #include "event.h"
@@ -409,7 +408,7 @@ bool screenTileUpdate(TileView *view, const Coords &coords, bool redraw)
  * neither is set, the map area is left untouched.
  */
 void screenUpdate(TileView *view, bool showmap, bool blackout) {
-    ASSERT(c != NULL, "context has not yet been initialized");
+    xu4_assert(c != NULL, "context has not yet been initialized");
 
     screenLock();
 
@@ -549,7 +548,7 @@ void screenShowChar(int chr, int x, int y) {
  * Scroll the text in the message area up one position.
  */
 void screenScrollMessageArea() {
-    ASSERT(charsetInfo != NULL && charsetInfo->image != NULL, "charset not initialized!");
+    xu4_assert(charsetInfo != NULL && charsetInfo->image != NULL, "charset not initialized!");
     
     Image *screen = imageMgr->get("screen")->image;
     
@@ -580,7 +579,7 @@ void screenCycle() {
 void screenUpdateCursor() {
     int phase = screenCurrentCycle * SCR_CYCLE_PER_SECOND / SCR_CYCLE_MAX;
 
-    ASSERT(phase >= 0 && phase < 4, "derived an invalid cursor phase: %d", phase);
+    xu4_assert(phase >= 0 && phase < 4, "derived an invalid cursor phase: %d", phase);
 
     if (screenCursorStatus) {
         screenShowChar(31 - phase, screenCursorX, screenCursorY);
@@ -1045,7 +1044,7 @@ static int screenPointInTriangle(int x, int y, int tx1, int ty1, int tx2, int ty
  * Determine if the given point is within a mouse area.
  */
 int screenPointInMouseArea(int x, int y, MouseArea *area) {
-    ASSERT(area->npoints == 2 || area->npoints == 3, "unsupported number of points in area: %d", area->npoints);
+    xu4_assert(area->npoints == 2 || area->npoints == 3, "unsupported number of points in area: %d", area->npoints);
 
     /* two points define a rectangle */
     if (area->npoints == 2) {
@@ -1145,7 +1144,7 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
     unsigned int tile = map->translateToRawTileIndex(t);
     
     if (map->type == Map::DUNGEON) {
-        ASSERT(charsetInfo, "charset not initialized");
+        xu4_assert(charsetInfo, "charset not initialized");
         std::map<string, int>::iterator charIndex = dungeonTileChars.find(t.getTileType()->getName());
         if (charIndex != dungeonTileChars.end()) {
             charsetInfo->image->drawSubRect((layout->viewport.x + (x * layout->tileshape.width)) * settings.scale,

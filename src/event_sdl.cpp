@@ -9,7 +9,6 @@
 #include "event.h"
 
 #include "context.h"
-#include "debug.h"
 #include "error.h"
 #include "screen.h"
 #include "settings.h"
@@ -123,7 +122,7 @@ KeyHandlerController::~KeyHandlerController() {
 }
 
 bool KeyHandlerController::keyPressed(int key) {
-    ASSERT(handler != NULL, "key handler must be initialized");
+    xu4_assert(handler != NULL, "key handler must be initialized");
     return handler->handle(key);
 }
 
@@ -433,7 +432,7 @@ KeyHandler *EventHandler::getKeyHandler() const {
         return NULL;
 
     KeyHandlerController *khc = dynamic_cast<KeyHandlerController *>(controllers.back());
-    ASSERT(khc != NULL, "EventHandler::getKeyHandler called when controller wasn't a keyhandler");
+    xu4_assert(khc != NULL, "EventHandler::getKeyHandler called when controller wasn't a keyhandler");
     if (khc == NULL)
         return NULL;
 

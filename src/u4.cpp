@@ -8,11 +8,9 @@
  *
  * intro stuff goes here...
  */
- 
 
 #include "u4.h"
 #include <cstring>
-#include "debug.h"
 #include "error.h"
 #include "event.h"
 #include "game.h"
@@ -36,11 +34,7 @@ Performance perf("debug/performance.txt");
 
 using namespace std;
 
-
-
 int main(int argc, char *argv[]) {
-    Debug::initGlobal("debug/global.txt");
-
     if (!u4fopen("AVATAR.EXE"))
 	{
         xu4_error(XU4_LOG_ERR, 	"xu4 requires the PC version of Ultima IV to be present. "

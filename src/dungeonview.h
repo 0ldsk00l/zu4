@@ -6,7 +6,6 @@
 #define DUNGEONVIEW_H
 
 #include "context.h"
-#include "debug.h"
 #include "dungeon.h"
 #include "savegame.h"
 #include "tileset.h"

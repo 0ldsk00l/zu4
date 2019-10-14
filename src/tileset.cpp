@@ -2,13 +2,11 @@
  * $Id: tileset.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-
 #include <vector>
 
 #include "tileset.h"
 
 #include "config.h"
-#include "debug.h"
 #include "error.h"
 #include "screen.h"
 #include "settings.h"
@@ -156,20 +154,19 @@ Tileset::TilesetMap Tileset::tilesets;
  * Loads all tilesets using the filename
  * indicated by 'filename' as a definition
  */
-void Tileset::loadAll() {    
-    Debug dbg("debug/tileset.txt", "Tileset");
+void Tileset::loadAll() {
     const Config *config = Config::getInstance();    
     vector<ConfigElement> conf;
 
-    TRACE(dbg, "Unloading all tilesets");
+    xu4_error(XU4_LOG_DBG, "Unloading all tilesets");
     unloadAll();
 
     // get the config element for all tilesets
-    TRACE_LOCAL(dbg, "Loading tilesets info from config");
+    xu4_error(XU4_LOG_DBG, "Loading tilesets info from config");
     conf = config->getElement("tilesets").getChildren();
     
     // load tile rules
-    TRACE_LOCAL(dbg, "Loading tile rules");
+    xu4_error(XU4_LOG_DBG, "Loading tile rules");
     if (!TileRule::rules.size())
         TileRule::load();
 
@@ -185,10 +182,10 @@ void Tileset::loadAll() {
     }
 
     // load tile maps, including translations from index to id
-    TRACE_LOCAL(dbg, "Loading tilemaps");
+    xu4_error(XU4_LOG_DBG, "Loading tilemaps");
     TileMap::loadAll();
 
-    TRACE(dbg, "Successfully Loaded Tilesets");
+    xu4_error(XU4_LOG_DBG, "Successfully Loaded Tilesets");
 }
 
 /**
@@ -261,8 +258,6 @@ Tile* Tileset::findTileById(TileId id) {
  * Loads a tileset.
  */
 void Tileset::load(const ConfigElement &tilesetConf) {
-    Debug dbg("debug/tileset.txt", "Tileset", true);
-    
     name = tilesetConf.getString("name");
     if (tilesetConf.exists("imageName"))
         imageName = tilesetConf.getString("imageName");
@@ -270,7 +265,7 @@ void Tileset::load(const ConfigElement &tilesetConf) {
         extends = Tileset::get(tilesetConf.getString("extends"));
     else extends = NULL;
 
-    TRACE_LOCAL(dbg, "\tLoading Tiles...");
+    xu4_error(XU4_LOG_DBG, "\tLoading Tiles...");
 
     int index = 0;
     vector<ConfigElement> children = tilesetConf.getChildren();
@@ -281,7 +276,7 @@ void Tileset::load(const ConfigElement &tilesetConf) {
         Tile *tile = new Tile(this);
         tile->loadProperties(*i);
 
-        TRACE_LOCAL(dbg, string("\t\tLoaded '") + tile->getName() + "'");
+        xu4_error(XU4_LOG_DBG, "\t\tLoaded %s", tile->getName().c_str());
 
         /* add the tile to our tileset */
         tiles[tile->getId()] = tile;

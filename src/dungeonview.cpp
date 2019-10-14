@@ -3,7 +3,6 @@
  */
 
 
-#include "debug.h"
 #include "dungeonview.h"
 #include "image.h"
 #include "imagemgr.h"
@@ -260,7 +259,7 @@ std::vector<MapTile> DungeonView::getTiles(int fwd, int side) {
     case DIR_ADVANCE:
     case DIR_RETREAT:
     default:
-        ASSERT(0, "Invalid dungeon orientation");
+        xu4_assert(0, "Invalid dungeon orientation");
     }
 
     // Wrap the coordinates if necessary

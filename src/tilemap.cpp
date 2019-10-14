@@ -2,20 +2,16 @@
  * $Id: tilemap.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-
 #include <vector>
 
 #include "tilemap.h"
 #include "tile.h"
 
 #include "config.h"
-#include "debug.h"
 #include "error.h"
 #include "tileset.h"
 
 using std::vector;
-
-Debug dbg("debug/tilemap.txt", "TileMap");
 
 /**
  * Static variables
@@ -31,11 +27,11 @@ void TileMap::loadAll() {
 
     /* FIXME: make sure tilesets are loaded by now */    
 
-    TRACE_LOCAL(dbg, "Unloading all tilemaps");
+    xu4_error(XU4_LOG_DBG, "Unloading all tilemaps");
     unloadAll();
 
     /* open the filename for the tileset and parse it! */
-    TRACE_LOCAL(dbg, "Loading tilemaps from config");
+    xu4_error(XU4_LOG_DBG, "Loading tilemaps from config");
     conf = config->getElement("tilesets").getChildren();    
     
     /* load all of the tilemaps */
@@ -73,7 +69,7 @@ void TileMap::load(const ConfigElement &tilemapConf) {
     TileMap *tm = new TileMap;
     
     string name = tilemapConf.getString("name");
-    TRACE_LOCAL(dbg, string("Tilemap name is: ") + name);
+    xu4_error(XU4_LOG_DBG, "Tilemap name is: %s",  name.c_str());
     
     string tileset = tilemapConf.getString("tileset");
 
@@ -89,7 +85,7 @@ void TileMap::load(const ConfigElement &tilemapConf) {
         int frames = 1;
         string tile = i->getString("tile");
 
-        TRACE_LOCAL(dbg, string("\tLoading '") + tile + "'");
+        xu4_error(XU4_LOG_DBG, "\tLoading %s", tile.c_str());
         
         /* find the tile this references */
         Tile *t = Tileset::get(tileset)->getByName(tile);

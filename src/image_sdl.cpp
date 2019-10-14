@@ -8,7 +8,6 @@
 #include <memory>
 #include <list>
 #include <utility>
-#include "debug.h"
 #include "image.h"
 #include "settings.h"
 #include "error.h"
@@ -69,7 +68,7 @@ Image *Image::createScreenImage() {
     Image *screen = new Image();
 
     screen->surface = SDL_GetVideoSurface();
-    ASSERT(screen->surface != NULL, "SDL_GetVideoSurface() returned a NULL screen surface!");
+    xu4_assert(screen->surface != NULL, "SDL_GetVideoSurface() returned a NULL screen surface!");
     screen->w = screen->surface->w;
     screen->h = screen->surface->h;
     screen->indexed = screen->surface->format->palette != NULL;
@@ -112,7 +111,7 @@ Image::~Image() {
  * Sets the palette
  */
 void Image::setPalette(const RGBA *colors, unsigned n_colors) {
-    ASSERT(indexed, "imageSetPalette called on non-indexed image");
+    xu4_assert(indexed, "imageSetPalette called on non-indexed image");
     
     SDL_Color *sdlcolors = new SDL_Color[n_colors];
     for (unsigned i = 0; i < n_colors; i++) {
@@ -130,7 +129,7 @@ void Image::setPalette(const RGBA *colors, unsigned n_colors) {
  * Copies the palette from another image.
  */
 void Image::setPaletteFromImage(const Image *src) {
-    ASSERT(indexed && src->indexed, "imageSetPaletteFromImage called on non-indexed image");
+    xu4_assert(indexed && src->indexed, "imageSetPaletteFromImage called on non-indexed image");
     memcpy(surface->format->palette->colors, 
            src->surface->format->palette->colors, 
            sizeof(SDL_Color) * src->surface->format->palette->ncolors);

@@ -2,7 +2,6 @@
  * $Id: scale.cpp 2674 2006-12-20 08:25:50Z solus $
  */
 
-#include "debug.h"
 #include "image.h"
 #include "scale.h"
 
