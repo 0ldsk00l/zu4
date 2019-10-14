@@ -13,7 +13,6 @@
 #include "observer.h"
 
 class ConfigElement;
-class Debug;
 class ImageSet;
 class Settings;
 
@@ -141,8 +140,6 @@ private:
     std::map<std::string, ImageSet *> imageSets;
     std::vector<std::string> imageSetNames;
     ImageSet *baseSet;
-
-    Debug *logger;
 };
 
 #define imageMgr (ImageMgr::getInstance())
