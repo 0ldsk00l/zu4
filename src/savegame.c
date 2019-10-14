@@ -155,10 +155,9 @@ int saveGameRead(SaveGame *sg, FILE *f) {
 	}
 	
 	// workaround of U4DOS bug to retain savegame compatibility
-	if (&sg->location == 0 && &sg->dnglevel == 0) {
+	if (sg->location == 0 && sg->dnglevel == 0) {
 		sg->dnglevel = 0xFFFF;
 	}
-	
 	return 1;
 }
 
