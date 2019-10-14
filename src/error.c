@@ -50,8 +50,10 @@ void xu4_error(int level, const char *fmt, ...) {
 	vsnprintf(buffer, sizeof(buffer), fmt, va);
 	va_end(va);
 	
-	fprintf(stderr, "%c: %s\n", levelchr[level], buffer);
-	fflush(stderr);
+	if (level > XU4_LOG_DBG) {
+		fprintf(stderr, "%c: %s\n", levelchr[level], buffer);
+		fflush(stderr);
+	}
 	
 	if (level >= XU4_LOG_ERR) { exit(1); }
 }
