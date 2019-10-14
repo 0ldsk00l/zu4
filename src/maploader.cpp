@@ -2,7 +2,7 @@
  * $Id: maploader.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-#include <string>
+#include <string.h>
 #include "u4.h"
 
 #include "maploader.h"
@@ -13,7 +13,6 @@
 #include "dialogueloader.h"
 #include "dungeon.h"
 #include "error.h"
-#include "filesystem.h"
 #include "map.h"
 #include "maploader.h"
 #include "mapmgr.h"

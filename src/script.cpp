@@ -14,7 +14,6 @@
 #include "conversation.h"
 #include "error.h"
 #include "event.h"
-#include "filesystem.h"
 #include "game.h"
 #include "music.h"
 #include "player.h"
@@ -148,22 +147,6 @@ bool Script::load(const string &filename, const string &baseId, const string &su
     root = xmlDocGetRootElement(vendorScriptDoc);
     if (xmlStrcmp(root->name, (const xmlChar *) "scripts") != 0)
         xu4_error(XU4_LOG_ERR, "malformed %s", filename.c_str());
-
-    /**
-     * If the script is set to debug, then open our script debug file
-     */ 
-    if (xmlPropExists(root, "debug")) {
-        static const char *dbg_filename = "debug/script.txt";
-        // Our script is going to hog all the debug info
-        if (xmlGetPropAsBool(root, "debug"))
-            debug = FileSystem::openFile(dbg_filename, "wt");
-        else {
-            // See if we share our debug space with other scripts
-            string val = xmlGetPropAsString(root, "debug");
-            if (val == "share")
-                debug = FileSystem::openFile(dbg_filename, "at");
-        }
-    }
 
     /**
      * Get a new global item name or id name

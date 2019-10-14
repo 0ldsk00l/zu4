@@ -57,7 +57,6 @@ CXXSRCS=\
 		src/dungeonview.cpp \
 		src/event.cpp \
 		src/event_sdl.cpp \
-		src/filesystem.cpp \
 		src/game.cpp \
 		src/image_sdl.cpp \
 		src/imageloader_png.cpp \

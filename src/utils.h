@@ -11,8 +11,6 @@
 #include <string>
 #include <vector>
 
-#include "filesystem.h"
-
 using std::string;
 
 /* The AdjustValue functions used to be #define'd macros, but these are 

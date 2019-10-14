@@ -2,16 +2,14 @@
  * $Id: settings.cpp 3090 2016-01-26 02:55:36Z darren_janeczek $
  */
 
-
-#include <cctype>
-#include <cstring>
+#include <string.h>
 #include <stdint.h>
+#include <sys/stat.h>
 
 #include "settings.h"
 
 #include "error.h"
 #include "event.h"
-#include "filesystem.h"
 #include "utils.h"
 
 using namespace std;
@@ -75,7 +73,7 @@ void Settings::init(const bool useProfile, const string profileName) {
             userPath = "./";
         }
 	}
-    FileSystem::createDirectory(userPath);
+    mkdir(userPath.c_str(), S_IRWXU|S_IRWXG|S_IRWXO);
 
     filename = userPath + SETTINGS_BASE_FILENAME;
 
