@@ -11,7 +11,6 @@
 #include "aura.h"
 #include "names.h"
 #include "person.h"
-#include "script.h"
 #include "types.h"
 #include "savegame.h"
 
@@ -30,14 +29,7 @@ typedef enum {
     TRANSPORT_ANY			= 0xffff
 } TransportContext;
 
-/**
- * Context class
- */
-class Context : public Script::Provider {
-public:
-    Context();
-    ~Context();
-
+typedef struct Context {
     Party *party;
     SaveGame *saveGame;
     class Location *location;
@@ -53,19 +45,11 @@ public:
     TransportContext transportContext;
     time_t lastCommandTime;
     class Object *lastShip;
-
-    /**
-     * Provides scripts with information
-     */
-    virtual string translate(std::vector<string>& parts) {
-        if (parts.size() == 1) {
-            if (parts[0] == "wind")
-                return getDirectionName(static_cast<Direction>(windDirection));
-        }
-        return "";
-    }
-};
+} Context;
 
 extern Context *c;
+
+Context *xu4_ctx_init();
+void xu4_ctx_deinit();
 
 #endif

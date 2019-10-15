@@ -212,6 +212,8 @@ int main(int argc, char *argv[]) {
     xu4_snd_deinit();
     xu4_music_deinit();
     screenDelete();
+    
+    game->deinit();
 
     return 0;
 }

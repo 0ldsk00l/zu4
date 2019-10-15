@@ -101,6 +101,7 @@ public:
 
     /* main game functions */
     void init();
+    void deinit();
     void initScreen();
     void initScreenWithoutReloadingState();
     void setMap(Map *map, bool saveLocation, const Portal *portal, TurnCompleter *turnCompleter = NULL);

@@ -192,6 +192,14 @@ void GameController::initScreenWithoutReloadingState()
     eventHandler->setScreenUpdate(&gameUpdateScreen);
 }
 
+void GameController::deinit() {
+	delete c->location;
+	delete c->party;
+	delete c->aura;
+	delete c->stats;
+	free(c->saveGame);
+	xu4_ctx_deinit();
+}
 
 void GameController::init() {
     FILE *saveGameFile, *monstersFile;    
@@ -208,8 +216,9 @@ void GameController::init() {
     screenTextAt(13, 11, "%s", "Loading Game...");
 
     /* initialize the global game context */
-    c = new Context;
-    c->saveGame = new SaveGame;
+    //c = new Context;
+    c = xu4_ctx_init();
+    c->saveGame = (SaveGame*)calloc(1, sizeof(SaveGame));
 
     xu4_error(XU4_LOG_DBG, "Global context initialized.");
 
@@ -2749,7 +2758,6 @@ bool talkAt(const Coords &coords) {
     Conversation conv;
     xu4_error(XU4_LOG_DBG, "Setting up script information providers.");
     conv.script->addProvider("party", c->party);
-    conv.script->addProvider("context", c);
 
     conv.state = Conversation::INTRO;
     conv.reply = talker->getConversationText(&conv, "");

@@ -375,6 +375,3 @@ int saveGameMonstersRead(SaveGameMonsterRecord *monsterTable, FILE *f) {
 	
 	return 1;
 }
-#ifdef __cplusplus
-}
-#endif
