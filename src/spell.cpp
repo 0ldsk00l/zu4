@@ -299,7 +299,7 @@ bool spellCast(unsigned int spell, int character, int param, SpellCastError *err
         return false;
 
     // If there's a negate magic aura, spells fail!
-    if (*c->aura == Aura::NEGATE) {
+    if (c->aura->type == AURA_NEGATE) {
         *error = CASTERR_FAILED;
         return false;
     }
@@ -589,7 +589,7 @@ static int spellIceball(int dir) {
 }
 
 static int spellJinx(int unused) {
-    c->aura->set(Aura::JINX, 10);    
+    c->aura->set(AURA_JINX, 10);    
     return 1;
 }
 
@@ -609,7 +609,7 @@ static int spellMMissle(int dir) {
 }
 
 static int spellNegate(int unused) {
-    c->aura->set(Aura::NEGATE, 10);    
+    c->aura->set(AURA_NEGATE, 10);    
     return 1;
 }
 
@@ -619,7 +619,7 @@ static int spellOpen(int unused) {
 }
 
 static int spellProtect(int unused) {
-    c->aura->set(Aura::PROTECTION, 10);    
+    c->aura->set(AURA_PROTECTION, 10);    
     return 1;
 }
 
@@ -630,7 +630,7 @@ static int spellRez(int player) {
 }
 
 static int spellQuick(int unused) {
-    c->aura->set(Aura::QUICKNESS, 10);    
+    c->aura->set(AURA_QUICKNESS, 10);    
     return 1;
 }
 

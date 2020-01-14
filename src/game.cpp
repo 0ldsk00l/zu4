@@ -3056,7 +3056,7 @@ void GameController::checkSpecialCreatures(Direction dir) {
         c->location->coords.x < 234 &&
         c->location->coords.y >= 212 &&
         c->location->coords.y < 217 &&
-        *c->aura != Aura::HORN) {
+        c->aura->type != AURA_HORN) {
         for (i = 0; i < 8; i++)            
             c->location->map->addCreature(creatureMgr->getById(DAEMON_ID), MapCoords(231, c->location->coords.y + 1, c->location->coords.z));                    
     }

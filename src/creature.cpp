@@ -472,7 +472,7 @@ void Creature::act(CombatController *controller) {
         return;
 
     if (negates())
-        c->aura->set(Aura::NEGATE, 2);
+        c->aura->set(AURA_NEGATE, 2);
 
     /*
      * figure out what to do
@@ -484,10 +484,10 @@ void Creature::act(CombatController *controller) {
     // creatures who ranged attack do so 1/4 of the time.  Make sure
     // their ranged attack is not negated!
     else if (ranged != 0 && xu4_random(4) == 0 && 
-             (rangedhittile != "magic_flash" || (*c->aura != Aura::NEGATE)))
+             (rangedhittile != "magic_flash" || (c->aura->type != AURA_NEGATE)))
         action = CA_RANGED;
     // creatures who cast sleep do so 1/4 of the time they don't ranged attack
-    else if (castsSleep() && (*c->aura != Aura::NEGATE) && (xu4_random(4) == 0))
+    else if (castsSleep() && (c->aura->type != AURA_NEGATE) && (xu4_random(4) == 0))
         action = CA_CAST_SLEEP;
     else if (getState() == MSTAT_FLEEING)
         action = CA_FLEE;
@@ -766,7 +766,7 @@ Creature *Creature::nearestOpponent(int *dist, bool ranged) {
     Creature *opponent = NULL;
     int d, leastDist = 0xFFFF;    
     ObjectDeque::iterator i;
-    bool jinx = (*c->aura == Aura::JINX);
+    bool jinx = (c->aura->type == AURA_JINX);
     Map *map = getMap();
 
     for (i = map->objects.begin(); i < map->objects.end(); i++) {

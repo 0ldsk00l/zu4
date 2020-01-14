@@ -5,7 +5,7 @@
 
 #include "aura.h"
 
-Aura::Aura() : type(NONE), duration(0) {}
+Aura::Aura() : type(AURA_NONE), duration(0) {}
 
 void Aura::setDuration(int d) {
     duration = d;
@@ -13,14 +13,14 @@ void Aura::setDuration(int d) {
     notifyObservers(NULL);
 }
 
-void Aura::set(Type t, int d) {
+void Aura::set(AuraType t, int d) {
     type = t;
     duration = d;
     setChanged();
     notifyObservers(NULL);
 }
 
-void Aura::setType(Type t) {
+void Aura::setType(AuraType t) {
     type = t;
     setChanged();
     notifyObservers(NULL);
@@ -31,7 +31,7 @@ void Aura::passTurn() {
         duration--;
         
         if (duration == 0) {
-            type = NONE;
+            type = AURA_NONE;
 
             setChanged();
             notifyObservers(NULL);

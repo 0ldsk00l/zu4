@@ -690,7 +690,7 @@ void CombatController::finishTurn() {
         player->applyEffect(c->location->map->tileTypeAt(player->getCoords(), WITH_GROUND_OBJECTS)->getEffect());
     }
 
-    quick = (*c->aura == Aura::QUICKNESS) && player && (xu4_random(2) == 0) ? 1 : 0;
+    quick = (c->aura->type == AURA_QUICKNESS) && player && (xu4_random(2) == 0) ? 1 : 0;
 
     /* check to see if the player gets to go again (and is still alive) */
     if (!quick || player->isDisabled()){    

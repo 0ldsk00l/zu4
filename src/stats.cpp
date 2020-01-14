@@ -136,23 +136,23 @@ void StatsArea::update(Aura *aura) {
             mask &= ~(1 << i);
     }
 
-    switch (aura->getType()) {
-    case Aura::NONE:
+    switch (aura->type) {
+    case AURA_NONE:
         summary.drawCharMasked(0, STATS_AREA_WIDTH/2, 0, mask);
         break;
-    case Aura::HORN:
+    case AURA_HORN:
         summary.drawChar(CHARSET_REDDOT, STATS_AREA_WIDTH/2, 0);
         break;
-    case Aura::JINX:
+    case AURA_JINX:
         summary.drawChar('J', STATS_AREA_WIDTH/2, 0);
         break;
-    case Aura::NEGATE:
+    case AURA_NEGATE:
         summary.drawChar('N', STATS_AREA_WIDTH/2, 0);
         break;
-    case Aura::PROTECTION:
+    case AURA_PROTECTION:
         summary.drawChar('P', STATS_AREA_WIDTH/2, 0);
         break;
-    case Aura::QUICKNESS:
+    case AURA_QUICKNESS:
         summary.drawChar('Q', STATS_AREA_WIDTH/2, 0);
         break;
     }    
