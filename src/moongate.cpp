@@ -1,48 +1,27 @@
-/*
- * $Id: moongate.cpp 2793 2011-01-25 00:37:56Z Kirben $
- */
-
-
-#include <cstdlib>
-#include <map>
-
-#include "error.h"
 #include "coords.h"
 #include "moongate.h"
-#include "types.h"
 
-typedef std::map<int, Coords> MoongateList; /* map moon phase to map coordinates */
-
-MoongateList gates; 
+static Coords gates[8] = {};
 
 void moongateAdd(int phase, const Coords &coords) {
-    if (!gates.insert(MoongateList::value_type(phase, coords)).second)
-        xu4_error(XU4_LOG_ERR, "Error: A moongate for phase %d already exists", phase);    
+	gates[phase] = coords;
 }
 
 const Coords *moongateGetGateCoordsForPhase(int phase) {
-    MoongateList::iterator moongate;
-
-    moongate = gates.find(phase);
-    if (moongate != gates.end())
-        return &moongate->second;
-    return NULL;
+	return &gates[phase];
 }
 
 bool moongateFindActiveGateAt(int trammel, int felucca, const Coords &src, Coords &dest) {
-    const Coords *moongate_coords;
-
-    moongate_coords = moongateGetGateCoordsForPhase(trammel);
-    if (moongate_coords && (src == *moongate_coords)) {
-        moongate_coords = moongateGetGateCoordsForPhase(felucca);
-        if (moongate_coords) {
-            dest = *moongate_coords;
-            return true;
-        }
-    }
-    return false;
+	const Coords *mg_coords;
+	mg_coords = moongateGetGateCoordsForPhase(trammel);
+	if (src.x == mg_coords->x && src.y == mg_coords->y && src.z == mg_coords->z) {
+		mg_coords = moongateGetGateCoordsForPhase(felucca);
+		dest = *mg_coords;
+		return true;
+	}
+	return false;
 }
 
 bool moongateIsEntryToShrineOfSpirituality(int trammel, int felucca) {
-    return (trammel == 4 && felucca == 4) ? true : false;
+    return trammel == 4 && felucca == 4;
 }
