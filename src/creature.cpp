@@ -378,7 +378,7 @@ bool Creature::specialEffect() {
         {
             ObjectDeque::iterator i;
 
-            if (coords == c->location->coords) {
+            if (xu4_coords_equal(coords, c->location->coords)) {
 
                 /* damage the ship */
                 if (c->transportContext == TRANSPORT_SHIP) {
@@ -399,7 +399,7 @@ bool Creature::specialEffect() {
 
                 obj = *i;
                 if (this != obj &&
-                    obj->getCoords() == coords) {
+                    xu4_coords_equal(obj->getCoords(), coords)) {
                     /* Converged with an object, destroy the object! */
                     i = c->location->map->removeObject(i);
                     retval = true;
@@ -413,7 +413,7 @@ bool Creature::specialEffect() {
         {
             ObjectDeque::iterator i;
 
-            if (coords == c->location->coords && (c->transportContext == TRANSPORT_SHIP)) {                    
+            if (xu4_coords_equal(coords, c->location->coords) && (c->transportContext == TRANSPORT_SHIP)) {                    
                                 
                 /* Deal 10 damage to the ship */
                 gameDamageShip(-1, 10);
@@ -434,7 +434,7 @@ bool Creature::specialEffect() {
                 obj = *i;
 
                 if (this != obj &&
-                	obj->getCoords() == coords) {
+                	xu4_coords_equal(obj->getCoords(), coords)) {
 
                 	Creature *m = dynamic_cast<Creature*>(obj);
 

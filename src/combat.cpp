@@ -1165,7 +1165,7 @@ PartyMember *CombatMap::partyMemberAt(Coords coords) {
     PartyMemberVector::iterator i;
     
     for (i = party.begin(); i != party.end(); i++) {
-        if ((*i)->getCoords() == coords)
+        if (xu4_coords_equal((*i)->getCoords(), coords))
             return *i;
     }
     return NULL;
@@ -1180,7 +1180,7 @@ Creature *CombatMap::creatureAt(Coords coords) {
     CreatureVector::iterator i;
 
     for (i = creatures.begin(); i != creatures.end(); i++) {
-        if ((*i)->getCoords() == coords)            
+        if (xu4_coords_equal((*i)->getCoords(), coords))
             return *i;
     }
     return NULL;

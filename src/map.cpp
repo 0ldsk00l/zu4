@@ -273,7 +273,7 @@ Object *Map::objectAt(const Coords &coords) {
     for(i = objects.begin(); i != objects.end(); i++) {
         Object *obj = *i;
         
-        if (obj->getCoords() == coords) {
+        if (xu4_coords_equal(obj->getCoords(), coords)) {
             /* get the most visible object */
             if (objAt && (objAt->getType() == Object::UNKNOWN) && (obj->getType() != Object::UNKNOWN))
                 objAt = obj;

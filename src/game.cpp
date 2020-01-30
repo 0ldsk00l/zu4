@@ -1900,7 +1900,7 @@ bool fireAt(const Coords &coords, bool originAvatar) {
         validObject = true;
 
     /* Does the cannon hit the avatar? */
-    if (coords == c->location->coords) {
+    if (xu4_coords_equal(coords, c->location->coords)) {
         validObject = true;
         hitsAvatar = true;
     }        
@@ -3180,7 +3180,7 @@ bool creatureRangeAttack(const Coords &coords, Creature *m) {
     m = dynamic_cast<Creature*>(obj);
         
     // Does the attack hit the avatar?
-    if (coords == c->location->coords) {
+    if (xu4_coords_equal(coords, c->location->coords)) {
         /* always displays as a 'hit' */
     	GameController::flashTile(coords, tile, 3);
 

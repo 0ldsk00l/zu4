@@ -194,7 +194,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
         /* If the pirate ship turned last move instead of moving, this time it must
            try to move, not turn again */
         if (obj->getTile().getTileType()->isPirateShip() && DIR_IN_MASK(obj->getTile().getDirection(), dirmask) &&
-            (obj->getTile() != obj->getPrevTile()) && (obj->getPrevCoords() == obj->getCoords())) {
+            (obj->getTile() != obj->getPrevTile()) && xu4_coords_equal(obj->getPrevCoords(), obj->getCoords())) {
             dir = obj->getTile().getDirection();
             break;
         }

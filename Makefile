@@ -47,6 +47,7 @@ CXXSRCS=\
 		src/controller.cpp \
 		src/context.cpp \
 		src/conversation.cpp \
+		src/coords.cpp \
 		src/creature.cpp \
 		src/death.cpp \
 		src/dialogueloader.cpp \
