@@ -98,16 +98,16 @@ MapCoords& MapCoords::move(int dx, int dy, const Map *map) {
  * itself accordingly. If the two coordinates are not on the same z-plane,
  * then this function return DIR_NONE.
  */
-int MapCoords::getRelativeDirection(const MapCoords &c, const Map *map) const {
+int getRelativeDirection(Coords oc, Coords c, const Map *map) {
     int dx, dy, dirmask;        
 
     dirmask = DIR_NONE;
-    if (z != c.z)
+    if (oc.z != c.z)
         return dirmask;
     
-    /* adjust our coordinates to find the closest path */
+    // adjust our coordinates to find the closest path
     if (map && map->border_behavior == Map::BORDER_WRAP) {
-        MapCoords me = *this;            
+        Coords me = oc;            
         
         if (abs(int(me.x - c.x)) > abs(int(me.x + map->width - c.x)))
             me.x += map->width;
@@ -123,19 +123,19 @@ int MapCoords::getRelativeDirection(const MapCoords &c, const Map *map) const {
         dy = me.y - c.y;
     }
     else {        
-        dx = x - c.x;
-        dy = y - c.y;
+        dx = oc.x - c.x;
+        dy = oc.y - c.y;
     }
 
-    /* add x directions that lead towards to_x to the mask */
+    // add x directions that lead towards to_x to the mask
     if (dx < 0)         dirmask |= MASK_DIR(DIR_EAST);
     else if (dx > 0)    dirmask |= MASK_DIR(DIR_WEST);
 
-    /* add y directions that lead towards to_y to the mask */
+    // add y directions that lead towards to_y to the mask
     if (dy < 0)         dirmask |= MASK_DIR(DIR_SOUTH);
     else if (dy > 0)    dirmask |= MASK_DIR(DIR_NORTH);
 
-    /* return the result */
+    // return the result
     return dirmask;
 }
 
@@ -150,7 +150,7 @@ Direction MapCoords::pathTo(const MapCoords &c, int valid_directions, bool towar
     int directionsToObject;
 
     /* find the directions that lead [to/away from] our target */
-    directionsToObject = towards ? getRelativeDirection(c, map) : ~getRelativeDirection(c, map);
+    directionsToObject = towards ? getRelativeDirection(this->getCoords(), c.getCoords(), map) : ~getRelativeDirection(this->getCoords(), c.getCoords(), map);
 
     /* make sure we eliminate impossible options */
     directionsToObject &= valid_directions;
@@ -184,7 +184,7 @@ int MapCoords::movementDistance(const MapCoords &c, const Map *map) const {
         return -1;
 
     /* get the direction(s) to the coordinates */
-    dirmask = getRelativeDirection(c, map);
+    dirmask = getRelativeDirection(this->getCoords(), c.getCoords(), map);
 
     while ((me.x != c.x) || (me.y != c.y))
     {

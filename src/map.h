@@ -59,8 +59,8 @@ public:
     MapCoords &wrap(const class Map *map);
     MapCoords &putInBounds(const class Map *map);
     MapCoords &move(Direction d, const class Map *map = NULL);
-    MapCoords &move(int dx, int dy, const class Map *map = NULL);    
-    int getRelativeDirection(const MapCoords &c, const class Map *map = NULL) const;
+    MapCoords &move(int dx, int dy, const class Map *map = NULL);
+
     Direction pathTo(const MapCoords &c, int valid_dirs = MASK_DIR_ALL, bool towards = true, const class Map *map = NULL) const;
     Direction pathAway(const MapCoords &c, int valid_dirs = MASK_DIR_ALL) const;
     int movementDistance(const MapCoords &c, const class Map *map = NULL) const;
@@ -68,6 +68,8 @@ public:
 
     static MapCoords nowhere;
 };
+
+int getRelativeDirection(Coords oc, Coords c, const class Map *map = NULL);
 
 /**
  * Map class

@@ -306,8 +306,9 @@ bool Creature::specialAction() {
     int mapdist = c->location->coords.distance(coords, c->location->map);
 
     /* find out which direction the avatar is in relation to the creature */
-    MapCoords mapcoords(coords);
-    int dir = mapcoords.getRelativeDirection(c->location->coords, c->location->map);
+    //MapCoords mapcoords(coords);
+    //int dir = mapcoords.getRelativeDirection(c->location->coords, c->location->map);
+    int dir = getRelativeDirection(coords, c->location->coords.getCoords(), c->location->map);
 
     //Init outside of switch
     int broadsidesDirs = 0;
@@ -595,7 +596,8 @@ void Creature::act(CombatController *controller) {
             p_coords = target->getCoords();
 
         // figure out which direction to fire the weapon
-        int dir = m_coords.getRelativeDirection(p_coords);
+        //int dir = m_coords.getRelativeDirection(p_coords);
+        int dir = getRelativeDirection(m_coords.getCoords(), p_coords.getCoords());
 
         xu4_snd_play(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, ranged
 
