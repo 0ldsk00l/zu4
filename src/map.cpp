@@ -408,13 +408,13 @@ void Map::findWalkability(Coords coords, int *path_data) {
         path_data[index] = isBorderTile ? 2 : 1;
 
         if ((coords.x > 0) && path_data[coords.x - 1 + (coords.y * width)] < 0)
-            findWalkability(Coords(coords.x - 1, coords.y, coords.z), path_data);
+            findWalkability((Coords){coords.x - 1, coords.y, coords.z}, path_data);
         if ((coords.x < signed(width-1)) && path_data[coords.x + 1 + (coords.y * width)] < 0)
-            findWalkability(Coords(coords.x + 1, coords.y, coords.z), path_data);
+            findWalkability((Coords){coords.x + 1, coords.y, coords.z}, path_data);
         if ((coords.y > 0) && path_data[coords.x + ((coords.y - 1) * width)] < 0)
-            findWalkability(Coords(coords.x, coords.y - 1, coords.z), path_data);
+            findWalkability((Coords){coords.x, coords.y - 1, coords.z}, path_data);
         if ((coords.y < signed(height-1)) && path_data[coords.x + ((coords.y + 1) * width)] < 0)
-            findWalkability(Coords(coords.x, coords.y + 1, coords.z), path_data);    
+            findWalkability((Coords){coords.x, coords.y + 1, coords.z}, path_data);    
     }
     else path_data[index] = 0;    
 }

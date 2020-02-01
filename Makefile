@@ -23,6 +23,7 @@ CSRCS=\
 		src/lzw/lzw.c \
 		src/lzw/u4decode.c \
 		src/cmixer.c \
+		src/coords.c \
 		src/direction.c \
 		src/error.c \
 		src/io.c \
@@ -47,7 +48,6 @@ CXXSRCS=\
 		src/controller.cpp \
 		src/context.cpp \
 		src/conversation.cpp \
-		src/coords.cpp \
 		src/creature.cpp \
 		src/death.cpp \
 		src/dialogueloader.cpp \

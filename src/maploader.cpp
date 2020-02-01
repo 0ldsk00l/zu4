@@ -396,12 +396,12 @@ bool DngMapLoader::load(Map *map) {
                 // update the map data, moving the chest to the center of the room,
                 // and removing the walls at the lower-left corner thereby creating
                 // a connection to room 8
-                const Coords tile[] = { Coords(5, 5, 0x3C),  // chest
-                                        Coords(0, 7, 0x16),  // floor
-                                        Coords(1, 7, 0x16),
-                                        Coords(0, 8, 0x16),
-                                        Coords(1, 8, 0x16),
-                                        Coords(0, 9, 0x16) };
+                const Coords tile[] = { (Coords){5, 5, 0x3C},  // chest
+                                        (Coords){0, 7, 0x16},  // floor
+                                        (Coords){1, 7, 0x16},
+                                        (Coords){0, 8, 0x16},
+                                        (Coords){1, 8, 0x16},
+                                        (Coords){0, 9, 0x16} };
 
                 for (int j=0; j < int(sizeof(tile)/sizeof(Coords)); j++)
                 {

@@ -176,7 +176,7 @@ void putItemInInventory(int item) {
  * Use bell, book, or candle on the entrance to the Abyss
  */
 void useBBC(int item) {
-    Coords abyssEntrance(0xe9, 0xe9);
+    Coords abyssEntrance = { 0xe9, 0xe9, 0 };
     /* on top of the Abyss entrance */
     if (c->location->coords == abyssEntrance) {
         /* must use bell first */

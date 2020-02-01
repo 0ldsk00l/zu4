@@ -323,7 +323,7 @@ void MapMgr::initDungeonFromConf(const ConfigElement &dungeonConf, Dungeon *dung
 
 void MapMgr::createMoongateFromConf(const ConfigElement &moongateConf) {
     int phase = moongateConf.getInt("phase");
-    Coords coords(moongateConf.getInt("x"), moongateConf.getInt("y"));
+    Coords coords = { moongateConf.getInt("x"), moongateConf.getInt("y"), 0 };
 
     moongateAdd(phase, coords);
 }

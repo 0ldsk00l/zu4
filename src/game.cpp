@@ -3109,7 +3109,7 @@ void gameFixupObjects(Map *map) {
     for (i = 0; i < MONSTERTABLE_SIZE; i++) {
         SaveGameMonsterRecord *monster = &map->monsterTable[i];
         if (monster->prevTile != 0) {
-            Coords coords(monster->x, monster->y);
+            Coords coords = { monster->x, monster->y, 0 };
 
             // tile values stored in monsters.sav hardcoded to index into base tilemap
             MapTile tile = TileMap::get("base")->translate(monster->tile),
