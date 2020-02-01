@@ -276,7 +276,7 @@ bool CheatMenuController::keyPressed(int key) {
                 coords.move(readDir.waitFor(), c->location->map);
                 if (coords != c->location->coords) {            
                     bool ok = false;
-                    MapTile *ground = c->location->map->tileAt(coords, WITHOUT_OBJECTS);
+                    MapTile *ground = c->location->map->tileAt(coords.getCoords(), WITHOUT_OBJECTS);
 
                     screenMessage("%s\n", getDirectionName(readDir.getValue()));
 
@@ -288,7 +288,7 @@ bool CheatMenuController::keyPressed(int key) {
                     }
 
                     if (choice && ok) {
-                        c->location->map->addObject(*choice, *choice, coords);
+                        c->location->map->addObject(*choice, *choice, coords.getCoords());
                         screenMessage("%s created!\n", tile->getName().c_str());
                     }
                     else if (!choice)

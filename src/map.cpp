@@ -41,6 +41,11 @@ bool MapCoords::operator<(const MapCoords &a)  const {
 	return z < a.z;
 }
 
+Coords MapCoords::getCoords() const {
+	Coords temp;
+	temp.x = x; temp.y = y; temp.z = z;
+	return temp;
+}
 
 MapCoords& MapCoords::wrap(const Map *map) {
     if (map && map->border_behavior == Map::BORDER_WRAP) {
@@ -614,7 +619,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
             continue;
         }
 
-        obj = objectAt(coords);
+        obj = objectAt(coords.getCoords());
 
         // see if it's trying to move onto the avatar
         if ((flags & SHOW_AVATAR) && (coords == c->location->coords))
@@ -631,9 +636,9 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
         else if (ontoCreature)
             tile = obj->getTile();
         else 
-            tile = *tileAt(coords, WITH_OBJECTS);
+            tile = *tileAt(coords.getCoords(), WITH_OBJECTS);
 
-        MapTile prev_tile = *tileAt(from, WITHOUT_OBJECTS);
+        MapTile prev_tile = *tileAt(from.getCoords(), WITHOUT_OBJECTS);
 
         // get the other creature object, if it exists (the one that's being moved onto)        
         to_m = dynamic_cast<Creature*>(obj);
@@ -646,7 +651,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
             // these conditions are not met, the creature cannot move onto another.
 
         	if ((ontoAvatar && m->canMoveOntoPlayer()) || (ontoCreature && m->canMoveOntoCreatures()))
-               	tile = *tileAt(coords, WITHOUT_OBJECTS); //Ignore all objects, and just consider terrain
+               	tile = *tileAt(coords.getCoords(), WITHOUT_OBJECTS); //Ignore all objects, and just consider terrain
         	  if ((ontoAvatar && !m->canMoveOntoPlayer())
             	||	(
             			ontoCreature &&
@@ -734,7 +739,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
 bool Map::move(Object *obj, Direction d) {
     MapCoords new_coords = obj->getCoords();
     if (new_coords.move(d) != obj->getCoords()) {
-        obj->setCoords(new_coords);
+        obj->setCoords(new_coords.getCoords());
         return true;
     }
     return false;

@@ -48,7 +48,7 @@ int usePortalAt(Location *location, MapCoords coords, PortalTriggerAction action
     Map *destination;
     char msg[32] = {0};
     
-    const Portal *portal = location->map->portalAt(coords, action);
+    const Portal *portal = location->map->portalAt(coords.getCoords(), action);
     Portal dngLadder;
 
     /* didn't find a portal there */

@@ -87,7 +87,7 @@ unsigned char Dungeon::currentSubToken() {
  * Returns the dungeon token for the given coordinates
  */
 DungeonToken Dungeon::tokenAt(MapCoords coords) {
-    return tokenForTile(*getTileFromData(coords));
+    return tokenForTile(*getTileFromData(coords.getCoords()));
 }
 
 /**
@@ -108,7 +108,7 @@ unsigned char Dungeon::subTokenAt(MapCoords coords) {
 void dungeonSearch(void) {
     Dungeon *dungeon = dynamic_cast<Dungeon *>(c->location->map);
     DungeonToken token = dungeon->currentToken(); 
-    Annotation::List a = dungeon->annotations->allAt(c->location->coords);
+    Annotation::List a = dungeon->annotations->allAt(c->location->coords.getCoords());
     const ItemLocation *item;
     if (a.size() > 0)
         token = DUNGEON_CORRIDOR;
@@ -128,7 +128,7 @@ void dungeonSearch(void) {
     default: 
         {
             /* see if there is an item at the current location (stones on altars, etc.) */
-            item = itemAtLocation(dungeon, c->location->coords);
+            item = itemAtLocation(dungeon, c->location->coords.getCoords());
             if (item) {
                 if (*item->isItemInInventory != NULL && (*item->isItemInInventory)(item->data))
                     screenMessage("Nothing Here!\n");
@@ -246,7 +246,7 @@ void dungeonTouchOrb() {
     /* deal damage to the party member who touched the orb */
     c->party->member(player)->applyDamage(damage);    
     /* remove the orb from the map */
-    c->location->map->annotations->add(c->location->coords, replacementTile);
+    c->location->map->annotations->add(c->location->coords.getCoords(), replacementTile);
 }
 
 /**
@@ -279,7 +279,7 @@ bool dungeonHandleTrap(TrapType trap) {
  * Returns true if a ladder-up is found at the given coordinates
  */
 bool Dungeon::ladderUpAt(MapCoords coords) {    
-    Annotation::List a = annotations->allAt(coords);
+    Annotation::List a = annotations->allAt(coords.getCoords());
 
     if (tokenAt(coords) == DUNGEON_LADDER_UP ||
         tokenAt(coords) == DUNGEON_LADDER_UPDOWN)
@@ -299,7 +299,7 @@ bool Dungeon::ladderUpAt(MapCoords coords) {
  * Returns true if a ladder-down is found at the given coordinates
  */
 bool Dungeon::ladderDownAt(MapCoords coords) {
-    Annotation::List a = annotations->allAt(coords);
+    Annotation::List a = annotations->allAt(coords.getCoords());
 
     if (tokenAt(coords) == DUNGEON_LADDER_DOWN ||
         tokenAt(coords) == DUNGEON_LADDER_UPDOWN)
@@ -316,6 +316,6 @@ bool Dungeon::ladderDownAt(MapCoords coords) {
 }
 
 bool Dungeon::validTeleportLocation(MapCoords coords) {
-    MapTile *tile = tileAt(coords, WITH_OBJECTS);
+    MapTile *tile = tileAt(coords.getCoords(), WITH_OBJECTS);
     return tokenForTile(*tile) == DUNGEON_CORRIDOR;    
 }

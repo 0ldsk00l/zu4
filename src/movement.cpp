@@ -79,7 +79,7 @@ void moveAvatar(MoveEvent &event) {
         case SLOWED_BY_TILE:
           // TODO: CHEST: Make a user option to not make chests always fast to
           // travel over
-            slowed = slowedByTile(c->location->map->tileTypeAt(newCoords, WITH_OBJECTS));
+            slowed = slowedByTile(c->location->map->tileTypeAt(newCoords.getCoords(), WITH_OBJECTS));
             break;
         case SLOWED_BY_WIND:
             slowed = slowedByWind(event.dir);
@@ -134,7 +134,7 @@ void moveAvatarInDungeon(MoveEvent &event) {
     newCoords = c->location->coords;    
     newCoords.move(realDir, c->location->map);
 
-    tile = c->location->map->tileAt(newCoords, WITH_OBJECTS);
+    tile = c->location->map->tileAt(newCoords.getCoords(), WITH_OBJECTS);
 
     /* see if we moved off the map (really, this should never happen in a dungeon) */
     if (MAP_IS_OOB(c->location->map, newCoords)) {
@@ -217,7 +217,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
     /* is the object slowed by terrain or by wind direction? */
     switch(slowedType) {
     case SLOWED_BY_TILE:
-        slowed = slowedByTile(map->tileTypeAt(new_coords, WITHOUT_OBJECTS));
+        slowed = slowedByTile(map->tileTypeAt(new_coords.getCoords(), WITHOUT_OBJECTS));
         break;
     case SLOWED_BY_WIND:
         slowed = slowedByWind(obj->getTile().getDirection());
@@ -243,7 +243,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
     if (!(new_coords == obj->getCoords()) && 
         !MAP_IS_OOB(map, new_coords))
     {
-    	obj->setCoords(new_coords);
+    	obj->setCoords(new_coords.getCoords());
     }
     return 1;
 }
@@ -294,7 +294,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
     /* is the object slowed by terrain or by wind direction? */
     switch(slowedType) {
     case SLOWED_BY_TILE:
-        slowed = slowedByTile(map->tileTypeAt(new_coords, WITHOUT_OBJECTS));
+        slowed = slowedByTile(map->tileTypeAt(new_coords.getCoords(), WITHOUT_OBJECTS));
         break;
     case SLOWED_BY_WIND:
         slowed = slowedByWind(obj->getTile().getDirection());
@@ -307,7 +307,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
     /* if the object wan't slowed... */
     if (!slowed) {        
         // Set the new coordinates
-    	obj->setCoords(new_coords);
+    	obj->setCoords(new_coords.getCoords());
         return 1;
     }
 
@@ -360,10 +360,10 @@ void movePartyMember(MoveEvent &event) {
     }
 
     /* is the party member slowed? */
-    if (!slowedByTile(c->location->map->tileTypeAt(newCoords, WITHOUT_OBJECTS)))
+    if (!slowedByTile(c->location->map->tileTypeAt(newCoords.getCoords(), WITHOUT_OBJECTS)))
     {
         /* move succeeded */        
-        (*party)[member]->setCoords(newCoords);
+        (*party)[member]->setCoords(newCoords.getCoords());
 
         /* handle dungeon room triggers */
         if (cm->isDungeonRoom()) {
@@ -389,17 +389,17 @@ void movePartyMember(MoveEvent &event) {
                     /**
                      * Remove any previous annotations placed at our target coordinates
                      */ 
-                    c->location->map->annotations->remove(c->location->map->annotations->allAt(change1));
-                    c->location->map->annotations->remove(c->location->map->annotations->allAt(change2));
+                    c->location->map->annotations->remove(c->location->map->annotations->allAt(change1.getCoords()));
+                    c->location->map->annotations->remove(c->location->map->annotations->allAt(change2.getCoords()));
 
                     /* change the tiles! */
                     if (change1.x || change1.y) {
                         /*if (m) combatAddCreature(m, triggers[i].change_x1, triggers[i].change_y1, c->location->coords.z);
-                        else*/ c->location->map->annotations->add(change1, triggers[i].tile, false, true);
+                        else*/ c->location->map->annotations->add(change1.getCoords(), triggers[i].tile, false, true);
                     }
                     if (change2.x || change2.y) {
                         /*if (m) combatAddCreature(m, triggers[i].change_x2, triggers[i].change_y2, c->location->coords.z);
-                        else*/ c->location->map->annotations->add(change2, triggers[i].tile, false, true);
+                        else*/ c->location->map->annotations->add(change2.getCoords(), triggers[i].tile, false, true);
                     }
                 }
             }

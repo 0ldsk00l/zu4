@@ -378,7 +378,7 @@ bool Creature::specialEffect() {
         {
             ObjectDeque::iterator i;
 
-            if (xu4_coords_equal(coords, c->location->coords)) {
+            if (xu4_coords_equal(coords, c->location->coords.getCoords())) {
 
                 /* damage the ship */
                 if (c->transportContext == TRANSPORT_SHIP) {
@@ -413,7 +413,7 @@ bool Creature::specialEffect() {
         {
             ObjectDeque::iterator i;
 
-            if (xu4_coords_equal(coords, c->location->coords) && (c->transportContext == TRANSPORT_SHIP)) {                    
+            if (xu4_coords_equal(coords, c->location->coords.getCoords()) && (c->transportContext == TRANSPORT_SHIP)) {                    
                                 
                 /* Deal 10 damage to the ship */
                 gameDamageShip(-1, 10);
@@ -598,7 +598,7 @@ void Creature::act(CombatController *controller) {
 
         xu4_snd_play(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, ranged
 
-        vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, m_coords,
+        vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, m_coords.getCoords(),
                                                            1, 11, &Tile::canAttackOverTile, false);
         bool hit = false;
         for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
@@ -706,7 +706,7 @@ bool Creature::divide() {
         coords.move(d, map);
 
         /* create our new creature! */
-        Creature * addedCreature = map->addCreature(this, coords);
+        Creature * addedCreature = map->addCreature(this, coords.getCoords());
         int dividedHp = (this->hp + 1) / 2;
         addedCreature->hp = dividedHp;
         this->hp = dividedHp;
@@ -726,7 +726,7 @@ bool Creature::spawnOnDeath() {
     MapCoords coords(getCoords());
         
     /* create our new creature! */
-    map->addCreature(creatureMgr->getById(spawn), coords);                
+    map->addCreature(creatureMgr->getById(spawn), coords.getCoords());                
     return true;
 }
 

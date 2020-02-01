@@ -250,13 +250,13 @@ bool ConMapLoader::load(Map *map) {
         CombatMap *cm = getCombatMap(map);
 
         for (i = 0; i < AREA_CREATURES; i++)
-            cm->creature_start[i] = MapCoords(u4fgetc(con));        
+            cm->creature_start[i] = MapCoords(u4fgetc(con)).getCoords();        
 
         for (i = 0; i < AREA_CREATURES; i++)
             cm->creature_start[i].y = u4fgetc(con);
 
         for (i = 0; i < AREA_PLAYERS; i++)
-            cm->player_start[i] = MapCoords(u4fgetc(con));
+            cm->player_start[i] = MapCoords(u4fgetc(con)).getCoords();
 
         for (i = 0; i < AREA_PLAYERS; i++)
             cm->player_start[i].y = u4fgetc(con);

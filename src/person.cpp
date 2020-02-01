@@ -119,7 +119,7 @@ string Person::getName() const {
 }
 
 void Person::goToStartLocation() {
-    setCoords(start);
+    setCoords(start.getCoords());
 }
 
 void Person::setDialogue(Dialogue *d) {

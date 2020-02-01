@@ -427,10 +427,10 @@ static int spellBlink(int dir) {
     
     i = distance;   
     /* begin walking backward until you find a valid spot */
-    while ((i-- > 0) && !c->location->map->tileTypeAt(coords, WITH_OBJECTS)->isWalkable())
+    while ((i-- > 0) && !c->location->map->tileTypeAt(coords.getCoords(), WITH_OBJECTS)->isWalkable())
         coords.move(reverseDir, c->location->map);
     
-    if (c->location->map->tileTypeAt(coords, WITH_OBJECTS)->isWalkable()) {
+    if (c->location->map->tileTypeAt(coords.getCoords(), WITH_OBJECTS)->isWalkable()) {
         /* we didn't move! */
         if (c->location->coords == coords)
             failed = 1;
@@ -470,7 +470,7 @@ static int spellDispel(int dir) {
      * (or other unwalkable surface).  So, we need to provide a valid replacement
      * annotation to fill in the gap :)
      */
-    Annotation::List a = c->location->map->annotations->allAt(field);
+    Annotation::List a = c->location->map->annotations->allAt(field.getCoords());
     if (a.size() > 0) {
         Annotation::List::iterator i;
         for (i = a.begin(); i != a.end(); i++) {            
@@ -482,7 +482,7 @@ static int spellDispel(int dir) {
                 MapTile newTile(c->location->getReplacementTile(field, i->getTile().getTileType()));
 
                 c->location->map->annotations->remove(*i);
-                c->location->map->annotations->add(field, newTile, false, true);
+                c->location->map->annotations->add(field.getCoords(), newTile, false, true);
                 return 1;
             }                
         }
@@ -492,7 +492,7 @@ static int spellDispel(int dir) {
      * if the map tile itself is a field, overlay it with a replacement tile
      */
 
-    tile = c->location->map->tileAt(field, WITHOUT_OBJECTS);    
+    tile = c->location->map->tileAt(field.getCoords(), WITHOUT_OBJECTS);    
     if (!tile->getTileType()->canDispel())
         return 0;
 
@@ -501,7 +501,7 @@ static int spellDispel(int dir) {
      */
     MapTile newTile(c->location->getReplacementTile(field, tile->getTileType()));
     
-    c->location->map->annotations->add(field, newTile, false, true);
+    c->location->map->annotations->add(field.getCoords(), newTile, false, true);
 
     return 1;
 }
@@ -539,11 +539,11 @@ static int spellEField(int param) {
          * Field cast on top of field and then dispel = no fields left
          * The code below seems to produce this behaviour.
          */
-        const Tile *tile = c->location->map->tileTypeAt(coords, WITH_GROUND_OBJECTS);
+        const Tile *tile = c->location->map->tileTypeAt(coords.getCoords(), WITH_GROUND_OBJECTS);
         if (!tile->isWalkable()) return 0;
         
         /* Get rid of old field, if any */
-        Annotation::List a = c->location->map->annotations->allAt(coords);
+        Annotation::List a = c->location->map->annotations->allAt(coords.getCoords());
         if (a.size() > 0) {
             Annotation::List::iterator i;
             for (i = a.begin(); i != a.end(); i++) {                
@@ -552,7 +552,7 @@ static int spellEField(int param) {
             }
         }     
             
-        c->location->map->annotations->add(coords, fieldTile);
+        c->location->map->annotations->add(coords.getCoords(), fieldTile);
     }
 
     return 1;

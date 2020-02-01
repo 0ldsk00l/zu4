@@ -336,7 +336,7 @@ void useStone(int item) {
                         MapCoords coords;
                         screenMessage("\n\nThe altar changes before thyne eyes!\n");
                         c->location->getCurrentPosition(&coords);
-                        c->location->map->annotations->add(coords, c->location->map->tileset->getByName("down_ladder")->getId());
+                        c->location->map->annotations->add(coords.getCoords(), c->location->map->tileset->getByName("down_ladder")->getId());
                     }
                     /* start chamber of the codex sequence... */
                     else {

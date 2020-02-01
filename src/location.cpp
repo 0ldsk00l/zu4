@@ -45,9 +45,9 @@ Location::Location(MapCoords coords, Map *map, int viewmode, LocationContext ctx
  */
 std::vector<MapTile> Location::tilesAt(MapCoords coords, bool &focus) {
     std::vector<MapTile> tiles;
-    std::list<Annotation *> a = map->annotations->ptrsToAllAt(coords);
+    std::list<Annotation *> a = map->annotations->ptrsToAllAt(coords.getCoords());
     std::list<Annotation *>::iterator i;
-    Object *obj = map->objectAt(coords);
+    Object *obj = map->objectAt(coords.getCoords());
     Creature *m = dynamic_cast<Creature *>(obj);
     focus = false;
 
@@ -60,7 +60,7 @@ std::vector<MapTile> Location::tilesAt(MapCoords coords, bool &focus) {
         if (avatar)
             tiles.push_back(c->party->getTransport());
         else             
-            tiles.push_back(*map->getTileFromData(coords));
+            tiles.push_back(*map->getTileFromData(coords.getCoords()));
 
         return tiles;
     }
@@ -123,8 +123,8 @@ std::vector<MapTile> Location::tilesAt(MapCoords coords, bool &focus) {
     }
 
     /* finally the base tile */
-    MapTile tileFromMapData = *map->getTileFromData(coords);
-    const Tile * tileType = map->getTileFromData(coords)->getTileType();
+    MapTile tileFromMapData = *map->getTileFromData(coords.getCoords());
+    const Tile * tileType = map->getTileFromData(coords.getCoords())->getTileType();
     if (tileType->isLivingObject())
     {
     	//This animation should be frozen because a living object represented on the map data is usually a statue of a monster or something
@@ -176,7 +176,7 @@ TileId Location::getReplacementTile(MapCoords atCoords, const Tile * forTile) {
 			MapCoords newStep(currentStep);
 			newStep.move(dirs[i][0], dirs[i][1], map);
 
-			Tile const * tileType = map->tileTypeAt(newStep,WITHOUT_OBJECTS);
+			Tile const * tileType = map->tileTypeAt(newStep.getCoords(),WITHOUT_OBJECTS);
 
 			if (!tileType->isOpaque()) {
 				//if (searched.find(newStep) == searched.end()) -- the find mechanism doesn't work.

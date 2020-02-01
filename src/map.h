@@ -49,16 +49,17 @@ typedef std::vector<MapTile> MapData;
 /**
  * MapCoords class
  */ 
-class MapCoords : public Coords {    
+class MapCoords {    
 public:
-    MapCoords(int initx = 0, int inity = 0, int initz = 0) : Coords(initx, inity, initz) {}
-    MapCoords(const Coords &a) : Coords(a.x, a.y, a.z) {}
+    int x, y, z;
+    MapCoords(int initx = 0, int inity = 0, int initz = 0) { x = initx; y = inity; z = initz; }
+    MapCoords(const Coords &a) { x = a.x; y = a.y; z = a.z; }
     
     MapCoords &operator=(const Coords &a) { x = a.x; y = a.y; z = a.z; return *this; }
     bool operator==(const MapCoords &a) const;
     bool operator!=(const MapCoords &a) const;
     bool operator<(const MapCoords &a)  const;
-    
+    Coords getCoords() const;
     MapCoords &wrap(const class Map *map);
     MapCoords &putInBounds(const class Map *map);
     MapCoords &move(Direction d, const class Map *map = NULL);
