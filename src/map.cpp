@@ -146,30 +146,29 @@ int getRelativeDirection(Coords oc, Coords c, const Map *map) {
  * This function also takes into account map boundaries and adjusts
  * itself accordingly, provided the 'map' parameter is passed
  */
-Direction MapCoords::pathTo(const MapCoords &c, int valid_directions, bool towards, const Map *map) const {
+Direction pathTo(Coords oc, Coords c, int valid_directions, bool towards, const Map *map) {
     int directionsToObject;
 
-    /* find the directions that lead [to/away from] our target */
-    directionsToObject = towards ? getRelativeDirection(this->getCoords(), c.getCoords(), map) : ~getRelativeDirection(this->getCoords(), c.getCoords(), map);
+    // find the directions that lead [to/away from] our target
+    directionsToObject = towards ? getRelativeDirection(oc, c, map) : ~getRelativeDirection(oc, c, map);
 
-    /* make sure we eliminate impossible options */
+    // make sure we eliminate impossible options
     directionsToObject &= valid_directions;
 
-    /* get the new direction to move */
+    // get the new direction to move
     if (directionsToObject > DIR_NONE)
         return dirRandomDir(directionsToObject);
 
-    /* there are no valid directions that lead to our target, just move wherever we can! */
+    // there are no valid directions that lead to our target, just move wherever we can!
     else return dirRandomDir(valid_directions);
 }
 
 /**
  * Finds the appropriate direction to travel to move away from one point
  */
-Direction MapCoords::pathAway(const MapCoords &c, int valid_directions) const {
-    return pathTo(c, valid_directions, false);
+Direction pathAway(Coords oc, Coords c, int valid_directions) {
+    return pathTo(oc, c, valid_directions, false);
 }
-
 /**
  * Finds the movement distance (not using diagonals) from point a to point b
  * on a map, taking into account map boundaries and such.  If the two coords

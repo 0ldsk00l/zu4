@@ -199,7 +199,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
             break;
         }
 
-        dir = new_coords.pathTo(avatar, dirmask, true, c->location->map);
+        dir = pathTo(new_coords.getCoords(), avatar.getCoords(), dirmask, true, c->location->map);
         break;
     }
     
@@ -265,7 +265,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
 
     if (action == CA_FLEE) {
         /* run away from our target instead! */
-        dir = new_coords.pathAway(target, valid_dirs);
+        dir = pathAway(new_coords.getCoords(), target.getCoords(), valid_dirs);
     
     } else {
         xu4_assert(action == CA_ADVANCE, "action must be CA_ADVANCE or CA_FLEE");
@@ -279,7 +279,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
         else if (new_coords.y >= (signed)(map->height - 1))
             valid_dirs = DIR_REMOVE_FROM_MASK(DIR_SOUTH, valid_dirs);        
 
-        dir = new_coords.pathTo(target, valid_dirs);
+        dir = pathTo(new_coords.getCoords(), target.getCoords(), valid_dirs);
     }
 
     if (dir)
