@@ -24,7 +24,6 @@
 /**
  * MapCoords Class Implementation
  */
-MapCoords MapCoords::nowhere(-1, -1, -1);
 
 Coords MapCoords::getCoords() const {
 	Coords temp;
@@ -32,36 +31,34 @@ Coords MapCoords::getCoords() const {
 	return temp;
 }
 
-MapCoords& MapCoords::wrap(const Map *map) {
+void wrap(Coords *oc, const Map *map) {
     if (map && map->border_behavior == Map::BORDER_WRAP) {
-        while (x < 0)
-            x += map->width;
-        while (y < 0)
-            y += map->height;
-        while (x >= (int)map->width)
-            x -= map->width;
-        while (y >= (int)map->height)
-            y -= map->height;
+        while (oc->x < 0)
+            oc->x += map->width;
+        while (oc->y < 0)
+            oc->y += map->height;
+        while (oc->x >= (int)map->width)
+            oc->x -= map->width;
+        while (oc->y >= (int)map->height)
+            oc->y -= map->height;
     }
-    return *this;
 }
 
-MapCoords& MapCoords::putInBounds(const Map *map) {
+void putInBounds(Coords *oc, const Map *map) {
     if (map) {
-        if (x < 0)
-            x = 0;
-        if (x >= (int) map->width)
-            x = map->width - 1;
-        if (y < 0)
-            y = 0;
-        if (y >= (int) map->height)
-            y = map->height - 1;
-        if (z < 0)
-            z = 0;
-        if (z >= (int) map->levels)
-            z = map->levels - 1;
+        if (oc->x < 0)
+            oc->x = 0;
+        if (oc->x >= (int) map->width)
+            oc->x = map->width - 1;
+        if (oc->y < 0)
+            oc->y = 0;
+        if (oc->y >= (int) map->height)
+            oc->y = map->height - 1;
+        if (oc->z < 0)
+            oc->z = 0;
+        if (oc->z >= (int) map->levels)
+            oc->z = map->levels - 1;
     }
-    return *this;
 }
 
 MapCoords& MapCoords::move(Direction d, const Map *map) {
@@ -74,7 +71,10 @@ MapCoords& MapCoords::move(Direction d, const Map *map) {
     }
     
     // Wrap the coordinates if necessary
-    wrap(map);
+    Coords temp;
+    temp.x = x, temp.y = y, temp.z = z;
+    wrap(&temp, map);
+    x = temp.x, y = temp.y, z = temp.z;
 
     return *this;
 }
@@ -84,7 +84,10 @@ MapCoords& MapCoords::move(int dx, int dy, const Map *map) {
     y += dy;        
     
     // Wrap the coordinates if necessary
-    wrap(map);
+    Coords temp;
+    temp.x = x, temp.y = y, temp.z = z;
+    wrap(&temp, map);
+    x = temp.x, y = temp.y, z = temp.z;
 
     return *this;
 }
@@ -182,7 +185,7 @@ int MapCoords::movementDistance(const MapCoords &c, const Map *map) const {
     if (z != c.z)
         return -1;
 
-    /* get the direction(s) to the coordinates */
+    // get the direction(s) to the coordinates
     dirmask = getRelativeDirection(this->getCoords(), c.getCoords(), map);
 
     while ((me.x != c.x) || (me.y != c.y))
@@ -216,7 +219,7 @@ int MapCoords::distance(const MapCoords &c, const Map *map) const {
     if (dist <= 0)
         return dist;
 
-    /* calculate how many fewer movements there would have been */
+    // calculate how many fewer movements there would have been */
     dist -= abs(x - c.x) < abs(y - c.y) ? abs(x - c.x) : abs(y - c.y);
 
     return dist;
@@ -746,8 +749,10 @@ void Map::alertGuards() {
 
 const MapCoords &Map::getLabel(const string &name) const {
     std::map<string, MapCoords>::const_iterator i = labels.find(name);
-    if (i == labels.end())
-        return MapCoords::nowhere;
+    if (i == labels.end()) {
+        //return xu4_coords_nowhere();
+        xu4_error(XU4_LOG_ERR, "Label not found\n");
+	}
     return i->second;
 }
 

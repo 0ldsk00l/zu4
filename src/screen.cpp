@@ -338,7 +338,7 @@ Layout *screenLoadLayoutFromConf(const ConfigElement &conf) {
 
 
 vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int x, int y, bool &focus) {
-    MapCoords center = c->location->coords;    
+    Coords center = c->location->coords.getCoords();    
     static MapTile grass = c->location->map->tileset->getByName("grass")->getId();
     
     if (c->location->map->width <= width &&
@@ -347,13 +347,13 @@ vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int 
         center.y = c->location->map->height / 2;
     }
 
-    MapCoords tc = center;
+    Coords tc = center;
 
     tc.x += x - (width / 2);
     tc.y += y - (height / 2);
 
     /* Wrap the location if we can */    
-    tc.wrap(c->location->map);
+    wrap(&tc, c->location->map);
 
     /* off the edge of the map: pad with grass tiles */
     if (MAP_IS_OOB(c->location->map, tc)) {        
@@ -362,8 +362,10 @@ vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int 
         result.push_back(grass);
         return result;
     }
+    
+    MapCoords tc2(tc);
 
-    return c->location->tilesAt(tc, focus);
+    return c->location->tilesAt(tc2, focus);
 }
 
 bool screenTileUpdate(TileView *view, const Coords &coords, bool redraw)
@@ -373,9 +375,11 @@ bool screenTileUpdate(TileView *view, const Coords &coords, bool redraw)
 
 	// Get the tiles
 	bool focus;
-	MapCoords mc(coords);
-	mc.wrap(c->location->map);
-	vector<MapTile> tiles = c->location->tilesAt(mc, focus);
+	Coords mc;
+	mc.x = coords.x; mc.y = coords.y; mc.z = coords.z;
+	wrap(&mc, c->location->map);
+	MapCoords mc2(mc);
+	vector<MapTile> tiles = c->location->tilesAt(mc2, focus);
 
 	// Get the screen coordinates
 	int x = coords.x;

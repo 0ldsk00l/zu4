@@ -233,7 +233,7 @@ void DungeonView::drawTile(Tile *tile, int x_offset, int distance, Direction ori
 }
 
 std::vector<MapTile> DungeonView::getTiles(int fwd, int side) {
-    MapCoords coords = c->location->coords;
+    Coords coords = c->location->coords.getCoords();
 
     switch (c->saveGame->orientation) {
     case DIR_WEST:
@@ -263,10 +263,11 @@ std::vector<MapTile> DungeonView::getTiles(int fwd, int side) {
     }
 
     // Wrap the coordinates if necessary
-    coords.wrap(c->location->map);
+    wrap(&coords, c->location->map);
 
     bool focus;
-    return c->location->tilesAt(coords, focus);
+    MapCoords coords2(coords);
+    return c->location->tilesAt(coords2, focus);
 }
 
 DungeonGraphicType DungeonView::tilesToGraphic(const std::vector<MapTile> &tiles) {

@@ -56,16 +56,16 @@ public:
     MapCoords(const Coords &a) { x = a.x; y = a.y; z = a.z; }
     
     Coords getCoords() const;
-    MapCoords &wrap(const class Map *map);
-    MapCoords &putInBounds(const class Map *map);
+    
     MapCoords &move(Direction d, const class Map *map = NULL);
     MapCoords &move(int dx, int dy, const class Map *map = NULL);
 
     int movementDistance(const MapCoords &c, const class Map *map = NULL) const;
     int distance(const MapCoords &c, const class Map *map = NULL) const;
-
-    static MapCoords nowhere;
 };
+
+void wrap(Coords *oc, const Map *map);
+void putInBounds(Coords *oc, const class Map *map);
 
 int getRelativeDirection(Coords oc, Coords c, const class Map *map = NULL);
 Direction pathTo(Coords oc, Coords c, int valid_dirs = MASK_DIR_ALL, bool towards = true, const class Map *map = NULL);

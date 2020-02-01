@@ -285,8 +285,13 @@ void GameController::init() {
      * To maintain compatibility with u4dos, this value gets translated
      * when the game is saved and loaded
      */
-    if (MAP_IS_OOB(c->location->map, c->location->coords))
-        c->location->coords.putInBounds(c->location->map);    
+    if (MAP_IS_OOB(c->location->map, c->location->coords)) {
+        Coords newcoords = c->location->coords.getCoords();
+        putInBounds(&newcoords, c->location->map);
+        c->location->coords.x = newcoords.x;
+        c->location->coords.y = newcoords.y;
+        c->location->coords.z = newcoords.z;
+	}
 
     xu4_error(XU4_LOG_DBG, "Loading monsters."); ++pb;
 
