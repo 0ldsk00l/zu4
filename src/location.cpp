@@ -51,7 +51,7 @@ std::vector<MapTile> Location::tilesAt(MapCoords coords, bool &focus) {
     Creature *m = dynamic_cast<Creature *>(obj);
     focus = false;
 
-    bool avatar = this->coords == coords;
+    bool avatar = xu4_coords_equal(this->coords.getCoords(), coords.getCoords());
 
     /* Do not return objects for VIEW_GEM mode, show only the avatar and tiles */
     if (viewMode == VIEW_GEM && (!settings.enhancements || !settings.enhancementsOptions.peerShowsObjects)) {        
@@ -158,7 +158,7 @@ TileId Location::getReplacementTile(MapCoords atCoords, const Tile * forTile) {
     const static int dirs_per_step = sizeof(dirs) / sizeof(*dirs);
     int loop_count = 0;
 
-    std::set<MapCoords> searched;
+    //std::set<MapCoords> searched; // was never used
     std::list<MapCoords> searchQueue;
 
     //Pathfinding to closest traversable tile with appropriate replacement properties.
@@ -169,7 +169,7 @@ TileId Location::getReplacementTile(MapCoords atCoords, const Tile * forTile) {
         MapCoords currentStep = searchQueue.front();
         searchQueue.pop_front();
 
-		searched.insert(currentStep);
+		//searched.insert(currentStep);
 
     	for (int i = 0; i < dirs_per_step; i++)
 		{

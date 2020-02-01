@@ -3072,7 +3072,7 @@ bool GameController::checkMoongates() {
 
         gameSpellEffect(-1, -1, SOUND_MOONGATE); // Default spell effect (screen inversion without 'spell' sound effects)
         
-        if (c->location->coords != dest) {
+        if (!xu4_coords_equal(c->location->coords.getCoords(), dest)) {
             c->location->coords = dest;            
             gameSpellEffect(-1, -1, SOUND_MOONGATE); // Again, after arriving
         }
@@ -3482,7 +3482,7 @@ bool gameSpawnCreature(const Creature *m) {
     }
 
     /* can't spawn creatures on top of the player */
-    if (coords == c->location->coords)
+    if (xu4_coords_equal(coords.getCoords(), c->location->coords.getCoords()))
         return false;    
     
     /* figure out what creature to spawn */

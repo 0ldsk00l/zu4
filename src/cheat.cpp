@@ -109,7 +109,7 @@ bool CheatMenuController::keyPressed(int key) {
         }
         if (!found) {
             MapCoords coords = c->location->map->getLabel(dest);
-            if (coords != MapCoords::nowhere) {
+            if (!xu4_coords_equal(coords.getCoords(), MapCoords::nowhere.getCoords())) {
                 screenMessage("\n%s\n", dest.c_str());
                 c->location->coords = coords;
                 found = true;
@@ -274,7 +274,7 @@ bool CheatMenuController::keyPressed(int key) {
 
                 screenMessage("Dir: ");
                 coords.move(readDir.waitFor(), c->location->map);
-                if (coords != c->location->coords) {            
+                if (!xu4_coords_equal(coords.getCoords(), c->location->coords.getCoords())) {            
                     bool ok = false;
                     MapTile *ground = c->location->map->tileAt(coords.getCoords(), WITHOUT_OBJECTS);
 

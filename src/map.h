@@ -55,10 +55,6 @@ public:
     MapCoords(int initx = 0, int inity = 0, int initz = 0) { x = initx; y = inity; z = initz; }
     MapCoords(const Coords &a) { x = a.x; y = a.y; z = a.z; }
     
-    MapCoords &operator=(const Coords &a) { x = a.x; y = a.y; z = a.z; return *this; }
-    bool operator==(const MapCoords &a) const;
-    bool operator!=(const MapCoords &a) const;
-    bool operator<(const MapCoords &a)  const;
     Coords getCoords() const;
     MapCoords &wrap(const class Map *map);
     MapCoords &putInBounds(const class Map *map);

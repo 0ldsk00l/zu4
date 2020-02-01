@@ -26,21 +26,6 @@
  */
 MapCoords MapCoords::nowhere(-1, -1, -1);
 
-bool MapCoords::operator==(const MapCoords &a) const {        
-    return (x == a.x) && (y == a.y) && (z == a.z);
-}
-bool MapCoords::operator!=(const MapCoords &a) const {
-    return !operator==(a);
-}    
-bool MapCoords::operator<(const MapCoords &a)  const {
-	//TODO cooler boolean logic
-	if (x > a.x)
-		return false;
-	if (y > a.y)
-		return false;
-	return z < a.z;
-}
-
 Coords MapCoords::getCoords() const {
 	Coords temp;
 	temp.x = x; temp.y = y; temp.z = z;
@@ -301,7 +286,7 @@ const Portal *Map::portalAt(const Coords &coords, int actionFlags) {
     PortalList::const_iterator i;    
 
     for(i = portals.begin(); i != portals.end(); i++) {
-        if (((*i)->coords == coords) &&
+        if (xu4_coords_equal((*i)->coords.getCoords(), coords) &&
             ((*i)->trigger_action & actionFlags))
             return *i;
     }
@@ -600,7 +585,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
     // get the creature object, if it exists (the one that's moving)
     m = creatureMgr->getByTile(transport);
 
-    bool isAvatar = (c->location->coords == coords);
+    bool isAvatar = xu4_coords_equal(c->location->coords.getCoords(), coords.getCoords());
     if (m && m->canMoveOntoPlayer())
     	isAvatar = false;
 
@@ -622,7 +607,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
         obj = objectAt(coords.getCoords());
 
         // see if it's trying to move onto the avatar
-        if ((flags & SHOW_AVATAR) && (coords == c->location->coords))
+        if ((flags & SHOW_AVATAR) && xu4_coords_equal(coords.getCoords(), c->location->coords.getCoords()))
             ontoAvatar = 1;
         
         // see if it's trying to move onto a person or creature
@@ -738,7 +723,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
 
 bool Map::move(Object *obj, Direction d) {
     MapCoords new_coords = obj->getCoords();
-    if (new_coords.move(d) != obj->getCoords()) {
+    if (!xu4_coords_equal(new_coords.move(d).getCoords(), obj->getCoords())) {
         obj->setCoords(new_coords.getCoords());
         return true;
     }

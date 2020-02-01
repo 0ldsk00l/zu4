@@ -240,7 +240,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
     /**
      * Set the new coordinates
      */ 
-    if (!(new_coords == obj->getCoords()) && 
+    if (!xu4_coords_equal(new_coords.getCoords(), obj->getCoords()) && 
         !MAP_IS_OOB(map, new_coords))
     {
     	obj->setCoords(new_coords.getCoords());
@@ -382,7 +382,7 @@ void movePartyMember(MoveEvent &event) {
                 MapCoords trigger(triggers[i].x, triggers[i].y, c->location->coords.z);
 
                 /* see if we're on a trigger */
-                if (newCoords == trigger) {
+                if (xu4_coords_equal(newCoords.getCoords(), trigger.getCoords())) {
                     MapCoords change1(triggers[i].change_x1, triggers[i].change_y1, c->location->coords.z),
                               change2(triggers[i].change_x2, triggers[i].change_y2, c->location->coords.z);
 

@@ -432,7 +432,7 @@ static int spellBlink(int dir) {
     
     if (c->location->map->tileTypeAt(coords.getCoords(), WITH_OBJECTS)->isWalkable()) {
         /* we didn't move! */
-        if (c->location->coords == coords)
+        if (xu4_coords_equal(c->location->coords.getCoords(), coords.getCoords()))
             failed = 1;
 
         c->location->coords = coords;
