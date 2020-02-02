@@ -54,18 +54,15 @@ public:
     int x, y, z;
     MapCoords(int initx = 0, int inity = 0, int initz = 0) { x = initx; y = inity; z = initz; }
     MapCoords(const Coords &a) { x = a.x; y = a.y; z = a.z; }
-    
     Coords getCoords() const;
-
-    int movementDistance(const MapCoords &c, const class Map *map = NULL) const;
-    int distance(const MapCoords &c, const class Map *map = NULL) const;
 };
 
+int movementDistance(Coords oc, Coords c, const class Map *map = NULL);
+int distance(Coords oc, Coords c, const class Map *map = NULL);
 void movedir(Coords *oc, Direction d, const class Map *map = NULL);
 void movexy(Coords *oc, int dx, int dy, const class Map *map = NULL);
 void wrap(Coords *oc, const Map *map);
 void putInBounds(Coords *oc, const class Map *map);
-
 int getRelativeDirection(Coords oc, Coords c, const class Map *map = NULL);
 Direction pathTo(Coords oc, Coords c, int valid_dirs = MASK_DIR_ALL, bool towards = true, const class Map *map = NULL);
 Direction pathAway(Coords oc, Coords c, int valid_dirs = MASK_DIR_ALL);
@@ -118,7 +115,7 @@ public:
     void removeObject(const class Object *rem, bool deleteObject = true);
     ObjectDeque::iterator removeObject(ObjectDeque::iterator rem, bool deleteObject = true);    
     void clearObjects();
-    class Creature *moveObjects(MapCoords avatar);
+    class Creature *moveObjects(Coords avatar);
     void resetObjectAnimations();
     int getNumberOfCreatures();
     int getValidMoves(MapCoords from, MapTile transport);

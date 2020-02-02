@@ -167,17 +167,17 @@ Direction pathAway(Coords oc, Coords c, int valid_directions) {
  * on a map, taking into account map boundaries and such.  If the two coords
  * are not on the same z-plane, then this function returns -1;
  */
-int MapCoords::movementDistance(const MapCoords &c, const Map *map) const {
+int movementDistance(Coords oc, Coords c, const Map *map) {
     int dirmask = DIR_NONE;
     int dist = 0;
     Coords me;
-    me.x = x; me.y = y; me.z = z;
+    me.x = oc.x; me.y = oc.y; me.z = oc.z;
 
-    if (z != c.z)
+    if (oc.z != c.z)
         return -1;
 
     // get the direction(s) to the coordinates
-    dirmask = getRelativeDirection(this->getCoords(), c.getCoords(), map);
+    dirmask = getRelativeDirection(oc, c, map);
 
     while ((me.x != c.x) || (me.y != c.y))
     {
@@ -205,13 +205,13 @@ int MapCoords::movementDistance(const MapCoords &c, const Map *map) const {
  * If the two coordinates are not on the same z-plane, then this function
  * returns -1. This function also takes into account map boundaries.
  */ 
-int MapCoords::distance(const MapCoords &c, const Map *map) const {
-    int dist = movementDistance(c, map);
+int distance(Coords oc, Coords c, const Map *map) {
+    int dist = movementDistance(oc, c, map);
     if (dist <= 0)
         return dist;
 
-    // calculate how many fewer movements there would have been */
-    dist -= abs(x - c.x) < abs(y - c.y) ? abs(x - c.x) : abs(y - c.y);
+    // calculate how many fewer movements there would have been
+    dist -= abs(oc.x - c.x) < abs(oc.y - c.y) ? abs(oc.x - c.x) : abs(oc.y - c.y);
 
     return dist;
 }
@@ -482,7 +482,7 @@ ObjectDeque::iterator Map::removeObject(ObjectDeque::iterator rem, bool deleteOb
  * Returns an attacking object if there is a creature attacking.
  * Also performs special creature actions and creature effects.
  */
-Creature *Map::moveObjects(MapCoords avatar) {        
+Creature *Map::moveObjects(Coords avatar) {        
     Creature *attacker = NULL;
     
     for (unsigned int i = 0; i < objects.size(); i++) {
@@ -493,13 +493,13 @@ Creature *Map::moveObjects(MapCoords avatar) {
                just a normal, docile person in town or an inanimate object */
             if ((m->getType() == Object::PERSON && m->getMovementBehavior() == MOVEMENT_ATTACK_AVATAR) ||
                 (m->getType() == Object::CREATURE && m->willAttack())) {
-                MapCoords o_coords = m->getCoords();
+                Coords o_coords = m->getCoords();
             
                 /* don't move objects that aren't on the same level as us */
                 if (o_coords.z != avatar.z)
                     continue;
 
-                if (o_coords.movementDistance(avatar, this) <= 1) {
+                if (movementDistance(o_coords, avatar, this) <= 1) {
                     attacker = m;
                     continue;
                 }

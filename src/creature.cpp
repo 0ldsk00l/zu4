@@ -303,7 +303,7 @@ bool Creature::specialAction() {
 
     int dx = abs(c->location->coords.x - coords.x);
     int dy = abs(c->location->coords.y - coords.y);
-    int mapdist = c->location->coords.distance(coords, c->location->map);
+    int mapdist = distance(c->location->coords.getCoords(), coords, c->location->map);
 
     /* find out which direction the avatar is in relation to the creature */
     //MapCoords mapcoords(coords);
@@ -783,12 +783,12 @@ Creature *Creature::nearestOpponent(int *dist, bool ranged) {
         /* if jinxed is false, find anything that isn't self */
         if ((amPlayer != fightingPlayer) || 
             (jinx && !amPlayer && *i != this)) {
-            MapCoords objCoords = (*i)->getCoords();
+            Coords objCoords = (*i)->getCoords();
 
             /* if ranged, get the distance using diagonals, otherwise get movement distance */
             if (ranged)
-                d = objCoords.distance(getCoords());
-            else d = objCoords.movementDistance(getCoords());
+                d = distance(objCoords, getCoords());
+            else d = movementDistance(objCoords, getCoords());
             
             /* skip target 50% of time if same distance */
             if (d < leastDist || (d == leastDist && xu4_random(2) == 0)) {

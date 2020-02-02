@@ -633,7 +633,7 @@ void GameController::finishTurn() {
             c->party->applyEffect(c->location->map->tileTypeAt(c->location->coords.getCoords(), WITH_GROUND_OBJECTS)->getEffect());
 
             // Move creatures and see if something is attacking the avatar
-            attacker = c->location->map->moveObjects(c->location->coords);        
+            attacker = c->location->map->moveObjects(c->location->coords.getCoords());        
 
             // Something's attacking!  Start combat!
             if (attacker) {
@@ -3343,10 +3343,10 @@ void GameController::creatureCleanup() {
     
     for (i = map->objects.begin(); i != map->objects.end();) {
         Object *obj = *i;
-        MapCoords o_coords = obj->getCoords();
+        Coords o_coords = obj->getCoords();
 
         if ((obj->getType() == Object::CREATURE) && (o_coords.z == c->location->coords.z) &&
-             o_coords.distance(c->location->coords, c->location->map) > MAX_CREATURE_DISTANCE) {
+             distance(o_coords, c->location->coords.getCoords(), c->location->map) > MAX_CREATURE_DISTANCE) {
             
             /* delete the object and remove it from the map */
             i = map->removeObject(i);            
