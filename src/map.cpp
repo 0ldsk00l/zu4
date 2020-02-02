@@ -21,16 +21,6 @@
 #include "utils.h"
 #include "settings.h"
 
-/**
- * MapCoords Class Implementation
- */
-
-Coords MapCoords::getCoords() const {
-	Coords temp;
-	temp.x = x; temp.y = y; temp.z = z;
-	return temp;
-}
-
 void wrap(Coords *oc, const Map *map) {
     if (map && map->border_behavior == Map::BORDER_WRAP) {
         while (oc->x < 0)
@@ -279,7 +269,7 @@ const Portal *Map::portalAt(const Coords &coords, int actionFlags) {
     PortalList::const_iterator i;    
 
     for(i = portals.begin(); i != portals.end(); i++) {
-        if (xu4_coords_equal((*i)->coords.getCoords(), coords) &&
+        if (xu4_coords_equal((*i)->coords, coords) &&
             ((*i)->trigger_action & actionFlags))
             return *i;
     }
@@ -578,7 +568,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
     // get the creature object, if it exists (the one that's moving)
     m = creatureMgr->getByTile(transport);
 
-    bool isAvatar = xu4_coords_equal(c->location->coords.getCoords(), coords);
+    bool isAvatar = xu4_coords_equal(c->location->coords, coords);
     if (m && m->canMoveOntoPlayer())
     	isAvatar = false;
 
@@ -600,7 +590,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
         obj = objectAt(coords);
 
         // see if it's trying to move onto the avatar
-        if ((flags & SHOW_AVATAR) && xu4_coords_equal(coords, c->location->coords.getCoords()))
+        if ((flags & SHOW_AVATAR) && xu4_coords_equal(coords, c->location->coords))
             ontoAvatar = 1;
         
         // see if it's trying to move onto a person or creature
@@ -616,7 +606,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
         else 
             tile = *tileAt(coords, WITH_OBJECTS);
 
-        MapTile prev_tile = *tileAt(from.getCoords(), WITHOUT_OBJECTS);
+        MapTile prev_tile = *tileAt(from, WITHOUT_OBJECTS);
 
         // get the other creature object, if it exists (the one that's being moved onto)        
         to_m = dynamic_cast<Creature*>(obj);

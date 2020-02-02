@@ -77,7 +77,7 @@ void CampController::begin() {
         screenMessage("Ambushed!\n");
         
         /* create an ambushing creature (so it leaves a chest) */
-        setCreature(c->location->prev->map->addCreature(m, c->location->prev->coords.getCoords()));
+        setCreature(c->location->prev->map->addCreature(m, c->location->prev->coords));
         
         /* fill the creature table with creatures and place them */
         fillCreatureTable(m);
@@ -248,11 +248,11 @@ void InnController::maybeAmbush()
         if (xu4_random(4) == 0) {
             /* Rats! */
             mapid = MAP_BRICK_CON;
-            creature = c->location->map->addCreature(creatureMgr->getById(RAT_ID), c->location->coords.getCoords());
+            creature = c->location->map->addCreature(creatureMgr->getById(RAT_ID), c->location->coords);
         } else {
             /* While strolling down the street, attacked by rogues! */
             mapid = MAP_INN_CON;
-            creature = c->location->map->addCreature(creatureMgr->getById(ROGUE_ID), c->location->coords.getCoords());
+            creature = c->location->map->addCreature(creatureMgr->getById(ROGUE_ID), c->location->coords);
             screenMessage("\nIn the middle of the night while out on a stroll...\n\n");
             showMessage = false;
         }

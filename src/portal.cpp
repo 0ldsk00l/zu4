@@ -44,11 +44,11 @@ void createDngLadder(Location *location, PortalTriggerAction action, Portal *p) 
  * and uses it.  If in a dungeon and trying to use a ladder, it creates a portal
  * based on the ladder and uses it.
  */
-int usePortalAt(Location *location, MapCoords coords, PortalTriggerAction action) {
+int usePortalAt(Location *location, Coords coords, PortalTriggerAction action) {
     Map *destination;
     char msg[32] = {0};
     
-    const Portal *portal = location->map->portalAt(coords.getCoords(), action);
+    const Portal *portal = location->map->portalAt(coords, action);
     Portal dngLadder;
 
     /* didn't find a portal there */

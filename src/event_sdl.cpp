@@ -54,7 +54,7 @@ bool KeyHandler::defaultHandler(int key, void *data) {
     switch (key) {
     case '`':
         if (c && c->location)
-            printf("x = %d, y = %d, level = %d, tile = %d (%s)\n", c->location->coords.getCoords().x, c->location->coords.getCoords().y, c->location->coords.getCoords().z, c->location->map->translateToRawTileIndex(*c->location->map->tileAt(c->location->coords.getCoords(), WITH_OBJECTS)), c->location->map->tileTypeAt(c->location->coords.getCoords(), WITH_OBJECTS)->getName().c_str());
+            printf("x = %d, y = %d, level = %d, tile = %d (%s)\n", c->location->coords.x, c->location->coords.y, c->location->coords.z, c->location->map->translateToRawTileIndex(*c->location->map->tileAt(c->location->coords, WITH_OBJECTS)), c->location->map->tileTypeAt(c->location->coords, WITH_OBJECTS)->getName().c_str());
         break;
     default:
         valid = false;

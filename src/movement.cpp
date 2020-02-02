@@ -57,7 +57,7 @@ void moveAvatar(MoveEvent &event) {
     }
 
     /* figure out our new location we're trying to move to */
-    newCoords = c->location->coords.getCoords();    
+    newCoords = c->location->coords;    
     movedir(&newCoords, event.dir, c->location->map);
 
     /* see if we moved off the map */
@@ -131,7 +131,7 @@ void moveAvatarInDungeon(MoveEvent &event) {
     }
     
     /* figure out our new location */
-    newCoords = c->location->coords.getCoords();    
+    newCoords = c->location->coords;    
     movedir(&newCoords, event.dir, c->location->map);
 
     tile = c->location->map->tileAt(newCoords, WITH_OBJECTS);
@@ -199,7 +199,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
             break;
         }
 
-        dir = pathTo(new_coords, avatar.getCoords(), dirmask, true, c->location->map);
+        dir = pathTo(new_coords, avatar, dirmask, true, c->location->map);
         break;
     }
     
@@ -265,7 +265,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
 
     if (action == CA_FLEE) {
         /* run away from our target instead! */
-        dir = pathAway(new_coords, target.getCoords(), valid_dirs);
+        dir = pathAway(new_coords, target, valid_dirs);
     
     } else {
         xu4_assert(action == CA_ADVANCE, "action must be CA_ADVANCE or CA_FLEE");
@@ -279,7 +279,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
         else if (new_coords.y >= (signed)(map->height - 1))
             valid_dirs = DIR_REMOVE_FROM_MASK(DIR_SOUTH, valid_dirs);        
 
-        dir = pathTo(new_coords, target.getCoords(), valid_dirs);
+        dir = pathTo(new_coords, target, valid_dirs);
     }
 
     if (dir)
@@ -379,27 +379,27 @@ void movePartyMember(MoveEvent &event) {
                    wipe the creature table and replace it with the triggered creatures. Thus, retriggering
                    it will reset the creatures.
                    */
-                MapCoords trigger(triggers[i].x, triggers[i].y, c->location->coords.z);
+                Coords trigger = {triggers[i].x, triggers[i].y, c->location->coords.z};
 
                 /* see if we're on a trigger */
-                if (xu4_coords_equal(newCoords, trigger.getCoords())) {
-                    MapCoords change1(triggers[i].change_x1, triggers[i].change_y1, c->location->coords.z),
-                              change2(triggers[i].change_x2, triggers[i].change_y2, c->location->coords.z);
+                if (xu4_coords_equal(newCoords, trigger)) {
+                    Coords change1 = {triggers[i].change_x1, triggers[i].change_y1, c->location->coords.z};
+                    Coords change2 = {triggers[i].change_x2, triggers[i].change_y2, c->location->coords.z};
 
                     /**
                      * Remove any previous annotations placed at our target coordinates
                      */ 
-                    c->location->map->annotations->remove(c->location->map->annotations->allAt(change1.getCoords()));
-                    c->location->map->annotations->remove(c->location->map->annotations->allAt(change2.getCoords()));
+                    c->location->map->annotations->remove(c->location->map->annotations->allAt(change1));
+                    c->location->map->annotations->remove(c->location->map->annotations->allAt(change2));
 
                     /* change the tiles! */
                     if (change1.x || change1.y) {
                         /*if (m) combatAddCreature(m, triggers[i].change_x1, triggers[i].change_y1, c->location->coords.z);
-                        else*/ c->location->map->annotations->add(change1.getCoords(), triggers[i].tile, false, true);
+                        else*/ c->location->map->annotations->add(change1, triggers[i].tile, false, true);
                     }
                     if (change2.x || change2.y) {
                         /*if (m) combatAddCreature(m, triggers[i].change_x2, triggers[i].change_y2, c->location->coords.z);
-                        else*/ c->location->map->annotations->add(change2.getCoords(), triggers[i].tile, false, true);
+                        else*/ c->location->map->annotations->add(change2, triggers[i].tile, false, true);
                     }
                 }
             }

@@ -49,7 +49,7 @@ public:
     virtual string getName() const;
     void goToStartLocation();
     void setDialogue(Dialogue *d);
-    MapCoords &getStart() { return start; }
+    Coords &getStart() { return start; }
     PersonNpcType getNpcType() const { return npcType; }
     void setNpcType(PersonNpcType t);
 
@@ -68,7 +68,7 @@ public:
 
 private:
     Dialogue* dialogue;
-    MapCoords start;    
+    Coords start;    
     PersonNpcType npcType;
 };
 

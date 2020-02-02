@@ -1192,7 +1192,7 @@ Creature *CombatMap::creatureAt(Coords coords) {
 MapId CombatMap::mapForTile(const Tile *groundTile, const Tile *transport, Object *obj) {
     bool fromShip = false,
         toShip = false;
-    Object *objUnder = c->location->map->objectAt(c->location->coords.getCoords());
+    Object *objUnder = c->location->map->objectAt(c->location->coords);
 
     static std::map<const Tile *, MapId> tileMap;
     if (!tileMap.size()) {        

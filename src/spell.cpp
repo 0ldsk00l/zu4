@@ -399,7 +399,7 @@ static int spellBlink(int dir) {
         diff,
         *var;
     Direction reverseDir = dirReverse((Direction)dir);
-    Coords coords = c->location->coords.getCoords();
+    Coords coords = c->location->coords;
     
     /* Blink doesn't work near the mouth of the abyss */
     /* Note: This means you can teleport to Hythloth from the top of the map,
@@ -432,7 +432,7 @@ static int spellBlink(int dir) {
     
     if (c->location->map->tileTypeAt(coords, WITH_OBJECTS)->isWalkable()) {
         /* we didn't move! */
-        if (xu4_coords_equal(c->location->coords.getCoords(), coords))
+        if (xu4_coords_equal(c->location->coords, coords))
             failed = 1;
 
         //c->location->coords = coords;
@@ -454,7 +454,7 @@ static int spellCure(int player) {
 
 static int spellDispel(int dir) {    
     MapTile *tile; 
-    MapCoords field;
+    Coords field;
 
     /* 
      * get the location of the avatar (or current party member, if in battle)
@@ -464,9 +464,7 @@ static int spellDispel(int dir) {
     /*
      * find where we want to dispel the field
      */
-    Coords field2 = {field.x, field.y, field.z};
-    movedir(&field2, (Direction)dir, c->location->map);
-    field.x = field2.x; field.y = field2.y; field.z = field2.z;
+    movedir(&field, (Direction)dir, c->location->map);
 
     GameController::flashTile(field, "wisp", 2);
     /*
@@ -476,7 +474,7 @@ static int spellDispel(int dir) {
      * (or other unwalkable surface).  So, we need to provide a valid replacement
      * annotation to fill in the gap :)
      */
-    Annotation::List a = c->location->map->annotations->allAt(field2);
+    Annotation::List a = c->location->map->annotations->allAt(field);
     if (a.size() > 0) {
         Annotation::List::iterator i;
         for (i = a.begin(); i != a.end(); i++) {            
@@ -488,7 +486,7 @@ static int spellDispel(int dir) {
                 MapTile newTile(c->location->getReplacementTile(field, i->getTile().getTileType()));
 
                 c->location->map->annotations->remove(*i);
-                c->location->map->annotations->add(field.getCoords(), newTile, false, true);
+                c->location->map->annotations->add(field, newTile, false, true);
                 return 1;
             }                
         }
@@ -498,7 +496,7 @@ static int spellDispel(int dir) {
      * if the map tile itself is a field, overlay it with a replacement tile
      */
 
-    tile = c->location->map->tileAt(field.getCoords(), WITHOUT_OBJECTS);    
+    tile = c->location->map->tileAt(field, WITHOUT_OBJECTS);    
     if (!tile->getTileType()->canDispel())
         return 0;
 
@@ -507,7 +505,7 @@ static int spellDispel(int dir) {
      */
     MapTile newTile(c->location->getReplacementTile(field, tile->getTileType()));
     
-    c->location->map->annotations->add(field.getCoords(), newTile, false, true);
+    c->location->map->annotations->add(field, newTile, false, true);
 
     return 1;
 }
@@ -752,7 +750,7 @@ static int spellYup(int unused) {
     /* staying in the dungeon */
     else if (coords.z > 0) {
         for (int i = 0; i < 0x20; i++) {
-            coords = MapCoords(xu4_random(8), xu4_random(8), c->location->coords.z - 1);
+            coords = (Coords){xu4_random(8), xu4_random(8), c->location->coords.z - 1};
             if (dungeon->validTeleportLocation(coords)) {
                 c->location->coords = coords;
                 return 1;
@@ -771,7 +769,7 @@ static int spellYup(int unused) {
 }
 
 static int spellZdown(int unused) {
-    MapCoords coords = c->location->coords;
+    Coords coords = c->location->coords;
     Dungeon *dungeon = dynamic_cast<Dungeon *>(c->location->map);
     
     /* can't cast in the Abyss */
@@ -782,7 +780,7 @@ static int spellZdown(int unused) {
         return 0;
     else {
         for (int i = 0; i < 0x20; i++) {
-            coords = MapCoords(xu4_random(8), xu4_random(8), c->location->coords.z + 1);
+            coords = (Coords){xu4_random(8), xu4_random(8), c->location->coords.z + 1};
             if (dungeon->validTeleportLocation(coords)) {
                 c->location->coords = coords;
                 return 1;

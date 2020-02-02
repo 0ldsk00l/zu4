@@ -238,10 +238,10 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
     portal->portalConditionsMet = NULL;
     portal->retroActiveDest = NULL;
  
-    portal->coords = MapCoords(
+    portal->coords = (Coords){
         portalConf.getInt("x"),
         portalConf.getInt("y"),
-        portalConf.getInt("z", 0));
+        portalConf.getInt("z", 0)};
     portal->destid = static_cast<MapId>(portalConf.getInt("destmapid"));
     
     portal->start.x = static_cast<unsigned short>(portalConf.getInt("startx"));
@@ -297,10 +297,10 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
         if (i->getName() == "retroActiveDest") {
             portal->retroActiveDest = new PortalDestination;
             
-            portal->retroActiveDest->coords = MapCoords(
+            portal->retroActiveDest->coords = (Coords){
                 i->getInt("x"),
                 i->getInt("y"),
-                i->getInt("z", 0));
+                i->getInt("z", 0)};
             portal->retroActiveDest->mapid = static_cast<MapId>(i->getInt("mapid"));
         }
     }
@@ -332,8 +332,8 @@ int MapMgr::initCompressedChunkFromConf(const ConfigElement &compressedChunkConf
     return compressedChunkConf.getInt("index");
 }
 
-pair<string, MapCoords> MapMgr::initLabelFromConf(const ConfigElement &labelConf) {
-    return pair<string, MapCoords>
+pair<string, Coords> MapMgr::initLabelFromConf(const ConfigElement &labelConf) {
+    return pair<string, Coords>
         (labelConf.getString("name"), 
-         MapCoords(labelConf.getInt("x"), labelConf.getInt("y"), labelConf.getInt("z", 0)));
+         (MapCoords){labelConf.getInt("x"), labelConf.getInt("y"), labelConf.getInt("z", 0)});
 }

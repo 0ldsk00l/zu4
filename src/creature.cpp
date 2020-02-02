@@ -303,12 +303,12 @@ bool Creature::specialAction() {
 
     int dx = abs(c->location->coords.x - coords.x);
     int dy = abs(c->location->coords.y - coords.y);
-    int mapdist = distance(c->location->coords.getCoords(), coords, c->location->map);
+    int mapdist = distance(c->location->coords, coords, c->location->map);
 
     /* find out which direction the avatar is in relation to the creature */
     //MapCoords mapcoords(coords);
     //int dir = mapcoords.getRelativeDirection(c->location->coords, c->location->map);
-    int dir = getRelativeDirection(coords, c->location->coords.getCoords(), c->location->map);
+    int dir = getRelativeDirection(coords, c->location->coords, c->location->map);
 
     //Init outside of switch
     int broadsidesDirs = 0;
@@ -379,7 +379,7 @@ bool Creature::specialEffect() {
         {
             ObjectDeque::iterator i;
 
-            if (xu4_coords_equal(coords, c->location->coords.getCoords())) {
+            if (xu4_coords_equal(coords, c->location->coords)) {
 
                 /* damage the ship */
                 if (c->transportContext == TRANSPORT_SHIP) {
@@ -414,7 +414,7 @@ bool Creature::specialEffect() {
         {
             ObjectDeque::iterator i;
 
-            if (xu4_coords_equal(coords, c->location->coords.getCoords()) && (c->transportContext == TRANSPORT_SHIP)) {                    
+            if (xu4_coords_equal(coords, c->location->coords) && (c->transportContext == TRANSPORT_SHIP)) {                    
                                 
                 /* Deal 10 damage to the ship */
                 gameDamageShip(-1, 10);
@@ -597,11 +597,11 @@ void Creature::act(CombatController *controller) {
 
         // figure out which direction to fire the weapon
         //int dir = m_coords.getRelativeDirection(p_coords);
-        int dir = getRelativeDirection(m_coords.getCoords(), p_coords.getCoords());
+        int dir = getRelativeDirection(m_coords, p_coords);
 
         xu4_snd_play(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, ranged
 
-        vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, m_coords.getCoords(),
+        vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, m_coords,
                                                            1, 11, &Tile::canAttackOverTile, false);
         bool hit = false;
         for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
@@ -729,7 +729,7 @@ bool Creature::spawnOnDeath() {
     MapCoords coords(getCoords());
         
     /* create our new creature! */
-    map->addCreature(creatureMgr->getById(spawn), coords.getCoords());                
+    map->addCreature(creatureMgr->getById(spawn), coords);                
     return true;
 }
 

@@ -108,8 +108,8 @@ bool CheatMenuController::keyPressed(int key) {
             }
         }
         if (!found) {
-            MapCoords coords = c->location->map->getLabel(dest);
-            if (!xu4_coords_equal(coords.getCoords(), xu4_coords_nowhere())) {
+            Coords coords = c->location->map->getLabel(dest);
+            if (!xu4_coords_equal(coords, xu4_coords_nowhere())) {
                 screenMessage("\n%s\n", dest.c_str());
                 c->location->coords = coords;
                 found = true;
@@ -243,7 +243,7 @@ bool CheatMenuController::keyPressed(int key) {
 
     case 't':
         if (c->location->map->isWorldMap()) {
-            Coords coords = c->location->coords.getCoords();
+            Coords coords = c->location->coords;
             static MapTile horse = c->location->map->tileset->getByName("horse")->getId(),
                 ship = c->location->map->tileset->getByName("ship")->getId(),
                 balloon = c->location->map->tileset->getByName("balloon")->getId();
@@ -274,7 +274,7 @@ bool CheatMenuController::keyPressed(int key) {
 
                 screenMessage("Dir: ");
                 movedir(&coords, readDir.waitFor(), c->location->map);
-                if (!xu4_coords_equal(coords, c->location->coords.getCoords())) {            
+                if (!xu4_coords_equal(coords, c->location->coords)) {            
                     bool ok = false;
                     MapTile *ground = c->location->map->tileAt(coords, WITHOUT_OBJECTS);
 

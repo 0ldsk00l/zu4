@@ -338,7 +338,7 @@ Layout *screenLoadLayoutFromConf(const ConfigElement &conf) {
 
 
 vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int x, int y, bool &focus) {
-    Coords center = c->location->coords.getCoords();    
+    Coords center = c->location->coords;    
     static MapTile grass = c->location->map->tileset->getByName("grass")->getId();
     
     if (c->location->map->width <= width &&
@@ -1262,7 +1262,7 @@ void screenGemUpdate() {
 			{
 				//Hack to avoid showing the avatar tile multiple times in cycling dungeon maps
 				if (tile.getId() == avatarTileId)
-					tile = c->location->map->getTileFromData(c->location->coords.getCoords())->getId();
+					tile = c->location->map->getTileFromData(c->location->coords)->getId();
 			}
             
 			screenShowGemTile(layout, c->location->map, tile, focus, x, y);

@@ -46,16 +46,7 @@ typedef std::vector<MapTile> MapData;
 #define WITH_GROUND_OBJECTS 1
 #define WITH_OBJECTS        2
 
-/**
- * MapCoords class
- */ 
-class MapCoords {    
-public:
-    int x, y, z;
-    MapCoords(int initx = 0, int inity = 0, int initz = 0) { x = initx; y = inity; z = initz; }
-    MapCoords(const Coords &a) { x = a.x; y = a.y; z = a.z; }
-    Coords getCoords() const;
-};
+typedef Coords MapCoords;
 
 int movementDistance(Coords oc, Coords c, const class Map *map = NULL);
 int distance(Coords oc, Coords c, const class Map *map = NULL);

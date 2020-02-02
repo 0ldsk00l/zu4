@@ -43,15 +43,15 @@ Location::Location(MapCoords coords, Map *map, int viewmode, LocationContext ctx
 /**
  * Return the entire stack of objects at the given location.
  */
-std::vector<MapTile> Location::tilesAt(MapCoords coords, bool &focus) {
+std::vector<MapTile> Location::tilesAt(Coords coords, bool &focus) {
     std::vector<MapTile> tiles;
-    std::list<Annotation *> a = map->annotations->ptrsToAllAt(coords.getCoords());
+    std::list<Annotation *> a = map->annotations->ptrsToAllAt(coords);
     std::list<Annotation *>::iterator i;
-    Object *obj = map->objectAt(coords.getCoords());
+    Object *obj = map->objectAt(coords);
     Creature *m = dynamic_cast<Creature *>(obj);
     focus = false;
 
-    bool avatar = xu4_coords_equal(this->coords.getCoords(), coords.getCoords());
+    bool avatar = xu4_coords_equal(this->coords, coords);
 
     /* Do not return objects for VIEW_GEM mode, show only the avatar and tiles */
     if (viewMode == VIEW_GEM && (!settings.enhancements || !settings.enhancementsOptions.peerShowsObjects)) {        
@@ -60,7 +60,7 @@ std::vector<MapTile> Location::tilesAt(MapCoords coords, bool &focus) {
         if (avatar)
             tiles.push_back(c->party->getTransport());
         else             
-            tiles.push_back(*map->getTileFromData(coords.getCoords()));
+            tiles.push_back(*map->getTileFromData(coords));
 
         return tiles;
     }
@@ -123,8 +123,8 @@ std::vector<MapTile> Location::tilesAt(MapCoords coords, bool &focus) {
     }
 
     /* finally the base tile */
-    MapTile tileFromMapData = *map->getTileFromData(coords.getCoords());
-    const Tile * tileType = map->getTileFromData(coords.getCoords())->getTileType();
+    MapTile tileFromMapData = *map->getTileFromData(coords);
+    const Tile * tileType = map->getTileFromData(coords)->getTileType();
     if (tileType->isLivingObject())
     {
     	//This animation should be frozen because a living object represented on the map data is usually a statue of a monster or something

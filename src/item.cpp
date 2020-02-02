@@ -178,7 +178,7 @@ void putItemInInventory(int item) {
 void useBBC(int item) {
     Coords abyssEntrance = { 0xe9, 0xe9, 0 };
     /* on top of the Abyss entrance */
-    if (xu4_coords_equal(c->location->coords.getCoords(), abyssEntrance)) {
+    if (xu4_coords_equal(c->location->coords, abyssEntrance)) {
         /* must use bell first */
         if (item == ITEM_BELL) {
             screenMessage("\nThe Bell rings on and on!\n");
@@ -336,7 +336,7 @@ void useStone(int item) {
                         MapCoords coords;
                         screenMessage("\n\nThe altar changes before thyne eyes!\n");
                         c->location->getCurrentPosition(&coords);
-                        c->location->map->annotations->add(coords.getCoords(), c->location->map->tileset->getByName("down_ladder")->getId());
+                        c->location->map->annotations->add(coords, c->location->map->tileset->getByName("down_ladder")->getId());
                     }
                     /* start chamber of the codex sequence... */
                     else {
@@ -501,7 +501,7 @@ const ItemLocation *itemAtLocation(const Map *map, const Coords &coords) {
     for (i = 0; i < N_ITEMS; i++) {
         if (!items[i].locationLabel)
             continue;
-        if (xu4_coords_equal(map->getLabel(items[i].locationLabel).getCoords(), coords) &&
+        if (xu4_coords_equal(map->getLabel(items[i].locationLabel), coords) &&
             itemConditionsMet(items[i].conditions))
             return &(items[i]);
     }

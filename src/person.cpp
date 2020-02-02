@@ -89,7 +89,8 @@ list<string> replySplit(const string &text) {
     return reply;
 }
 
-Person::Person(MapTile tile) : Creature(tile), start(0, 0) {
+Person::Person(MapTile tile) : Creature(tile) {
+    start = {0, 0, 0};
     setType(Object::PERSON);
     dialogue = NULL;
     npcType = NPC_EMPTY;
@@ -119,7 +120,7 @@ string Person::getName() const {
 }
 
 void Person::goToStartLocation() {
-    setCoords(start.getCoords());
+    setCoords(start);
 }
 
 void Person::setDialogue(Dialogue *d) {
