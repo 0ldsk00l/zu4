@@ -56,14 +56,13 @@ public:
     MapCoords(const Coords &a) { x = a.x; y = a.y; z = a.z; }
     
     Coords getCoords() const;
-    
-    MapCoords &move(Direction d, const class Map *map = NULL);
-    MapCoords &move(int dx, int dy, const class Map *map = NULL);
 
     int movementDistance(const MapCoords &c, const class Map *map = NULL) const;
     int distance(const MapCoords &c, const class Map *map = NULL) const;
 };
 
+void movedir(Coords *oc, Direction d, const class Map *map = NULL);
+void movexy(Coords *oc, int dx, int dy, const class Map *map = NULL);
 void wrap(Coords *oc, const Map *map);
 void putInBounds(Coords *oc, const class Map *map);
 

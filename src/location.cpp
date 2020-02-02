@@ -173,10 +173,11 @@ TileId Location::getReplacementTile(MapCoords atCoords, const Tile * forTile) {
 
     	for (int i = 0; i < dirs_per_step; i++)
 		{
-			MapCoords newStep(currentStep);
-			newStep.move(dirs[i][0], dirs[i][1], map);
+			Coords newStep;
+			newStep.x = currentStep.x; newStep.y = currentStep.y; newStep.z = currentStep.z;
+			movexy(&newStep, dirs[i][0], dirs[i][1], map);
 
-			Tile const * tileType = map->tileTypeAt(newStep.getCoords(),WITHOUT_OBJECTS);
+			Tile const * tileType = map->tileTypeAt(newStep,WITHOUT_OBJECTS);
 
 			if (!tileType->isOpaque()) {
 				//if (searched.find(newStep) == searched.end()) -- the find mechanism doesn't work.

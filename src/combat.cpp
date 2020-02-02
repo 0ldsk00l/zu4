@@ -655,7 +655,7 @@ void CombatController::rangedMiss(const Coords &coords, Creature *attacker) {
 }
 
 bool CombatController::returnWeaponToOwner(const Coords &coords, int distance, int dir, const Weapon *weapon) {
-    MapCoords new_coords = coords;
+    Coords new_coords = coords;
 
     MapTile misstile = map->tileset->getByName(weapon->getMissTile())->getId();
 
@@ -663,9 +663,9 @@ bool CombatController::returnWeaponToOwner(const Coords &coords, int distance, i
     Direction returnDir = dirReverse(dirFromMask(dir));
 
     for (int i = distance; i > 1; i--) {
-        new_coords.move(returnDir, map);        
-        
-        GameController::flashTile(new_coords, misstile, 1);
+        movedir(&new_coords, returnDir, map);        
+        MapCoords mc(new_coords);
+        GameController::flashTile(mc, misstile, 1);
     }
     gameUpdateScreen();
 

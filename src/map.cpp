@@ -61,35 +61,25 @@ void putInBounds(Coords *oc, const Map *map) {
     }
 }
 
-MapCoords& MapCoords::move(Direction d, const Map *map) {
-    switch(d) {
-    case DIR_NORTH: y--; break;
-    case DIR_EAST: x++; break;
-    case DIR_SOUTH: y++; break;
-    case DIR_WEST: x--; break;
-    default: break;
-    }
-    
-    // Wrap the coordinates if necessary
-    Coords temp;
-    temp.x = x, temp.y = y, temp.z = z;
-    wrap(&temp, map);
-    x = temp.x, y = temp.y, z = temp.z;
-
-    return *this;
+void movedir(Coords *oc, Direction d, const Map *map) {
+	switch(d) {
+		case DIR_NORTH: oc->y--; break;
+		case DIR_EAST: oc->x++; break;
+		case DIR_SOUTH: oc->y++; break;
+		case DIR_WEST: oc->x--; break;
+		default: break;
+	}
+	
+	// Wrap the coordinates if necessary
+	wrap(oc, map);
 }
 
-MapCoords& MapCoords::move(int dx, int dy, const Map *map) {
-    x += dx;
-    y += dy;        
-    
-    // Wrap the coordinates if necessary
-    Coords temp;
-    temp.x = x, temp.y = y, temp.z = z;
-    wrap(&temp, map);
-    x = temp.x, y = temp.y, z = temp.z;
-
-    return *this;
+void movexy(Coords *oc, int dx, int dy, const Map *map) {
+	oc->x += dx;
+	oc->y += dy;        
+	
+	// Wrap the coordinates if necessary
+	wrap(oc, map);
 }
 
 /**
@@ -180,7 +170,8 @@ Direction pathAway(Coords oc, Coords c, int valid_directions) {
 int MapCoords::movementDistance(const MapCoords &c, const Map *map) const {
     int dirmask = DIR_NONE;
     int dist = 0;
-    MapCoords me = *this;
+    Coords me;
+    me.x = x; me.y = y; me.z = z;
 
     if (z != c.z)
         return -1;
@@ -192,15 +183,15 @@ int MapCoords::movementDistance(const MapCoords &c, const Map *map) const {
     {
         if (me.x != c.x) {
             if (dirmask & MASK_DIR_WEST)
-                me.move(DIR_WEST, map);
-            else me.move(DIR_EAST, map);
+                movedir(&me, DIR_WEST, map);
+            else movedir(&me, DIR_EAST, map);
 
             dist++;
         }
         if (me.y != c.y) {
             if (dirmask & MASK_DIR_NORTH)
-                me.move(DIR_NORTH, map);
-            else me.move(DIR_SOUTH, map);
+                movedir(&me, DIR_NORTH, map);
+            else movedir(&me, DIR_SOUTH, map);
 
             dist++;
         }            
@@ -582,23 +573,23 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
     Object *obj;    
     const Creature *m, *to_m;
     int ontoAvatar, ontoCreature;    
-    MapCoords coords = from;
+    Coords coords = {from.x, from.y, from.z};
 
     // get the creature object, if it exists (the one that's moving)
     m = creatureMgr->getByTile(transport);
 
-    bool isAvatar = xu4_coords_equal(c->location->coords.getCoords(), coords.getCoords());
+    bool isAvatar = xu4_coords_equal(c->location->coords.getCoords(), coords);
     if (m && m->canMoveOntoPlayer())
     	isAvatar = false;
 
     retval = 0;
     for (d = DIR_WEST; d <= DIR_SOUTH; d = (Direction)(d+1)) {
-        coords = from;
+        coords = {from.x, from.y, from.z};
         ontoAvatar = 0;
         ontoCreature = 0;
 
         // Move the coordinates in the current direction and test it
-        coords.move(d, this);
+        movedir(&coords, d, this);
         
         // you can always walk off the edge of the map
         if (MAP_IS_OOB(this, coords)) {
@@ -606,10 +597,10 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
             continue;
         }
 
-        obj = objectAt(coords.getCoords());
+        obj = objectAt(coords);
 
         // see if it's trying to move onto the avatar
-        if ((flags & SHOW_AVATAR) && xu4_coords_equal(coords.getCoords(), c->location->coords.getCoords()))
+        if ((flags & SHOW_AVATAR) && xu4_coords_equal(coords, c->location->coords.getCoords()))
             ontoAvatar = 1;
         
         // see if it's trying to move onto a person or creature
@@ -623,7 +614,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
         else if (ontoCreature)
             tile = obj->getTile();
         else 
-            tile = *tileAt(coords.getCoords(), WITH_OBJECTS);
+            tile = *tileAt(coords, WITH_OBJECTS);
 
         MapTile prev_tile = *tileAt(from.getCoords(), WITHOUT_OBJECTS);
 
@@ -638,7 +629,7 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
             // these conditions are not met, the creature cannot move onto another.
 
         	if ((ontoAvatar && m->canMoveOntoPlayer()) || (ontoCreature && m->canMoveOntoCreatures()))
-               	tile = *tileAt(coords.getCoords(), WITHOUT_OBJECTS); //Ignore all objects, and just consider terrain
+               	tile = *tileAt(coords, WITHOUT_OBJECTS); //Ignore all objects, and just consider terrain
         	  if ((ontoAvatar && !m->canMoveOntoPlayer())
             	||	(
             			ontoCreature &&
@@ -724,9 +715,10 @@ int Map::getValidMoves(MapCoords from, MapTile transport) {
 }
 
 bool Map::move(Object *obj, Direction d) {
-    MapCoords new_coords = obj->getCoords();
-    if (!xu4_coords_equal(new_coords.move(d).getCoords(), obj->getCoords())) {
-        obj->setCoords(new_coords.getCoords());
+    Coords new_coords = obj->getCoords();
+    movedir(&new_coords, d);
+    if (!xu4_coords_equal(new_coords, obj->getCoords())) {
+        obj->setCoords(new_coords);
         return true;
     }
     return false;

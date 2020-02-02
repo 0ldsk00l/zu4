@@ -2219,17 +2219,17 @@ void GameController::avatarMoved(MoveEvent &event) {
 
             /* if shortcuts are enabled, try them! */
             if (settings.shortcutCommands) {
-                MapCoords new_coords = c->location->coords;
+                Coords new_coords = c->location->coords.getCoords();
                 MapTile *tile;
                 
-                new_coords.move(event.dir, c->location->map);
-                tile = c->location->map->tileAt(new_coords.getCoords(), WITH_OBJECTS);
+                movedir(&new_coords, event.dir, c->location->map);
+                tile = c->location->map->tileAt(new_coords, WITH_OBJECTS);
 
                 if (tile->getTileType()->isDoor()) {
-                    openAt(new_coords.getCoords());
+                    openAt(new_coords);
                     event.result = (MoveResult)(MOVE_SUCCEEDED | MOVE_END_TURN);
                 } else if (tile->getTileType()->isLockedDoor()) {
-                    jimmyAt(new_coords.getCoords());
+                    jimmyAt(new_coords);
                     event.result = (MoveResult)(MOVE_SUCCEEDED | MOVE_END_TURN);
                 } /*else if (mapPersonAt(c->location->map, new_coords) != NULL) {
                     talkAtCoord(newx, newy, 1, NULL);
@@ -3237,25 +3237,25 @@ vector<Coords> gameGetDirectionalActionPath(int dirmask, int validDirections, co
      * Stop when the the range is exceeded, or the action is blocked.
      */
     
-    MapCoords t_c(origin);
+    Coords t_c = origin;
     if ((dirx <= 0 || DIR_IN_MASK(dirx, validDirections)) && 
         (diry <= 0 || DIR_IN_MASK(diry, validDirections))) {
         for (int distance = 0; distance <= maxDistance;
-             distance++, t_c.move(dirx, c->location->map), t_c.move(diry, c->location->map)) {
+             distance++, movedir(&t_c, dirx, c->location->map), movedir(&t_c, diry, c->location->map)) {
 
             if (distance >= minDistance) {
                 /* make sure our action isn't taking us off the map */
                 if (MAP_IS_OOB(c->location->map, t_c))
                     break;
 
-                const Tile *tile = c->location->map->tileTypeAt(t_c.getCoords(), WITH_GROUND_OBJECTS);
+                const Tile *tile = c->location->map->tileTypeAt(t_c, WITH_GROUND_OBJECTS);
 
                 /* should we see if the action is blocked before trying it? */
                 if (!includeBlocked && blockedPredicate &&
                     !(*(blockedPredicate))(tile))
                     break;
 
-                path.push_back(t_c.getCoords());
+                path.push_back(t_c);
 
                 /* see if the action was blocked only if it did not succeed */
                 if (includeBlocked && blockedPredicate &&
@@ -3423,17 +3423,17 @@ void gameLordBritishCheckLevels() {
 bool gameSpawnCreature(const Creature *m) {
     int t, i;
     const Creature *creature;
-    MapCoords coords = c->location->coords;
+    Coords coords = c->location->coords.getCoords();
 
     if (c->location->context & CTX_DUNGEON) {
         /* FIXME: for some reason dungeon monsters aren't spawning correctly */
 
         bool found = false;
-        MapCoords new_coords;
+        Coords new_coords;
         
         for (i = 0; i < 0x20; i++) {
-            new_coords = MapCoords(xu4_random(c->location->map->width), xu4_random(c->location->map->height), coords.z);
-            const Tile *tile = c->location->map->tileTypeAt(new_coords.getCoords(), WITH_OBJECTS);
+            new_coords = (Coords){xu4_random(c->location->map->width), xu4_random(c->location->map->height), coords.z};
+            const Tile *tile = c->location->map->tileTypeAt(new_coords, WITH_OBJECTS);
             if (tile->isCreatureWalkable()) {
                 found = true;
                 break;
@@ -3468,10 +3468,10 @@ bool gameSpawnCreature(const Creature *m) {
 
             /* make sure we can spawn the creature there */
             if (m) {
-                MapCoords new_coords = coords;
-                new_coords.move(dx, dy, c->location->map);
+                Coords new_coords = coords;
+                movexy(&new_coords, dx, dy, c->location->map);
             
-                const Tile *tile = c->location->map->tileTypeAt(new_coords.getCoords(), WITHOUT_OBJECTS);
+                const Tile *tile = c->location->map->tileTypeAt(new_coords, WITHOUT_OBJECTS);
                 if ((m->sails() && tile->isSailable()) || 
                     (m->swims() && tile->isSwimable()) ||
                     (m->walks() && tile->isCreatureWalkable()) ||
@@ -3483,11 +3483,11 @@ bool gameSpawnCreature(const Creature *m) {
         }
 
         if (ok)
-            coords.move(dx, dy, c->location->map);
+            movexy(&coords, dx, dy, c->location->map);
     }
 
     /* can't spawn creatures on top of the player */
-    if (xu4_coords_equal(coords.getCoords(), c->location->coords.getCoords()))
+    if (xu4_coords_equal(coords, c->location->coords.getCoords()))
         return false;    
     
     /* figure out what creature to spawn */
@@ -3496,10 +3496,10 @@ bool gameSpawnCreature(const Creature *m) {
     else if (c->location->context & CTX_DUNGEON)
         creature = creatureMgr->randomForDungeon(c->location->coords.z);
     else
-        creature = creatureMgr->randomForTile(c->location->map->tileTypeAt(coords.getCoords(), WITHOUT_OBJECTS));
+        creature = creatureMgr->randomForTile(c->location->map->tileTypeAt(coords, WITHOUT_OBJECTS));
 
     if (creature)
-        c->location->map->addCreature(creature, coords.getCoords());    
+        c->location->map->addCreature(creature, coords);    
     return true;
 }
 

@@ -399,7 +399,7 @@ static int spellBlink(int dir) {
         diff,
         *var;
     Direction reverseDir = dirReverse((Direction)dir);
-    MapCoords coords = c->location->coords;
+    Coords coords = c->location->coords.getCoords();
     
     /* Blink doesn't work near the mouth of the abyss */
     /* Note: This means you can teleport to Hythloth from the top of the map,
@@ -423,19 +423,23 @@ static int spellBlink(int dir) {
 
     /* test our distance, and see if it works */
     for (i = 0; i < distance; i++)
-        coords.move((Direction)dir, c->location->map);    
+        movedir(&coords, (Direction)dir, c->location->map);    
     
     i = distance;   
     /* begin walking backward until you find a valid spot */
-    while ((i-- > 0) && !c->location->map->tileTypeAt(coords.getCoords(), WITH_OBJECTS)->isWalkable())
-        coords.move(reverseDir, c->location->map);
+    while ((i-- > 0) && !c->location->map->tileTypeAt(coords, WITH_OBJECTS)->isWalkable())
+        movedir(&coords, reverseDir, c->location->map);
     
-    if (c->location->map->tileTypeAt(coords.getCoords(), WITH_OBJECTS)->isWalkable()) {
+    if (c->location->map->tileTypeAt(coords, WITH_OBJECTS)->isWalkable()) {
         /* we didn't move! */
-        if (xu4_coords_equal(c->location->coords.getCoords(), coords.getCoords()))
+        if (xu4_coords_equal(c->location->coords.getCoords(), coords))
             failed = 1;
 
-        c->location->coords = coords;
+        //c->location->coords = coords;
+        c->location->coords.x = coords.x;
+        c->location->coords.y = coords.y;
+        c->location->coords.z = coords.z;
+        
     } else failed = 1;    
 
     return (failed ? 0 : 1);
@@ -460,7 +464,9 @@ static int spellDispel(int dir) {
     /*
      * find where we want to dispel the field
      */
-    field.move((Direction)dir, c->location->map);    
+    Coords field2 = {field.x, field.y, field.z};
+    movedir(&field2, (Direction)dir, c->location->map);
+    field.x = field2.x; field.y = field2.y; field.z = field2.z;
 
     GameController::flashTile(field, "wisp", 2);
     /*
@@ -470,7 +476,7 @@ static int spellDispel(int dir) {
      * (or other unwalkable surface).  So, we need to provide a valid replacement
      * annotation to fill in the gap :)
      */
-    Annotation::List a = c->location->map->annotations->allAt(field.getCoords());
+    Annotation::List a = c->location->map->annotations->allAt(field2);
     if (a.size() > 0) {
         Annotation::List::iterator i;
         for (i = a.begin(); i != a.end(); i++) {            
@@ -510,7 +516,7 @@ static int spellEField(int param) {
     MapTile fieldTile(0);
     int fieldType;
     int dir;
-    MapCoords coords;
+    Coords coords;
     
     /* Unpack fieldType and direction */
     fieldType = param >> 4;
@@ -525,9 +531,11 @@ static int spellEField(int param) {
         default: return 0; break;
     }
 
-    c->location->getCurrentPosition(&coords);        
+    MapCoords mc(coords);
+    c->location->getCurrentPosition(&mc);
+    coords.x = mc.x; coords.y = mc.y; coords.z = mc.z;        
     
-    coords.move((Direction)dir, c->location->map);    
+    movedir(&coords, (Direction)dir, c->location->map);    
     if (MAP_IS_OOB(c->location->map, coords))
         return 0;
     else {
@@ -539,11 +547,11 @@ static int spellEField(int param) {
          * Field cast on top of field and then dispel = no fields left
          * The code below seems to produce this behaviour.
          */
-        const Tile *tile = c->location->map->tileTypeAt(coords.getCoords(), WITH_GROUND_OBJECTS);
+        const Tile *tile = c->location->map->tileTypeAt(coords, WITH_GROUND_OBJECTS);
         if (!tile->isWalkable()) return 0;
         
         /* Get rid of old field, if any */
-        Annotation::List a = c->location->map->annotations->allAt(coords.getCoords());
+        Annotation::List a = c->location->map->annotations->allAt(coords);
         if (a.size() > 0) {
             Annotation::List::iterator i;
             for (i = a.begin(); i != a.end(); i++) {                
@@ -552,7 +560,7 @@ static int spellEField(int param) {
             }
         }     
             
-        c->location->map->annotations->add(coords.getCoords(), fieldTile);
+        c->location->map->annotations->add(coords, fieldTile);
     }
 
     return 1;

@@ -243,7 +243,7 @@ bool CheatMenuController::keyPressed(int key) {
 
     case 't':
         if (c->location->map->isWorldMap()) {
-            MapCoords coords = c->location->coords;
+            Coords coords = c->location->coords.getCoords();
             static MapTile horse = c->location->map->tileset->getByName("horse")->getId(),
                 ship = c->location->map->tileset->getByName("ship")->getId(),
                 balloon = c->location->map->tileset->getByName("balloon")->getId();
@@ -273,10 +273,10 @@ bool CheatMenuController::keyPressed(int key) {
                 eventHandler->pushController(&readDir);                
 
                 screenMessage("Dir: ");
-                coords.move(readDir.waitFor(), c->location->map);
-                if (!xu4_coords_equal(coords.getCoords(), c->location->coords.getCoords())) {            
+                movedir(&coords, readDir.waitFor(), c->location->map);
+                if (!xu4_coords_equal(coords, c->location->coords.getCoords())) {            
                     bool ok = false;
-                    MapTile *ground = c->location->map->tileAt(coords.getCoords(), WITHOUT_OBJECTS);
+                    MapTile *ground = c->location->map->tileAt(coords, WITHOUT_OBJECTS);
 
                     screenMessage("%s\n", getDirectionName(readDir.getValue()));
 
@@ -288,7 +288,7 @@ bool CheatMenuController::keyPressed(int key) {
                     }
 
                     if (choice && ok) {
-                        c->location->map->addObject(*choice, *choice, coords.getCoords());
+                        c->location->map->addObject(*choice, *choice, coords);
                         screenMessage("%s created!\n", tile->getName().c_str());
                     }
                     else if (!choice)

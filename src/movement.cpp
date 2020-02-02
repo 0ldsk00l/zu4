@@ -26,7 +26,7 @@ bool collisionOverride = false;
  * keystroke.  Returns zero if the avatar is blocked.
  */
 void moveAvatar(MoveEvent &event) {    
-    MapCoords newCoords;
+    Coords newCoords;
     int slowed = 0;
     SlowedType slowedType = SLOWED_BY_TILE;
 
@@ -57,8 +57,8 @@ void moveAvatar(MoveEvent &event) {
     }
 
     /* figure out our new location we're trying to move to */
-    newCoords = c->location->coords;    
-    newCoords.move(event.dir, c->location->map);
+    newCoords = c->location->coords.getCoords();    
+    movedir(&newCoords, event.dir, c->location->map);
 
     /* see if we moved off the map */
     if (MAP_IS_OOB(c->location->map, newCoords)) {
@@ -79,7 +79,7 @@ void moveAvatar(MoveEvent &event) {
         case SLOWED_BY_TILE:
           // TODO: CHEST: Make a user option to not make chests always fast to
           // travel over
-            slowed = slowedByTile(c->location->map->tileTypeAt(newCoords.getCoords(), WITH_OBJECTS));
+            slowed = slowedByTile(c->location->map->tileTypeAt(newCoords, WITH_OBJECTS));
             break;
         case SLOWED_BY_WIND:
             slowed = slowedByWind(event.dir);
@@ -114,7 +114,7 @@ void moveAvatar(MoveEvent &event) {
  * Moves the avatar while in dungeon view
  */
 void moveAvatarInDungeon(MoveEvent &event) {
-    MapCoords newCoords;
+    Coords newCoords;
     Direction realDir = dirNormalize((Direction)c->saveGame->orientation, event.dir); /* get our real direction */  
     int advancing = realDir == c->saveGame->orientation,
         retreating = realDir == dirReverse((Direction)c->saveGame->orientation);
@@ -131,10 +131,10 @@ void moveAvatarInDungeon(MoveEvent &event) {
     }
     
     /* figure out our new location */
-    newCoords = c->location->coords;    
-    newCoords.move(realDir, c->location->map);
+    newCoords = c->location->coords.getCoords();    
+    movedir(&newCoords, event.dir, c->location->map);
 
-    tile = c->location->map->tileAt(newCoords.getCoords(), WITH_OBJECTS);
+    tile = c->location->map->tileAt(newCoords, WITH_OBJECTS);
 
     /* see if we moved off the map (really, this should never happen in a dungeon) */
     if (MAP_IS_OOB(c->location->map, newCoords)) {
@@ -171,7 +171,7 @@ void moveAvatarInDungeon(MoveEvent &event) {
 int moveObject(Map *map, Creature *obj, MapCoords avatar) {
     int dirmask = DIR_NONE;
     Direction dir;
-    MapCoords new_coords = obj->getCoords();    
+    Coords new_coords = obj->getCoords();    
     int slowed = 0;    
     
     /* determine a direction depending on the object's movement behavior */
@@ -199,13 +199,13 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
             break;
         }
 
-        dir = pathTo(new_coords.getCoords(), avatar.getCoords(), dirmask, true, c->location->map);
+        dir = pathTo(new_coords, avatar.getCoords(), dirmask, true, c->location->map);
         break;
     }
     
     /* now, get a new x and y for the object */
     if (dir)
-        new_coords.move(dir, c->location->map);        
+        movedir(&new_coords, dir, c->location->map);        
     else
         return 0;
 
@@ -217,7 +217,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
     /* is the object slowed by terrain or by wind direction? */
     switch(slowedType) {
     case SLOWED_BY_TILE:
-        slowed = slowedByTile(map->tileTypeAt(new_coords.getCoords(), WITHOUT_OBJECTS));
+        slowed = slowedByTile(map->tileTypeAt(new_coords, WITHOUT_OBJECTS));
         break;
     case SLOWED_BY_WIND:
         slowed = slowedByWind(obj->getTile().getDirection());
@@ -240,10 +240,10 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
     /**
      * Set the new coordinates
      */ 
-    if (!xu4_coords_equal(new_coords.getCoords(), obj->getCoords()) && 
+    if (!xu4_coords_equal(new_coords, obj->getCoords()) && 
         !MAP_IS_OOB(map, new_coords))
     {
-    	obj->setCoords(new_coords.getCoords());
+    	obj->setCoords(new_coords);
     }
     return 1;
 }
@@ -252,7 +252,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
  * Moves an object in combat according to its chosen combat action
  */
 int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
-    MapCoords new_coords = obj->getCoords();
+    Coords new_coords = obj->getCoords();
     int valid_dirs = map->getValidMoves(new_coords, obj->getTile());
     Direction dir;
     CombatAction action = (CombatAction)act;
@@ -265,7 +265,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
 
     if (action == CA_FLEE) {
         /* run away from our target instead! */
-        dir = pathAway(new_coords.getCoords(), target.getCoords(), valid_dirs);
+        dir = pathAway(new_coords, target.getCoords(), valid_dirs);
     
     } else {
         xu4_assert(action == CA_ADVANCE, "action must be CA_ADVANCE or CA_FLEE");
@@ -279,11 +279,11 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
         else if (new_coords.y >= (signed)(map->height - 1))
             valid_dirs = DIR_REMOVE_FROM_MASK(DIR_SOUTH, valid_dirs);        
 
-        dir = pathTo(new_coords.getCoords(), target.getCoords(), valid_dirs);
+        dir = pathTo(new_coords, target.getCoords(), valid_dirs);
     }
 
     if (dir)
-        new_coords.move(dir, c->location->map);
+        movedir(&new_coords, dir, c->location->map);
     else
         return 0;
 
@@ -294,7 +294,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
     /* is the object slowed by terrain or by wind direction? */
     switch(slowedType) {
     case SLOWED_BY_TILE:
-        slowed = slowedByTile(map->tileTypeAt(new_coords.getCoords(), WITHOUT_OBJECTS));
+        slowed = slowedByTile(map->tileTypeAt(new_coords, WITHOUT_OBJECTS));
         break;
     case SLOWED_BY_WIND:
         slowed = slowedByWind(obj->getTile().getDirection());
@@ -307,7 +307,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
     /* if the object wan't slowed... */
     if (!slowed) {        
         // Set the new coordinates
-    	obj->setCoords(new_coords.getCoords());
+    	obj->setCoords(new_coords);
         return 1;
     }
 
@@ -321,14 +321,14 @@ void movePartyMember(MoveEvent &event) {
     CombatController *ct = dynamic_cast<CombatController *>(eventHandler->getController());
     CombatMap *cm = getCombatMap();
     int member = ct->getFocus();
-    MapCoords newCoords;
+    Coords newCoords;
     PartyMemberVector *party = ct->getParty();
 
     event.result = MOVE_SUCCEEDED;    
 
     /* find our new location */
     newCoords = (*party)[member]->getCoords();
-    newCoords.move(event.dir, c->location->map);
+    movedir(&newCoords, event.dir, c->location->map);
 
     if (MAP_IS_OOB(c->location->map, newCoords)) {
         bool sameExit = (!cm->isDungeonRoom() || (ct->getExitDir() == DIR_NONE) || (event.dir == ct->getExitDir()));
@@ -360,10 +360,10 @@ void movePartyMember(MoveEvent &event) {
     }
 
     /* is the party member slowed? */
-    if (!slowedByTile(c->location->map->tileTypeAt(newCoords.getCoords(), WITHOUT_OBJECTS)))
+    if (!slowedByTile(c->location->map->tileTypeAt(newCoords, WITHOUT_OBJECTS)))
     {
         /* move succeeded */        
-        (*party)[member]->setCoords(newCoords.getCoords());
+        (*party)[member]->setCoords(newCoords);
 
         /* handle dungeon room triggers */
         if (cm->isDungeonRoom()) {
@@ -382,7 +382,7 @@ void movePartyMember(MoveEvent &event) {
                 MapCoords trigger(triggers[i].x, triggers[i].y, c->location->coords.z);
 
                 /* see if we're on a trigger */
-                if (xu4_coords_equal(newCoords.getCoords(), trigger.getCoords())) {
+                if (xu4_coords_equal(newCoords, trigger.getCoords())) {
                     MapCoords change1(triggers[i].change_x1, triggers[i].change_y1, c->location->coords.z),
                               change2(triggers[i].change_x2, triggers[i].change_y2, c->location->coords.z);
 

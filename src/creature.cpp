@@ -701,15 +701,15 @@ bool Creature::divide() {
     
     /* make sure there's a place to put the divided creature! */
     if (d != DIR_NONE) {                            
-        MapCoords coords(getCoords());
+        Coords coords = getCoords();
         
         screenMessage("%s Divides!\n", name.c_str());
 
         /* find a spot to put our new creature */        
-        coords.move(d, map);
+        movedir(&coords, d, map);
 
         /* create our new creature! */
-        Creature * addedCreature = map->addCreature(this, coords.getCoords());
+        Creature * addedCreature = map->addCreature(this, coords);
         int dividedHp = (this->hp + 1) / 2;
         addedCreature->hp = dividedHp;
         this->hp = dividedHp;
