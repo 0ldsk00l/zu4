@@ -423,8 +423,7 @@ bool Creature::specialEffect() {
                 c->location->coords = c->location->map->getLabel("lockelake");
 
                 /* Teleport the whirlpool that sent you there far away from lockelake */
-                Coords temp = { 0, 0, 0 };
-                this->setCoords(temp);
+                this->setCoords((Coords){ 0, 0, 0 });
                 retval = true;
                 break;
             }
@@ -567,7 +566,7 @@ void Creature::act(CombatController *controller) {
         
         while (!valid) {
             Map *map = getMap();
-            new_c = { xu4_random(map->width), xu4_random(map->height), c->location->coords.z };
+            new_c = (Coords){ xu4_random(map->width), xu4_random(map->height), c->location->coords.z };
                 
             const Tile *tile = map->tileTypeAt(new_c, WITH_OBJECTS);
             

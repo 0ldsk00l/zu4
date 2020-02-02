@@ -443,8 +443,10 @@ void CombatController::placeCreatures() {
 
     for (i = 0; i < AREA_CREATURES; i++) {        
         const Creature *m = creatureTable[i];
-        if (m)
+        if (m) {
+            map->creature_start[i].z = 0;
             map->addCreature(m, map->creature_start[i]);
+        }
     }
 }
 
@@ -463,6 +465,7 @@ void CombatController::placePartyMembers() {
         /* don't place dead party members */
         if (p->getStatus() != STAT_DEAD) {
             /* add the party member to the map */
+            map->player_start[i].z = 0;
             p->setCoords(map->player_start[i]);
             p->setMap(map);
             map->objects.push_back(p);
