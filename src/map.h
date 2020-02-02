@@ -46,8 +46,6 @@ typedef std::vector<MapTile> MapData;
 #define WITH_GROUND_OBJECTS 1
 #define WITH_OBJECTS        2
 
-typedef Coords MapCoords;
-
 int movementDistance(Coords oc, Coords c, const class Map *map = NULL);
 int distance(Coords oc, Coords c, const class Map *map = NULL);
 void movedir(Coords *oc, Direction d, const class Map *map = NULL);
@@ -109,10 +107,10 @@ public:
     class Creature *moveObjects(Coords avatar);
     void resetObjectAnimations();
     int getNumberOfCreatures();
-    int getValidMoves(MapCoords from, MapTile transport);
+    int getValidMoves(Coords from, MapTile transport);
     bool move(Object *obj, Direction d);
     void alertGuards();
-    const MapCoords &getLabel(const string &name) const;
+    const Coords &getLabel(const string &name) const;
 
     // u4dos compatibility
     bool fillMonsterTable();    
@@ -142,7 +140,7 @@ public:
     int             music;
     MapData         data;
     ObjectDeque     objects;
-    std::map<string, MapCoords> labels;
+    std::map<string, Coords> labels;
     Tileset        *tileset;
     TileMap        *tilemap;
 

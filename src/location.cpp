@@ -28,7 +28,7 @@ Location *locationPop(Location **stack);
  * Add a new location to the stack, or
  * start a new stack if 'prev' is NULL
  */
-Location::Location(MapCoords coords, Map *map, int viewmode, LocationContext ctx,
+Location::Location(Coords coords, Map *map, int viewmode, LocationContext ctx,
                    TurnCompleter *turnCompleter, Location *prev) {
 
     this->coords = coords;
@@ -151,22 +151,22 @@ std::vector<MapTile> Location::tilesAt(Coords coords, bool &focus) {
  * is marked as a valid replacement (or waterReplacement) tile in tiles.xml.  If a valid replacement
  * cannot be found, it returns a "best guess" tile.
  */
-TileId Location::getReplacementTile(MapCoords atCoords, const Tile * forTile) {
+TileId Location::getReplacementTile(Coords atCoords, const Tile * forTile) {
     std::map<TileId, int> validMapTileCount;
 
     const static int dirs[][2] = {{-1,0},{1,0},{0,-1},{0,1}};
     const static int dirs_per_step = sizeof(dirs) / sizeof(*dirs);
     int loop_count = 0;
 
-    //std::set<MapCoords> searched; // was never used
-    std::list<MapCoords> searchQueue;
+    //std::set<Coords> searched; // was never used
+    std::list<Coords> searchQueue;
 
     //Pathfinding to closest traversable tile with appropriate replacement properties.
     //For tiles marked water-replaceable, pathfinding includes swimmables.
     searchQueue.push_back(atCoords);
     do
     {
-        MapCoords currentStep = searchQueue.front();
+        Coords currentStep = searchQueue.front();
         searchQueue.pop_front();
 
 		//searched.insert(currentStep);
@@ -230,7 +230,7 @@ TileId Location::getReplacementTile(MapCoords atCoords, const Tile * forTile) {
  *     If in combat - returns the coordinates of party member with focus
  *     If elsewhere - returns the coordinates of the avatar
  */
-int Location::getCurrentPosition(MapCoords *coords) {
+int Location::getCurrentPosition(Coords *coords) {
     if (context & CTX_COMBAT) {
         CombatController *cc = dynamic_cast<CombatController *>(eventHandler->getController());
         PartyMemberVector *party = cc->getParty();

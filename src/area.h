@@ -11,8 +11,8 @@
 #define AREA_PLAYERS 8
 
 struct Area {
-    MapCoords monster_start[AREA_MONSTERS];
-    MapCoords player_start[AREA_PLAYERS];
+    Coords monster_start[AREA_MONSTERS];
+    Coords player_start[AREA_PLAYERS];
 };
 
 #endif

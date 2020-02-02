@@ -168,7 +168,7 @@ void moveAvatarInDungeon(MoveEvent &event) {
  * tile direction changed, or object simply cannot move
  * (fixed objects, nowhere to go, etc.)
  */
-int moveObject(Map *map, Creature *obj, MapCoords avatar) {
+int moveObject(Map *map, Creature *obj, Coords avatar) {
     int dirmask = DIR_NONE;
     Direction dir;
     Coords new_coords = obj->getCoords();    
@@ -251,7 +251,7 @@ int moveObject(Map *map, Creature *obj, MapCoords avatar) {
 /**
  * Moves an object in combat according to its chosen combat action
  */
-int moveCombatObject(int act, Map *map, Creature *obj, MapCoords target) {
+int moveCombatObject(int act, Map *map, Creature *obj, Coords target) {
     Coords new_coords = obj->getCoords();
     int valid_dirs = map->getValidMoves(new_coords, obj->getTile());
     Direction dir;

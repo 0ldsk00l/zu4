@@ -75,13 +75,13 @@ public:
     DungeonToken tokenForTile(MapTile tile);
     DungeonToken currentToken();
     unsigned char currentSubToken();
-    DungeonToken tokenAt(MapCoords coords);
-    unsigned char subTokenAt(MapCoords coords);
+    DungeonToken tokenAt(Coords coords);
+    unsigned char subTokenAt(Coords coords);
 
-    bool ladderUpAt(MapCoords coords);
-    bool ladderDownAt(MapCoords coords);
+    bool ladderUpAt(Coords coords);
+    bool ladderDownAt(Coords coords);
 
-    bool validTeleportLocation(MapCoords coords);
+    bool validTeleportLocation(Coords coords);
 
     // Properties
     string name;

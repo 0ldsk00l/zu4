@@ -335,5 +335,5 @@ int MapMgr::initCompressedChunkFromConf(const ConfigElement &compressedChunkConf
 pair<string, Coords> MapMgr::initLabelFromConf(const ConfigElement &labelConf) {
     return pair<string, Coords>
         (labelConf.getString("name"), 
-         (MapCoords){labelConf.getInt("x"), labelConf.getInt("y"), labelConf.getInt("z", 0)});
+         (Coords){labelConf.getInt("x"), labelConf.getInt("y"), labelConf.getInt("z", 0)});
 }

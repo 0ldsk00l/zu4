@@ -557,7 +557,7 @@ int Map::getNumberOfCreatures() {
 /**
  * Returns a mask of valid moves for the given transport on the given map
  */
-int Map::getValidMoves(MapCoords from, MapTile transport) {
+int Map::getValidMoves(Coords from, MapTile transport) {
     int retval;
     Direction d;
     Object *obj;    
@@ -729,8 +729,8 @@ void Map::alertGuards() {
     }
 }
 
-const MapCoords &Map::getLabel(const string &name) const {
-    std::map<string, MapCoords>::const_iterator i = labels.find(name);
+const Coords &Map::getLabel(const string &name) const {
+    std::map<string, Coords>::const_iterator i = labels.find(name);
     if (i == labels.end()) {
         //return xu4_coords_nowhere();
         xu4_error(XU4_LOG_ERR, "Label not found\n");

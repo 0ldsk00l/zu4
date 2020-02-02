@@ -86,7 +86,7 @@ unsigned char Dungeon::currentSubToken() {
 /**
  * Returns the dungeon token for the given coordinates
  */
-DungeonToken Dungeon::tokenAt(MapCoords coords) {
+DungeonToken Dungeon::tokenAt(Coords coords) {
     return tokenForTile(*getTileFromData(coords));
 }
 
@@ -97,7 +97,7 @@ DungeonToken Dungeon::tokenAt(MapCoords coords) {
  * This function will always need type-casting to the token type
  * necessary
  */
-unsigned char Dungeon::subTokenAt(MapCoords coords) {
+unsigned char Dungeon::subTokenAt(Coords coords) {
     int index = coords.x + (coords.y * width) + (width * height * coords.z);
     return dataSubTokens[index];
 }
@@ -278,7 +278,7 @@ bool dungeonHandleTrap(TrapType trap) {
 /**
  * Returns true if a ladder-up is found at the given coordinates
  */
-bool Dungeon::ladderUpAt(MapCoords coords) {    
+bool Dungeon::ladderUpAt(Coords coords) {    
     Annotation::List a = annotations->allAt(coords);
 
     if (tokenAt(coords) == DUNGEON_LADDER_UP ||
@@ -298,7 +298,7 @@ bool Dungeon::ladderUpAt(MapCoords coords) {
 /**
  * Returns true if a ladder-down is found at the given coordinates
  */
-bool Dungeon::ladderDownAt(MapCoords coords) {
+bool Dungeon::ladderDownAt(Coords coords) {
     Annotation::List a = annotations->allAt(coords);
 
     if (tokenAt(coords) == DUNGEON_LADDER_DOWN ||
@@ -315,7 +315,7 @@ bool Dungeon::ladderDownAt(MapCoords coords) {
     return false;
 }
 
-bool Dungeon::validTeleportLocation(MapCoords coords) {
+bool Dungeon::validTeleportLocation(Coords coords) {
     MapTile *tile = tileAt(coords, WITH_OBJECTS);
     return tokenForTile(*tile) == DUNGEON_CORRIDOR;    
 }

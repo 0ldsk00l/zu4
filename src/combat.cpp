@@ -664,7 +664,7 @@ bool CombatController::returnWeaponToOwner(const Coords &coords, int distance, i
 
     for (int i = distance; i > 1; i--) {
         movedir(&new_coords, returnDir, map);        
-        MapCoords mc(new_coords);
+        Coords mc(new_coords);
         GameController::flashTile(mc, misstile, 1);
     }
     gameUpdateScreen();

@@ -266,7 +266,7 @@ std::vector<MapTile> DungeonView::getTiles(int fwd, int side) {
     wrap(&coords, c->location->map);
 
     bool focus;
-    MapCoords coords2(coords);
+    Coords coords2(coords);
     return c->location->tilesAt(coords2, focus);
 }
 

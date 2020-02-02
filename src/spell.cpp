@@ -529,7 +529,7 @@ static int spellEField(int param) {
         default: return 0; break;
     }
 
-    MapCoords mc(coords);
+    Coords mc(coords);
     c->location->getCurrentPosition(&mc);
     coords.x = mc.x; coords.y = mc.y; coords.z = mc.z;        
     
@@ -741,7 +741,7 @@ static int spellXit(int unused) {
 }
 
 static int spellYup(int unused) {
-    MapCoords coords = c->location->coords;
+    Coords coords = c->location->coords;
     Dungeon *dungeon = dynamic_cast<Dungeon *>(c->location->map);
 
     /* can't cast in the Abyss */

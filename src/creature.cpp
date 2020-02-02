@@ -306,7 +306,7 @@ bool Creature::specialAction() {
     int mapdist = distance(c->location->coords, coords, c->location->map);
 
     /* find out which direction the avatar is in relation to the creature */
-    //MapCoords mapcoords(coords);
+    //Coords mapcoords(coords);
     //int dir = mapcoords.getRelativeDirection(c->location->coords, c->location->map);
     int dir = getRelativeDirection(coords, c->location->coords, c->location->map);
 
@@ -592,7 +592,7 @@ void Creature::act(CombatController *controller) {
         if (hasRandomRanged())
             setRandomRanged();
 
-        MapCoords m_coords = getCoords(),
+        Coords m_coords = getCoords(),
             p_coords = target->getCoords();
 
         // figure out which direction to fire the weapon
@@ -726,7 +726,7 @@ bool Creature::spawnOnDeath() {
         return false;
     
     /* make sure there's a place to put the divided creature! */
-    MapCoords coords(getCoords());
+    Coords coords(getCoords());
         
     /* create our new creature! */
     map->addCreature(creatureMgr->getById(spawn), coords);                

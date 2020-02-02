@@ -363,7 +363,7 @@ vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int 
         return result;
     }
     
-    MapCoords tc2(tc);
+    Coords tc2(tc);
 
     return c->location->tilesAt(tc2, focus);
 }
@@ -378,7 +378,7 @@ bool screenTileUpdate(TileView *view, const Coords &coords, bool redraw)
 	Coords mc;
 	mc.x = coords.x; mc.y = coords.y; mc.z = coords.z;
 	wrap(&mc, c->location->map);
-	MapCoords mc2(mc);
+	Coords mc2(mc);
 	vector<MapTile> tiles = c->location->tilesAt(mc2, focus);
 
 	// Get the screen coordinates
