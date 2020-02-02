@@ -21,6 +21,8 @@
 #include "utils.h"
 #include "settings.h"
 
+static Coords nowhere = xu4_coords_nowhere();
+
 void wrap(Coords *oc, const Map *map) {
     if (map && map->border_behavior == Map::BORDER_WRAP) {
         while (oc->x < 0)
@@ -732,8 +734,7 @@ void Map::alertGuards() {
 const Coords &Map::getLabel(const string &name) const {
     std::map<string, Coords>::const_iterator i = labels.find(name);
     if (i == labels.end()) {
-        //return xu4_coords_nowhere();
-        xu4_error(XU4_LOG_ERR, "Label not found\n");
+        return nowhere;
 	}
     return i->second;
 }

@@ -116,8 +116,8 @@ void moveAvatar(MoveEvent &event) {
 void moveAvatarInDungeon(MoveEvent &event) {
     Coords newCoords;
     Direction realDir = dirNormalize((Direction)c->saveGame->orientation, event.dir); /* get our real direction */  
-    int advancing = realDir == c->saveGame->orientation,
-        retreating = realDir == dirReverse((Direction)c->saveGame->orientation);
+    int advancing = realDir == c->saveGame->orientation;
+    int retreating = realDir == dirReverse((Direction)c->saveGame->orientation);
     MapTile *tile;
     
     /* we're not in a dungeon, failed! */
@@ -132,7 +132,7 @@ void moveAvatarInDungeon(MoveEvent &event) {
     
     /* figure out our new location */
     newCoords = c->location->coords;    
-    movedir(&newCoords, event.dir, c->location->map);
+    movedir(&newCoords, realDir, c->location->map);
 
     tile = c->location->map->tileAt(newCoords, WITH_OBJECTS);
 
