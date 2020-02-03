@@ -314,12 +314,12 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
     /* -------------------------
      * update the colors for VGA
      * ------------------------- */
-    if (settings.videoType == "VGA")
+    if (settings.videoType == 1) // VGA
     {
         ImageInfo *borderInfo = imageMgr->get(BKGD_BORDERS, true);
 //        ImageInfo *charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!borderInfo)
-            xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_BORDERS, settings.game.c_str());
+            xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_BORDERS);
 
         delete borderInfo->image;
         borderInfo->image = NULL;
@@ -361,7 +361,7 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
         x = sigData[i] + 0x14;
         y = 0xBF - sigData[i+1];
 
-        if (settings.videoType != "EGA")
+        if (settings.videoType) // Not EGA
         {
             // yellow gradient
             color = im->setColor(255, (y == 1 ? 250 : 255), blue[y]);
@@ -377,7 +377,7 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
      * draw the red line between "Origin Systems, Inc." and "present"
      * -------------------------------------------------------------- */
     /* we're still working with an unscaled surface */
-    if (settings.videoType != "EGA")
+    if (settings.videoType) // Not EGA
     {
         color = im->setColor(0, 0, 161);    // dark blue
     }
@@ -544,7 +544,7 @@ U4FILE * ImageMgr::getImageFile(ImageInfo *info)
      * and are not renamed in the upgrade installation process
      */
 	if (u4isUpgradeInstalled() && getInfoFromSet(info->name, getSet("VGA"))->filename.find(".old") != string::npos) {
-        if (settings.videoType == "EGA")
+        if (!settings.videoType) // EGA
             filename = getInfoFromSet(info->name, getSet("VGA"))->filename;
         else
             filename = getInfoFromSet(info->name, getSet("EGA"))->filename;
@@ -739,8 +739,7 @@ const vector<string> &ImageMgr::getSetNames() {
  * Find the new base image set when settings have changed.
  */
 void ImageMgr::update(Settings *newSettings) {
-    string setname;
-    setname = newSettings->videoType;
+    string setname = newSettings->videoType ? "VGA" : "EGA";//newSettings->videoType;
     xu4_error(XU4_LOG_DBG, "Base image set is: %s", setname.c_str());
     baseSet = getSet(setname);
 }

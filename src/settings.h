@@ -26,7 +26,7 @@ using std::string;
 
 #define DEFAULT_SCALE                   4
 #define DEFAULT_FULLSCREEN              0
-#define DEFAULT_VIDEO_TYPE              "EGA"
+#define DEFAULT_VIDEO_TYPE              0
 #define DEFAULT_GEM_LAYOUT              "Standard"
 #define DEFAULT_LINEOFSIGHT             "DOS"
 #define DEFAULT_SCREEN_SHAKES           1
@@ -117,6 +117,7 @@ public:
     bool                volumeFades;
     int                 titleSpeedRandom;
     int                 titleSpeedOther;
+    int                 videoType;
 
     //Settings that aren't in file yet
     int					pauseForEachTurn;
@@ -132,9 +133,7 @@ public:
 
     string              gemLayout;
     string              lineOfSight;
-    string              videoType;
     string              battleDiff;
-    string              game;
 };
 
 /**

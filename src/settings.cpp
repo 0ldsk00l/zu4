@@ -30,11 +30,7 @@ bool SettingsData::operator==(const SettingsData &s) const {
         return false;
     if (lineOfSight != s.lineOfSight)
         return false;
-    if (videoType != s.videoType)
-        return false;
     if (battleDiff != s.battleDiff)
-        return false;
-    if (game != s.game)
         return false;
 
     return true;
@@ -151,8 +147,6 @@ bool Settings::read() {
 
     /* mouse defaults to on */
     mouseOptions.enabled = 1;
-
-    game = "Ultima IV";
     
     settingsFile = fopen(u4settings.filename, "rt");    
     if (!settingsFile)
@@ -167,7 +161,7 @@ bool Settings::read() {
         else if (strstr(buffer, "fullscreen=") == buffer)
             fullscreen = (int) strtoul(buffer + strlen("fullscreen="), NULL, 0);
         else if (strstr(buffer, "video=") == buffer)
-            videoType = buffer + strlen("video=");
+            videoType = (int) strtoul(buffer + strlen("video="), NULL, 0);
         else if (strstr(buffer, "gemLayout=") == buffer)
             gemLayout = buffer + strlen("gemLayout=");
         else if (strstr(buffer, "lineOfSight=") == buffer)
@@ -248,8 +242,6 @@ bool Settings::read() {
         /* mouse options */
         else if (strstr(buffer, "mouseEnabled=") == buffer)
             mouseOptions.enabled = (int) strtoul(buffer + strlen("mouseEnabled="), NULL, 0);
-        else if (strstr(buffer, "game=") == buffer)
-            game = buffer + strlen("game=");
 
         /* graphics enhancements options */
         else if (strstr(buffer, "renderTileTransparency=") == buffer)
@@ -258,25 +250,6 @@ bool Settings::read() {
         	enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity = (int) strtoul(buffer + strlen("transparentTilePixelShadowOpacity="), NULL, 0);
         else if (strstr(buffer, "transparentTileShadowSize=") == buffer)
         	enhancementsOptions.u4TrileTransparencyHackShadowBreadth = (int) strtoul(buffer + strlen("transparentTileShadowSize="), NULL, 0);
-
-
-
-        /**
-         * FIXME: this is just to avoid an error for those who have not written
-         * a new xu4.cfg file since these items were removed.  Remove them after a reasonable
-         * amount of time 
-         *
-         * remove:  attackspeed, minorEnhancements, majorEnhancements, vol
-         */
-        
-        else if (strstr(buffer, "attackspeed=") == buffer);
-        else if (strstr(buffer, "minorEnhancements=") == buffer)
-            enhancements = (int)strtoul(buffer + strlen("minorEnhancements="), NULL, 0);
-        else if (strstr(buffer, "majorEnhancements=") == buffer);
-        else if (strstr(buffer, "vol=") == buffer)
-            musicVol = soundVol = (int) strtoul(buffer + strlen("vol="), NULL, 0);        
-        
-        /***/
 
         else
             xu4_error(XU4_LOG_WRN, "invalid line in settings file %s", buffer);
@@ -289,8 +262,7 @@ bool Settings::read() {
 }
 
 /**
- * Write the settings out into a human readable file.  This also
- * notifies observers that changes have been commited.
+ * Write the settings out into a human readable file.
  */
 bool Settings::write() {    
     FILE *settingsFile;
@@ -304,7 +276,7 @@ bool Settings::write() {
     fprintf(settingsFile, 
             "scale=%d\n"
             "fullscreen=%d\n"
-            "video=%s\n"
+            "video=%d\n"
             "gemLayout=%s\n"
             "lineOfSight=%s\n"
             "screenShakes=%d\n"
@@ -342,13 +314,12 @@ bool Settings::write() {
             "innAlwaysCombat=%d\n"
             "campingAlwaysCombat=%d\n"
             "mouseEnabled=%d\n"
-            "game=%s\n"
             "renderTileTransparency=%d\n"
             "transparentTilePixelShadowOpacity=%d\n"
             "transparentTileShadowSize=%d\n",
             scale,
             fullscreen,
-            videoType.c_str(),
+            videoType,
             gemLayout.c_str(),
             lineOfSight.c_str(),
             screenShakes,
@@ -386,7 +357,6 @@ bool Settings::write() {
             innAlwaysCombat,
             campingAlwaysCombat,
             mouseOptions.enabled,
-            game.c_str(),
             enhancementsOptions.u4TileTransparencyHack,
             enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity,
             enhancementsOptions.u4TrileTransparencyHackShadowBreadth);

@@ -201,7 +201,8 @@ IntroController::IntroController() :
     videoMenu.setClosesMenu(CANCEL);
     
     gfxMenu.setTitle("Game Graphics Options", 0,0);
-    gfxMenu.add(MI_GFX_SCHEME, new StringMenuItem		 	 			("Graphics Scheme    %s", 2, 2, /*'G'*/ 0, &settingsChanged.videoType, imageMgr->getSetNames()));
+    //IntMenuItem(string text, short x, short y, int shortcutKey, int *val, int min, int max, int increment, menuOutputType output=MENU_OUTPUT_INT);
+    gfxMenu.add(MI_GFX_SCHEME, new IntMenuItem							("Graphics Scheme    %d", 2, 2, /*'G'*/ 0, &settingsChanged.videoType, 0, 1, 1));
     gfxMenu.add(MI_GFX_TILE_TRANSPARENCY, new BoolMenuItem              ("Transparency Hack  %s", 2, 4, /*'t'*/ 0, &settingsChanged.enhancementsOptions.u4TileTransparencyHack));
     gfxMenu.add(MI_GFX_TILE_TRANSPARENCY_SHADOW_SIZE, new IntMenuItem   ("  Shadow Size:     %d", 2, 5, /*'s'*/ 9, &settingsChanged.enhancementsOptions.u4TrileTransparencyHackShadowBreadth, 0, 16, 1));
     gfxMenu.add(MI_GFX_TILE_TRANSPARENCY_SHADOW_OPACITY, new IntMenuItem("  Shadow Opacity:  %d", 2, 6, /*'o'*/ 9, &settingsChanged.enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity, 8, 256, 8));
@@ -1575,7 +1576,7 @@ void IntroController::getTitleSourceData()
     // will be scaled appropriately.
     ImageInfo *info = imageMgr->get(BKGD_INTRO, true);
     if (!info) {
-        xu4_error(XU4_LOG_ERR, "ERROR 1007: Unable to load the image \"%s\".\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO, settings.game.c_str());
+        xu4_error(XU4_LOG_ERR, "ERROR 1007: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
     }
 
     if (info->width / info->prescale != 320 || info->height / info->prescale != 200)
@@ -1636,7 +1637,7 @@ void IntroController::getTitleSourceData()
                     x = srcData[titles[i].animStepMax] - 0x4C;
                     y = 0xC0 - srcData[titles[i].animStepMax+1];
 
-                    if (settings.videoType != "EGA")
+                    if (settings.videoType) // Not EGA
                     {
                         // yellow gradient
                         color = info->image->setColor(255, (y == 2 ? 250 : 255), blue[y-1]);

@@ -102,8 +102,8 @@ void screenInit() {
     screenInit_sys();
     
     /* if we can't use vga, reset to default:ega */
-    if (!u4isUpgradeAvailable() && settings.videoType == "VGA")
-        settings.videoType = "EGA";
+    if (!u4isUpgradeAvailable() && settings.videoType == 1)
+        settings.videoType = 0;
     
     
     KeyHandler::setKeyRepeat(settings.keydelay, settings.keyinterval);
@@ -112,11 +112,13 @@ void screenInit() {
     tileanims = NULL;
     for (std::vector<TileAnimSet *>::const_iterator i = tileanimSets.begin(); i != tileanimSets.end(); i++) {
         TileAnimSet *set = *i;
-        if (set->name == settings.videoType)
+        if (set->name == "EGA" && !settings.videoType)
+            tileanims = set;
+        else if (set->name == "VGA" && settings.videoType)
             tileanims = set;
     }
     if (!tileanims)
-        xu4_error(XU4_LOG_ERR, "unable to find tile animations for \"%s\" video mode in graphics.xml", settings.videoType.c_str());
+        xu4_error(XU4_LOG_ERR, "unable to find tile animations for \"%s\" video mode in graphics.xml", settings.videoType ? "VGA" : "EGA");
     
     dungeonTileChars.clear();
     dungeonTileChars["brick_floor"] = CHARSET_FLOOR;
@@ -489,7 +491,7 @@ void screenDrawImage(const string &name, int x, int y) {
             return;
         }
     }
-    xu4_error(XU4_LOG_ERR, "ERROR 1006: Unable to load the image \"%s\".\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", name.c_str(), settings.game.c_str());
+    xu4_error(XU4_LOG_ERR, "ERROR 1006: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", name.c_str());
 }
 
 void screenDrawImageInMapArea(const string &name) {
@@ -497,7 +499,7 @@ void screenDrawImageInMapArea(const string &name) {
     
     info = imageMgr->get(name);
     if (!info)
-        xu4_error(XU4_LOG_ERR, "ERROR 1004: Unable to load data files.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", settings.game.c_str());
+        xu4_error(XU4_LOG_ERR, "ERROR 1004: Unable to load data files.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/");
     
     info->image->drawSubRect(BORDER_WIDTH * settings.scale, BORDER_HEIGHT * settings.scale,
                              BORDER_WIDTH * settings.scale, BORDER_HEIGHT * settings.scale,
@@ -513,7 +515,7 @@ void screenTextColor(int color) {
     if (charsetInfo == NULL) {
         charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!charsetInfo)
-            xu4_error(XU4_LOG_ERR, "ERROR 1003: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET, settings.game.c_str());
+            xu4_error(XU4_LOG_ERR, "ERROR 1003: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
     }
     
 	if (!settings.enhancements || !settings.enhancementsOptions.textColorization) {
@@ -540,7 +542,7 @@ void screenShowChar(int chr, int x, int y) {
     if (charsetInfo == NULL) {
         charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!charsetInfo)
-            xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET, settings.game.c_str());
+            xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
     }
     
     charsetInfo->image->drawSubRect(x * charsetInfo->image->width(), y * (CHAR_HEIGHT * settings.scale),
@@ -1163,7 +1165,7 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
         if (gemTilesInfo == NULL) {
             gemTilesInfo = imageMgr->get(BKGD_GEMTILES);
             if (!gemTilesInfo)
-                xu4_error(XU4_LOG_ERR, "ERROR 1002: Unable to load the \"%s\" data file.\t\n\nIs %s installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_GEMTILES, settings.game.c_str());
+                xu4_error(XU4_LOG_ERR, "ERROR 1002: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_GEMTILES);
         }
         
         if (tile < 128) {

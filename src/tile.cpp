@@ -133,7 +133,7 @@ void Tile::loadImage() {
            a better way to handle this? */
         if (name == "guard")
         {
-        	if (settings.videoType == "EGA")
+        	if (!settings.videoType) // EGA
         		frames = 2;
         	else
         		frames = 4;

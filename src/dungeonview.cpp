@@ -112,7 +112,7 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     const int * nscale;
     int offset_multiplier = 0;
     int offset_adj = 0;
-    if (settings.videoType != "EGA")
+    if (settings.videoType) // Not EGA
     {
     	lscale = & lscale_vga[0];
     	nscale = & nscale_vga[0];
@@ -433,7 +433,7 @@ void DungeonView::drawWall(int xoffset, int distance, Direction orientation, Dun
 
     if (dngGraphicInfo[index].subimage2 != NULL) {
         // FIXME: subimage2 is a horrible hack, needs to be cleaned up
-        if (settings.videoType == "EGA")
+        if (!settings.videoType) // EGA
             screenDrawImage(dngGraphicInfo[index].subimage2,
                             (8 + dngGraphicInfo[index].ega_x2) * settings.scale,
                             (8 + dngGraphicInfo[index].ega_y2) * settings.scale);
