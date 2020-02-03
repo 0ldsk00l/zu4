@@ -100,8 +100,7 @@ CXXSRCS=\
 		src/utils.cpp \
 		src/view.cpp \
 		src/weapon.cpp \
-		src/xml.cpp \
-		src/lzw/u6decode.cpp
+		src/xml.cpp
 
 OBJS += $(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
 
