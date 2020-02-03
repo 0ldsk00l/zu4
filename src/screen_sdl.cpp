@@ -63,7 +63,7 @@ void screenInit_sys() {
     }
 
     /* enable or disable the mouse cursor */
-    if (settings.mouseOptions.enabled) {
+    if (settings.mouseEnabled) {
         SDL_ShowCursor(SDL_ENABLE);
         cursors[0] = SDL_GetCursor();
         cursors[1] = screenInitCursor(w_xpm);

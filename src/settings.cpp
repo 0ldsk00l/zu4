@@ -13,26 +13,10 @@
 #include "utils.h"
 
 using namespace std;
-
-/*
- * Initialize static members
- */ 
+#define SETTINGS_BASE_FILENAME "xu4rc"
+ 
 Settings *Settings::instance = NULL;
 static u4settings_t u4settings;
-
-#define SETTINGS_BASE_FILENAME "xu4rc"
-
-bool SettingsData::operator==(const SettingsData &s) const {    
-    intptr_t offset = (intptr_t)&end_of_bitwise_comparators - (intptr_t)this;
-    if (memcmp(this, &s, offset) != 0)
-        return false;
-
-    return true;
-}
-
-bool SettingsData::operator!=(const SettingsData &s) const {
-    return !operator==(s);
-}
 
 u4settings_t* xu4_settings_ptr() { return &u4settings; }
 
@@ -108,9 +92,6 @@ bool Settings::read() {
     titleSpeedRandom      = DEFAULT_TITLE_SPEED_RANDOM;
     titleSpeedOther       = DEFAULT_TITLE_SPEED_OTHER;
 
-    pauseForEachMovement  = DEFAULT_PAUSE_FOR_EACH_MOVEMENT;
-    pauseForEachTurn	  = DEFAULT_PAUSE_FOR_EACH_TURN;
-
     /* all specific minor enhancements default to "on", any major enhancements default to "off" */
     enhancementsOptions.activePlayer     = true;
     enhancementsOptions.u5spellMixing    = true;
@@ -130,7 +111,7 @@ bool Settings::read() {
     campingAlwaysCombat = 0;
 
     /* mouse defaults to on */
-    mouseOptions.enabled = 1;
+    mouseEnabled = 1;
     
     settingsFile = fopen(u4settings.filename, "rt");    
     if (!settingsFile)
@@ -225,7 +206,7 @@ bool Settings::read() {
 
         /* mouse options */
         else if (strstr(buffer, "mouseEnabled=") == buffer)
-            mouseOptions.enabled = (int) strtoul(buffer + strlen("mouseEnabled="), NULL, 0);
+            mouseEnabled = (int) strtoul(buffer + strlen("mouseEnabled="), NULL, 0);
 
         /* graphics enhancements options */
         else if (strstr(buffer, "renderTileTransparency=") == buffer)
@@ -340,7 +321,7 @@ bool Settings::write() {
             enhancementsOptions.u5combat,
             innAlwaysCombat,
             campingAlwaysCombat,
-            mouseOptions.enabled,
+            mouseEnabled,
             enhancementsOptions.u4TileTransparencyHack,
             enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity,
             enhancementsOptions.u4TrileTransparencyHackShadowBreadth);

@@ -207,7 +207,7 @@ EventHandler::EventHandler() : timer(eventTimerGranularity), updateScreen(NULL) 
 }
 
 static void handleMouseMotionEvent(const SDL_Event &event) {    
-    if (!settings.mouseOptions.enabled)
+    if (!settings.mouseEnabled)
         return;
 
     MouseArea *area;
@@ -232,7 +232,7 @@ static void handleActiveEvent(const SDL_Event &event, updateScreenCallback updat
 static void handleMouseButtonDownEvent(const SDL_Event &event, Controller *controller, updateScreenCallback updateScreen) {
     int button = event.button.button - 1;
     
-    if (!settings.mouseOptions.enabled)
+    if (!settings.mouseEnabled)
         return;
     
     if (button > 2)

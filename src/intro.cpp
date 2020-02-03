@@ -227,7 +227,7 @@ IntroController::IntroController() :
     inputMenu.add(MI_INPUT_01,  new IntMenuItem("Repeat Delay        %4d msec", 2,  2,/*'d'*/  7, &settingsChanged.keydelay, 100, MAX_KEY_DELAY, 100));
     inputMenu.add(MI_INPUT_02,  new IntMenuItem("Repeat Interval     %4d msec", 2,  3,/*'i'*/  7, &settingsChanged.keyinterval, 10, MAX_KEY_INTERVAL, 10));
     /* "Mouse Options:" is drawn in the updateInputMenu() function */
-    inputMenu.add(MI_INPUT_03, new BoolMenuItem("Mouse                %s",      2,  7,/*'m'*/  0, &settingsChanged.mouseOptions.enabled));
+    inputMenu.add(MI_INPUT_03, new BoolMenuItem("Mouse                %s",      2,  7,/*'m'*/  0, &settingsChanged.mouseEnabled));
     inputMenu.add(USE_SETTINGS,                 "\010 Use These Settings",      2, 11,/*'u'*/  2);
     inputMenu.add(CANCEL,                       "\010 Cancel",                  2, 12,/*'c'*/  2);
     inputMenu.addShortcutKey(CANCEL, ' ');
@@ -1121,17 +1121,15 @@ void IntroController::updateVideoMenu(MenuEvent &event) {
 
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
-            /* save settings (if necessary) */
-            if (settings != settingsChanged) {
-                settings.setData(settingsChanged);
-                settings.write();
+            /* save settings (if necessary - FIXME) */
+            settings.setData(settingsChanged);
+            settings.write();
 
-                /* FIXME: resize images, etc. */
-                screenReInit();
+            /* FIXME: resize images, etc. */
+            screenReInit();
 
-                // go back to menu mode
-                mode = INTRO_MENU;
-            }        
+            // go back to menu mode
+            mode = INTRO_MENU;
             break;
         case MI_VIDEO_CONF_GFX:
         	runMenu(&gfxMenu, &extendedMenuArea, true);
@@ -1217,7 +1215,7 @@ void IntroController::updateInputMenu(MenuEvent &event) {
             // re-initialize keyboard
             KeyHandler::setKeyRepeat(settingsChanged.keydelay, settingsChanged.keyinterval);
 
-            if (settings.mouseOptions.enabled) {
+            if (settings.mouseEnabled) {
                 SDL_ShowCursor(SDL_ENABLE);
             }
             else {
