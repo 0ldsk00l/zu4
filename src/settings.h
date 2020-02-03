@@ -26,9 +26,9 @@ using std::string;
 
 #define DEFAULT_SCALE                   4
 #define DEFAULT_FULLSCREEN              0
-#define DEFAULT_VIDEO_TYPE              0
-#define DEFAULT_GEM_LAYOUT              "Standard"
-#define DEFAULT_LINEOFSIGHT             "DOS"
+#define DEFAULT_VIDEO_TYPE              0 // 0 = EGA, 1 = VGA
+#define DEFAULT_GEM_LAYOUT              0 // 0 = Standard, 1 = Full Viewport
+#define DEFAULT_LINEOFSIGHT             0 // 0 = DOS, 1 = Enhanced
 #define DEFAULT_SCREEN_SHAKES           1
 #define DEFAULT_GAMMA                   100
 #define DEFAULT_MUSIC_VOLUME            10
@@ -49,7 +49,7 @@ using std::string;
 #define DEFAULT_INN_TIME                8
 #define DEFAULT_SHRINE_TIME             16
 #define DEFAULT_SHAKE_INTERVAL          100
-#define DEFAULT_BATTLE_DIFFICULTY       "Normal"
+#define DEFAULT_BATTLE_DIFFICULTY       0 // 0 = Normal, 1 = Hard, 2 = Expert
 #define DEFAULT_TITLE_SPEED_RANDOM      150
 #define DEFAULT_TITLE_SPEED_OTHER       30
 
@@ -118,6 +118,9 @@ public:
     int                 titleSpeedRandom;
     int                 titleSpeedOther;
     int                 videoType;
+    int                 gemLayout;
+    int                 lineOfSight;
+    int                 battleDiff;
 
     //Settings that aren't in file yet
     int					pauseForEachTurn;
@@ -130,10 +133,6 @@ public:
      * function correctly
      */ 
     long                end_of_bitwise_comparators;
-
-    string              gemLayout;
-    string              lineOfSight;
-    string              battleDiff;
 };
 
 /**
@@ -145,22 +144,14 @@ class Settings : public SettingsData {
 
 public:
     /* Methods */
-	void init(const bool useProfile, const string profileName);
     static Settings &getInstance();
     void setData(const SettingsData &data);
     bool read();
     bool write();
 
-    const string &getUserPath();
-    const std::vector<string> &getBattleDiffs();
-
 private:
-    Settings();
-
+    Settings() {}
     static Settings *instance;
-
-    string filename;
-    std::vector<string> battleDiffs;
 };
 
 /* the global settings */

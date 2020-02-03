@@ -135,9 +135,9 @@ void Creature::load(const ConfigElement &conf) {
     /* get the base hp */
     basehp = conf.getInt("basehp", 0);
     /* adjust basehp according to battle difficulty setting */
-    if (settings.battleDiff == "Hard")
+    if (settings.battleDiff == 1)
         basehp *= 2;
-    if (settings.battleDiff == "Expert")
+    else if (settings.battleDiff == 2)
         basehp *= 4;
 
     /* get the camouflaged tile */

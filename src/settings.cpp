@@ -26,28 +26,12 @@ bool SettingsData::operator==(const SettingsData &s) const {
     intptr_t offset = (intptr_t)&end_of_bitwise_comparators - (intptr_t)this;
     if (memcmp(this, &s, offset) != 0)
         return false;
-    if (gemLayout != s.gemLayout)
-        return false;
-    if (lineOfSight != s.lineOfSight)
-        return false;
-    if (battleDiff != s.battleDiff)
-        return false;
 
     return true;
 }
 
 bool SettingsData::operator!=(const SettingsData &s) const {
     return !operator==(s);
-}
-
-
-/**
- * Default contructor.  Settings is a singleton so this is private.
- */
-Settings::Settings() {    
-    battleDiffs.push_back("Normal");
-    battleDiffs.push_back("Hard");
-    battleDiffs.push_back("Expert");
 }
 
 u4settings_t* xu4_settings_ptr() { return &u4settings; }
@@ -163,9 +147,9 @@ bool Settings::read() {
         else if (strstr(buffer, "video=") == buffer)
             videoType = (int) strtoul(buffer + strlen("video="), NULL, 0);
         else if (strstr(buffer, "gemLayout=") == buffer)
-            gemLayout = buffer + strlen("gemLayout=");
+            gemLayout = (int) strtoul(buffer + strlen("gemLayout="), NULL, 0);
         else if (strstr(buffer, "lineOfSight=") == buffer)
-            lineOfSight = buffer + strlen("lineOfSight=");
+            lineOfSight = (int) strtol(buffer + strlen("lineOfSight="), NULL, 0);
         else if (strstr(buffer, "screenShakes=") == buffer)
             screenShakes = (int) strtoul(buffer + strlen("screenShakes="), NULL, 0);        
         else if (strstr(buffer, "gamma=") == buffer)
@@ -193,7 +177,7 @@ bool Settings::read() {
         else if (strstr(buffer, "debug=") == buffer)
             debug = (int) strtoul(buffer + strlen("debug="), NULL, 0);
         else if (strstr(buffer, "battleDiff=") == buffer)
-            battleDiff = buffer + strlen("battleDiff=");
+            battleDiff = (int) strtoul(buffer + strlen("battleDiff="), NULL, 0);
         else if (strstr(buffer, "validateXml=") == buffer)
             validateXml = (int) strtoul(buffer + strlen("validateXml="), NULL, 0);
         else if (strstr(buffer, "spellEffectSpeed=") == buffer)
@@ -277,8 +261,8 @@ bool Settings::write() {
             "scale=%d\n"
             "fullscreen=%d\n"
             "video=%d\n"
-            "gemLayout=%s\n"
-            "lineOfSight=%s\n"
+            "gemLayout=%d\n"
+            "lineOfSight=%d\n"
             "screenShakes=%d\n"
             "gamma=%d\n"
             "musicVol=%d\n"
@@ -292,7 +276,7 @@ bool Settings::write() {
             "enhancements=%d\n"            
             "gameCyclesPerSecond=%d\n"
             "debug=%d\n"
-            "battleDiff=%s\n"
+            "battleDiff=%d\n"
             "validateXml=%d\n"
             "spellEffectSpeed=%d\n"
             "campTime=%d\n"
@@ -320,8 +304,8 @@ bool Settings::write() {
             scale,
             fullscreen,
             videoType,
-            gemLayout.c_str(),
-            lineOfSight.c_str(),
+            gemLayout,
+            lineOfSight,
             screenShakes,
             gamma,
             musicVol,
@@ -335,7 +319,7 @@ bool Settings::write() {
             enhancements,            
             gameCyclesPerSecond,
             debug,
-            battleDiff.c_str(),
+            battleDiff,
             validateXml,
             spellEffectSpeed,
             campTime,
@@ -364,8 +348,4 @@ bool Settings::write() {
     fclose(settingsFile);
 
     return true;
-}
-
-const vector<string> &Settings::getBattleDiffs() { 
-    return battleDiffs;
 }

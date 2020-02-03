@@ -303,13 +303,17 @@ void screenLoadGraphicsFromConf() {
     for (i = layouts.begin(); i != layouts.end(); i++) {
         Layout *layout = *i;
         
-        if (layout->type == LAYOUT_GEM && layout->name == settings.gemLayout) {
+        if (layout->type == LAYOUT_GEM && layout->name == "Standard" && !settings.gemLayout) {
+            gemlayout = layout;
+            break;
+        }
+        else if (layout->type == LAYOUT_GEM && layout->name == "Full Viewport" && settings.gemLayout) {
             gemlayout = layout;
             break;
         }
     }
     if (!gemlayout)
-        xu4_error(XU4_LOG_ERR, "no gem layout named %s found!\n", settings.gemLayout.c_str());
+        xu4_error(XU4_LOG_ERR, "no gem layout named %s found!\n", settings.gemLayout ? "Full Viewport" : "Standard");
 }
 
 Layout *screenLoadLayoutFromConf(const ConfigElement &conf) {
@@ -692,12 +696,12 @@ void screenFindLineOfSight(vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H
         }
     }
 
-    if (settings.lineOfSight == "DOS")
+    if (!settings.lineOfSight)
         screenFindLineOfSightDOS(viewportTiles);
-    else if (settings.lineOfSight == "Enhanced")
+    else if (settings.lineOfSight)
         screenFindLineOfSightEnhanced(viewportTiles);
     else
-        xu4_error(XU4_LOG_ERR, "unknown line of sight style %s!\n", settings.lineOfSight.c_str());
+        xu4_error(XU4_LOG_ERR, "unknown line of sight style %s!\n", settings.lineOfSight ? "Enhanced" : "DOS");
 }        
 
 
