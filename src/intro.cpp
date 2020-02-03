@@ -1076,8 +1076,8 @@ void IntroController::updateConfMenu(MenuEvent &event) {
         confMenu.getItemById(MI_CONF_INTERFACE)->setVisible(settingsChanged.enhancements);
 
         // save settings
-        settings.setData(settingsChanged);
-        settings.write();
+        xu4_settings_setdata(settingsChanged);
+        xu4_settings_write();
 
         switch(event.getMenuItem()->getId()) {
         case MI_CONF_VIDEO:
@@ -1122,8 +1122,8 @@ void IntroController::updateVideoMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
             /* save settings (if necessary - FIXME) */
-            settings.setData(settingsChanged);
-            settings.write();
+            xu4_settings_setdata(settingsChanged);
+            xu4_settings_write();
 
             /* FIXME: resize images, etc. */
             screenReInit();
@@ -1182,8 +1182,8 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
                 break;
             case USE_SETTINGS:
                 // save settings
-                settings.setData(settingsChanged);
-                settings.write();
+                xu4_settings_setdata(settingsChanged);
+                xu4_settings_write();
                 xu4_music_play_track(TRACK_TOWNS);
                 break;
             case CANCEL:
@@ -1209,8 +1209,8 @@ void IntroController::updateInputMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
             // save settings
-            settings.setData(settingsChanged);
-            settings.write();
+            xu4_settings_setdata(settingsChanged);
+            xu4_settings_write();
 
             // re-initialize keyboard
             KeyHandler::setKeyRepeat(settingsChanged.keydelay, settingsChanged.keyinterval);
@@ -1247,8 +1247,8 @@ void IntroController::updateSpeedMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
             // save settings
-            settings.setData(settingsChanged);
-            settings.write();
+            xu4_settings_setdata(settingsChanged);
+            xu4_settings_write();
     
             // re-initialize events
             eventTimerGranularity = (1000 / settings.gameCyclesPerSecond);
@@ -1276,8 +1276,8 @@ void IntroController::updateGameplayMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
             // save settings
-            settings.setData(settingsChanged);
-            settings.write();
+            xu4_settings_setdata(settingsChanged);
+            xu4_settings_write();
             break;
         case CANCEL:
             // discard settings
@@ -1300,8 +1300,8 @@ void IntroController::updateInterfaceMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
             case USE_SETTINGS:
                 // save settings
-                settings.setData(settingsChanged);
-                settings.write();
+                xu4_settings_setdata(settingsChanged);
+                xu4_settings_write();
                 break;
             case CANCEL:
                 // discard settings

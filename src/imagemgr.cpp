@@ -11,7 +11,6 @@
 #include "imageloader_u4.h"
 #include "imagemgr.h"
 #include "intro.h"
-#include "settings.h"
 #include "u4file.h"
 
 using std::map;
@@ -659,11 +658,11 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
     	Image *unscaled_original = unscaled;
     	unscaled = Image::duplicate(unscaled);
     	delete unscaled_original;
-    	if (Settings::getInstance().enhancements && Settings::getInstance().enhancementsOptions.u4TileTransparencyHack)
+    	if (settings.enhancements && settings.enhancementsOptions.u4TileTransparencyHack)
     	{
-    		int transparency_shadow_size =Settings::getInstance().enhancementsOptions.u4TrileTransparencyHackShadowBreadth;
+    		int transparency_shadow_size = settings.enhancementsOptions.u4TrileTransparencyHackShadowBreadth;
     		int black_index = 0;
-    		int opacity = Settings::getInstance().enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity;
+    		int opacity = settings.enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity;
 
     		int frames = info->tiles;
     		for (int f = 0; f < frames; ++f)
@@ -682,7 +681,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
     if ((settings.scale % info->prescale) != 0) {
         int orig_scale = settings.scale;
         settings.scale = info->prescale;
-        settings.write();
+        xu4_settings_write();
     	xu4_error(XU4_LOG_ERR, "image %s is prescaled to an incompatible size: %d\nResetting the scale to %d. Sorry about the inconvenience, please restart.", info->filename.c_str(), orig_scale, settings.scale);
     }
     imageScale /= info->prescale;
@@ -738,7 +737,7 @@ const vector<string> &ImageMgr::getSetNames() {
 /**
  * Find the new base image set when settings have changed.
  */
-void ImageMgr::update(Settings *newSettings) {
+void ImageMgr::update(SettingsData *newSettings) {
     string setname = newSettings->videoType ? "VGA" : "EGA";//newSettings->videoType;
     xu4_error(XU4_LOG_DBG, "Base image set is: %s", setname.c_str());
     baseSet = getSet(setname);

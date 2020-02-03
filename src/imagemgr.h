@@ -11,6 +11,7 @@
 
 #include "image.h"
 #include "observer.h"
+#include "settings.h"
 
 class ConfigElement;
 class ImageSet;
@@ -134,7 +135,7 @@ private:
     void fixupDungNS(Image *im, int prescale);
     void fixupFMTowns(Image *im, int prescale);
 
-    void update(Settings *newSettings);
+    void update(SettingsData *newSettings);
 
     static ImageMgr *instance;
     std::map<std::string, ImageSet *> imageSets;

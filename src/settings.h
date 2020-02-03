@@ -1,9 +1,10 @@
-/*
- * $Id: settings.h 3059 2013-01-06 22:37:10Z darren_janeczek $
- */
-
 #ifndef SETTINGS_H
 #define SETTINGS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <stdbool.h>
 
 #define MIN_SHAKE_INTERVAL              50
 
@@ -51,7 +52,7 @@
 #define DEFAULT_SHADOW_PIXEL_OPACITY	64
 #define DEFAULT_SHADOW_PIXEL_SIZE		2
 
-struct SettingsEnhancementOptions {
+typedef struct SettingsEnhancementOptions {
     bool activePlayer;
     bool u5spellMixing;
     bool u5shrines;
@@ -66,10 +67,9 @@ struct SettingsEnhancementOptions {
     int	 u4TileTransparencyHackPixelShadowOpacity;
     int	 u4TrileTransparencyHackShadowBreadth;
 
-};
+} SettingsEnhancementOptions;
 
-class SettingsData {
-public:
+typedef struct SettingsData {
     int                 battleSpeed;
     bool                campingAlwaysCombat;
     int                 campTime;
@@ -102,22 +102,9 @@ public:
     int                 gemLayout;
     int                 lineOfSight;
     int                 battleDiff;
-};
+} SettingsData;
 
-class Settings : public SettingsData {
-public:
-    static Settings &getInstance();
-    void setData(const SettingsData &data);
-    bool read();
-    bool write();
-
-private:
-    Settings() {}
-    static Settings *instance;
-};
-
-/* the global settings */
-#define settings (Settings::getInstance())
+extern SettingsData settings;
 
 typedef struct u4settings_t {
 	char path[64];
@@ -126,5 +113,12 @@ typedef struct u4settings_t {
 
 u4settings_t* xu4_settings_ptr();
 void xu4_settings_init(bool useProfile, const char *profileName);
+void xu4_settings_setdata(const SettingsData data);
+bool xu4_settings_read();
+bool xu4_settings_write();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
