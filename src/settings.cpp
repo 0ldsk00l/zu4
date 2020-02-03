@@ -18,9 +18,9 @@ using namespace std;
  * Initialize static members
  */ 
 Settings *Settings::instance = NULL;
+static u4settings_t u4settings;
 
 #define SETTINGS_BASE_FILENAME "xu4rc"
-
 
 bool SettingsData::operator==(const SettingsData &s) const {    
     intptr_t offset = (intptr_t)&end_of_bitwise_comparators - (intptr_t)this;
@@ -54,32 +54,27 @@ Settings::Settings() {
     battleDiffs.push_back("Expert");
 }
 
+u4settings_t* xu4_settings_ptr() { return &u4settings; }
 
 /**
  * Initialize the settings.
  */
-void Settings::init(const bool useProfile, const string profileName) {
+void xu4_settings_init(bool useProfile, const char *profileName) {
 	if (useProfile) {
-		userPath = "./profiles/";
-		userPath += profileName.c_str();
-		userPath += "/";
-	} else {
-        char *home = getenv("HOME");
-        if (home && home[0]) {
-            userPath += home;
-            userPath += "/.xu4";
-            userPath += "/";
-        } else {
-            userPath = "./";
-        }
+		snprintf(u4settings.path, sizeof(u4settings.path), "./profiles/%s/", profileName);
+		mkdir("./profiles", S_IRWXU|S_IRWXG|S_IRWXO);
 	}
-    mkdir(userPath.c_str(), S_IRWXU|S_IRWXG|S_IRWXO);
-
-    filename = userPath + SETTINGS_BASE_FILENAME;
-
-    read();
+	else {
+		char *home = getenv("HOME");
+		if (home && home[0]) {
+			snprintf(u4settings.path, sizeof(u4settings.path), "%s/.xu4/", home);
+		}
+		else { snprintf(u4settings.path, sizeof(u4settings.path), "./"); }
+	}
+	mkdir(u4settings.path, S_IRWXU|S_IRWXG|S_IRWXO);
+	snprintf(u4settings.filename, sizeof(u4settings.filename), "%s%s", u4settings.path, SETTINGS_BASE_FILENAME);
+	settings.read();
 }
-
 
 /**
  * Return the global instance of settings.
@@ -159,7 +154,7 @@ bool Settings::read() {
 
     game = "Ultima IV";
     
-    settingsFile = fopen(filename.c_str(), "rt");    
+    settingsFile = fopen(u4settings.filename, "rt");    
     if (!settingsFile)
         return false;
 
@@ -300,7 +295,7 @@ bool Settings::read() {
 bool Settings::write() {    
     FILE *settingsFile;
         
-    settingsFile = fopen(filename.c_str(), "wt");
+    settingsFile = fopen(u4settings.filename, "wt");
     if (!settingsFile) {
         xu4_error(XU4_LOG_WRN, "can't write settings file");
         return false;
@@ -398,17 +393,7 @@ bool Settings::write() {
 
     fclose(settingsFile);
 
-    setChanged();
-    notifyObservers(NULL);
-
     return true;
-}
-
-/**
- * Return the path where user settings are stored.
- */
-const string &Settings::getUserPath() {
-    return userPath;
 }
 
 const vector<string> &Settings::getBattleDiffs() { 

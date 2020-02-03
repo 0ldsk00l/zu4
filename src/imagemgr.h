@@ -99,7 +99,7 @@ public:
 /**
  * The image manager singleton that keeps track of all the images.
  */
-class ImageMgr : Observer<Settings *> {
+class ImageMgr {
 public:
     static ImageMgr *getInstance();
     static void destroy();

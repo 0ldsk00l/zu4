@@ -55,11 +55,11 @@ void ImageMgr::destroy() {
 
 ImageMgr::ImageMgr() {
     xu4_error(XU4_LOG_DBG, "Creating ImageMgr");
-    settings.addObserver(this);
+    //settings.addObserver(this);
 }
 
 ImageMgr::~ImageMgr() {
-    settings.deleteObserver(this);
+    //settings.deleteObserver(this);
     for (std::map<string, ImageSet *>::iterator i = imageSets.begin(); i != imageSets.end(); i++)
         delete i->second;
 }

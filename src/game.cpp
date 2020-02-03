@@ -202,7 +202,8 @@ void GameController::deinit() {
 }
 
 void GameController::init() {
-    FILE *saveGameFile, *monstersFile;    
+    FILE *saveGameFile, *monstersFile;
+    char saveGameFileName[80];
 
     xu4_error(XU4_LOG_DBG, "gameInit() running.");
 
@@ -237,7 +238,9 @@ void GameController::init() {
     c->lastShip = NULL;
 
     /* load in the save game */
-    saveGameFile = fopen((settings.getUserPath() + PARTY_SAV_BASE_FILENAME).c_str(), "rb");
+    u4settings_t *u4settings = xu4_settings_ptr();
+    snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, PARTY_SAV_BASE_FILENAME);
+    saveGameFile = fopen(saveGameFileName, "rb");
     if (saveGameFile) {
         //c->saveGame->read(saveGameFile);
         saveGameRead(c->saveGame, saveGameFile);
@@ -296,7 +299,9 @@ void GameController::init() {
     xu4_error(XU4_LOG_DBG, "Loading monsters."); ++pb;
 
     /* load in creatures.sav */
-    monstersFile = fopen((settings.getUserPath() + MONSTERS_SAV_BASE_FILENAME).c_str(), "rb");
+    snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, MONSTERS_SAV_BASE_FILENAME);
+    monstersFile = fopen(saveGameFileName, "rb");
+
     if (monstersFile) {
         saveGameMonstersRead(c->location->map->monsterTable, monstersFile);
         fclose(monstersFile);
@@ -305,7 +310,8 @@ void GameController::init() {
 
     /* we have previous creature information as well, load it! */
     if (c->location->prev) {
-        monstersFile = fopen((settings.getUserPath() + OUTMONST_SAV_BASE_FILENAME).c_str(), "rb");
+        snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, OUTMONST_SAV_BASE_FILENAME);
+        monstersFile = fopen(saveGameFileName, "rb");
         if (monstersFile) {
             saveGameMonstersRead(c->location->prev->map->monsterTable, monstersFile);
             fclose(monstersFile);
@@ -359,7 +365,10 @@ int gameSave() {
     /* Done making sure the savegame struct is accurate */
     /****************************************************/
 
-    saveGameFile = fopen((settings.getUserPath() + PARTY_SAV_BASE_FILENAME).c_str(), "wb");
+    u4settings_t *u4settings = xu4_settings_ptr();
+    char saveGameFileName[80];
+    snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, PARTY_SAV_BASE_FILENAME);
+    saveGameFile = fopen(saveGameFileName, "wb");
     if (!saveGameFile) {
         screenMessage("Error opening " PARTY_SAV_BASE_FILENAME "\n");
         return 0;
@@ -373,7 +382,8 @@ int gameSave() {
     }
     fclose(saveGameFile);
 
-    monstersFile = fopen((settings.getUserPath() + MONSTERS_SAV_BASE_FILENAME).c_str(), "wb");
+    snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, MONSTERS_SAV_BASE_FILENAME);
+    monstersFile = fopen(saveGameFileName, "wb");
     if (!monstersFile) {
         screenMessage("Error opening %s\n", MONSTERS_SAV_BASE_FILENAME);
         return 0;
@@ -420,7 +430,8 @@ int gameSave() {
             id_map[creatureMgr->getById(ROGUE_ID)]        = 15;
         }
 
-        dngMapFile = fopen((settings.getUserPath() + "dngmap.sav").c_str(), "wb");
+        snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, "dngmap.sav");
+        dngMapFile = fopen(saveGameFileName, "wb");
         if (!dngMapFile) {
             screenMessage("Error opening dngmap.sav\n");
             return 0;
@@ -454,7 +465,8 @@ int gameSave() {
          * Write outmonst.sav
          */ 
 
-        monstersFile = fopen((settings.getUserPath() + OUTMONST_SAV_BASE_FILENAME).c_str(), "wb");
+        snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, OUTMONST_SAV_BASE_FILENAME);
+        monstersFile = fopen(saveGameFileName, "wb");
         if (!monstersFile) {
             screenMessage("Error opening %s\n", OUTMONST_SAV_BASE_FILENAME);
             return 0;

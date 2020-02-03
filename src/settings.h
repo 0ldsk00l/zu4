@@ -8,8 +8,6 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "observable.h"
-#include "types.h"
 
 using std::string;
 
@@ -143,7 +141,7 @@ public:
  * The settings class is a singleton that holds all the settings
  * information.  It is dynamically initialized when first accessed.
  */
-class Settings : public SettingsData, public Observable<Settings *> {
+class Settings : public SettingsData {
     typedef std::map<string, int, std::less<string> > SettingsMap;
 
 public:
@@ -162,12 +160,19 @@ private:
 
     static Settings *instance;
 
-    string userPath;
     string filename;
     std::vector<string> battleDiffs;
 };
 
 /* the global settings */
 #define settings (Settings::getInstance())
+
+typedef struct u4settings_t {
+	char path[64];
+	char filename[80];
+} u4settings_t;
+
+u4settings_t* xu4_settings_ptr();
+void xu4_settings_init(bool useProfile, const char *profileName);
 
 #endif

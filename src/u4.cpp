@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* initialize the settings */
-    settings.init(useProfile, profileName);
+    xu4_settings_init(useProfile, profileName.c_str());
 
     /* update the settings based upon command-line arguments */
     for (i = 1; i < (unsigned int)argc; i++) {
