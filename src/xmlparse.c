@@ -77,9 +77,12 @@ int xu4_xmlparse_find(char *value, const char *elemname, const char *attrname) {
 				}
 				break;
 			case YXML_ATTREND:
-				value[index] = '\0';
-				ptr++;
-				return 1;
+				if ((!strcmp(x->elem, elemname)) && (!strcmp(x->attr, attrname))) {
+					value[index] = '\0';
+					ptr++;
+					return 1;
+				}
+				break;
 			default: break;
 		}
 		ptr++;

@@ -33,6 +33,7 @@ CSRCS=\
 		src/rle.c \
 		src/savegame.c \
 		src/settings.c \
+		src/sound.c \
 		src/stb_vorbis.c \
 		src/xmlparse.c \
 		src/u4_sdl.c \
@@ -89,7 +90,6 @@ CXXSRCS=\
 		src/screen.cpp \
 		src/screen_sdl.cpp \
 		src/shrine.cpp \
-		src/sound.cpp \
 		src/spell.cpp \
 		src/stats.cpp \
 		src/textview.cpp \

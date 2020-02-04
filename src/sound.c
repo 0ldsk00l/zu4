@@ -1,7 +1,7 @@
 /*
- * sound.cpp
+ * sound.c
  * Copyright (C) 2012 Daniel Santos
- * Copyright (C) 2019 R. Danbrook
+ * Copyright (C) 2019-2020 R. Danbrook
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,19 +20,15 @@
  * 
  */
 
-#include <string>
-#include <vector>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "cmixer.h"
 
-#include "sound.h"
-#include "config.h"
 #include "error.h"
 #include "settings.h"
-#include "u4file.h"
-
-using std::string;
-using std::vector;
+#include "sound.h"
+#include "xmlparse.h"
 
 static cm_Source *effect[SOUND_MAX];
 
@@ -79,17 +75,17 @@ static void xu4_snd_free_files() {
 }
 
 static void xu4_snd_load_files() {
-	const Config *config = Config::getInstance();
+	xu4_xmlparse_init("conf/sound.xml");
 	
-	vector<ConfigElement> soundConfs = config->getElement("sound").getChildren();
-	std::vector<ConfigElement>::const_iterator i = soundConfs.begin();
-	std::vector<ConfigElement>::const_iterator theEnd = soundConfs.end();
-	
-	for (; i != theEnd; ++i) { // FIXME handle failure to read file
-		if (i->getName() != "track") { continue; }
-		int j = (i - soundConfs.begin()); // major hack while converting away from C++
-		effect[j] = cm_new_source_from_file(u4find_sound(i->getString("file")).c_str());
+	char soundfile[64]; // Buffer for sound effect filenames that are found
+	char soundpath[128]; // Buffer for full path to sound effect
+	int index = 0;
+	while (xu4_xmlparse_find(soundfile, "track", "file")) {
+		snprintf(soundpath, sizeof(soundpath), "%s%s", "sound/", soundfile);
+		effect[index++] = cm_new_source_from_file(soundpath);
 	}
+	
+	xu4_xmlparse_deinit();
 }
 
 void xu4_snd_init() {

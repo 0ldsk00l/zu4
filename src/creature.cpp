@@ -513,10 +513,10 @@ void Creature::act(CombatController *controller) {
 
     switch(action) {
     case CA_ATTACK:
-        xu4_snd_play(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, melee
+        xu4_snd_play(SOUND_NPC_ATTACK, false, -1); // NPC_ATTACK, melee
 
         if (controller->attackHit(this, target)) {
-            xu4_snd_play(SOUND_PC_STRUCK, false);                                 // PC_STRUCK, melee and ranged
+            xu4_snd_play(SOUND_PC_STRUCK, false, -1); // PC_STRUCK, melee and ranged
             GameController::flashTile(target->getCoords(), "hit_flash", 4);
 
 
@@ -526,13 +526,13 @@ void Creature::act(CombatController *controller) {
             if (target && isPartyMember(target)) {
                 /* steal gold if the creature steals gold */
                 if (stealsGold() && xu4_random(4) == 0) {
-                    xu4_snd_play(SOUND_ITEM_STOLEN, false);                       // ITEM_STOLEN, gold
+                    xu4_snd_play(SOUND_ITEM_STOLEN, false, -1); // ITEM_STOLEN, gold
                     c->party->adjustGold(-(xu4_random(0x3f)));
                 }
             
                 /* steal food if the creature steals food */
                 if (stealsFood()) {
-                    xu4_snd_play(SOUND_ITEM_STOLEN, false);                       // ITEM_STOLEN, food
+                    xu4_snd_play(SOUND_ITEM_STOLEN, false, -1); // ITEM_STOLEN, food
                     c->party->adjustFood(-2500);
                 }
             }
@@ -598,7 +598,7 @@ void Creature::act(CombatController *controller) {
         //int dir = m_coords.getRelativeDirection(p_coords);
         int dir = getRelativeDirection(m_coords, p_coords);
 
-        xu4_snd_play(SOUND_NPC_ATTACK, false);                                    // NPC_ATTACK, ranged
+        xu4_snd_play(SOUND_NPC_ATTACK, false, -1); // NPC_ATTACK, ranged
 
         vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, m_coords,
                                                            1, 11, &Tile::canAttackOverTile, false);

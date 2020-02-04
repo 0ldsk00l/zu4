@@ -263,7 +263,7 @@ void PartyMember::applyEffect(TileEffect effect) {
     case EFFECT_POISONFIELD:
     case EFFECT_POISON:
         if (getStatus() != STAT_POISONED) {
-            xu4_snd_play(SOUND_POISON_EFFECT, false);
+            xu4_snd_play(SOUND_POISON_EFFECT, false, -1);
             addStatus(STAT_POISONED);
         }
         break;
@@ -534,7 +534,7 @@ int PartyMember::loseWeapon() {
  */
 void PartyMember::putToSleep() {    
     if (getStatus() != STAT_DEAD) {
-        xu4_snd_play(SOUND_SLEEP, false);
+        xu4_snd_play(SOUND_SLEEP, false, -1);
         addStatus(STAT_SLEEPING);
         setTile(Tileset::findTileByName("corpse")->getId());
     }
@@ -970,7 +970,7 @@ void Party::endTurn() {
                  * begins, the sound is played  after the combat
                  * screen appears
                  */
-                xu4_snd_play(SOUND_POISON_DAMAGE, false);
+                xu4_snd_play(SOUND_POISON_DAMAGE, false, -1);
                 members[i]->applyDamage(2);
                 break;
 

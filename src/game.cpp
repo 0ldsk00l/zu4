@@ -808,7 +808,7 @@ void gameSpellEffect(int spell, int player, int sound) {
 
         if (effect == Spell::SFX_TREMOR) {
             gameUpdateScreen();
-            xu4_snd_play(SOUND_RUMBLE, false);
+            xu4_snd_play(SOUND_RUMBLE, false, -1);
             screenShake(8);
 
         }
@@ -1066,13 +1066,13 @@ bool GameController::keyPressed(int key) {
         case '<':
             // decrease the volume if possible
             screenMessage("Sound: %d%s\n", xu4_snd_vol_dec(), "%");
-            xu4_snd_play(SOUND_FLEE);
+            xu4_snd_play(SOUND_FLEE, true, -1);
             endTurn = false;
             break;
         case '>':
             // increase the volume if possible
             screenMessage("Sound: %d%s\n", xu4_snd_vol_inc(), "%");
-            xu4_snd_play(SOUND_FLEE);
+            xu4_snd_play(SOUND_FLEE, true, -1);
             endTurn = false;
             break;
 
@@ -2251,30 +2251,30 @@ void GameController::avatarMoved(MoveEvent &event) {
 
             /* if we're still blocked */
             if ((event.result & MOVE_BLOCKED) && !settings.filterMoveMessages) {
-                xu4_snd_play(SOUND_BLOCKED, false);
+                xu4_snd_play(SOUND_BLOCKED, false, -1);
                 screenMessage("%cBlocked!%c\n", FG_GREY, FG_WHITE);
             }
         }
         else if (c->transportContext == TRANSPORT_FOOT || c->transportContext == TRANSPORT_HORSE) {
             /* movement was slowed */
             if (event.result & MOVE_SLOWED) {
-                xu4_snd_play(SOUND_WALK_SLOWED);
+                xu4_snd_play(SOUND_WALK_SLOWED, true, -1);
                 screenMessage("%cSlow progress!%c\n", FG_GREY, FG_WHITE);
             }
             else if (c->horseSpeed == 1) {
                 switch(xu4_random(4)) {
-                    case 1: xu4_snd_play(SOUND_HORSE_NORMAL_1); break;
-                    case 2: xu4_snd_play(SOUND_HORSE_NORMAL_2); break;
-                    case 3: xu4_snd_play(SOUND_HORSE_NORMAL_3); break;
-                    default: xu4_snd_play(SOUND_HORSE_NORMAL_4); break;
+                    case 1: xu4_snd_play(SOUND_HORSE_NORMAL_1, true, -1); break;
+                    case 2: xu4_snd_play(SOUND_HORSE_NORMAL_2, true, -1); break;
+                    case 3: xu4_snd_play(SOUND_HORSE_NORMAL_3, true, -1); break;
+                    default: xu4_snd_play(SOUND_HORSE_NORMAL_4, true, -1); break;
 				}
             }
             else {
                 switch(xu4_random(4)) {
-                    case 1: xu4_snd_play(SOUND_WALK_NORMAL_1); break;
-                    case 2: xu4_snd_play(SOUND_WALK_NORMAL_2); break;
-                    case 3: xu4_snd_play(SOUND_WALK_NORMAL_3); break;
-                    default: xu4_snd_play(SOUND_WALK_NORMAL_4); break;
+                    case 1: xu4_snd_play(SOUND_WALK_NORMAL_1, true, -1); break;
+                    case 2: xu4_snd_play(SOUND_WALK_NORMAL_2, true, -1); break;
+                    case 3: xu4_snd_play(SOUND_WALK_NORMAL_3, true, -1); break;
+                    default: xu4_snd_play(SOUND_WALK_NORMAL_4, true, -1); break;
 				}
             }
         }

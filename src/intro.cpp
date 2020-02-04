@@ -1178,7 +1178,7 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
                 break;
             case MI_SOUND_02:
                 xu4_snd_vol((double)settingsChanged.soundVol / MAX_VOLUME);
-                xu4_snd_play(SOUND_FLEE);
+                xu4_snd_play(SOUND_FLEE, true, -1);
                 break;
             case USE_SETTINGS:
                 // save settings
@@ -1769,7 +1769,7 @@ bool IntroController::updateTitle()
         if (title->method == TITLE)
         {
             // assume this is the first frame of "Ultima IV" and begin sound
-            xu4_snd_play(SOUND_TITLE_FADE);
+            xu4_snd_play(SOUND_TITLE_FADE, true, -1);
         }
     }
 

@@ -367,7 +367,7 @@ bool spellMagicAttackAt(const Coords &coords, MapTile attackTile, int attackDama
         objectHit = true;
 
         /* show the 'hit' tile */
-        xu4_snd_play(SOUND_NPC_STRUCK);
+        xu4_snd_play(SOUND_NPC_STRUCK, true, -1);
         GameController::flashTile(coords, attackTile, 3);
 
 
@@ -654,12 +654,12 @@ static int spellSleep(int unused) {
         if ((m->getResists() != EFFECT_SLEEP) &&
             xu4_random(0xFF) >= m->getHp())
         {
-        	xu4_snd_play(SOUND_POISON_EFFECT);
+        	xu4_snd_play(SOUND_POISON_EFFECT, true, -1);
             m->putToSleep();
             GameController::flashTile(coords, "sleep_field", 3);
         }
         else
-        	xu4_snd_play(SOUND_EVADE);
+        	xu4_snd_play(SOUND_EVADE, true, -1);
     }
 
     return 1;
@@ -679,26 +679,26 @@ static int spellTremor(int unused) {
 
         /* creatures with over 192 hp are unaffected */
         if (m->getHp() > 192) {
-            xu4_snd_play(SOUND_EVADE);
+            xu4_snd_play(SOUND_EVADE, true, -1);
             continue;
         }
         else {
             /* Deal maximum damage to creature */
             if (xu4_random(2) == 0) {
-                xu4_snd_play(SOUND_NPC_STRUCK);
+                xu4_snd_play(SOUND_NPC_STRUCK, true, -1);
                 GameController::flashTile(coords, "hit_flash", 3);
                 ct->getCurrentPlayer()->dealDamage(m, 0xFF);
             }
             /* Deal enough damage to creature to make it flee */
             else if (xu4_random(2) == 0) {
-                xu4_snd_play(SOUND_NPC_STRUCK);
+                xu4_snd_play(SOUND_NPC_STRUCK, true, -1);
                 GameController::flashTile(coords, "hit_flash", 2);
                 if (m->getHp() > 23)
                     ct->getCurrentPlayer()->dealDamage(m, m->getHp()-23);
             }
             else
             {
-                xu4_snd_play(SOUND_EVADE);
+                xu4_snd_play(SOUND_EVADE, true, -1);
             }
         }
     }

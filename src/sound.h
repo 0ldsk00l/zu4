@@ -1,6 +1,10 @@
 #ifndef SOUND_H
 #define SOUND_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum SoundEffect {
 	SOUND_TITLE_FADE,       // the intro title fade
 	SOUND_WALK_NORMAL_1,    // walk, world and town
@@ -74,7 +78,7 @@ enum SoundEffect {
 	SOUND_MAX
 };
 
-void xu4_snd_play(int sound, bool onlyOnce = true, int specificDurationInTicks = -1);
+void xu4_snd_play(int sound, bool onlyOnce, int specificDurationInTicks); // true, -1
 
 void xu4_snd_stop();
 void xu4_snd_vol(double);
@@ -83,5 +87,9 @@ int xu4_snd_vol_inc();
 
 void xu4_snd_init();
 void xu4_snd_deinit();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
