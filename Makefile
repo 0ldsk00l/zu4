@@ -34,6 +34,7 @@ CSRCS=\
 		src/savegame.c \
 		src/settings.c \
 		src/stb_vorbis.c \
+		src/xmlparse.c \
 		src/u4_sdl.c \
 		src/yxml.c
 

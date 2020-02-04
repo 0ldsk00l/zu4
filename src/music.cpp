@@ -1,7 +1,7 @@
 /*
  * music.cpp
  * Copyright (C) 2012 Daniel Santos
- * Copyright (C) 2019 R. Danbrook
+ * Copyright (C) 2019-2020 R. Danbrook
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,21 +20,16 @@
  * 
  */
 
-#include <string>
-#include <vector>
-
 #include <SDL.h>
 
 #include "cmixer.h"
 
 #include "music.h"
 #include "sound.h"
-#include "config.h"
-#include "context.h"
+#include "context.h" // Last C++ dependency
 #include "error.h"
 #include "settings.h"
-#include "u4.h"
-#include "u4file.h"
+#include "xmlparse.h"
 
 using std::string;
 using std::vector;
@@ -122,18 +117,18 @@ static void xu4_music_free_files() {
 }
 
 static void xu4_music_load_files() {
-	const Config *config = Config::getInstance();
+	xu4_xmlparse_init("conf/music.xml");
 	
-	vector<ConfigElement> musicConfs = config->getElement("music").getChildren();
-	std::vector<ConfigElement>::const_iterator i = musicConfs.begin();
-	std::vector<ConfigElement>::const_iterator theEnd = musicConfs.end();
-	
-	for (; i != theEnd; ++i) {
-		if (i->getName() != "track") { continue; }
-		int j = (i - musicConfs.begin()) + 1; // major hack while converting away from C++
-		track[j] = cm_new_source_from_file(u4find_music(i->getString("file")).c_str());
-		cm_set_loop(track[j], 1);
+	char trackfile[64]; // Buffer for track filenames that are found
+	char trackpath[128]; // Buffer for full path to track
+	int index = 1; // Start at 1 because track 0 is silence, and has no file
+	while (xu4_xmlparse_find(trackfile, "track", "file")) {
+		snprintf(trackpath, sizeof(trackpath), "%s%s", "music/", trackfile);
+		track[index] = cm_new_source_from_file(trackpath);
+		cm_set_loop(track[index++], 1);
 	}
+	
+	xu4_xmlparse_deinit();
 }
 
 void xu4_music_init() {
