@@ -34,7 +34,9 @@ CSRCS=\
 		src/savegame.c \
 		src/settings.c \
 		src/stb_vorbis.c \
-		src/u4_sdl.c
+		src/u4_sdl.c \
+		src/yxml.c
+
 
 CXXSRCS=\
 		src/annotation.cpp \
