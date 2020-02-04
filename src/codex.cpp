@@ -187,7 +187,7 @@ void codexEject(CodexEjectCode code) {
     /* return view to normal and exit the Abyss */
     gameSetViewMode(VIEW_NORMAL);
     game->exitToParentMap();    
-    xu4_music_play();
+    xu4_music_play(c->location->map->music);
     
     /**
      * if being ejected because of a missed virtue question, 

@@ -1270,16 +1270,16 @@ Script::ReturnCode Script::karma(xmlNodePtr script, xmlNodePtr current) {
  */ 
 Script::ReturnCode Script::music(xmlNodePtr script, xmlNodePtr current) {
     if (xmlGetPropAsBool(current, "reset"))        
-        xu4_music_play();
+        xu4_music_play(c->location->map->music);
     else {
         string type = getPropAsStr(current, "type");
 
         if (xmlGetPropAsBool(current, "play"))
-            xu4_music_play();
+            xu4_music_play(c->location->map->music);
         if (xmlGetPropAsBool(current, "stop"))
             xu4_music_stop();
         else if (type == "shopping")
-            xu4_music_play_track(TRACK_SHOPPING);
+            xu4_music_play(TRACK_SHOPPING);
         else if (type == "camp")
             xu4_music_fadeout(CAMP_FADE_OUT_TIME);
     }

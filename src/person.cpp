@@ -368,13 +368,13 @@ void Person::runCommand(Conversation *cnv, const ResponsePart &command) {
         cnv->state = Conversation::CONFIRMATION;
     }
     else if (command == ResponsePart::STARTMUSIC_LB) {
-        xu4_music_play_track(TRACK_RULEBRIT);
+        xu4_music_play(TRACK_RULEBRIT);
     }
     else if (command == ResponsePart::STARTMUSIC_HW) {
-        xu4_music_play_track(TRACK_SHOPPING);
+        xu4_music_play(TRACK_SHOPPING);
     }
     else if (command == ResponsePart::STOPMUSIC) {
-        xu4_music_play();
+        xu4_music_play(c->location->map->music);
     }
     else if (command == ResponsePart::HAWKWIND) {
         c->party->adjustKarma(KA_HAWKWIND);

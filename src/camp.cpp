@@ -73,7 +73,7 @@ void CampController::begin() {
     if (settings.campingAlwaysCombat || (xu4_random(8) == 0)) {        
         const Creature *m = creatureMgr->randomAmbushing();
                 
-        xu4_music_play();
+        xu4_music_play(c->location->map->music);
         screenMessage("Ambushed!\n");
         
         /* create an ambushing creature (so it leaves a chest) */

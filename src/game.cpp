@@ -180,7 +180,7 @@ void GameController::initScreen()
 
 void GameController::initScreenWithoutReloadingState()
 {
-    xu4_music_play();
+    xu4_music_play(c->location->map->music);
     imageMgr->get(BKGD_BORDERS)->image->draw(0, 0);
     c->stats->update(); /* draw the party stats */
 
@@ -2284,7 +2284,7 @@ void GameController::avatarMoved(MoveEvent &event) {
     if (event.result & MOVE_EXIT_TO_PARENT) {
         screenMessage("%cLeaving...%c\n", FG_GREY, FG_WHITE);
         exitToParentMap();
-        xu4_music_play();
+        xu4_music_play(c->location->map->music);
     }
 
     /* things that happen while not on board the balloon */
@@ -2324,7 +2324,7 @@ void GameController::avatarMovedInDungeon(MoveEvent &event) {
     if (event.result & MOVE_EXIT_TO_PARENT) {
         screenMessage("%cLeaving...%c\n", FG_GREY, FG_WHITE);
         exitToParentMap();
-        xu4_music_play();
+        xu4_music_play(c->location->map->music);
     }
 
     /* check to see if we're entering a dungeon room */
@@ -3103,7 +3103,7 @@ bool GameController::checkMoongates() {
                 return true;
             
             setMap(shrine_spirituality, 1, NULL);
-            xu4_music_play();
+            xu4_music_play(c->location->map->music);
 
             shrine_spirituality->enter();
         }

@@ -28,6 +28,7 @@ CSRCS=\
 		src/error.c \
 		src/io.c \
 		src/miniz.c \
+		src/music.c \
 		src/names.c \
 		src/random.c \
 		src/rle.c \
@@ -79,7 +80,6 @@ CXXSRCS=\
 		src/menuitem.cpp \
 		src/moongate.cpp \
 		src/movement.cpp \
-		src/music.cpp \
 		src/object.cpp \
 		src/person.cpp \
 		src/player.cpp \

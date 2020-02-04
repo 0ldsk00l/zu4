@@ -1,5 +1,5 @@
 /*
- * music.cpp
+ * music.c
  * Copyright (C) 2012 Daniel Santos
  * Copyright (C) 2019-2020 R. Danbrook
  * 
@@ -24,15 +24,11 @@
 
 #include "cmixer.h"
 
-#include "music.h"
-#include "sound.h"
-#include "context.h" // Last C++ dependency
 #include "error.h"
+#include "music.h"
 #include "settings.h"
+#include "sound.h"
 #include "xmlparse.h"
-
-using std::string;
-using std::vector;
 
 static int curtrack = TRACK_NONE;
 static bool music_enabled = false;
@@ -51,7 +47,7 @@ static void lock_handler(cm_Event *e) {
 	}
 }
 
-void xu4_music_play_track(int music) {
+void xu4_music_play(int music) {
 	if (music_enabled) {
 		if (curtrack == music) { return; }
 		else {
@@ -60,10 +56,6 @@ void xu4_music_play_track(int music) {
 			cm_play(track[curtrack]);
 		}
 	}
-}
-
-void xu4_music_play() {
-	xu4_music_play_track(c->location->map->music);
 }
 
 void xu4_music_stop() {
@@ -78,7 +70,7 @@ void xu4_music_fadeout(int msecs) { // Implement later
 }
 
 void xu4_music_fadein(int msecs, bool loadFromMap) { // Implement later
-	xu4_music_play();
+	xu4_music_play(curtrack);
 }
 
 void xu4_music_vol(double volume) {

@@ -297,7 +297,7 @@ bool IntroController::init() {
         mode = INTRO_MENU;
         beastiesVisible = true;
         beastieOffset = 0;
-        xu4_music_play_track(TRACK_TOWNS);
+        xu4_music_play(TRACK_TOWNS);
     }
     else
     {
@@ -410,7 +410,7 @@ bool IntroController::keyPressed(int key) {
         case '7':
         case '8':
         case '9':
-            xu4_music_play_track(key - '0');
+            xu4_music_play(key - '0');
             break;
         default:
             valid = false;
@@ -1016,7 +1016,7 @@ void IntroController::timerFired() {
             // setup the map screen
             mode = INTRO_MAP;
             beastiesVisible = true;
-            xu4_music_play_track(TRACK_TOWNS);
+            xu4_music_play(TRACK_TOWNS);
             updateScreen();
         }
 
@@ -1184,7 +1184,7 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
                 // save settings
                 xu4_settings_setdata(settingsChanged);
                 xu4_settings_write();
-                xu4_music_play_track(TRACK_TOWNS);
+                xu4_music_play(TRACK_TOWNS);
                 break;
             case CANCEL:
                 xu4_music_vol((double)settings.musicVol / MAX_VOLUME);

@@ -224,7 +224,7 @@ void CombatController::begin() {
     
     /* FIXME: there should be a better way to accomplish this */
     if (!camping) {
-        xu4_music_play();
+        xu4_music_play(c->location->map->music);
     }
 
     /* Set focus to the first active party member, if there is one */ 
@@ -259,7 +259,7 @@ void CombatController::end(bool adjustKarma) {
         bool won = isWon();    
     
         game->exitToParentMap();
-        xu4_music_play();
+        xu4_music_play(c->location->map->music);
     
         if (winOrLose) {
             if (won) {
