@@ -9,6 +9,8 @@
 extern "C" {
 #endif
 
+#define VERSION "1.1-git"
+
 /* info for loading city data from *.ult and *.tlk */
 #define CITY_HEIGHT 32
 #define CITY_WIDTH 32

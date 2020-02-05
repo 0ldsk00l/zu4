@@ -252,8 +252,8 @@ void StatsArea::showWeapons() {
             n = 99;
         if (n >= 1) {
             const char *format = (n >= 10) ? "%c%d-%s" : "%c-%d-%s";
-
-            mainArea.textAt(col, line++, format, w - WEAP_HANDS + 'A', n, xu4_weapon_name((WeaponType)w));
+            weapon_t *weapon = xu4_weapon((WeaponType)w);
+            mainArea.textAt(col, line++, format, w - WEAP_HANDS + 'A', n, weapon->abbr);
             if (line >= (STATS_AREA_HEIGHT)) {
                 line = 0;
                 col += 8;

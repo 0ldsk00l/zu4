@@ -8,14 +8,12 @@ datadir = $(prefix)/share
 UILIBS = $(shell sdl-config --libs)
 UIFLAGS = $(shell sdl-config --cflags)
 
-CXXFLAGS = -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags) -DVERSION=\"$(VERSION)\"
+CXXFLAGS = -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags)
 #CXXFLAGS += -ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
 CFLAGS = $(CXXFLAGS)
 LIBS = $(UILIBS) $(shell xml2-config --libs)
 
 MAIN = u4
-
-VERSION = 1.1-git
 
 CSRCS=\
 		src/lzw/hash.c \

@@ -945,12 +945,12 @@ void IntroController::about() {
 
     screenHideCursor();
     menuArea.textAt(14, 1, "XU4 %s", VERSION);
-    menuArea.textAt(1, 3, "xu4 is free software; you can redist-");
-    menuArea.textAt(1, 4, "ribute it and/or modify it under the");
-    menuArea.textAt(1, 5, "terms of the GNU GPL as published by");
-    menuArea.textAt(1, 6, "the FSF.  See COPYING.");
-    menuArea.textAt(4, 8, "Copyright \011 2002-2006, xu4 Team");
-    menuArea.textAt(4, 9, "Copyright \011 1987, Lord British");
+    menuArea.textAt(1, 3, "xu4 is free software under the terms");
+    menuArea.textAt(1, 4, "of the GNU GPLv2 as published by the");
+    menuArea.textAt(1, 5, "FSF. See COPYING for details.");
+    menuArea.textAt(2, 7, "Copyright \011 1987, Lord British");
+    menuArea.textAt(2, 8, "Copyright \011 2002-2016, xu4 Team");
+    menuArea.textAt(2, 9, "Copyright \011 2019-2020, R. Danbrook");
     drawBeasties();
 
     ReadChoiceController::get("");
