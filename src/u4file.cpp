@@ -98,9 +98,6 @@ void U4PATH::initDefaultPaths() {
 	rootResourcePaths.push_back("./ultima4");
 	rootResourcePaths.push_back("/usr/lib/u4");
 	rootResourcePaths.push_back("/usr/local/lib/u4");
-	rootResourcePaths.push_back("C:");
-	rootResourcePaths.push_back("C:/DOS");
-	rootResourcePaths.push_back("C:/GAMES");
 	
 	//The second (specific) part of the path searched will be these various subdirectories
 	
@@ -112,18 +109,6 @@ void U4PATH::initDefaultPaths() {
 	/* the possible paths where the u4 zipfiles can be installed */
 	u4ZipPaths.push_back(".");
 	u4ZipPaths.push_back("u4");
-	
-	/* the possible paths where the u4 music files can be installed */
-	musicPaths.push_back(".");
-	musicPaths.push_back("mid");
-	musicPaths.push_back("../mid");
-	musicPaths.push_back("music");
-	musicPaths.push_back("../music");
-	
-	/* the possible paths where the u4 sound files can be installed */
-	soundPaths.push_back(".");
-	soundPaths.push_back("./sound");
-	soundPaths.push_back("../sound");
 	
 	/* the possible paths where the u4 config files can be installed */
 	configPaths.push_back(".");
@@ -706,14 +691,6 @@ string u4find_path(const string &fname, std::list<string> specificSubPaths) {
 		return path;
 	}
 	else { return ""; }
-}
-
-string u4find_music(const string &fname) {
-	return u4find_path(fname, u4Path.musicPaths);
-}
-
-string u4find_sound(const string &fname) {
-	return u4find_path(fname, u4Path.soundPaths);
 }
 
 string u4find_conf(const string &fname) {
