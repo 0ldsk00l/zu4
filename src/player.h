@@ -17,6 +17,7 @@
 #include "script.h"
 #include "tile.h"
 #include "types.h"
+#include "weapon.h"
 
 //class Armor;
 class Party;
@@ -106,7 +107,7 @@ public:
     int getInt() const     { return player->intel; }
     int getMp() const      { return player->mp; }
     int getMaxMp() const;
-    const Weapon *getWeapon() const;
+    const weapon_t *getWeapon() const;
     const armor_t *getArmor() const;
     virtual string getName() const;    
     SexType getSex() const;
@@ -125,7 +126,7 @@ public:
     virtual void setHp(int hp);
     void setMp(int mp);    
     EquipError setArmor(const ArmorType a);
-    EquipError setWeapon(const Weapon *w);    
+    EquipError setWeapon(const WeaponType w);    
     
     virtual bool applyDamage(int damage, bool byplayer = false);    
     virtual int getAttackBonus() const;

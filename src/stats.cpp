@@ -231,7 +231,8 @@ void StatsArea::showPlayerDetails() {
     mainArea.textAt(0, 3, "STR:%02d  HP:%04d", p->getStr(), p->getHp());
     mainArea.textAt(0, 4, "DEX:%02d  HM:%04d", p->getDex(), p->getMaxHp());
     mainArea.textAt(0, 5, "INT:%02d  EX:%04d", p->getInt(), p->getExp());
-    mainArea.textAt(0, 6, "W:%s", p->getWeapon()->getName().c_str());
+    const weapon_t *w = p->getWeapon();
+    mainArea.textAt(0, 6, "W:%s", w->name);
     const armor_t *a = p->getArmor();
     mainArea.textAt(0, 7, "A:%s", a->name);
 }
@@ -244,7 +245,7 @@ void StatsArea::showWeapons() {
 
     int line = 0;
     int col = 0;
-    mainArea.textAt(0, line++, "A-%s", Weapon::get(WEAP_HANDS)->getName().c_str());
+    mainArea.textAt(0, line++, "A-Hands");
     for (int w = WEAP_HANDS + 1; w < WEAP_MAX; w++) {
         int n = c->saveGame->weapons[w];
         if (n >= 100)
@@ -252,7 +253,7 @@ void StatsArea::showWeapons() {
         if (n >= 1) {
             const char *format = (n >= 10) ? "%c%d-%s" : "%c-%d-%s";
 
-            mainArea.textAt(col, line++, format, w - WEAP_HANDS + 'A', n, Weapon::get((WeaponType) w)->getAbbrev().c_str());
+            mainArea.textAt(col, line++, format, w - WEAP_HANDS + 'A', n, xu4_weapon_name((WeaponType)w));
             if (line >= (STATS_AREA_HEIGHT)) {
                 line = 0;
                 col += 8;

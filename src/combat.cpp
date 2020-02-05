@@ -29,7 +29,6 @@
 #include "stats.h"
 #include "tileset.h"
 #include "utils.h"
-#include "weapon.h"
 
 /**
  * Returns true if 'map' points to a Combat Map
@@ -487,7 +486,8 @@ bool CombatController::setActivePlayer(int player) {
         p->setFocus();
         focus = player;
 
-        screenMessage("\n%s with %s\n\020", p->getName().c_str(), p->getWeapon()->getName().c_str());        
+        const weapon_t *w = p->getWeapon();
+        screenMessage("\n%s with %s\n\020", p->getName().c_str(), w->name);        
         c->stats->highlightPlayer(focus);        
         return true;
     }
@@ -525,11 +525,11 @@ bool CombatController::attackHit(Creature *attacker, Creature *defender) {
 }
 
 bool CombatController::attackAt(const Coords &coords, PartyMember *attacker, int dir, int range, int distance) {
-    const Weapon *weapon = attacker->getWeapon();
-    bool wrongRange = weapon->rangeAbsolute() && (distance != range);
+    const weapon_t *weapon = attacker->getWeapon();
+    bool wrongRange = (weapon->flags & WEAP_ABSOLUTERANGE) && (distance != range);
 
-    MapTile hittile = map->tileset->getByName(weapon->getHitTile())->getId();
-    MapTile misstile = map->tileset->getByName(weapon->getMissTile())->getId();
+    MapTile hittile = map->tileset->getByName(weapon->hittile)->getId();
+    MapTile misstile = map->tileset->getByName(weapon->misstile)->getId();
 
     // Check to see if something hit
     Creature *creature = map->creatureAt(coords);
@@ -539,7 +539,7 @@ bool CombatController::attackAt(const Coords &coords, PartyMember *attacker, int
     if (!creature || wrongRange) {
         
         /* If the weapon is shown as it travels, show it now */
-        if (weapon->showTravel()) {
+        if (!(weapon->flags & WEAP_DONTSHOWTRAVEL)) {
         	GameController::flashTile(coords, misstile, 1);
         }
 
@@ -548,7 +548,7 @@ bool CombatController::attackAt(const Coords &coords, PartyMember *attacker, int
     }
     
     /* Did the weapon miss? */
-    if ((c->location->prev->map->id == MAP_ABYSS && !weapon->isMagic()) || /* non-magical weapon in the Abyss */
+    if ((c->location->prev->map->id == MAP_ABYSS && !(weapon->flags & WEAP_MAGIC)) || /* non-magical weapon in the Abyss */
         !attackHit(attacker, creature)) { /* player naturally missed */
         screenMessage("Missed!\n");
 
@@ -657,10 +657,10 @@ void CombatController::rangedMiss(const Coords &coords, Creature *attacker) {
         map->annotations->add(coords, map->tileset->getByName(attacker->getHitTile())->getId());
 }
 
-bool CombatController::returnWeaponToOwner(const Coords &coords, int distance, int dir, const Weapon *weapon) {
+bool CombatController::returnWeaponToOwner(const Coords &coords, int distance, int dir, const weapon_t *weapon) {
     Coords new_coords = coords;
 
-    MapTile misstile = map->tileset->getByName(weapon->getMissTile())->getId();
+    MapTile misstile = map->tileset->getByName(weapon->misstile)->getId();
 
     /* reverse the direction of the weapon */
     Direction returnDir = dirReverse(dirFromMask(dir));
@@ -1058,12 +1058,12 @@ void CombatController::attack() {
 
     PartyMember *attacker = getCurrentPlayer();
 
-    const Weapon *weapon = attacker->getWeapon();
-    int range = weapon->getRange();
-    if (weapon->canChooseDistance()) {
+    const weapon_t *weapon = attacker->getWeapon();
+    int range = weapon->range;
+    if (weapon->flags & WEAP_CHOOSEDISTANCE) {
         screenMessage("Range: ");
         int choice = ReadChoiceController::get("123456789");
-        if ((choice - '0') >= 1 && (choice - '0') <= weapon->getRange()) {
+        if ((choice - '0') >= 1 && (choice - '0') <= weapon->range) {
             range = choice - '0';
             screenMessage("%d\n", range);
         } else {
@@ -1079,7 +1079,7 @@ void CombatController::attack() {
     vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, 
                                                        attacker->getCoords(),
                                                        1, range, 
-                                                       weapon->canAttackThroughObjects() ? NULL : &Tile::canAttackOverTile,
+                                                       weapon->flags & WEAP_ATTACKTHROUGHOBJECTS ? NULL : &Tile::canAttackOverTile,
                                                        false);
 
     bool foundTarget = false;
@@ -1100,26 +1100,26 @@ void CombatController::attack() {
     }
 
     // is weapon lost? (e.g. dagger)
-    if (weapon->loseWhenUsed() ||
-        (weapon->loseWhenRanged() && (!foundTarget || targetDistance > 1))) {
+    if (weapon->flags & WEAP_LOSE ||
+        (weapon->flags & WEAP_LOSEWHENRANGED && (!foundTarget || targetDistance > 1))) {
         if (!attacker->loseWeapon())
             screenMessage("Last One!\n");
     }
 
     // does weapon leave a tile behind? (e.g. flaming oil)
     const Tile *ground = map->tileTypeAt(targetCoords, WITHOUT_OBJECTS);
-    if (!weapon->leavesTile().empty() && ground->isWalkable())
-        map->annotations->add(targetCoords, map->tileset->getByName(weapon->leavesTile())->getId());
+    if (strcmp(weapon->leavetile, "") && ground->isWalkable()) // FIXME: This is really questionable
+        map->annotations->add(targetCoords, map->tileset->getByName(weapon->leavetile)->getId());
 
     /* show the 'miss' tile */
     if (!foundTarget) {
-    	GameController::flashTile(targetCoords, weapon->getMissTile(), 1);
+    	GameController::flashTile(targetCoords, weapon->misstile, 1);
         /* This goes here so messages are shown in the original order */
         screenMessage("Missed!\n");
     }
 
     // does weapon returns to its owner? (e.g. magic axe)
-    if (weapon->returns())
+    if (weapon->flags & WEAP_RETURNS)
         returnWeaponToOwner(targetCoords, targetDistance, MASK_DIR(dir), weapon);
 }
 

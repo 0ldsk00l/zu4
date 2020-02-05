@@ -25,7 +25,6 @@
 #include <string.h>
 
 #include "armor.h"
-#include "error.h"
 
 static armor_t armor[ARMR_MAX] = {
 	{ ARMR_NONE, "Skin", 0xff, 96 },

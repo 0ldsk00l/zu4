@@ -39,6 +39,7 @@ CSRCS=\
 		src/stb_vorbis.c \
 		src/xmlparse.c \
 		src/u4_sdl.c \
+		src/weapon.c \
 		src/yxml.c
 
 
@@ -102,7 +103,6 @@ CXXSRCS=\
 		src/u4file.cpp \
 		src/utils.cpp \
 		src/view.cpp \
-		src/weapon.cpp \
 		src/xml.cpp
 
 OBJS += $(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)

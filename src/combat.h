@@ -17,6 +17,7 @@
 #include "player.h"
 #include "savegame.h"
 #include "types.h"
+#include "weapon.h"
 
 #define AREA_CREATURES   16
 #define AREA_PLAYERS    8
@@ -85,7 +86,7 @@ public:
     bool attackAt(const Coords &coords, PartyMember *attacker, int dir, int range, int distance);
     bool rangedAttack(const Coords &coords, Creature *attacker);
     void rangedMiss(const Coords &coords, Creature *attacker);
-    bool returnWeaponToOwner(const Coords &coords, int distance, int dir, const Weapon *weapon);
+    bool returnWeaponToOwner(const Coords &coords, int distance, int dir, const weapon_t *weapon);
 
     /** 
      * Static member functions

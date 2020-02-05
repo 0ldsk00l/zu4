@@ -2462,15 +2462,15 @@ void readyWeapon(int player) {
     c->stats->setView(STATS_PARTY_OVERVIEW);
 
     PartyMember *p = c->party->member(player);
-    const Weapon *w = Weapon::get(weapon);
+    //const Weapon *w = Weapon::get(weapon);
 
-    if (!w) {
+    /*if (!w) {
         screenMessage("\n");
         return;
-    }
-    switch (p->setWeapon(w)) {
+    }*/
+    switch (p->setWeapon(weapon)) {
     case EQUIP_SUCCEEDED:
-        screenMessage("%s\n", w->getName().c_str());
+        screenMessage("%s\n", xu4_weapon_name(weapon));
         break;
     case EQUIP_NONE_LEFT:
         screenMessage("%cNone left!%c\n", FG_GREY, FG_WHITE);
@@ -2478,7 +2478,7 @@ void readyWeapon(int player) {
     case EQUIP_CLASS_RESTRICTED: {
         string indef_article;
 
-        switch(tolower(w->getName()[0])) {
+        switch(tolower(xu4_weapon_name(weapon)[0])) {
         case 'a': case 'e': case 'i':
         case 'o': case 'u': case 'y':
             indef_article = "an"; break;
@@ -2487,7 +2487,7 @@ void readyWeapon(int player) {
         }
 
         screenMessage("\n%cA %s may NOT use %s %s%c\n", FG_GREY, getClassName(p->getClass()),
-                      indef_article.c_str(), w->getName().c_str(), FG_WHITE);
+                      indef_article.c_str(), xu4_weapon_name(weapon), FG_WHITE);
         break;
     }
     }

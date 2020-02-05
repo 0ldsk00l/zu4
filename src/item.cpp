@@ -432,7 +432,8 @@ bool isWeaponInInventory(int weapon) {
         return true;
     else {
         for (int i = 0; i < c->party->size(); i++) {
-            if (c->party->member(i)->getWeapon()->getType() == weapon)
+            const weapon_t *w = c->party->member(i)->getWeapon();
+            if (w->type == weapon)
                 return true;
         }
     }

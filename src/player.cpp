@@ -19,6 +19,8 @@
 #include "utils.h"
 #include "weapon.h"
 
+static string hittile, misstile;
+
 bool isPartyMember(Object *punknown) {
     PartyMember *pm;
     if ((pm = dynamic_cast<PartyMember*>(punknown)) != NULL)
@@ -37,7 +39,9 @@ PartyMember::PartyMember(Party *p, SaveGamePlayerRecord *pr) :
 {
     /* FIXME: we need to rename movement behaviors */
     setMovementBehavior(MOVEMENT_ATTACK_AVATAR);
-    this->ranged = Weapon::get(pr->weapon)->getRange() ? 1 : 0;
+    weapon_t *w = xu4_weapon(pr->weapon);
+    // FIXME: converted from original, are all weapons really considered ranged? Broken somewhere else?
+    this->ranged = w->range ? 1 : 0;
     setStatus(pr->status);
 }
 
@@ -78,8 +82,10 @@ string PartyMember::translate(std::vector<string>& parts) {
             return xu4_to_string(getExp());
         else if (parts[0] == "name")
             return getName();
-        else if (parts[0] == "weapon")
-            return getWeapon()->getName();
+        else if (parts[0] == "weapon") {
+            const weapon_t *w = getWeapon();
+            return w->name;
+		}
         else if (parts[0] == "armor") {
             const armor_t *a = getArmor();
             return a->name;
@@ -160,7 +166,7 @@ int PartyMember::getMaxMp() const {
     return max_mp;
 }
 
-const Weapon *PartyMember::getWeapon() const { return Weapon::get(player->weapon); }
+const weapon_t *PartyMember::getWeapon() const { return xu4_weapon(player->weapon); }
 const armor_t *PartyMember::getArmor() const   { return xu4_armor(player->armor); }
 string PartyMember::getName() const          { return player->name; }
 SexType PartyMember::getSex() const          { return player->sex; }
@@ -386,21 +392,20 @@ EquipError PartyMember::setArmor(const ArmorType a) {
     return EQUIP_SUCCEEDED;
 }
 
-EquipError PartyMember::setWeapon(const Weapon *w) {
-    WeaponType type = w->getType();
+EquipError PartyMember::setWeapon(const WeaponType w) {
 
-    if (type != WEAP_HANDS && party->saveGame->weapons[type] < 1)
+    if (w != WEAP_HANDS && party->saveGame->weapons[w] < 1)
         return EQUIP_NONE_LEFT;
-    if (!w->canReady(getClass()))
+    if (!xu4_weapon_usable(w, getClass()))
         return EQUIP_CLASS_RESTRICTED;
 
-    WeaponType old = getWeapon()->getType();
+    WeaponType old = player->weapon;
     if (old != WEAP_HANDS)
         party->saveGame->weapons[old]++;
-    if (type != WEAP_HANDS)
-        party->saveGame->weapons[type]--;
+    if (w != WEAP_HANDS)
+        party->saveGame->weapons[w]--;
 
-    player->weapon = type;
+    player->weapon = w;
     notifyOfChange();
 
     return EQUIP_SUCCEEDED;
@@ -451,8 +456,9 @@ bool PartyMember::applyDamage(int damage, bool) {
 }
 
 int PartyMember::getAttackBonus() const {
-    if (Weapon::get(player->weapon)->alwaysHits() || player->dex >= 40)
-	return 255;
+    weapon_t *w = xu4_weapon(player->weapon);
+    if (w->flags & WEAP_ALWAYSHITS || player->dex >= 40)
+        return 255;
     return player->dex;
 }
 
@@ -478,10 +484,8 @@ bool PartyMember::dealDamage(Creature *m, int damage) {
  * Calculate damage for an attack.
  */
 int PartyMember::getDamage() {
-    int maxDamage;
-
-    maxDamage = Weapon::get(player->weapon)->getDamage();
-    maxDamage += player->str;
+    weapon_t *w = xu4_weapon(player->weapon);
+    int maxDamage = w->damage + player->str;
     if (maxDamage > 255)
         maxDamage = 255;
 
@@ -493,7 +497,10 @@ int PartyMember::getDamage() {
  * member's attack hits
  */
 const string &PartyMember::getHitTile() const {
-    return getWeapon()->getHitTile();
+    //return getWeapon()->getHitTile();
+    const weapon_t *w = getWeapon();
+    hittile = w->hittile;
+    return hittile;
 }
 
 /**
@@ -501,7 +508,10 @@ const string &PartyMember::getHitTile() const {
  * member's attack fails
  */
 const string &PartyMember::getMissTile() const {
-    return getWeapon()->getMissTile();
+    //return getWeapon()->getMissTile();
+    const weapon_t *w = getWeapon();
+    misstile = w->misstile;
+    return misstile;
 }
 
 bool PartyMember::isDead() {
@@ -675,9 +685,11 @@ string Party::translate(std::vector<string>& parts) {
 
         else if (parts.size() == 2) {
             if (parts[0] == "weapon") {
-                const Weapon *w = Weapon::get(parts[1]);
+                /*const Weapon *w = Weapon::get(parts[1]);
                 if (w)
-                    return xu4_to_string(saveGame->weapons[w->getType()]);
+                    return xu4_to_string(saveGame->weapons[w->getType()]);*/
+                WeaponType wtype = xu4_weapon_type(parts[1].c_str());
+                return xu4_to_string(saveGame->weapons[wtype]);
             }
             else if (parts[0] == "armor") {
                 /*const Armor *a = Armor::get(parts[1]);
