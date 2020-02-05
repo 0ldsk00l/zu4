@@ -1,43 +1,27 @@
-/*
- * $Id: armor.h 3019 2012-03-18 11:31:13Z daniel_santos $
- */
-
 #ifndef ARMOR_H
 #define ARMOR_H
 
-#include <string>
-#include <vector>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "savegame.h"
 
-class ConfigElement;
+typedef struct armor_t {
+	ArmorType type;      // Enumerated Armor Type
+	const char *name;    // Name of the Armor
+	uint8_t wearable;    // What classes can wear the Armor
+	int defense;         // Defense value of the Armor
+} armor_t;
 
-class Armor {
-public:
-    typedef std::string string;
+armor_t* xu4_armor(ArmorType type);
+int xu4_armor_defense(ArmorType type);
+const char* xu4_armor_name(ArmorType type);
+ArmorType xu4_armor_type(const char* aname);
+bool xu4_armor_wearable(ArmorType type, ClassType klass);
 
-    static const Armor *get(ArmorType a);
-    static const Armor *get(const string &name);
-
-    // Getters
-    ArmorType getType() const       {return type;   } /**< Returns the ArmorType of the armor */
-    const string &getName() const   {return name;   } /**< Returns the name of the armor */
-    int getDefense() const          {return defense;} /**< Returns the defense value of the armor */
-                                                      /** Returns true if the class given can wear the armor */
-    bool canWear(ClassType klass) const {return canuse & (1 << klass);}
-
-private:
-    Armor(const ConfigElement &conf);
-
-    static void loadConf();
-    static bool confLoaded;
-    static std::vector<Armor *> armors;
-
-    ArmorType type;
-    string name;
-    unsigned char canuse;
-    int defense;
-    unsigned short mask;
-};
+#ifdef __cplusplus
+}
+#endif
 
 #endif

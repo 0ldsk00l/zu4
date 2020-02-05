@@ -22,6 +22,7 @@ CSRCS=\
 		src/lzw/hash.c \
 		src/lzw/lzw.c \
 		src/lzw/u4decode.c \
+		src/armor.c \
 		src/cmixer.c \
 		src/coords.c \
 		src/direction.c \
@@ -43,7 +44,6 @@ CSRCS=\
 
 CXXSRCS=\
 		src/annotation.cpp \
-		src/armor.cpp \
 		src/aura.cpp \
 		src/camp.cpp \
 		src/cheat.cpp \

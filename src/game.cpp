@@ -2895,22 +2895,22 @@ void wearArmor(int player) {
     ArmorType armor = (ArmorType) AlphaActionController::get(ARMR_MAX + 'a' - 1, "Armour: ");
     c->stats->setView(STATS_PARTY_OVERVIEW);
 
-    const Armor *a = Armor::get(armor);
+    //const Armor *a = Armor::get(armor);
     PartyMember *p = c->party->member(player);
 
-    if (!a) {
+    /*if (!a) {
         screenMessage("\n");
         return;
-    }
-    switch (p->setArmor(a)) {
+    }*/
+    switch (p->setArmor(armor)) {
     case EQUIP_SUCCEEDED:
-        screenMessage("%s\n", a->getName().c_str());
+        screenMessage("%s\n", xu4_armor_name(armor));
         break;
     case EQUIP_NONE_LEFT:
         screenMessage("%cNone left!%c\n", FG_GREY, FG_WHITE);
         break;
     case EQUIP_CLASS_RESTRICTED:
-        screenMessage("\n%cA %s may NOT use %s%c\n", FG_GREY, getClassName(p->getClass()), a->getName().c_str(), FG_WHITE);
+        screenMessage("\n%cA %s may NOT use %s%c\n", FG_GREY, getClassName(p->getClass()), xu4_armor_name(armor), FG_WHITE);
         break;
     }
 }

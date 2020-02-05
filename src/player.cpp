@@ -80,8 +80,10 @@ string PartyMember::translate(std::vector<string>& parts) {
             return getName();
         else if (parts[0] == "weapon")
             return getWeapon()->getName();
-        else if (parts[0] == "armor")
-            return getArmor()->getName();
+        else if (parts[0] == "armor") {
+            const armor_t *a = getArmor();
+            return a->name;
+		}
         else if (parts[0] == "sex") {
             string var = " ";
             var[0] = getSex();
@@ -159,7 +161,7 @@ int PartyMember::getMaxMp() const {
 }
 
 const Weapon *PartyMember::getWeapon() const { return Weapon::get(player->weapon); }
-const Armor *PartyMember::getArmor() const   { return Armor::get(player->armor); }
+const armor_t *PartyMember::getArmor() const   { return xu4_armor(player->armor); }
 string PartyMember::getName() const          { return player->name; }
 SexType PartyMember::getSex() const          { return player->sex; }
 ClassType PartyMember::getClass() const      { return player->klass; }
@@ -365,21 +367,20 @@ void PartyMember::setMp(int mp) {
     notifyOfChange();
 }
 
-EquipError PartyMember::setArmor(const Armor *a) {
-    ArmorType type = a->getType();
+EquipError PartyMember::setArmor(const ArmorType a) {
 
-    if (type != ARMR_NONE && party->saveGame->armor[type] < 1)
+    if (a != ARMR_NONE && party->saveGame->armor[a] < 1)
         return EQUIP_NONE_LEFT;
-    if (!a->canWear(getClass()))
+    if (!xu4_armor_wearable(a, getClass()))
         return EQUIP_CLASS_RESTRICTED;
 
-    ArmorType oldArmorType = getArmor()->getType();
+    ArmorType oldArmorType = player->armor;
     if (oldArmorType != ARMR_NONE)
         party->saveGame->armor[oldArmorType]++;
-    if (type != ARMR_NONE)
-        party->saveGame->armor[type]--;
+    if (a != ARMR_NONE)
+        party->saveGame->armor[a]--;
 
-    player->armor = type;
+    player->armor = a;
     notifyOfChange();
 
     return EQUIP_SUCCEEDED;
@@ -456,7 +457,8 @@ int PartyMember::getAttackBonus() const {
 }
 
 int PartyMember::getDefense() const {
-    return Armor::get(player->armor)->getDefense();
+    //return Armor::get(player->armor)->getDefense();
+    return xu4_armor_defense(player->armor);
 }
 
 bool PartyMember::dealDamage(Creature *m, int damage) {
@@ -678,9 +680,11 @@ string Party::translate(std::vector<string>& parts) {
                     return xu4_to_string(saveGame->weapons[w->getType()]);
             }
             else if (parts[0] == "armor") {
-                const Armor *a = Armor::get(parts[1]);
+                /*const Armor *a = Armor::get(parts[1]);
                 if (a)
-                    return xu4_to_string(saveGame->armor[a->getType()]);
+                    return xu4_to_string(saveGame->armor[a->getType()]);*/
+                ArmorType atype = xu4_armor_type(parts[1].c_str());
+                return xu4_to_string(saveGame->armor[atype]);
             }
         }
     }    

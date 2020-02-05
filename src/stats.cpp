@@ -232,7 +232,8 @@ void StatsArea::showPlayerDetails() {
     mainArea.textAt(0, 4, "DEX:%02d  HM:%04d", p->getDex(), p->getMaxHp());
     mainArea.textAt(0, 5, "INT:%02d  EX:%04d", p->getInt(), p->getExp());
     mainArea.textAt(0, 6, "W:%s", p->getWeapon()->getName().c_str());
-    mainArea.textAt(0, 7, "A:%s", p->getArmor()->getName().c_str());
+    const armor_t *a = p->getArmor();
+    mainArea.textAt(0, 7, "A:%s", a->name);
 }
 
 /**
@@ -271,8 +272,8 @@ void StatsArea::showArmor() {
     for (int a = ARMR_NONE + 1; a < ARMR_MAX; a++) {
         if (c->saveGame->armor[a] > 0) {
             const char *format = (c->saveGame->armor[a] >= 10) ? "%c%d-%s" : "%c-%d-%s";
-
-            mainArea.textAt(0, line++, format, a - ARMR_NONE + 'A', c->saveGame->armor[a], Armor::get((ArmorType) a)->getName().c_str());
+            
+            mainArea.textAt(0, line++, format, a - ARMR_NONE + 'A', c->saveGame->armor[a], xu4_armor_name((ArmorType)a));
         }
     }
 }

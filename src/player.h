@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "armor.h"
 #include "creature.h"
 #include "direction.h"
 #include "observable.h"
@@ -17,7 +18,7 @@
 #include "tile.h"
 #include "types.h"
 
-class Armor;
+//class Armor;
 class Party;
 class Weapon;
 
@@ -106,7 +107,7 @@ public:
     int getMp() const      { return player->mp; }
     int getMaxMp() const;
     const Weapon *getWeapon() const;
-    const Armor *getArmor() const;
+    const armor_t *getArmor() const;
     virtual string getName() const;    
     SexType getSex() const;
     ClassType getClass() const;
@@ -123,7 +124,7 @@ public:
     virtual void removeStatus(StatusType status);
     virtual void setHp(int hp);
     void setMp(int mp);    
-    EquipError setArmor(const Armor *a);
+    EquipError setArmor(const ArmorType a);
     EquipError setWeapon(const Weapon *w);    
     
     virtual bool applyDamage(int damage, bool byplayer = false);    
