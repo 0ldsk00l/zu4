@@ -1,0 +1,95 @@
+A)  Attack - Attempt to engage thy foe with the weapons thou hast readied
+    (Ready Weapon command); must be followed by the direction of thy foe.
+B)  Board - Board a vessel or mount a horse.
+C)  Cast - Cast a magical spell; must be followed by the number of the player
+    who wishes to cast it (not needed in combat or in dungeon rooms), and then
+    the first letter of the desired spell. Note: All spells must have reagents
+    mixed in advance of casting.
+D)  Descend - Climb down ladder to next level of dungeon or building.
+E)  Enter - Go into such places as villages, townes, castles, dungeons, and
+    shrines.
+F)  Fire - Fire a ship's cannons (once thou hast Boarded); must be followed by a
+    direction. Note: Broadsides only!
+G)  Get Chest - Attempt to open (and disarm, if trapped) chest; must be followed
+    by the number of the player who wishes to open the chest, except during
+    combat and in dungeon rooms. Note: 'Tis wisest to use the player with the
+    highest Dexterity when examining potentially dangerous chests as this
+    lessens the chances of setting off any traps.
+H)  Hole up and camp - Set up camp to rest and recover from thy wounds.
+    Note: This command may only be used with limited frequency.
+I)  Ignite a torch - Light a torch for illumination in dungeons. Requires a
+    special item.
+J)  Jimmy lock - Use a magical key to unlock a sealed door. Must be followed by
+    the direction of the door that thou dost wish to unlock.
+K)  Klimb - Climb up a ladder to the next level of a building or dungeon, or to
+    reach the surface from the topmost level of a dungeon.
+L)  Locate position - Requires a special item.
+M)  Mix Reagents - Prepare material components of spells for later use.
+    Note: Thou must have reagents mixed ahead of time in order to cast any
+    spells. When asked "Reagent:", type the letter corresponding to the reagents
+    desired, and then type [Return] when thou wish to mix them.
+N)  New order - Exchanges the position of two players indicated within thy
+    party, except for player #1, for thou must lead the party.
+O)  Open door - Open a door in the direction indicated.
+P)  Peer at gem - Requires a special item.
+Q)  Quit & Save (Usable only whilst in the outdoors of Britannia) - Saves the
+    current game status to disk; thou may continue after this command or power
+    down thy computer.
+R)  Ready a weapon - Equip a player with the weapon of thy choice (if owned) for
+    use in combat.
+S)  Search - Search thy exact current location for unusual items.
+T)  Talk - Allows a player to converse with merchants or townsfolk in the
+    direction indicated. (See Special Note)*
+U)  Use - Use an item thou hast found during play by means of the "Search"
+    command.
+V)  Volume - Toggles Music On/Off.
+W)  Wear armour - Outfits a player with the armour of thy choice (if owned) for
+    defense in combat.
+X)  Xit - That's (e)xit thy current form of transportation and continue on foot.
+Y)  Yell - Yell "giddyup" or "whoa" to speed up or slow down thy horse.
+Z)  Ztats - Displays the status and attributes of a selected player; If 0 is
+    pressed instead of a player number, this command will display the lists of
+    weapons, armour, items, reagents, and mixtures. The left and right arrow
+    keys will scroll through these lists, while pressing any other key will
+    return thee to game play.
+
+*Special Note: Talking with the people found in the game is one of the most
+important features of Ultima IV to master. It is virtually impossible to solve
+thy quests without talking to virtually all people in each towne. Each person
+with whom thou dost Talk is capable of a full conversation. They can be asked
+about their "Name," "Job," and "Health." You may "Look" again at their visual
+description. From this information thou shouldst be able to discern what else
+they might know, hinted at directly by use of the precise words in the
+conversation. E.g., if thou were to ask Dupre about his "Job" and he were to
+respond "I am hunting Gremlins," thou might think to ask him about "Hunting" or
+"Gremlins" - about either of which he might offer some insight.
+
+    Each of these people might ask of thee a question as well; be sure to answer
+the question honestly, for dishonesty will be remembered and not reflect well
+upon thee for the rest of the game. Often thou shalt not know what to ask a
+townsperson until thou hast been told by another. E.g., Iolo the Bard might tell
+thee to ask Shamino the Ranger about swords. Even if thou hadst met Shamino
+earlier thou wouldst not have known to ask him about swords, and thus thou
+wouldst have to seek him out again if thou dost wish that knowledge.
+
+    During thy conversations with people in Ultima IV, thou may feel the impulse
+to show thy generosity to less fortunate fellows. Thou may do so by saying:
+"Give".
+
+    Some of the people that thou shalt meet may be willing to become thy
+travelling companions. If thou dost wish for a character to become a player in
+thy party, thou must ask them to "Join" thee. 'Tis most wise to strengthen thy
+party as rapidly as possible, up to the seven companions thou shalt need to
+complete the game. When thou art through with a conversation, then speak the
+word "Bye" as an accepted means of politely ending thy conversation.
+
+    Be sure to keep a journal of thy travels! Many of the clues to solving the
+quests of Ultima IV art contained in the various and diverse conversations thou
+might have with the various townsfolk. It would be next to impossible to solve
+this game without some means of referring back to prior conversations held
+during play.
+
+    Be sure to thoroughly explore the cities and townes! Many of the quests
+within Ultima IV are contained entirely within individual cities. 'Tis wisest to
+spend a great deal of time seeking out the answers that lie hidden in each one
+of the various townes of Britannia, before moving on to another.
