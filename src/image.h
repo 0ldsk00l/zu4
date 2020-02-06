@@ -16,17 +16,11 @@ typedef SDL_Surface *BackendSurface;
 
 using std::string;
 
-
-#define DARK_GRAY_HALO RGBA(14,15,16,255)
-
-struct RGBA {
-	RGBA(int r, int g, int b, int a) : r(r), g(g), b(b), a(a){}
-	RGBA() : r(0), g(0), b(0), a(255){}
+typedef struct RGBA {
     unsigned int r, g, b, a;
-};
-bool operator==(const RGBA &lhs, const RGBA &rhs);
+} RGBA;
 
-class Image;
+#define DARK_GRAY_HALO (RGBA){14,15,16,255}
 
 struct SubImage {
     string name;
@@ -63,7 +57,6 @@ public:
     bool getTransparentIndex(unsigned int &index) const;
     void performTransparencyHack(unsigned int colorValue, unsigned int numFrames, unsigned int currentFrameIndex, unsigned int haloWidth, unsigned int haloOpacityIncrementByPixelDistance);
     void setTransparentIndex(unsigned int index);
-//    void invokeTransparencyHack(ImageInfo * info);
 
     bool setFontColor(ColorFG fg, ColorBG bg);
     bool setFontColorFG(ColorFG fg);
@@ -141,7 +134,6 @@ public:
     int height() const { return h; }
     bool isIndexed() const { return indexed; }
     BackendSurface getSurface() { return surface; }
-    void save(const string &filename);
     void drawHighlighted();
 
 private:

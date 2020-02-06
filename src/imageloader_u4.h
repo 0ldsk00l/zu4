@@ -1,8 +1,6 @@
 #ifndef IMAGELOADER_U4_H
 #define IMAGELOADER_U4_H
 
-struct RGBA;
-
 /**
  * Loader for U4 raw images.  Raw images are just an uncompressed
  * stream of pixel data with no palette information (e.g. shapes.ega,

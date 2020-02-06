@@ -5,9 +5,6 @@
 
 #include <SDL.h>
 
-#include <memory>
-#include <list>
-#include <utility>
 #include "image.h"
 #include "settings.h"
 #include "error.h"
@@ -137,7 +134,7 @@ void Image::setPaletteFromImage(const Image *src) {
 
 // returns the color of the specified palette index
 RGBA Image::getPaletteColor(int index) {
-	RGBA color = RGBA(0, 0, 0, 0);
+	RGBA color = {0, 0, 0, 0};// = RGBA(0, 0, 0, 0);
 
     if (indexed)
     {
@@ -170,8 +167,7 @@ int Image::getPaletteIndex(RGBA color) {
 }
 
 RGBA Image::setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-	RGBA color = RGBA(r, g, b, a);
-    return color;
+    return (RGBA){r, g, b, a};
 }
 
 /* sets the specified font colors */
@@ -550,9 +546,6 @@ void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw
  * Dumps the image to a file.  The file is always saved in .bmp
  * format.  This is mainly used for debugging.
  */
-void Image::save(const string &filename) {
-    SDL_SaveBMP(surface, filename.c_str());
-}
 
 
 void Image::drawHighlighted() {
