@@ -799,7 +799,7 @@
 
 	<tileanimset name="VGA">
 		<tileanim name="scroll">
-			<transform type="scroll" increment="1"/>
+			<transform type="scroll"/>
 		</tileanim>
 		<tileanim name="frame" random="50">
 			<transform type="frame"/>
