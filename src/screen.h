@@ -71,8 +71,6 @@ void screenLock();
 void screenUnlock();
 void screenWait(int numberOfAnimationFrames);
 
-void screenIconify(void);
-
 const std::vector<std::string> &screenGetGemLayoutNames();
 const std::vector<std::string> &screenGetFilterNames();
 const std::vector<std::string> &screenGetLineOfSightStyles();

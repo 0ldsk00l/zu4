@@ -83,7 +83,6 @@ CXXSRCS=\
 		src/player.cpp \
 		src/portal.cpp \
 		src/progress_bar.cpp \
-		src/scale.cpp \
 		src/script.cpp \
 		src/screen.cpp \
 		src/screen_sdl.cpp \

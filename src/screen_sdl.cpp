@@ -2,43 +2,46 @@
  * $Id: screen_sdl.cpp 3087 2015-01-24 03:44:46Z darren_janeczek $
  */
 
-
-#include <algorithm>
-#include <functional>
-#include <vector>
-#include <map>
 #include <SDL.h>
 
-#include "config.h"
-#include "context.h"
-
-#include "cursors.h"
-
-#include "dungeonview.h"
 #include "error.h"
-#include "event.h"
 #include "image.h"
-#include "imagemgr.h"
-#include "intro.h"
-#include "savegame.h"
 #include "settings.h"
-#include "scale.h"
 #include "screen.h"
-#include "tileanim.h"
-#include "tileset.h"
 #include "u4.h"
 #include "u4_sdl.h"
-#include "u4file.h"
-#include "utils.h"
-
-using std::vector;
-
-Scaler filterScaler;
-
-extern bool verbose;
 
 void screenRefreshThreadInit();
 void screenRefreshThreadEnd();
+
+/**
+ * A simple row and column duplicating scaler. FIXME use OpenGL instead
+ */
+Image *scalePoint(Image *src, int scale, int n) {
+    int x, y, i, j;
+    Image *dest;
+
+    dest = Image::create(src->width() * scale, src->height() * scale, src->isIndexed(), Image::HARDWARE);
+    if (!dest)
+        return NULL;
+
+    if (dest->isIndexed())
+        dest->setPaletteFromImage(src);
+
+    for (y = 0; y < src->height(); y++) {
+        for (x = 0; x < src->width(); x++) {
+            for (i = 0; i < scale; i++) {
+                for (j = 0; j < scale; j++) {
+                    unsigned int index;
+                    src->getPixelIndex(x, y, index);
+                    dest->putPixelIndex(x * scale + j, y * scale + i, index);
+                }
+            }
+        }
+    }
+
+    return dest;
+}
 
 void screenInit_sys() {
     /* start SDL */
@@ -53,14 +56,7 @@ void screenInit_sys() {
     if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 0, SDL_HWSURFACE | SDL_ANYFORMAT | (settings.fullscreen ? SDL_FULLSCREEN : 0)))
         xu4_error(XU4_LOG_ERR, "unable to set video: %s", SDL_GetError());
 
-    if (verbose) {
-        char driver[32];
-        printf("screen initialized [screenInit()], using %s video driver\n", SDL_VideoDriverName(driver, sizeof(driver)));
-    }
-
     SDL_ShowCursor(SDL_DISABLE);
-
-    filterScaler = scalerGet("point");
 
     screenRefreshThreadInit();
 }
@@ -68,13 +64,6 @@ void screenInit_sys() {
 void screenDelete_sys() {
 	screenRefreshThreadEnd();
     u4_SDL_QuitSubSystem(SDL_INIT_VIDEO);
-}
-
-/**
- * Attempts to iconify the screen.
- */
-void screenIconify() {
-    SDL_WM_IconifyWindow();
 }
 
 /**
@@ -154,36 +143,27 @@ void screenRefreshThreadEnd() {
  */
 Image *screenScale(Image *src, int scale, int n, int filter) {
     Image *dest = NULL;
-	bool isTransparent;
-	unsigned int transparentIndex;
 	bool alpha = src->isAlphaOn();
 
 	if (n == 0)
 		n = 1;
 
-	isTransparent = src->getTransparentIndex(transparentIndex);
 	src->alphaOff();
 
-	while (filter && filterScaler && (scale % 2 == 0)) {
-		dest = (*filterScaler)(src, 2, n);
+	while (filter && (scale % 2 == 0)) {
+		dest = scalePoint(src, 2, n);
 		src = dest;
 		scale /= 2;
 	}
 
 	if (scale != 1)
-		dest = (*scalerGet("point"))(src, scale, n);
+		dest = scalePoint(src, scale, n);
 
 	if (!dest)
 		dest = Image::duplicate(src);
 
-	if (isTransparent)
-		dest->setTransparentIndex(transparentIndex);
-
 	if (alpha)
 		src->alphaOn();
-
-
-
 
     return dest;
 }
@@ -195,11 +175,7 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
 Image *screenScaleDown(Image *src, int scale) {
     int x, y;
     Image *dest;
-    bool isTransparent;
-    unsigned int transparentIndex;
     bool alpha = src->isAlphaOn();
-
-    isTransparent = src->getTransparentIndex(transparentIndex);
 
     src->alphaOff();
 
@@ -222,10 +198,7 @@ Image *screenScaleDown(Image *src, int scale) {
             src->getPixelIndex(x, y, index);                
             dest->putPixelIndex(x / scale, y / scale, index);
         }
-    }    
-
-    if (isTransparent)
-        dest->setTransparentIndex(transparentIndex);
+    }
 
     if (alpha)
         src->alphaOn();
