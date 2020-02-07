@@ -203,12 +203,9 @@ IntroController::IntroController() :
     gfxMenu.setTitle("Game Graphics Options", 0,0);
     //IntMenuItem(string text, short x, short y, int shortcutKey, int *val, int min, int max, int increment, menuOutputType output=MENU_OUTPUT_INT);
     gfxMenu.add(MI_GFX_SCHEME, new IntMenuItem							("Graphics Scheme    %d", 2, 2, /*'G'*/ 0, &settingsChanged.videoType, 0, 1, 1));
-    gfxMenu.add(MI_GFX_TILE_TRANSPARENCY, new BoolMenuItem              ("Transparency Hack  %s", 2, 4, /*'t'*/ 0, &settingsChanged.enhancementsOptions.u4TileTransparencyHack));
-    gfxMenu.add(MI_GFX_TILE_TRANSPARENCY_SHADOW_SIZE, new IntMenuItem   ("  Shadow Size:     %d", 2, 5, /*'s'*/ 9, &settingsChanged.enhancementsOptions.u4TrileTransparencyHackShadowBreadth, 0, 16, 1));
-    gfxMenu.add(MI_GFX_TILE_TRANSPARENCY_SHADOW_OPACITY, new IntMenuItem("  Shadow Opacity:  %d", 2, 6, /*'o'*/ 9, &settingsChanged.enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity, 8, 256, 8));
-    gfxMenu.add(MI_VIDEO_02, 				new IntMenuItem				("Gem Layout         %d",  2,  8,/*'e'*/  1, &settingsChanged.gemLayout, 0, 1, 1));
-    gfxMenu.add(MI_VIDEO_03, 			new IntMenuItem					("Line Of Sight      %d",  2,  9,/*'l'*/  0, &settingsChanged.lineOfSight, 0, 1, 1));
-    gfxMenu.add(MI_VIDEO_07,   		new BoolMenuItem					("Screen Shaking     %s",  2, 10,/*'k'*/ 8, &settingsChanged.screenShakes));
+    gfxMenu.add(MI_VIDEO_02, 				new IntMenuItem				("Gem Layout         %d",  2,  4,/*'e'*/  1, &settingsChanged.gemLayout, 0, 1, 1));
+    gfxMenu.add(MI_VIDEO_03, 			new IntMenuItem					("Line Of Sight      %d",  2,  5,/*'l'*/  0, &settingsChanged.lineOfSight, 0, 1, 1));
+    gfxMenu.add(MI_VIDEO_07,   		new BoolMenuItem					("Screen Shaking     %s",  2, 6,/*'k'*/ 8, &settingsChanged.screenShakes));
     gfxMenu.add(MI_GFX_RETURN,               "\010 Return to Video Options",              2,  12,/*'r'*/  2);
     gfxMenu.setClosesMenu(MI_GFX_RETURN);
 
@@ -226,8 +223,6 @@ IntroController::IntroController() :
     inputMenu.setTitle("Keyboard Options:", 0, 0);
     inputMenu.add(MI_INPUT_01,  new IntMenuItem("Repeat Delay        %4d msec", 2,  2,/*'d'*/  7, &settingsChanged.keydelay, 100, MAX_KEY_DELAY, 100));
     inputMenu.add(MI_INPUT_02,  new IntMenuItem("Repeat Interval     %4d msec", 2,  3,/*'i'*/  7, &settingsChanged.keyinterval, 10, MAX_KEY_INTERVAL, 10));
-    /* "Mouse Options:" is drawn in the updateInputMenu() function */
-    inputMenu.add(MI_INPUT_03, new BoolMenuItem("Mouse                %s",      2,  7,/*'m'*/  0, &settingsChanged.mouseEnabled));
     inputMenu.add(USE_SETTINGS,                 "\010 Use These Settings",      2, 11,/*'u'*/  2);
     inputMenu.add(CANCEL,                       "\010 Cancel",                  2, 12,/*'c'*/  2);
     inputMenu.addShortcutKey(CANCEL, ' ');
@@ -1214,14 +1209,6 @@ void IntroController::updateInputMenu(MenuEvent &event) {
 
             // re-initialize keyboard
             KeyHandler::setKeyRepeat(settingsChanged.keydelay, settingsChanged.keyinterval);
-
-            if (settings.mouseEnabled) {
-                SDL_ShowCursor(SDL_ENABLE);
-            }
-            else {
-                SDL_ShowCursor(SDL_DISABLE);
-            }
-    
             break;
         case CANCEL:
             // discard settings
@@ -1234,9 +1221,6 @@ void IntroController::updateInputMenu(MenuEvent &event) {
     // draw the extended background for all option screens
     backgroundArea.draw(BKGD_OPTIONS_TOP, 0, 0);
     backgroundArea.draw(BKGD_OPTIONS_BTM, 0, 120);
-
-    // after drawing the menu, extra menu text can be added here
-    extendedMenuArea.textAt(0, 5, "Mouse Options:");
 }
 
 void IntroController::updateSpeedMenu(MenuEvent &event) {

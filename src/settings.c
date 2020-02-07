@@ -104,15 +104,9 @@ bool xu4_settings_read() {
     settings.enhancementsOptions.smartEnterKey    = true;
     settings.enhancementsOptions.peerShowsObjects = false;
     settings.enhancementsOptions.u5combat         = false;
-    settings.enhancementsOptions.u4TileTransparencyHack = false;
-    settings.enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity = DEFAULT_SHADOW_PIXEL_OPACITY;
-    settings.enhancementsOptions.u4TrileTransparencyHackShadowBreadth = DEFAULT_SHADOW_PIXEL_SIZE;
 
     settings.innAlwaysCombat = 0;
     settings.campingAlwaysCombat = 0;
-
-    /* mouse defaults to on */
-    settings.mouseEnabled = 1;
     
     settingsFile = fopen(u4settings.filename, "rt");    
     if (!settingsFile)
@@ -205,18 +199,6 @@ bool xu4_settings_read() {
         else if (strstr(buffer, "campingAlwaysCombat=") == buffer)
             settings.campingAlwaysCombat = (int) strtoul(buffer + strlen("campingAlwaysCombat="), NULL, 0);    
 
-        /* mouse options */
-        else if (strstr(buffer, "mouseEnabled=") == buffer)
-            settings.mouseEnabled = (int) strtoul(buffer + strlen("mouseEnabled="), NULL, 0);
-
-        /* graphics enhancements options */
-        else if (strstr(buffer, "renderTileTransparency=") == buffer)
-            settings.enhancementsOptions.u4TileTransparencyHack = (int) strtoul(buffer + strlen("renderTileTransparency="), NULL, 0);
-        else if (strstr(buffer, "transparentTilePixelShadowOpacity=") == buffer)
-        	settings.enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity = (int) strtoul(buffer + strlen("transparentTilePixelShadowOpacity="), NULL, 0);
-        else if (strstr(buffer, "transparentTileShadowSize=") == buffer)
-        	settings.enhancementsOptions.u4TrileTransparencyHackShadowBreadth = (int) strtoul(buffer + strlen("transparentTileShadowSize="), NULL, 0);
-
         else
             xu4_error(XU4_LOG_WRN, "invalid line in settings file %s", buffer);
     }
@@ -275,11 +257,7 @@ bool xu4_settings_write() {
             "peerShowsObjects=%d\n"
             "u5combat=%d\n"
             "innAlwaysCombat=%d\n"
-            "campingAlwaysCombat=%d\n"
-            "mouseEnabled=%d\n"
-            "renderTileTransparency=%d\n"
-            "transparentTilePixelShadowOpacity=%d\n"
-            "transparentTileShadowSize=%d\n",
+            "campingAlwaysCombat=%d\n",
             settings.scale,
             settings.fullscreen,
             settings.videoType,
@@ -318,11 +296,7 @@ bool xu4_settings_write() {
             settings.enhancementsOptions.peerShowsObjects,
             settings.enhancementsOptions.u5combat,
             settings.innAlwaysCombat,
-            settings.campingAlwaysCombat,
-            settings.mouseEnabled,
-            settings.enhancementsOptions.u4TileTransparencyHack,
-            settings.enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity,
-            settings.enhancementsOptions.u4TrileTransparencyHackShadowBreadth);
+            settings.campingAlwaysCombat);
 
     fclose(settingsFile);
 

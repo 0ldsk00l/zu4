@@ -48,10 +48,6 @@ extern "C" {
 #define DEFAULT_TITLE_SPEED_RANDOM      150
 #define DEFAULT_TITLE_SPEED_OTHER       30
 
-//--Tile transparency stuff
-#define DEFAULT_SHADOW_PIXEL_OPACITY	64
-#define DEFAULT_SHADOW_PIXEL_SIZE		2
-
 typedef struct SettingsEnhancementOptions {
     bool activePlayer;
     bool u5spellMixing;
@@ -63,10 +59,6 @@ typedef struct SettingsEnhancementOptions {
     bool c64chestTraps;    
     bool smartEnterKey;
     bool peerShowsObjects;
-    bool u4TileTransparencyHack;
-    int	 u4TileTransparencyHackPixelShadowOpacity;
-    int	 u4TrileTransparencyHackShadowBreadth;
-
 } SettingsEnhancementOptions;
 
 typedef struct SettingsData {
@@ -84,7 +76,6 @@ typedef struct SettingsData {
     int                 innTime;
     int                 keydelay;
     int                 keyinterval;
-    bool                mouseEnabled;
     int                 musicVol;
     unsigned int        scale;
     bool                screenShakes;

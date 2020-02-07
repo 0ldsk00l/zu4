@@ -22,11 +22,11 @@ typedef struct RGBA {
 
 #define DARK_GRAY_HALO (RGBA){14,15,16,255}
 
-struct SubImage {
+typedef struct SubImage {
     string name;
     string srcImageName;
     int x, y, width, height;
-};
+} SubImage;
 
 #define IM_OPAQUE (unsigned int) 255
 #define IM_TRANSPARENT 0
@@ -55,7 +55,6 @@ public:
     void setPalette(const RGBA *colors, unsigned n_colors);
     void setPaletteFromImage(const Image *src);
     bool getTransparentIndex(unsigned int &index) const;
-    void performTransparencyHack(unsigned int colorValue, unsigned int numFrames, unsigned int currentFrameIndex, unsigned int haloWidth, unsigned int haloOpacityIncrementByPixelDistance);
     void setTransparentIndex(unsigned int index);
 
     bool setFontColor(ColorFG fg, ColorBG bg);
@@ -76,11 +75,6 @@ public:
 
     /* Will clear the image to the background color, and set the internal backgroundColor variable */
     void initializeToBackgroundColor(RGBA backgroundColor = DARK_GRAY_HALO);
-    /* Will make the pixels that match the background color disappear, with a blur halo */
-    void makeBackgroundColorTransparent(int haloSize = 0,  int shadowOpacity = 255);
-
-
-    //void finalizeAlphaSurface(RGBA * key = NULL);
 
     /* writing to image */
 

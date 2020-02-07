@@ -206,18 +206,6 @@ void TimedEventMgr::start() {
 EventHandler::EventHandler() : timer(eventTimerGranularity), updateScreen(NULL) {
 }
 
-static void handleMouseMotionEvent(const SDL_Event &event) {    
-    if (!settings.mouseEnabled)
-        return;
-
-    MouseArea *area;
-    area = eventHandler->mouseAreaForPoint(event.button.x, event.button.y);
-    if (area)
-        screenSetMouseCursor(area->cursor);
-    else
-        screenSetMouseCursor(MC_DEFAULT);
-}
-
 static void handleActiveEvent(const SDL_Event &event, updateScreenCallback updateScreen) {
     if (event.active.state & SDL_APPACTIVE) {            
         // application was previously iconified and is now being restored
@@ -227,23 +215,6 @@ static void handleActiveEvent(const SDL_Event &event, updateScreenCallback updat
             screenRedrawScreen();
         }                
     }
-}
-
-static void handleMouseButtonDownEvent(const SDL_Event &event, Controller *controller, updateScreenCallback updateScreen) {
-    int button = event.button.button - 1;
-    
-    if (!settings.mouseEnabled)
-        return;
-    
-    if (button > 2)
-        button = 0;
-    MouseArea *area = eventHandler->mouseAreaForPoint(event.button.x, event.button.y);
-    if (!area || area->command[button] == 0)
-        return;
-    controller->keyPressed(area->command[button]);            
-    if (updateScreen)
-        (*updateScreen)();
-    screenRedrawScreen();
 }
 
 static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, updateScreenCallback updateScreen) {
@@ -319,12 +290,7 @@ void EventHandler::sleep(unsigned int usec) {
             break;
         case SDL_KEYDOWN:
         case SDL_KEYUP:
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
             // Discard the event.
-            break;
-        case SDL_MOUSEMOTION:
-            handleMouseMotionEvent(event);
             break;
         case SDL_ACTIVEEVENT:
             handleActiveEvent(event, eventHandler->updateScreen);
@@ -359,14 +325,6 @@ void EventHandler::run() {
             break;
         case SDL_KEYDOWN:
             handleKeyDownEvent(event, getController(), updateScreen);
-            break;
-
-        case SDL_MOUSEBUTTONDOWN:
-            handleMouseButtonDownEvent(event, getController(), updateScreen);
-            break;
-
-        case SDL_MOUSEMOTION:
-            handleMouseMotionEvent(event);
             break;
 
         case SDL_USEREVENT:
@@ -449,19 +407,4 @@ KeyHandler *EventHandler::getKeyHandler() const {
 void EventHandler::setKeyHandler(KeyHandler kh) {
     while (popController() != NULL) {}
     pushKeyHandler(kh);
-}
-
-MouseArea* EventHandler::mouseAreaForPoint(int x, int y) {
-    int i;
-    MouseArea *areas = getMouseAreaSet();
-
-    if (!areas)
-        return NULL;
-
-    for (i = 0; areas[i].npoints != 0; i++) {
-        if (screenPointInMouseArea(x, y, &(areas[i]))) {
-            return &(areas[i]);
-        }
-    }
-    return NULL;
 }

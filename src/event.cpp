@@ -185,25 +185,6 @@ void TimedEventMgr::tick() {
 void TimedEventMgr::lock()      { locked = true; }
 void TimedEventMgr::unlock()    { locked = false; }
 
-void EventHandler::pushMouseAreaSet(MouseArea *mouseAreas) {
-    mouseAreaSets.push_front(mouseAreas);
-}
-
-void EventHandler::popMouseAreaSet() {
-    if (mouseAreaSets.size())
-        mouseAreaSets.pop_front();
-}
-
-/**
- * Get the currently active mouse area set off the top of the stack.
- */
-MouseArea* EventHandler::getMouseAreaSet() const {
-    if (mouseAreaSets.size())
-        return mouseAreaSets.front();
-    else
-        return NULL;
-}
-
 /**
  * @param maxlen the maximum length of the string
  * @param screenX the screen column where to begin input

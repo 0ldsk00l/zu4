@@ -45,7 +45,6 @@ using std::string;
 
 extern int eventTimerGranularity;
 
-struct _MouseArea;
 class EventHandler;
 class TextView;
 
@@ -258,10 +257,7 @@ typedef void(*updateScreenCallback)(void);
  * A class for handling game events. 
  */
 class EventHandler {
-public:    
-    /* Typedefs */
-    typedef std::list<_MouseArea*> MouseAreaList;    
-
+public:
     /* Constructors */
     EventHandler();    
 
@@ -294,18 +290,11 @@ public:
     KeyHandler *getKeyHandler() const;
     void setKeyHandler(KeyHandler kh);
 
-    /* Mouse area functions */
-    void pushMouseAreaSet(_MouseArea *mouseAreas);
-    void popMouseAreaSet();
-    _MouseArea* getMouseAreaSet() const;
-    _MouseArea* mouseAreaForPoint(int x, int y);
-
 protected:    
     static bool controllerDone;
     static bool ended;
     TimedEventMgr timer;
     std::vector<Controller *> controllers;
-    MouseAreaList mouseAreaSets;
     updateScreenCallback updateScreen;
 
 private:

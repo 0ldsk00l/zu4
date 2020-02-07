@@ -33,13 +33,9 @@
 
 using std::vector;
 
-SDL_Cursor *cursors[5];
 Scaler filterScaler;
 
-SDL_Cursor *screenInitCursor(const char * const xpm[]);
-
 extern bool verbose;
-
 
 void screenRefreshThreadInit();
 void screenRefreshThreadEnd();
@@ -62,17 +58,7 @@ void screenInit_sys() {
         printf("screen initialized [screenInit()], using %s video driver\n", SDL_VideoDriverName(driver, sizeof(driver)));
     }
 
-    /* enable or disable the mouse cursor */
-    if (settings.mouseEnabled) {
-        SDL_ShowCursor(SDL_ENABLE);
-        cursors[0] = SDL_GetCursor();
-        cursors[1] = screenInitCursor(w_xpm);
-        cursors[2] = screenInitCursor(n_xpm);
-        cursors[3] = screenInitCursor(e_xpm);
-        cursors[4] = screenInitCursor(s_xpm);
-    } else {
-        SDL_ShowCursor(SDL_DISABLE);
-    }
+    SDL_ShowCursor(SDL_DISABLE);
 
     filterScaler = scalerGet("point");
 
@@ -81,10 +67,6 @@ void screenInit_sys() {
 
 void screenDelete_sys() {
 	screenRefreshThreadEnd();
-    SDL_FreeCursor(cursors[1]);
-    SDL_FreeCursor(cursors[2]);
-    SDL_FreeCursor(cursors[3]);
-    SDL_FreeCursor(cursors[4]);
     u4_SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
@@ -249,51 +231,4 @@ Image *screenScaleDown(Image *src, int scale) {
         src->alphaOn();
 
     return dest;
-}
-
-/**
- * Create an SDL cursor object from an xpm.  Derived from example in
- * SDL documentation project.
- */
-#define CURSORSIZE 32
-SDL_Cursor *screenInitCursor(const char * const xpm[]) {
-    int i, row, col;
-    Uint8 data[(CURSORSIZE/8)*CURSORSIZE];
-    Uint8 mask[(CURSORSIZE/8)*CURSORSIZE];
-    int hot_x, hot_y;
-
-    i = -1;
-    for (row=0; row < CURSORSIZE; row++) {
-        for (col=0; col < CURSORSIZE; col++) {
-            if (col % 8) {
-                data[i] <<= 1;
-                mask[i] <<= 1;
-            } else {
-                i++;
-                data[i] = mask[i] = 0;
-            }
-            switch (xpm[4+row][col]) {
-            case 'X':
-                data[i] |= 0x01;
-                mask[i] |= 0x01;
-                break;
-            case '.':
-                mask[i] |= 0x01;
-                break;
-            case ' ':
-                break;
-            }
-        }
-    }
-    sscanf(xpm[4+row], "%d,%d", &hot_x, &hot_y);
-    return SDL_CreateCursor(data, mask, CURSORSIZE, CURSORSIZE, hot_x, hot_y);
-}
-
-void screenSetMouseCursor(MouseCursor cursor) {
-    static int current = 0;
-
-    if (cursor != current) {
-        SDL_SetCursor(cursors[cursor]);
-        current = cursor;
-    }
 }

@@ -140,9 +140,6 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     {
         tile->getImage()->drawOn(animated, 0, 0);
     }
-    animated->makeBackgroundColorTransparent();
-    //This process involving the background color is only required for drawing in the dungeon.
-    //It will not play well with semi-transparent graphics.
 
     /* scale is based on distance; 1 means half size, 2 regular, 4 means scale by 2x, etc. */
     if (dscale[distance] == 0)

@@ -61,23 +61,6 @@ class Coords;
 #define _NVC_ 0x86
 #define _NV__ 0x84
 
-typedef enum {
-    MC_DEFAULT,
-    MC_WEST,
-    MC_NORTH,
-    MC_EAST,
-    MC_SOUTH
-} MouseCursor;
-
-typedef struct _MouseArea {
-    int npoints;
-    struct {
-        int x, y;
-    } point[4];
-    MouseCursor cursor;
-    int command[3];
-} MouseArea;
-
 #define SCR_CYCLE_PER_SECOND 4
 
 void screenInit(void);
@@ -125,9 +108,6 @@ void screenHideCursor(void);
 void screenEnableCursor(void);
 void screenDisableCursor(void);
 void screenSetCursorPos(int x, int y);
-
-void screenSetMouseCursor(MouseCursor cursor);
-int screenPointInMouseArea(int x, int y, MouseArea *area);
 
 Image *screenScale(Image *src, int scale, int n, int filter);
 Image *screenScaleDown(Image *src, int scale);

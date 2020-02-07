@@ -455,20 +455,6 @@ void ImageMgr::fixupDungNS(Image *im, int prescale) {
 }
 
 /**
- * The FMTowns images have a different screen dimension. This moves them up to what xu4 is accustomed to.
- * south.
- */
-void ImageMgr::fixupFMTowns(Image *im, int prescale) {
-    for (int y = 20; y < im->height(); y++) {
-        for (int x = 0; x < im->width(); x++) {
-            unsigned int index;
-            im->getPixelIndex(x, y, index);
-			im->putPixelIndex(x, y-20, index);
-        }
-    }
-}
-
-/**
  * Returns information for the given image set.
  */
 ImageSet *ImageMgr::getSet(const string &setname) {
@@ -649,25 +635,6 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         break;
     case FIXUP_DUNGNS:
         fixupDungNS(unscaled, info->prescale);
-        break;
-    case FIXUP_FMTOWNSSCREEN:
-    	fixupFMTowns(unscaled, info->prescale);
-    	break;
-    case FIXUP_BLACKTRANSPARENCYHACK:
-        //Apply transparency shadow hack to ultima4 ega and vga upgrade classic graphics.
-    	Image *unscaled_original = unscaled;
-    	unscaled = Image::duplicate(unscaled);
-    	delete unscaled_original;
-    	if (settings.enhancements && settings.enhancementsOptions.u4TileTransparencyHack)
-    	{
-    		int transparency_shadow_size = settings.enhancementsOptions.u4TrileTransparencyHackShadowBreadth;
-    		int black_index = 0;
-    		int opacity = settings.enhancementsOptions.u4TileTransparencyHackPixelShadowOpacity;
-
-    		int frames = info->tiles;
-    		for (int f = 0; f < frames; ++f)
-    			unscaled->performTransparencyHack(black_index, frames, f, transparency_shadow_size, opacity);
-    	}
         break;
     }
 
