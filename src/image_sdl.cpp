@@ -27,6 +27,7 @@ Image *Image::create(int w, int h, bool indexed, Image::Type type) {
     im->w = w;
     im->h = h;
     im->indexed = indexed;
+    //printf("w: %d, h: %d, indexed: %d type: %x\n", w, h, indexed, type);
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     rmask = 0xff000000;

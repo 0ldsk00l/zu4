@@ -12,7 +12,6 @@
 #include "textcolor.h"
 
 struct SDL_Surface;
-typedef SDL_Surface *BackendSurface;
 
 using std::string;
 
@@ -127,7 +126,7 @@ public:
     int width() const { return w; }
     int height() const { return h; }
     bool isIndexed() const { return indexed; }
-    BackendSurface getSurface() { return surface; }
+    SDL_Surface* getSurface() { return surface; }
     void drawHighlighted();
 
 private:
@@ -140,7 +139,7 @@ private:
     Image(const Image&);
     const Image &operator=(const Image&);
 
-    BackendSurface surface;
+    SDL_Surface *surface;
 };
 
 #endif /* IMAGE_H */

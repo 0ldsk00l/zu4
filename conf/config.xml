@@ -16,8 +16,6 @@
   %tileset;
   <!ENTITY % tilemap SYSTEM "dtd/tilemap.dtd">
   %tilemap;
-  <!ENTITY % egaPalette SYSTEM "dtd/egaPalette.dtd">
-  %egaPalette;
   <!ENTITY % graphics SYSTEM "dtd/graphics.dtd">
   %graphics;
   <!ENTITY % maps SYSTEM "dtd/maps.dtd">
@@ -31,7 +29,6 @@
   <xi:include xmlns:xi="http://www.w3.org/2003/XInclude" href="maps.xml"/>  
   <xi:include xmlns:xi="http://www.w3.org/2003/XInclude" href="tileRules.xml"/>
   <xi:include xmlns:xi="http://www.w3.org/2003/XInclude" href="tilesets.xml"/>
-  <xi:include xmlns:xi="http://www.w3.org/2003/XInclude" href="egaPalette.xml"/>
   <xi:include xmlns:xi="http://www.w3.org/2003/XInclude" href="graphics.xml"/>
   <xi:include xmlns:xi="http://www.w3.org/2003/XInclude" href="music.xml"/>
   <xi:include xmlns:xi="http://www.w3.org/2003/XInclude" href="sound.xml"/>

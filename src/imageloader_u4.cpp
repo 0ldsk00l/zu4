@@ -21,9 +21,6 @@
  * 
  */
 
-#include <vector>
-
-#include "config.h"
 #include "error.h"
 #include "image.h"
 #include "imageloader_u4.h"
@@ -40,40 +37,34 @@ static RGBA *vgaPalette = NULL;
 static RGBA* loadBWPalette() {
     if (bwPalette == NULL) {
         bwPalette = new RGBA[2];
-
-        bwPalette[0].r = 0;
-        bwPalette[0].g = 0;
-        bwPalette[0].b = 0;
-
-        bwPalette[1].r = 255;
-        bwPalette[1].g = 255;
-        bwPalette[1].b = 255;
-
+        bwPalette[0] = { 0, 0, 0, 255 };
+        bwPalette[1] = { 255, 255, 255, 255 };
     }
     return bwPalette;
 }
 
-// Loads the basic EGA palette from egaPalette.xml
+// http://upload.wikimedia.org/wikipedia/commons/d/df/EGA_Table.PNG
 static RGBA* loadEgaPalette() {
     if (egaPalette == NULL) {
-        int index = 0;
-        const Config *config = Config::getInstance();
-        
-        egaPalette = new RGBA[16];
-
-        vector<ConfigElement> paletteConf = config->getElement("egaPalette").getChildren();
-        for (std::vector<ConfigElement>::iterator i = paletteConf.begin(); i != paletteConf.end(); i++) {
-
-            if (i->getName() != "color") { continue; }
-        
-            egaPalette[index].r = i->getInt("red");
-            egaPalette[index].g = i->getInt("green");
-            egaPalette[index].b = i->getInt("blue");
-
-            index++;
-        }
-    }
-    return egaPalette;
+		egaPalette = new RGBA[16];
+		egaPalette[0] = { 0, 0, 0, 255 }; // black
+		egaPalette[1] = { 0, 0, 170, 255 }; // blue
+		egaPalette[2] = { 0, 170, 0, 255 }; // green
+		egaPalette[3] = { 0, 170, 170, 255 }; // green-blue
+		egaPalette[4] = { 170, 0, 0, 255 }; // red
+		egaPalette[5] = { 170, 0, 170, 255 }; // purple
+		egaPalette[6] = { 170, 85, 0, 255 }; // brown
+		egaPalette[7] = { 170, 170, 170, 255 }; // light grey
+		egaPalette[8] = { 85, 85, 85, 255 }; // grey
+		egaPalette[9] = { 85, 85, 255, 255 }; // bright blue
+		egaPalette[10] = { 85, 255, 80, 255 }; // bright green
+		egaPalette[11] = { 85, 255, 255, 255 }; // bright blue-green
+		egaPalette[12] = { 255, 85, 85, 255 }; // bright red
+		egaPalette[13] = { 255, 85, 255, 255 }; // magenta
+		egaPalette[14] = { 255, 255, 85, 255 }; // yellow
+		egaPalette[15] = { 255, 255, 255, 255 }; // white
+	}
+	return egaPalette;
 }
 
 // Load the 256 color VGA palette from a file.
