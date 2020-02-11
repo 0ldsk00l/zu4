@@ -284,29 +284,30 @@ void EventHandler::sleep(unsigned int usec) {
     stopUserInput = true;
     while (stopUserInput) {
         SDL_Event event;
-        SDL_WaitEvent(&event);
-        switch (event.type) {
-        default:
-            break;
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
-            // Discard the event.
-            break;
-        case SDL_ACTIVEEVENT:
-            handleActiveEvent(event, eventHandler->updateScreen);
-            break;
-        case SDL_USEREVENT:
-            if (event.user.code == 0) {
-                eventHandler->getTimer()->tick();
-            } else if (event.user.code == 1) {
-                SDL_RemoveTimer(sleepingTimer);
-                stopUserInput = false;
-            }
-            break;
-        case SDL_QUIT:
-            ::exit(0);
-            break;
-        }
+        while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+			default: screenRedrawScreen();
+				break;
+			case SDL_KEYDOWN:
+			case SDL_KEYUP:
+				// Discard the event.
+				break;
+			case SDL_ACTIVEEVENT:
+				handleActiveEvent(event, eventHandler->updateScreen);
+				break;
+			case SDL_USEREVENT:
+				if (event.user.code == 0) {
+					eventHandler->getTimer()->tick();
+				} else if (event.user.code == 1) {
+					SDL_RemoveTimer(sleepingTimer);
+					stopUserInput = false;
+				}
+				break;
+			case SDL_QUIT:
+				::exit(0);
+				break;
+			}
+		}
     }
 }
 
@@ -318,27 +319,27 @@ void EventHandler::run() {
     while (!ended && !controllerDone) {
         SDL_Event event;
 
-        SDL_WaitEvent(&event);
+        while (SDL_PollEvent(&event)) {
+			switch (event.type) {
+			default: screenRedrawScreen();
+				break;
+			case SDL_KEYDOWN:
+				handleKeyDownEvent(event, getController(), updateScreen);
+				break;
 
-        switch (event.type) {
-        default:
-            break;
-        case SDL_KEYDOWN:
-            handleKeyDownEvent(event, getController(), updateScreen);
-            break;
+			case SDL_USEREVENT:
+				eventHandler->getTimer()->tick();
+				break;
 
-        case SDL_USEREVENT:
-            eventHandler->getTimer()->tick();
-            break;
+			case SDL_ACTIVEEVENT:
+				handleActiveEvent(event, updateScreen);
+				break;
 
-        case SDL_ACTIVEEVENT:
-            handleActiveEvent(event, updateScreen);
-            break;
-
-        case SDL_QUIT:
-            ::exit(0);
-            break;
-        }
+			case SDL_QUIT:
+				::exit(0);
+				break;
+			}
+		}
     }
 
 }

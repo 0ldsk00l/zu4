@@ -74,23 +74,25 @@ SDL_mutex *screenLockMutex = NULL;
 int frameDuration = 0;
 
 void screenLock() {
+	//SDL_LockSurface(SDL_GetVideoSurface());
 	SDL_mutexP(screenLockMutex);
 }
 
 void screenUnlock() {
+	//SDL_UnlockSurface(SDL_GetVideoSurface());
 	SDL_mutexV(screenLockMutex);
 }
 
 void screenRedrawScreen() {
 	screenLock();
-    SDL_UpdateRect(SDL_GetVideoSurface(), 0, 0, 0, 0);
+    SDL_Flip(SDL_GetVideoSurface());
     screenUnlock();
 }
 
 void screenRedrawTextArea(int x, int y, int width, int height) {
-	screenLock();
+	/*screenLock();
 	SDL_UpdateRect(SDL_GetVideoSurface(), x * CHAR_WIDTH * settings.scale, y * CHAR_HEIGHT * settings.scale, width * CHAR_WIDTH * settings.scale, height * CHAR_HEIGHT * settings.scale);
-	screenUnlock();
+	screenUnlock();*/
 }
 
 void screenWait(int numberOfAnimationFrames) {
@@ -132,7 +134,6 @@ void screenRefreshThreadEnd() {
 	SDL_WaitThread(screenRefreshThread, NULL);
 	screenRefreshThread = NULL;
 }
-
 
 /**
  * Scale an image up.  The resulting image will be scale * the
