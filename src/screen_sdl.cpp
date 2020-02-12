@@ -18,7 +18,7 @@ Image *scalePoint(Image *src, int scale, int n) {
     int x, y, i, j;
     Image *dest;
 
-    dest = Image::create(src->width() * scale, src->height() * scale, src->isIndexed(), Image::HARDWARE);
+    dest = Image::create(src->width() * scale, src->height() * scale, src->isIndexed());
     if (!dest)
         return NULL;
 
@@ -113,7 +113,7 @@ Image *screenScaleDown(Image *src, int scale) {
 
     src->alphaOff();
 
-    dest = Image::create(src->width() / scale, src->height() / scale, src->isIndexed(), Image::HARDWARE);
+    dest = Image::create(src->width() / scale, src->height() / scale, src->isIndexed());
     if (!dest) {
         return NULL;
     }

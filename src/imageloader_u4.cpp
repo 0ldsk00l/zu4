@@ -168,7 +168,7 @@ Image* xu4_u4raw_load(U4FILE *file, int width, int height, int bpp) {
         return NULL;
     }
 
-    Image *image = Image::create(width, height, bpp <= 8, Image::HARDWARE);
+    Image *image = Image::create(width, height, bpp <= 8);
     if (!image) {
         if (raw) { free(raw); }
         return NULL;
@@ -206,7 +206,7 @@ Image* xu4_u4rle_load(U4FILE *file, int width, int height, int bpp) {
         return NULL;
     }
 
-    Image *image = Image::create(width, height, bpp <= 8, Image::HARDWARE);
+    Image *image = Image::create(width, height, bpp <= 8);
     if (!image) {
         if (raw) { free(raw); }
         return NULL;
@@ -244,7 +244,7 @@ Image* xu4_u4lzw_load(U4FILE *file, int width, int height, int bpp) {
         return NULL;
     }
 
-    Image *image = Image::create(width, height, bpp <= 8, Image::HARDWARE);
+    Image *image = Image::create(width, height, bpp <= 8);
     if (!image) {
         if (raw) { free(raw); }
         return NULL;

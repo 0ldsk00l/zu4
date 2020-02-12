@@ -1584,8 +1584,7 @@ void IntroController::getTitleSourceData()
             titles[i].srcImage = Image::create(
                 titles[i].rw * info->prescale,
                 titles[i].rh * info->prescale,
-                false,
-                Image::HARDWARE );
+                false);
             if (titles[i].srcImage->isIndexed())
             	titles[i].srcImage->setPaletteFromImage(info->image);
 
@@ -1700,8 +1699,7 @@ void IntroController::getTitleSourceData()
         titles[i].destImage = Image::create(
             2 + (titles[i].prescaled ? SCALED(titles[i].rw) : titles[i].rw) * info->prescale ,
             2 + (titles[i].prescaled ? SCALED(titles[i].rh) : titles[i].rh) * info->prescale,
-            indexed,
-            Image::HARDWARE);
+            indexed);
         if (indexed)
             titles[i].destImage->setPaletteFromImage(info->image);
     }

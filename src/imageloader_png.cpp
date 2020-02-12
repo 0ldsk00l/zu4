@@ -44,7 +44,7 @@ static void setFromRawData(Image *image, int width, int height, unsigned char *r
 
 Image* xu4_png_load(const char *filename, int *x, int *y) {
 	unsigned char *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
-	Image *image = Image::create(*x, *y, 0, Image::HARDWARE);
+	Image *image = Image::create(*x, *y, 0);
 	setFromRawData(image, *x, *y, pixels);
 	stbi_image_free(pixels);
 	return image;

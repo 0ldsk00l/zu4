@@ -19,7 +19,7 @@ Image::Image() : surface(NULL) {
  * Image type determines whether to create a hardware (i.e. video ram)
  * or software (i.e. normal ram) image.
  */
-Image *Image::create(int w, int h, bool indexed, Image::Type type) {
+Image *Image::create(int w, int h, bool indexed) {
     Uint32 rmask, gmask, bmask, amask;
     Uint32 flags;
     Image *im = new Image;
@@ -27,7 +27,7 @@ Image *Image::create(int w, int h, bool indexed, Image::Type type) {
     im->w = w;
     im->h = h;
     im->indexed = indexed;
-    //printf("w: %d, h: %d, indexed: %d type: %x\n", w, h, indexed, type);
+    //printf("w: %d, h: %d, indexed: %d\n", w, h, indexed);
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     rmask = 0xff000000;
@@ -41,10 +41,7 @@ Image *Image::create(int w, int h, bool indexed, Image::Type type) {
     amask = 0xff000000;
 #endif
 
-    if (type == Image::HARDWARE)
-        flags = SDL_HWSURFACE | SDL_SRCALPHA;
-    else
-        flags = SDL_SWSURFACE | SDL_SRCALPHA;
+    flags = SDL_SWSURFACE | SDL_SRCALPHA;
 
     if (indexed)
         im->surface = SDL_CreateRGBSurface(flags, w, h, 8, rmask, gmask, bmask, amask);
@@ -79,7 +76,7 @@ Image *Image::createScreenImage() {
  */
 Image *Image::duplicate(Image *image) {    
     bool alphaOn = image->isAlphaOn();
-    Image *im = create(image->width(), image->height(), false, HARDWARE);
+    Image *im = create(image->width(), image->height(), false);
     
 //    if (image->isIndexed())
 //        im->setPaletteFromImage(image);
