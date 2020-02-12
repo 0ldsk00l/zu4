@@ -64,12 +64,8 @@ class Coords;
 #define SCR_CYCLE_PER_SECOND 4
 
 void screenInit(void);
-void screenRefreshTimerInit(void);
 void screenDelete(void);
 void screenReInit(void);
-void screenLock();
-void screenUnlock();
-void screenWait(int numberOfAnimationFrames);
 
 const std::vector<std::string> &screenGetGemLayoutNames();
 const std::vector<std::string> &screenGetFilterNames();

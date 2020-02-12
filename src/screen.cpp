@@ -405,9 +405,10 @@ bool screenTileUpdate(TileView *view, const Coords &coords, bool redraw)
 
 		if (redraw)
 		{
-			//screenRedrawMapArea();
+			screenRedrawMapArea();
+			return true;
 		}
-		return true;
+		//return true;
 	}
 	return false;
 }
@@ -420,7 +421,7 @@ bool screenTileUpdate(TileView *view, const Coords &coords, bool redraw)
 void screenUpdate(TileView *view, bool showmap, bool blackout) {
     xu4_assert(c != NULL, "context has not yet been initialized");
 
-    screenLock();
+    //screenLock();
 
     if (blackout)
     {
@@ -464,7 +465,7 @@ void screenUpdate(TileView *view, bool showmap, bool blackout) {
     screenUpdateMoons();
     screenUpdateWind();
 
-    screenUnlock();
+    //screenUnlock();
 }
 
 /**

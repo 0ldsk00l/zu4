@@ -19,7 +19,7 @@ extern "C" {
 #define MAX_SHAKE_INTERVAL              200
 #define MAX_VOLUME                      10
 
-#define DEFAULT_SCALE                   4
+#define DEFAULT_SCALE                   2
 #define DEFAULT_FULLSCREEN              0
 #define DEFAULT_VIDEO_TYPE              0 // 0 = EGA, 1 = VGA
 #define DEFAULT_GEM_LAYOUT              0 // 0 = Standard, 1 = Full Viewport
@@ -36,7 +36,6 @@ extern "C" {
 #define DEFAULT_BATTLE_SPEED            5
 #define DEFAULT_ENHANCEMENTS            1
 #define DEFAULT_CYCLES_PER_SECOND       4
-#define DEFAULT_ANIMATION_FRAMES_PER_SECOND 24
 #define DEFAULT_DEBUG                   0
 #define DEFAULT_VALIDATE_XML            0
 #define DEFAULT_SPELL_EFFECT_SPEED      10
@@ -71,7 +70,6 @@ typedef struct SettingsData {
     bool                filterMoveMessages;
     bool                fullscreen;
     int                 gameCyclesPerSecond;
-    int					screenAnimationFramesPerSecond;
     bool                innAlwaysCombat;
     int                 innTime;
     int                 keydelay;

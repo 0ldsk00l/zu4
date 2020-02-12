@@ -81,7 +81,7 @@ bool xu4_settings_read() {
     settings.battleSpeed           = DEFAULT_BATTLE_SPEED;
     settings.enhancements          = DEFAULT_ENHANCEMENTS;    
     settings.gameCyclesPerSecond   = DEFAULT_CYCLES_PER_SECOND;
-    settings.screenAnimationFramesPerSecond = DEFAULT_ANIMATION_FRAMES_PER_SECOND;
+    //settings.screenAnimationFramesPerSecond = DEFAULT_ANIMATION_FRAMES_PER_SECOND;
     settings.debug                 = DEFAULT_DEBUG;
     settings.battleDiff            = DEFAULT_BATTLE_DIFFICULTY;
     settings.validateXml           = DEFAULT_VALIDATE_XML;

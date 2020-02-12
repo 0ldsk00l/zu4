@@ -623,10 +623,9 @@ void GameController::finishTurn() {
         gameCheckHullIntegrity();
 
         /* update party stats */
-        //c->stats->setView(STATS_PARTY_OVERVIEW);
+        c->stats->setView(STATS_PARTY_OVERVIEW);
 
         screenUpdate(&this->mapArea, true, false);
-        screenWait(1);
 
         /* Creatures cannot spawn, move or attack while the avatar is on the balloon */        
         if (!c->party->isFlying()) {
@@ -660,7 +659,6 @@ void GameController::finishTurn() {
             return;
         } else {            
             screenMessage("Zzzzzz\n");
-            screenWait(4);
         }
     }
 
@@ -687,7 +685,7 @@ void GameController::finishTurn() {
 
     /* draw a prompt */
     screenPrompt();
-    //screenRedrawTextArea(TEXT_AREA_X, TEXT_AREA_Y, TEXT_AREA_W, TEXT_AREA_H);
+    screenRedrawTextArea(TEXT_AREA_X, TEXT_AREA_Y, TEXT_AREA_W, TEXT_AREA_H);
 }
 
 /**
@@ -697,10 +695,12 @@ void GameController::finishTurn() {
  */
 void GameController::flashTile(const Coords &coords, MapTile tile, int frames) {
     c->location->map->annotations->add(coords, tile, true);
+    
+    int msecPerFrame = frames * 33;
 
     screenTileUpdate(&game->mapArea, coords);
+    EventHandler::wait_msecs(msecPerFrame);
 
-    screenWait(frames);
     c->location->map->annotations->remove(coords, tile);
 
     screenTileUpdate(&game->mapArea, coords, false);

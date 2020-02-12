@@ -11,9 +11,6 @@
 #include "u4.h"
 #include "u4_sdl.h"
 
-void screenRefreshThreadInit();
-void screenRefreshThreadEnd();
-
 /**
  * A simple row and column duplicating scaler. FIXME use OpenGL instead
  */
@@ -53,86 +50,22 @@ void screenInit_sys() {
 
     SDL_WM_SetCaption("Ultima IV", NULL);
 
-    if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 0, SDL_HWSURFACE | SDL_ANYFORMAT | (settings.fullscreen ? SDL_FULLSCREEN : 0)))
+    if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 0, SDL_HWSURFACE | SDL_ANYFORMAT))
         xu4_error(XU4_LOG_ERR, "unable to set video: %s", SDL_GetError());
 
     SDL_ShowCursor(SDL_DISABLE);
-
-    screenRefreshThreadInit();
 }
 
 void screenDelete_sys() {
-	screenRefreshThreadEnd();
     u4_SDL_QuitSubSystem(SDL_INIT_VIDEO);
 }
 
-/**
- * Force a redraw.
- */
-
-SDL_mutex *screenLockMutex = NULL;
-int frameDuration = 0;
-
-void screenLock() {
-	//SDL_LockSurface(SDL_GetVideoSurface());
-	SDL_mutexP(screenLockMutex);
-}
-
-void screenUnlock() {
-	//SDL_UnlockSurface(SDL_GetVideoSurface());
-	SDL_mutexV(screenLockMutex);
-}
-
 void screenRedrawScreen() {
-	screenLock();
     SDL_Flip(SDL_GetVideoSurface());
-    screenUnlock();
 }
 
 void screenRedrawTextArea(int x, int y, int width, int height) {
-	/*screenLock();
 	SDL_UpdateRect(SDL_GetVideoSurface(), x * CHAR_WIDTH * settings.scale, y * CHAR_HEIGHT * settings.scale, width * CHAR_WIDTH * settings.scale, height * CHAR_HEIGHT * settings.scale);
-	screenUnlock();*/
-}
-
-void screenWait(int numberOfAnimationFrames) {
-	SDL_Delay(numberOfAnimationFrames * frameDuration);
-}
-
-bool continueScreenRefresh = true;
-SDL_Thread *screenRefreshThread = NULL;
-
-int screenRefreshThreadFunction(void *unused) {
-
-	while (continueScreenRefresh) {
-		SDL_Delay(frameDuration);
-		screenRedrawScreen();
-	}
-	return 0;
-}
-
-void screenRefreshThreadInit() {
-	screenLockMutex = SDL_CreateMutex();;
-
-	frameDuration = 1000 / settings.screenAnimationFramesPerSecond;
-
-	continueScreenRefresh = true;
-	if (screenRefreshThread) {
-		xu4_error(XU4_LOG_WRN, "Screen refresh thread already exists.");
-		return;
-	}
-
-	screenRefreshThread = SDL_CreateThread(screenRefreshThreadFunction, NULL);
-	if (!screenRefreshThread) {
-		xu4_error(XU4_LOG_WRN, SDL_GetError());
-		return;
-	}
-}
-
-void screenRefreshThreadEnd() {
-	continueScreenRefresh = false;
-	SDL_WaitThread(screenRefreshThread, NULL);
-	screenRefreshThread = NULL;
 }
 
 /**
