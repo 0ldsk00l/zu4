@@ -1,6 +1,5 @@
 /*
  * music.c
- * Copyright (C) 2012 Daniel Santos
  * Copyright (C) 2019-2020 R. Danbrook
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -31,10 +30,11 @@
 #include "xmlparse.h"
 
 static int curtrack = TRACK_NONE;
+static int prevtrack = TRACK_NONE;
 static bool music_enabled = false;
 
 static SDL_AudioSpec *spec, *obtained;
-static SDL_mutex* audio_mutex;
+static SDL_mutex *audio_mutex;
 
 static cm_Source *track[TRACK_MAX];
 
@@ -62,6 +62,7 @@ void xu4_music_stop() {
 	if (curtrack && (cm_get_state(track[curtrack]) != CM_STATE_STOPPED)) {
 		cm_stop(track[curtrack]);
 	}
+	prevtrack = curtrack;
 	curtrack = TRACK_NONE;
 }
 
@@ -70,7 +71,7 @@ void xu4_music_fadeout(int msecs) { // Implement later
 }
 
 void xu4_music_fadein(int msecs, bool loadFromMap) { // Implement later
-	xu4_music_play(curtrack);
+	xu4_music_play(prevtrack);
 }
 
 void xu4_music_vol(double volume) {
