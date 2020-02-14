@@ -93,15 +93,6 @@ static void setFromRawData(Image *image, int width, int height, int bpp, unsigne
         }
         break;
 
-    case 4:
-        for (y = 0; y < height; y++) {
-            for (x = 0; x < width; x+=2) {
-                image->putPixelIndex(x, y, rawData[(y * width + x) / 2] >> 4);
-                image->putPixelIndex(x + 1, y, rawData[(y * width + x) / 2] & 0x0f);
-            }
-        }
-        break;
-
     case 1:
         for (y = 0; y < height; y++) {
             for (x = 0; x < width; x+=8) {
@@ -146,142 +137,67 @@ static void xu4_u4raw_egaconv(int w, int h, uint8_t *in, uint32_t *out, bool pal
 	}
 }
 
-// Load raw image and apply standard U4 16 or 256 color palette.
-Image* xu4_u4raw_load(U4FILE *file, int width, int height, int bpp) {
-    if (width == -1 || height == -1 || bpp == -1) {
-          xu4_error(XU4_LOG_ERR, "dimensions not set for u4raw image");
-    }
+Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
+	if (width == -1 || height == -1 || bpp == -1) {
+		  xu4_error(XU4_LOG_ERR, "dimensions not set for image");
+	}
 
-    xu4_assert(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
-
-    long rawLen = file->length();
-    unsigned char *raw = (unsigned char *)malloc(rawLen);
-    uint32_t *converted = (uint32_t*)malloc(width * height * sizeof(uint32_t));
-    file->read(raw, 1, rawLen);
-
-    long requiredLength = (width * height * bpp / 8);
-    if (rawLen < requiredLength) {
-        if (raw) { free(raw); }
-        xu4_error(XU4_LOG_WRN, "u4Raw Image of size %ld does not fit anticipated size %ld", rawLen, requiredLength);
-        return NULL;
-    }
-
-    Image *image = Image::create(width, height, bpp <= 8 && bpp != 4);
-    if (!image) {
-        if (raw) { free(raw); }
-        if (converted) { free(converted); }
-        return NULL;
-    }
-
-    if (bpp == 8) { // VGA
+	xu4_assert(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
+	
+	unsigned char *raw = NULL;
+	unsigned char *compressed = NULL;
+	uint32_t *converted = (uint32_t*)malloc(width * height * sizeof(uint32_t));
+	
+	long rawLen;
+	long compressedLen;
+	
+	if (type == XU4_IMG_RAW) {
+		rawLen = file->length();
+		raw = (unsigned char *)malloc(rawLen);
+		file->read(raw, 1, rawLen);
+	}
+	else if (type == XU4_IMG_RLE) {
+		compressedLen = file->length();
+		compressed = (unsigned char *) malloc(compressedLen);
+		file->read(compressed, 1, compressedLen);
+		rawLen = rleDecompressMemory(compressed, compressedLen, (void **) &raw);
+		free(compressed);
+	}
+	else if (type == XU4_IMG_LZW) {
+		compressedLen = file->length();
+		compressed = (unsigned char *) malloc(compressedLen);
+		file->read(compressed, 1, compressedLen);
+		rawLen = decompress_u4_memory(compressed, compressedLen, (void **) &raw);
+		free(compressed);
+	}
+	
+	if (rawLen != (width * height * bpp / 8)) {
+		if (raw) { free(raw); }
+		return NULL;
+	}
+	
+	Image *image = Image::create(width, height, bpp <= 8 && bpp != 4);
+	if (!image) {
+		if (raw) { free(raw); }
+		if (converted) { free(converted); }
+		return NULL;
+	}
+	
+	if (bpp == 8) { // VGA
 		image->setPalette(loadVgaPalette(), 256);
 		setFromRawData(image, width, height, bpp, raw);
 	}
-    else if (bpp == 4) { // EGA
+	else if (bpp == 4) { // EGA
 		xu4_u4raw_egaconv(width, height, raw, converted, true);
 		setFromRawData(image, width, height, 32, (unsigned char*)converted);
 	}
-    else if (bpp == 1) { // BW
+	else if (bpp == 1) { // BW
 		image->setPalette(loadBWPalette(), 2);
 		setFromRawData(image, width, height, bpp, raw);
 	}
-
-    free(raw);
-    free(converted);
-
-    return image;
-}
-
-// Load rle-compressed image and apply standard U4 16 or 256 color palette
-Image* xu4_u4rle_load(U4FILE *file, int width, int height, int bpp) {
-    if (width == -1 || height == -1 || bpp == -1) {
-          xu4_error(XU4_LOG_ERR, "dimensions not set for u4rle image");
-    }
-
-    xu4_assert(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
-
-    long compressedLen = file->length();
-    unsigned char *compressed = (unsigned char *) malloc(compressedLen);
-    file->read(compressed, 1, compressedLen);
-
-    unsigned char *raw = NULL;
-    long rawLen = rleDecompressMemory(compressed, compressedLen, (void **) &raw);
-    free(compressed);
-    uint32_t *converted = (uint32_t*)malloc(width * height * sizeof(uint32_t));
-
-    if (rawLen != (width * height * bpp / 8)) {
-        if (raw) { free(raw); }
-        return NULL;
-    }
-
-    Image *image = Image::create(width, height, bpp <= 8 && bpp != 4);
-    if (!image) {
-        if (raw) { free(raw); }
-        return NULL;
-    }
-
-    if (bpp == 8) { // VGA
-		image->setPalette(loadVgaPalette(), 256);
-		setFromRawData(image, width, height, bpp, raw);
-	}
-    else if (bpp == 4) { // EGA
-		xu4_u4raw_egaconv(width, height, raw, converted, true);
-		setFromRawData(image, width, height, 32, (unsigned char*)converted);
-	}
-    else if (bpp == 1) { // BW
-		image->setPalette(loadBWPalette(), 2);
-		setFromRawData(image, width, height, bpp, raw);
-	}
-
-    free(raw);
-    free(converted);
-
-    return image;
-}
-
-// Load lzw-compressed image and apply standard U4 16 or 256 color palette
-Image* xu4_u4lzw_load(U4FILE *file, int width, int height, int bpp) {
-    if (width == -1 || height == -1 || bpp == -1) {
-          xu4_error(XU4_LOG_ERR, "dimensions not set for u4lzw image");
-    }
-
-    xu4_assert(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
-
-    long compressedLen = file->length();
-    unsigned char *compressed = (unsigned char *) malloc(compressedLen);
-    file->read(compressed, 1, compressedLen);
-
-    unsigned char *raw = NULL;
-    long rawLen = decompress_u4_memory(compressed, compressedLen, (void **) &raw);
-    free(compressed);
-    uint32_t *converted = (uint32_t*)malloc(width * height * sizeof(uint32_t));
-
-    if (rawLen != (width * height * bpp / 8)) {
-        if (raw) { free(raw); }
-        return NULL;
-    }
-
-    Image *image = Image::create(width, height, bpp <= 8 && bpp != 4);
-    if (!image) {
-        if (raw) { free(raw); }
-        return NULL;
-    }
-
-    if (bpp == 8) { // VGA
-		image->setPalette(loadVgaPalette(), 256);
-		setFromRawData(image, width, height, bpp, raw);
-	}
-    else if (bpp == 4) { // EGA
-		xu4_u4raw_egaconv(width, height, raw, converted, true);
-		setFromRawData(image, width, height, 32, (unsigned char*)converted);
-	}
-    else if (bpp == 1) { // BW
-		image->setPalette(loadBWPalette(), 2);
-		setFromRawData(image, width, height, bpp, raw);
-	}
-
-    free(raw);
-    free(converted);
-
-    return image;
+	
+	free(raw);
+	free(converted);
+	
+	return image;
 }
