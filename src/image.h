@@ -40,24 +40,16 @@ typedef struct SubImage {
  */
 class Image {
 public:
-    static Image *create(int w, int h, bool indexed);
+    static Image *create(int w, int h);
     static Image *createScreenImage();
     static Image *duplicate(Image *image);
     ~Image();
-
-    /* palette handling */
-    void setPalette(const RGBA *colors, unsigned n_colors);
-    void setPaletteFromImage(const Image *src);
-    bool getTransparentIndex(unsigned int &index) const;
-    void setTransparentIndex(unsigned int index);
 
     bool setFontColor(ColorFG fg, ColorBG bg);
     bool setFontColorFG(ColorFG fg);
     bool setFontColorBG(ColorBG bg);
 
     RGBA getPaletteColor(int index);       // returns the color of the specified palette index
-    bool setPaletteIndex(unsigned int index, RGBA color);  // sets the specified palette index to the specified RGB color
-    int getPaletteIndex(RGBA color);              // returns the palette index of the specified RGB color
     RGBA setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = IM_OPAQUE);
 
 
@@ -120,13 +112,12 @@ public:
 
     int width() const { return w; }
     int height() const { return h; }
-    bool isIndexed() const { return indexed; }
+
     SDL_Surface* getSurface() { return surface; }
     void drawHighlighted();
 
 private:
     unsigned int w, h;
-    bool indexed;
     RGBA backgroundColor;
     Image();                    /* use create method to construct images */
 

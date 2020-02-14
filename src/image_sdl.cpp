@@ -19,15 +19,13 @@ Image::Image() : surface(NULL) {
  * Image type determines whether to create a hardware (i.e. video ram)
  * or software (i.e. normal ram) image.
  */
-Image *Image::create(int w, int h, bool indexed) {
+Image *Image::create(int w, int h) {
     Uint32 rmask, gmask, bmask, amask;
     Uint32 flags;
     Image *im = new Image;
 
     im->w = w;
     im->h = h;
-    im->indexed = indexed;
-    //printf("w: %d, h: %d, indexed: %d\n", w, h, indexed);
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     rmask = 0xff000000;
@@ -43,10 +41,7 @@ Image *Image::create(int w, int h, bool indexed) {
 
     flags = SDL_SWSURFACE | SDL_SRCALPHA;
 
-    if (indexed)
-        im->surface = SDL_CreateRGBSurface(flags, w, h, 8, rmask, gmask, bmask, amask);
-    else
-        im->surface = SDL_CreateRGBSurface(flags, w, h, 32, rmask, gmask, bmask, amask);
+    im->surface = SDL_CreateRGBSurface(flags, w, h, 32, rmask, gmask, bmask, amask);
 
     if (!im->surface) {
         delete im;
@@ -66,8 +61,6 @@ Image *Image::createScreenImage() {
     xu4_assert(screen->surface != NULL, "SDL_GetVideoSurface() returned a NULL screen surface!");
     screen->w = screen->surface->w;
     screen->h = screen->surface->h;
-    screen->indexed = screen->surface->format->palette != NULL;
-
     return screen;
 }
 
@@ -76,10 +69,7 @@ Image *Image::createScreenImage() {
  */
 Image *Image::duplicate(Image *image) {    
     bool alphaOn = image->isAlphaOn();
-    Image *im = create(image->width(), image->height(), false);
-    
-//    if (image->isIndexed())
-//        im->setPaletteFromImage(image);
+    Image *im = create(image->width(), image->height());
 
     /* Turn alpha off before blitting to non-screen surfaces */
     if (alphaOn)
@@ -102,67 +92,11 @@ Image::~Image() {
     SDL_FreeSurface(surface);
 }
 
-/**
- * Sets the palette
- */
-void Image::setPalette(const RGBA *colors, unsigned n_colors) {
-    xu4_assert(indexed, "imageSetPalette called on non-indexed image");
-    
-    SDL_Color *sdlcolors = new SDL_Color[n_colors];
-    for (unsigned i = 0; i < n_colors; i++) {
-        sdlcolors[i].r = colors[i].r;
-        sdlcolors[i].g = colors[i].g;
-        sdlcolors[i].b = colors[i].b;
-    }
-
-    SDL_SetColors(surface, sdlcolors, 0, n_colors);
-
-    delete [] sdlcolors;
-}
-
-/**
- * Copies the palette from another image.
- */
-void Image::setPaletteFromImage(const Image *src) {
-    return; // Hack to fix VGA while transitioning away from indexed images
-    xu4_assert(indexed && src->indexed, "imageSetPaletteFromImage called on non-indexed image");
-    memcpy(surface->format->palette->colors, 
-           src->surface->format->palette->colors, 
-           sizeof(SDL_Color) * src->surface->format->palette->ncolors);
-}
 
 // returns the color of the specified palette index
 RGBA Image::getPaletteColor(int index) {
 	RGBA color = {0, 0, 0, 0};// = RGBA(0, 0, 0, 0);
-
-    if (indexed)
-    {
-        color.r = surface->format->palette->colors[index].r;
-        color.g = surface->format->palette->colors[index].g;
-        color.b = surface->format->palette->colors[index].b;
-        color.a = IM_OPAQUE;
-    }
     return color;
-}
-
-/* returns the palette index of the specified RGB color */
-int Image::getPaletteIndex(RGBA color) {
-    if (!indexed)
-        return -1;
-
-    for (int i = 0; i < surface->format->palette->ncolors; i++)
-    {
-        if ( (surface->format->palette->colors[i].r == color.r)
-            && (surface->format->palette->colors[i].g == color.g)
-            && (surface->format->palette->colors[i].b == color.b) )
-        {
-            return i;
-        }
-
-    }
-
-    // return the proper palette index for the specified color
-    return -1;
 }
 
 RGBA Image::setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -178,7 +112,7 @@ bool Image::setFontColor(ColorFG fg, ColorBG bg) {
 
 /* sets the specified font colors */
 bool Image::setFontColorFG(ColorFG fg) {
-    switch (fg) {
+    /*switch (fg) {
         case FG_GREY:
             if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(153,153,153))) return false;
             if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(102,102,102))) return false;
@@ -213,13 +147,13 @@ bool Image::setFontColorFG(ColorFG fg) {
             if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(255,255,255))) return false;
             if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(204,204,204))) return false;
             if (!setPaletteIndex(TEXT_FG_SHADOW_INDEX,    setColor(68,68,68))) return false;
-    }
+    }*/
     return true;
 }
 
 /* sets the specified font colors */
 bool Image::setFontColorBG(ColorBG bg) {
-    switch (bg) {
+    /*switch (bg) {
         case BG_BRIGHT:
             if (!setPaletteIndex(TEXT_BG_INDEX, setColor(0,0,102)))
                 return false;
@@ -227,35 +161,12 @@ bool Image::setFontColorBG(ColorBG bg) {
         default:
             if (!setPaletteIndex(TEXT_BG_INDEX, setColor(0,0,0)))
                 return false;
-    }
-    return true;
-}
-
-/* sets the specified palette index to the specified RGB color */
-bool Image::setPaletteIndex(unsigned int index, RGBA color) {
-    if (!indexed)
-        return false;
-
-    surface->format->palette->colors[index].r = color.r;
-    surface->format->palette->colors[index].g = color.g;
-    surface->format->palette->colors[index].b = color.b;
-
-    // success
-    return true;
-}
-
-bool Image::getTransparentIndex(unsigned int &index) const {
-    if (!indexed || (surface->flags & SDL_SRCCOLORKEY) == 0)
-        return false;
-        
-    index = surface->format->colorkey;
+    }*/
     return true;
 }
 
 void Image::initializeToBackgroundColor(RGBA backgroundColor)
 {
-	if (indexed)
-		throw "Not supported"; //TODO, this better
 	this->backgroundColor = backgroundColor;
     this->fillRect(0,0,this->w,this->h,
     		backgroundColor.r,
@@ -281,15 +192,6 @@ void Image::alphaOff()
 
 void Image::putPixel(int x, int y, int r, int g, int b, int a) {
     putPixelIndex(x, y, SDL_MapRGBA(surface->format, Uint8(r), Uint8(g), Uint8(b), Uint8(a)));
-}
-
-void Image::setTransparentIndex(unsigned int index)//, unsigned int numFrames, unsigned int currentFrameIndex, int shadowOutlineWidth, int shadowOpacityOverride)
-{
-    if (indexed) {
-        SDL_SetColorKey(surface, SDL_SRCCOLORKEY, index);
-    } else {
-    	//xu4_error(XU4_LOG_WRN, "Setting transparent index for non indexed");
-    }
 }
 
 /**

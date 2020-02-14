@@ -23,7 +23,6 @@ bool ImageInfo::hasBlackBackground()
 	return this->filetype == "image/x-u4raw";
 }
 
-
 class ImageSet {
 public:
     ~ImageSet();
@@ -323,15 +322,6 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
         borderInfo->image = NULL;
         borderInfo = imageMgr->get(BKGD_BORDERS, true);
 
-        im->setPaletteFromImage(borderInfo->image);
-
-        // update the color of "and" and "present"
-        im->setPaletteIndex(15, im->setColor(226, 226, 255));
-
-        // update the color of "Origin Systems, Inc."
-        im->setPaletteIndex(9, im->setColor(129, 129, 255));
-
-        //borderInfo->image->save("border.png");
         // update the border appearance
         borderInfo->image->alphaOff();
         borderInfo->image->drawSubRectOn(im, 0, 96, 0, 0, 16, 56);
@@ -606,9 +596,6 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 
     if (unscaled == NULL)
         return NULL;
-
-    if (info->transparentIndex != -1)
-        unscaled->setTransparentIndex(info->transparentIndex);
 
     if (info->prescale == 0)
         info->prescale = 1;

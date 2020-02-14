@@ -110,8 +110,6 @@ public:
     U4FILE * getImageFile(ImageInfo *info);
     bool imageExists(ImageInfo * info);
 
-
-
 private:
     ImageMgr();
     ~ImageMgr();

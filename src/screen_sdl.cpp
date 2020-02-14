@@ -18,12 +18,9 @@ Image *scalePoint(Image *src, int scale, int n) {
     int x, y, i, j;
     Image *dest;
 
-    dest = Image::create(src->width() * scale, src->height() * scale, src->isIndexed());
+    dest = Image::create(src->width() * scale, src->height() * scale);
     if (!dest)
         return NULL;
-
-    if (dest->isIndexed())
-        dest->setPaletteFromImage(src);
 
     for (y = 0; y < src->height(); y++) {
         for (x = 0; x < src->width(); x++) {
@@ -113,17 +110,13 @@ Image *screenScaleDown(Image *src, int scale) {
 
     src->alphaOff();
 
-    dest = Image::create(src->width() / scale, src->height() / scale, src->isIndexed());
+    dest = Image::create(src->width() / scale, src->height() / scale);
     if (!dest) {
         return NULL;
     }
 
 	if (!dest) {
 		dest = Image::duplicate(src);
-    }
-
-    if (dest->isIndexed()) {
-        dest->setPaletteFromImage(src);
     }
 
     for (y = 0; y < src->height(); y+=scale) {

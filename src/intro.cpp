@@ -1583,10 +1583,7 @@ void IntroController::getTitleSourceData()
             // create a place to store the source image
             titles[i].srcImage = Image::create(
                 titles[i].rw * info->prescale,
-                titles[i].rh * info->prescale,
-                false);
-            if (titles[i].srcImage->isIndexed())
-            	titles[i].srcImage->setPaletteFromImage(info->image);
+                titles[i].rh * info->prescale);
 
             // get the source image
             info->image->drawSubRectOn(
@@ -1672,8 +1669,6 @@ void IntroController::getTitleSourceData()
 
                 Image *scaled;      // the scaled and filtered image
                 scaled = screenScale(titles[i].srcImage, settings.scale / info->prescale, 1, 1);
-                if (transparentIndex >= 0)
-                	scaled->setTransparentIndex(transparentIndex);
 
                 titles[i].prescaled = true;
                 delete titles[i].srcImage;
@@ -1694,14 +1689,10 @@ void IntroController::getTitleSourceData()
         if (titles[i].srcImage)
             titles[i].srcImage->alphaOff();
 
-        bool indexed = info->image->isIndexed() && titles[i].method != MAP;
         // create the initial animation frame
         titles[i].destImage = Image::create(
             2 + (titles[i].prescaled ? SCALED(titles[i].rw) : titles[i].rw) * info->prescale ,
-            2 + (titles[i].prescaled ? SCALED(titles[i].rh) : titles[i].rh) * info->prescale,
-            indexed);
-        if (indexed)
-            titles[i].destImage->setPaletteFromImage(info->image);
+            2 + (titles[i].prescaled ? SCALED(titles[i].rh) : titles[i].rh) * info->prescale);
     }
 
     // turn alpha back on
@@ -1711,10 +1702,7 @@ void IntroController::getTitleSourceData()
     }
 
     // scale the original image now
-    Image *scaled = screenScale(info->image,
-                                settings.scale / info->prescale,
-                                info->image->isIndexed(),
-                                1);
+    Image *scaled = screenScale(info->image, settings.scale / info->prescale, false, 1);
     delete info->image;
     info->image = scaled;
 }
@@ -2058,7 +2046,6 @@ void IntroController::drawTitle()
     else
         scaled = screenScale(title->destImage, settings.scale, 1, 1);
 
-    scaled->setTransparentIndex(transparentIndex);
     scaled->drawSubRect(
         SCALED(title->rx),    // dest x, y
         SCALED(title->ry),

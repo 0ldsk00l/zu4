@@ -144,7 +144,7 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 		return NULL;
 	}
 	
-	Image *image = Image::create(width, height, false);
+	Image *image = Image::create(width, height);
 	if (!image) {
 		if (raw) { free(raw); }
 		if (converted) { free(converted); }
@@ -168,7 +168,7 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 
 Image* xu4_png_load(const char *filename, int *x, int *y) {
 	unsigned char *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
-	Image *image = Image::create(*x, *y, 0);
+	Image *image = Image::create(*x, *y);
 	setFromRawData(image, *x, *y, pixels);
 	stbi_image_free(pixels);
 	return image;
