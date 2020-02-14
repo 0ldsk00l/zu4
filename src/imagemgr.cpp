@@ -590,6 +590,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 		else if (filetype == "image/x-u4lzw") {
 			//printf("u4lzw - w: %d, h: %d, d: %d - %s\n", info->width, info->height, info->depth, info->filename.c_str());
 			unscaled = xu4_u4lzw_load(file, info->width, info->height, info->depth);
+			if (info->depth == 4) info->depth = 32;
 			if (info->width == -1) {
 				info->width = unscaled->width();
 				info->height = unscaled->height();
@@ -598,6 +599,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 		else if (filetype == "image/x-u4rle") {
 			//printf("u4rle - w: %d, h: %d, d: %d - %s\n", info->width, info->height, info->depth, info->filename.c_str());
 			unscaled = xu4_u4rle_load(file, info->width, info->height, info->depth);
+			if (info->depth == 4) info->depth = 32;
 			if (info->width == -1) {
 				info->width = unscaled->width();
 				info->height = unscaled->height();

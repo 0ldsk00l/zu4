@@ -28,7 +28,6 @@
 #include "lzw/u4decode.h"
 
 static RGBA *bwPalette = NULL;
-static RGBA *egaPalette = NULL;
 static RGBA *vgaPalette = NULL;
 
 // Loads a simple black & white palette
@@ -39,29 +38,6 @@ static RGBA* loadBWPalette() {
         bwPalette[1] = { 255, 255, 255, 255 };
     }
     return bwPalette;
-}
-
-static RGBA* loadEgaPalette() {
-    if (egaPalette == NULL) {
-		egaPalette = new RGBA[16];
-		egaPalette[0] = { 0, 0, 0, 255 }; // black
-		egaPalette[1] = { 0, 0, 170, 255 }; // blue
-		egaPalette[2] = { 0, 170, 0, 255 }; // green
-		egaPalette[3] = { 0, 170, 170, 255 }; // green-blue
-		egaPalette[4] = { 170, 0, 0, 255 }; // red
-		egaPalette[5] = { 170, 0, 170, 255 }; // purple
-		egaPalette[6] = { 170, 85, 0, 255 }; // brown
-		egaPalette[7] = { 170, 170, 170, 255 }; // light grey
-		egaPalette[8] = { 85, 85, 85, 255 }; // grey
-		egaPalette[9] = { 85, 85, 255, 255 }; // bright blue
-		egaPalette[10] = { 85, 255, 85, 255 }; // bright green
-		egaPalette[11] = { 85, 255, 255, 255 }; // bright blue-green
-		egaPalette[12] = { 255, 85, 85, 255 }; // bright red
-		egaPalette[13] = { 255, 85, 255, 255 }; // magenta
-		egaPalette[14] = { 255, 255, 85, 255 }; // yellow
-		egaPalette[15] = { 255, 255, 255, 255 }; // white
-	}
-	return egaPalette;
 }
 
 // Load the 256 color VGA palette from a file.
@@ -146,14 +122,23 @@ static void setFromRawData(Image *image, int width, int height, int bpp, unsigne
     }
 }
 
-static void xu4_u4raw_egaconv(int w, int h, uint8_t *in, uint32_t *out) {
+static void xu4_u4raw_egaconv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
 	// http://upload.wikimedia.org/wikipedia/commons/d/df/EGA_Table.PNG
-	uint32_t palette[16] = {
+	uint32_t palette_rgba[16] = {
+		0x000000ff, 0x0000aaff, 0x00aa00ff, 0x00aaaaff,
+		0xaa0000ff, 0xaa00aaff, 0xaa5500ff, 0xaaaaaaff,
+		0x555555ff, 0x5555ffff, 0x55ff55ff, 0x55ffffff,
+		0xff5555ff, 0xff55ffff, 0xffff55ff, 0xffffffff,
+	};
+	
+	uint32_t palette_abgr[16] = {
 		0xff000000, 0xffaa0000, 0xff00aa00, 0xffaaaa00,
 		0xff0000aa, 0xffaa00aa, 0xff0055aa, 0xffaaaaaa,
 		0xff555555, 0xffff5555, 0xff55ff55, 0xffffff55,
 		0xff5555ff, 0xffff55ff, 0xff55ffff, 0xffffffff,
 	};
+	
+	uint32_t *palette = paletteswap ? palette_abgr : palette_rgba;
 	
 	for (int i = 0; i < (w * h) / 2; i++) {
 		out[i * 2] = palette[(in[i] >> 4) & 0xf];
@@ -193,7 +178,7 @@ Image* xu4_u4raw_load(U4FILE *file, int width, int height, int bpp) {
 		setFromRawData(image, width, height, bpp, raw);
 	}
     else if (bpp == 4) { // EGA
-		xu4_u4raw_egaconv(width, height, raw, converted);
+		xu4_u4raw_egaconv(width, height, raw, converted, true);
 		setFromRawData(image, width, height, 32, (unsigned char*)converted);
 	}
     else if (bpp == 1) { // BW
@@ -222,25 +207,34 @@ Image* xu4_u4rle_load(U4FILE *file, int width, int height, int bpp) {
     unsigned char *raw = NULL;
     long rawLen = rleDecompressMemory(compressed, compressedLen, (void **) &raw);
     free(compressed);
+    uint32_t *converted = (uint32_t*)malloc(width * height * sizeof(uint32_t));
 
     if (rawLen != (width * height * bpp / 8)) {
         if (raw) { free(raw); }
         return NULL;
     }
 
-    Image *image = Image::create(width, height, bpp <= 8);
+    Image *image = Image::create(width, height, bpp <= 8 && bpp != 4);
     if (!image) {
         if (raw) { free(raw); }
         return NULL;
     }
 
-    if (bpp == 8) { image->setPalette(loadVgaPalette(), 256); }
-    else if (bpp == 4) { image->setPalette(loadEgaPalette(), 16); }
-    else if (bpp == 1) { image->setPalette(loadBWPalette(), 2); }
-
-    setFromRawData(image, width, height, bpp, raw);
+    if (bpp == 8) { // VGA
+		image->setPalette(loadVgaPalette(), 256);
+		setFromRawData(image, width, height, bpp, raw);
+	}
+    else if (bpp == 4) { // EGA
+		xu4_u4raw_egaconv(width, height, raw, converted, true);
+		setFromRawData(image, width, height, 32, (unsigned char*)converted);
+	}
+    else if (bpp == 1) { // BW
+		image->setPalette(loadBWPalette(), 2);
+		setFromRawData(image, width, height, bpp, raw);
+	}
 
     free(raw);
+    free(converted);
 
     return image;
 }
@@ -260,25 +254,34 @@ Image* xu4_u4lzw_load(U4FILE *file, int width, int height, int bpp) {
     unsigned char *raw = NULL;
     long rawLen = decompress_u4_memory(compressed, compressedLen, (void **) &raw);
     free(compressed);
+    uint32_t *converted = (uint32_t*)malloc(width * height * sizeof(uint32_t));
 
     if (rawLen != (width * height * bpp / 8)) {
         if (raw) { free(raw); }
         return NULL;
     }
 
-    Image *image = Image::create(width, height, bpp <= 8);
+    Image *image = Image::create(width, height, bpp <= 8 && bpp != 4);
     if (!image) {
         if (raw) { free(raw); }
         return NULL;
     }
 
-    if (bpp == 8) { image->setPalette(loadVgaPalette(), 256); }
-    else if (bpp == 4) { image->setPalette(loadEgaPalette(), 16); }
-    else if (bpp == 1) { image->setPalette(loadBWPalette(), 2); }
-
-    setFromRawData(image, width, height, bpp, raw);
+    if (bpp == 8) { // VGA
+		image->setPalette(loadVgaPalette(), 256);
+		setFromRawData(image, width, height, bpp, raw);
+	}
+    else if (bpp == 4) { // EGA
+		xu4_u4raw_egaconv(width, height, raw, converted, true);
+		setFromRawData(image, width, height, 32, (unsigned char*)converted);
+	}
+    else if (bpp == 1) { // BW
+		image->setPalette(loadBWPalette(), 2);
+		setFromRawData(image, width, height, bpp, raw);
+	}
 
     free(raw);
+    free(converted);
 
     return image;
 }
