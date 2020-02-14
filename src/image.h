@@ -30,14 +30,6 @@ typedef struct SubImage {
 #define IM_OPAQUE (unsigned int) 255
 #define IM_TRANSPARENT 0
 
-/**
- * A simple image object that can be drawn and read/written to at the
- * pixel level.
- * @todo
- *  <ul>
- *      <li>drawing methods should be pushed to Drawable subclass</li>
- *  </ul>
- */
 class Image {
 public:
     static Image *create(int w, int h);
@@ -52,34 +44,24 @@ public:
     RGBA getPaletteColor(int index);       // returns the color of the specified palette index
     RGBA setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = IM_OPAQUE);
 
-
     /* alpha handling */
     bool isAlphaOn() const;
     void alphaOn();
     void alphaOff();
 
-
     /* Will clear the image to the background color, and set the internal backgroundColor variable */
     void initializeToBackgroundColor(RGBA backgroundColor = DARK_GRAY_HALO);
-
-    /* writing to image */
 
     /**
      * Sets the color of a single pixel.
      */
     void putPixel(int x, int y, int r, int g, int b, int a); //TODO Consider using &
-
-
     void putPixelIndex(int x, int y, unsigned int index);
-
-
     void fillRect(int x, int y, int w, int h, int r, int g, int b, int a=IM_OPAQUE);
 
-    /* reading from image */
     void getPixel(int x, int y, unsigned int &r, unsigned int &g, unsigned int &b, unsigned int &a) const;
     void getPixelIndex(int x, int y, unsigned int &index) const;
 
-    /* image drawing methods */
     /**
      * Draws the entire image onto the screen at the given offset.
      */

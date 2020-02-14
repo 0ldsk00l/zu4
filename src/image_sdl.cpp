@@ -205,32 +205,7 @@ void Image::putPixelIndex(int x, int y, unsigned int index) {
 
     bpp = surface->format->BytesPerPixel;
     p = static_cast<Uint8 *>(surface->pixels) + y * surface->pitch + x * bpp;
-
-    switch(bpp) {
-    case 1:
-        *p = index;
-        break;
-
-    case 2:
-        *reinterpret_cast<Uint16 *>(p) = index;
-        break;
-
-    case 3:
-        if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-            p[0] = (index >> 16) & 0xff;
-            p[1] = (index >> 8) & 0xff;
-            p[2] = index & 0xff;
-        } else {
-            p[0] = index & 0xff;
-            p[1] = (index >> 8) & 0xff;
-            p[2] = (index >> 16) & 0xff;
-        }
-        break;
-
-    case 4:
-        *reinterpret_cast<Uint32 *>(p) = index;
-        break;
-    }
+    *reinterpret_cast<Uint32 *>(p) = index;
 }
 
 /**
@@ -272,31 +247,8 @@ void Image::getPixel(int x, int y, unsigned int &r, unsigned int &g, unsigned in
  */
 void Image::getPixelIndex(int x, int y, unsigned int &index) const {
     int bpp = surface->format->BytesPerPixel;
-
     Uint8 *p = static_cast<Uint8 *>(surface->pixels) + y * surface->pitch + x * bpp;
-
-    switch(bpp) {
-    case 1:
-        index = *p;
-        break;
-
-    case 2:
-        index = *reinterpret_cast<Uint16 *>(p);
-        break;
-
-    case 3:
-        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-            index = p[0] << 16 | p[1] << 8 | p[2];
-        else
-            index = p[0] | p[1] << 8 | p[2] << 16;
-        break;
-
-    case 4:
-        index = *reinterpret_cast<Uint32 *>(p);
-
-    default:
-        return;
-    }
+    index = *reinterpret_cast<Uint32 *>(p);
 }
 
 /**

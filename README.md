@@ -2,6 +2,13 @@
 
 This is a cleaned up, modernized fork of "xu4".
 
+### WARNING
+This codebase is probably broken in a lot of ways.
+I am not looking for code contributions right now,
+as I am trying to realize my vision for the project
+before accepting outside assistance. However, any
+suggestions or bug reports are welcome.
+
 #### How to Compile
 Currently, the following dependencies are required:
 libxml2, libsdl1.2
