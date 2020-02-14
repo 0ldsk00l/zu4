@@ -124,6 +124,7 @@ void Image::setPalette(const RGBA *colors, unsigned n_colors) {
  * Copies the palette from another image.
  */
 void Image::setPaletteFromImage(const Image *src) {
+    return; // Hack to fix VGA while transitioning away from indexed images
     xu4_assert(indexed && src->indexed, "imageSetPaletteFromImage called on non-indexed image");
     memcpy(surface->format->palette->colors, 
            src->surface->format->palette->colors, 
