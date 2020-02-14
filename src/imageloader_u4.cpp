@@ -27,18 +27,7 @@
 #include "rle.h"
 #include "lzw/u4decode.h"
 
-static RGBA *bwPalette = NULL;
 static RGBA *vgaPalette = NULL;
-
-// Loads a simple black & white palette
-static RGBA* loadBWPalette() {
-    if (bwPalette == NULL) {
-        bwPalette = new RGBA[2];
-        bwPalette[0] = { 0, 0, 0, 255 };
-        bwPalette[1] = { 255, 255, 255, 255 };
-    }
-    return bwPalette;
-}
 
 // Load the 256 color VGA palette from a file.
 static RGBA* loadVgaPalette() {
@@ -61,7 +50,6 @@ static RGBA* loadVgaPalette() {
 
 static void setFromRawData(Image *image, int width, int height, int bpp, unsigned char *rawData) {
     int x, y;
-
     switch (bpp) {
 
     case 32:
@@ -75,36 +63,10 @@ static void setFromRawData(Image *image, int width, int height, int bpp, unsigne
         }
         break;
 
-    case 24:
-        for (y = 0; y < height; y++) {
-            for (x = 0; x < width; x++)
-                image->putPixel(x, y, 
-                                rawData[(y * width + x) * 3], 
-                                rawData[(y * width + x) * 3 + 1], 
-                                rawData[(y * width + x) * 3 + 2],
-                                IM_OPAQUE);
-        }
-        break;
-
     case 8:
         for (y = 0; y < height; y++) {
             for (x = 0; x < width; x++)
                 image->putPixelIndex(x, y, rawData[y * width + x]);
-        }
-        break;
-
-    case 1:
-        for (y = 0; y < height; y++) {
-            for (x = 0; x < width; x+=8) {
-                image->putPixelIndex(x + 0, y, (rawData[(y * width + x) / 8] >> 7) & 0x01);
-                image->putPixelIndex(x + 1, y, (rawData[(y * width + x) / 8] >> 6) & 0x01);
-                image->putPixelIndex(x + 2, y, (rawData[(y * width + x) / 8] >> 5) & 0x01);
-                image->putPixelIndex(x + 3, y, (rawData[(y * width + x) / 8] >> 4) & 0x01);
-                image->putPixelIndex(x + 4, y, (rawData[(y * width + x) / 8] >> 3) & 0x01);
-                image->putPixelIndex(x + 5, y, (rawData[(y * width + x) / 8] >> 2) & 0x01);
-                image->putPixelIndex(x + 6, y, (rawData[(y * width + x) / 8] >> 1) & 0x01);
-                image->putPixelIndex(x + 7, y, (rawData[(y * width + x) / 8] >> 0) & 0x01);
-            }
         }
         break;
 
@@ -142,7 +104,7 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 		  xu4_error(XU4_LOG_ERR, "dimensions not set for image");
 	}
 
-	xu4_assert(bpp == 1 || bpp == 4 || bpp == 8 || bpp == 24 || bpp == 32, "invalid bpp: %d", bpp);
+	xu4_assert(bpp == 4 || bpp == 8, "invalid bpp: %d", bpp);
 	
 	unsigned char *raw = NULL;
 	unsigned char *compressed = NULL;
@@ -190,10 +152,6 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	else if (bpp == 4) { // EGA
 		xu4_u4raw_egaconv(width, height, raw, converted, true);
 		setFromRawData(image, width, height, 32, (unsigned char*)converted);
-	}
-	else if (bpp == 1) { // BW
-		image->setPalette(loadBWPalette(), 2);
-		setFromRawData(image, width, height, bpp, raw);
 	}
 	
 	free(raw);
