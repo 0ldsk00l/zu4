@@ -48,34 +48,19 @@ static RGBA* loadVgaPalette() {
     return vgaPalette;
 }
 
-static void setFromRawData(Image *image, int width, int height, int bpp, unsigned char *rawData) {
-    int x, y;
-    switch (bpp) {
-
-    case 32:
-        for (y = 0; y < height; y++) {
-            for (x = 0; x < width; x++)
-                image->putPixel(x, y, 
-                                rawData[(y * width + x) * 4], 
-                                rawData[(y * width + x) * 4 + 1], 
-                                rawData[(y * width + x) * 4 + 2],
-                                rawData[(y * width + x) * 4 + 3]);
-        }
-        break;
-
-    case 8:
-        for (y = 0; y < height; y++) {
-            for (x = 0; x < width; x++)
-                image->putPixelIndex(x, y, rawData[y * width + x]);
-        }
-        break;
-
-    default:
-        xu4_assert(0, "invalid bits-per-pixel (bpp): %d", bpp);
-    }
+static void setFromRawData(Image *image, int width, int height, unsigned char *rawData) {
+	int x, y;
+	for (y = 0; y < height; y++) {
+		for (x = 0; x < width; x++)
+			image->putPixel(x, y, 
+							rawData[(y * width + x) * 4], 
+							rawData[(y * width + x) * 4 + 1], 
+							rawData[(y * width + x) * 4 + 2],
+							rawData[(y * width + x) * 4 + 3]);
+	}
 }
 
-static void xu4_u4raw_egaconv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
+static void xu4_u4raw_ega_conv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
 	// http://upload.wikimedia.org/wikipedia/commons/d/df/EGA_Table.PNG
 	uint32_t palette_rgba[16] = {
 		0x000000ff, 0x0000aaff, 0x00aa00ff, 0x00aaaaff,
@@ -96,6 +81,20 @@ static void xu4_u4raw_egaconv(int w, int h, uint8_t *in, uint32_t *out, bool pal
 	for (int i = 0; i < (w * h) / 2; i++) {
 		out[i * 2] = palette[(in[i] >> 4) & 0xf];
 		out[(i * 2) + 1] = palette[in[i] & 0xf];
+	}
+}
+
+static void xu4_u4raw_vga_conv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
+	RGBA *pp = loadVgaPalette();
+	if (paletteswap) { // ABGR
+		for (int i = 0; i < (w * h); i++) {
+			out[i] = 0xff000000 | pp[in[i] & 0xff].b << 16 |pp[in[i] & 0xff].g << 8 | pp[in[i] & 0xff].r;
+		}
+	}
+	else { // RGBA
+		for (int i = 0; i < (w * h); i++) {
+			out[i] =  pp[in[i] & 0xff].r << 24 |pp[in[i] & 0xff].g << 16 | pp[in[i] & 0xff].b << 8 | 0xff;
+		}
 	}
 }
 
@@ -138,7 +137,7 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 		return NULL;
 	}
 	
-	Image *image = Image::create(width, height, bpp <= 8 && bpp != 4);
+	Image *image = Image::create(width, height, false);
 	if (!image) {
 		if (raw) { free(raw); }
 		if (converted) { free(converted); }
@@ -146,12 +145,12 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	}
 	
 	if (bpp == 8) { // VGA
-		image->setPalette(loadVgaPalette(), 256);
-		setFromRawData(image, width, height, bpp, raw);
+		xu4_u4raw_vga_conv(width, height, raw, converted, true);
+		setFromRawData(image, width, height, (unsigned char*)converted);
 	}
 	else if (bpp == 4) { // EGA
-		xu4_u4raw_egaconv(width, height, raw, converted, true);
-		setFromRawData(image, width, height, 32, (unsigned char*)converted);
+		xu4_u4raw_ega_conv(width, height, raw, converted, true);
+		setFromRawData(image, width, height, (unsigned char*)converted);
 	}
 	
 	free(raw);

@@ -586,7 +586,6 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 		switch(imgtype) {
 			case XU4_IMG_RAW: case XU4_IMG_RLE: case XU4_IMG_LZW:
 				unscaled = xu4_img_load(file, info->width, info->height, info->depth, imgtype);
-				if (info->depth == 4) info->depth = 32;
 				if (info->width == -1) {
 					info->width = unscaled->width();
 					info->height = unscaled->height();
