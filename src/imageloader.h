@@ -1,5 +1,5 @@
-#ifndef IMAGELOADER_U4_H
-#define IMAGELOADER_U4_H
+#ifndef IMAGELOADER_H
+#define IMAGELOADER_H
 
 enum ImageType {
 	XU4_IMG_RAW,
@@ -15,5 +15,7 @@ enum ImageType {
  * well as the 8-bit VGA upgrade images. This handles RLE and LZW as well.
  */
 Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type);
+
+Image* xu4_png_load(const char *filename, int *x, int *y);
 
 #endif

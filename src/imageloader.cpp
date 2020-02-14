@@ -21,9 +21,15 @@
  * 
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include "error.h"
 #include "image.h"
-#include "imageloader_u4.h"
+#include "imageloader.h"
 #include "rle.h"
 #include "lzw/u4decode.h"
 
@@ -49,14 +55,15 @@ static RGBA* loadVgaPalette() {
 }
 
 static void setFromRawData(Image *image, int width, int height, unsigned char *rawData) {
-	int x, y;
+    int x, y;
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++)
 			image->putPixel(x, y, 
-							rawData[(y * width + x) * 4], 
-							rawData[(y * width + x) * 4 + 1], 
-							rawData[(y * width + x) * 4 + 2],
-							rawData[(y * width + x) * 4 + 3]);
+				rawData[(y * width + x) * 4], 
+				rawData[(y * width + x) * 4 + 1], 
+				rawData[(y * width + x) * 4 + 2],
+				rawData[(y * width + x) * 4 + 3]
+			);
 	}
 }
 
@@ -156,5 +163,13 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	free(raw);
 	free(converted);
 	
+	return image;
+}
+
+Image* xu4_png_load(const char *filename, int *x, int *y) {
+	unsigned char *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
+	Image *image = Image::create(*x, *y, 0);
+	setFromRawData(image, *x, *y, pixels);
+	stbi_image_free(pixels);
 	return image;
 }

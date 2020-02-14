@@ -64,8 +64,7 @@ CXXSRCS=\
 		src/event_sdl.cpp \
 		src/game.cpp \
 		src/image_sdl.cpp \
-		src/imageloader_png.cpp \
-		src/imageloader_u4.cpp \
+		src/imageloader.cpp \
 		src/imagemgr.cpp \
 		src/imageview.cpp \
 		src/intro.cpp \
