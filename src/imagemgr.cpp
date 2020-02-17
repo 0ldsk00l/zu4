@@ -392,7 +392,7 @@ void ImageMgr::fixupAbyssVision(Image *im, int prescale) {
                 unsigned int index;
                 im->getPixelIndex(x, y, index);
                 index ^= data[y * im->w + x];
-                im->putPixelIndex(x, y, index);
+                im->putPixel(x, y, index);
             }
         }
     } else {
@@ -436,9 +436,9 @@ void ImageMgr::fixupDungNS(Image *im, int prescale) {
             unsigned int index;
             im->getPixelIndex(x, y, index);
             if (index == 1)
-                im->putPixelIndex(x, y, 2);
+                im->putPixel(x, y, 2);
             else if (index == 2)
-                im->putPixelIndex(x, y, 1);
+                im->putPixel(x, y, 1);
         }
     }
 }

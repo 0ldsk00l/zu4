@@ -7,6 +7,7 @@
 
 #include <string>
 #include <stdint.h>
+#include <SDL.h> // very very temporary
 #include "types.h"
 #include "u4file.h"
 #include "textcolor.h"
@@ -45,11 +46,7 @@ public:
     /* Will clear the image to the background color, and set the internal backgroundColor variable */
     void initializeToBackgroundColor(RGBA backgroundColor = DARK_GRAY_HALO);
 
-    /**
-     * Sets the color of a single pixel.
-     */
-    void putPixel(int x, int y, int r, int g, int b, int a); //TODO Consider using &
-    void putPixelIndex(int x, int y, unsigned int index);
+    void putPixel(int x, int y, uint32_t);
     void fillRect(int x, int y, int w, int h, int r, int g, int b, int a=IM_OPAQUE);
 
     void getPixel(int x, int y, unsigned int &r, unsigned int &g, unsigned int &b, unsigned int &a) const;
@@ -85,20 +82,8 @@ public:
     void drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const;
     void drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const;
 
-    //int width() const { return w; }
-    //int height() const { return h; }
     unsigned int w, h;
-
-    SDL_Surface* getSurface() { return surface; }
-
-private:
     RGBA backgroundColor;
-    Image();                    /* use create method to construct images */
-
-    // disallow assignments, copy contruction
-    Image(const Image&);
-    const Image &operator=(const Image&);
-
     SDL_Surface *surface;
 };
 

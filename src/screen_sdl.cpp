@@ -28,7 +28,7 @@ Image *scalePoint(Image *src, int scale, int n) {
                 for (int j = 0; j < scale; j++) {
                     unsigned int index;
                     src->getPixelIndex(x, y, index);
-                    dest->putPixelIndex(x * scale + j, y * scale + i, index);
+                    dest->putPixel(x * scale + j, y * scale + i, index);
                 }
             }
         }
@@ -46,7 +46,7 @@ void screenInit_sys() {
     atexit(SDL_Quit);
 
     SDL_WM_SetCaption("Ultima IV", NULL);
-
+    
     if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 0, SDL_HWSURFACE | SDL_ANYFORMAT))
         xu4_error(XU4_LOG_ERR, "unable to set video: %s", SDL_GetError());
 
@@ -123,7 +123,7 @@ Image *screenScaleDown(Image *src, int scale) {
         for (x = 0; x < src->w; x+=scale) {
             unsigned int index;
             src->getPixelIndex(x, y, index);                
-            dest->putPixelIndex(x / scale, y / scale, index);
+            dest->putPixel(x / scale, y / scale, index);
         }
     }
 

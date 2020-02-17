@@ -1872,10 +1872,10 @@ bool IntroController::updateTitle()
                 title->destImage->putPixel(
                     title->plotData[i].x,
                     title->plotData[i].y,
-                    title->plotData[i].r,
-                    title->plotData[i].g,
-                    title->plotData[i].b,
-                    title->plotData[i].a);
+                    title->plotData[i].r |
+                    title->plotData[i].g << 8 |
+                    title->plotData[i].b << 16 |
+                    title->plotData[i].a << 24);
             }
 
             // cover the "present" area with the transparent color

@@ -2,15 +2,9 @@
  * $Id: image_sdl.cpp 3066 2014-07-21 00:18:48Z darren_janeczek $
  */
 
-
-#include <SDL.h>
-
 #include "image.h"
 #include "settings.h"
 #include "error.h"
-
-Image::Image() : surface(NULL) {
-}
 
 /**
  * Creates a new image.  Scale is stored to allow drawing using U4
@@ -117,22 +111,13 @@ void Image::alphaOff()
     surface->flags &= ~SDL_SRCALPHA;
 }
 
-void Image::putPixel(int x, int y, int r, int g, int b, int a) {
-    putPixelIndex(x, y, SDL_MapRGBA(surface->format, Uint8(r), Uint8(g), Uint8(b), Uint8(a)));
-}
-
 /**
  * Sets the palette index of a single pixel.  If the image is in
  * indexed mode, then the index is simply the palette entry number.
  * If the image is RGB, it is a packed RGB triplet.
  */
-void Image::putPixelIndex(int x, int y, unsigned int index) {
-    int bpp;
-    Uint8 *p;
-
-    bpp = surface->format->BytesPerPixel;
-    p = static_cast<Uint8 *>(surface->pixels) + y * surface->pitch + x * bpp;
-    *reinterpret_cast<Uint32 *>(p) = index;
+void Image::putPixel(int x, int y, uint32_t value) {
+    *((uint32_t*)(surface->pixels) + (y * w) + x) = value;
 }
 
 /**
@@ -140,7 +125,7 @@ void Image::putPixelIndex(int x, int y, unsigned int index) {
  */
 void Image::fillRect(int x, int y, int w, int h, int r, int g, int b, int a) {
     SDL_Rect dest;
-    Uint32 pixel;
+    uint32_t pixel;
 
     pixel = SDL_MapRGBA(surface->format, static_cast<Uint8>(r), static_cast<Uint8>(g), static_cast<Uint8>(b), static_cast<Uint8>(a));
     dest.x = x;
@@ -173,8 +158,7 @@ void Image::getPixel(int x, int y, unsigned int &r, unsigned int &g, unsigned in
  * If the image is RGB, it is a packed RGB triplet.
  */
 void Image::getPixelIndex(int x, int y, unsigned int &index) const {
-    int bpp = surface->format->BytesPerPixel;
-    Uint8 *p = static_cast<Uint8 *>(surface->pixels) + y * surface->pitch + x * bpp;
+    Uint8 *p = static_cast<Uint8 *>(surface->pixels) + y * surface->pitch + x * sizeof(uint32_t);
     index = *reinterpret_cast<Uint32 *>(p);
 }
 
@@ -247,3 +231,5 @@ void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw
         SDL_BlitSurface(surface, &src, destSurface, &dest);
     }
 }
+
+// FIXME: drawHighlighted needs to be reimplemented

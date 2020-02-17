@@ -183,7 +183,11 @@ void TileAnimPixelColorTransform::draw(Image *dest, Tile *tile, MapTile &mapTile
             if (pixelAt.r >= start->r && pixelAt.r <= end->r &&
                 pixelAt.g >= start->g && pixelAt.g <= end->g &&
                 pixelAt.b >= start->b && pixelAt.b <= end->b) {
-                dest->putPixel(i, j, start->r + xu4_random(diff.r), start->g + xu4_random(diff.g), start->b + xu4_random(diff.b), pixelAt.a);
+                dest->putPixel(i, j,
+					(start->r + xu4_random(diff.r)) |
+					(start->g + xu4_random(diff.g)) << 8 |
+					(start->b + xu4_random(diff.b)) << 16 |
+					pixelAt.a << 24);
             }
         }
     }

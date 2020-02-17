@@ -1,5 +1,5 @@
 /*
- * imageloader_u4.cpp
+ * imageloader.cpp
  * Copyright (C) 2011 Andrew Taylor
  * Copyright (C) 2011 Darren Janeczek
  * Copyright (C) 2019-2020 R. Danbrook
@@ -52,19 +52,6 @@ static RGBA* loadVgaPalette() {
 
     }
     return vgaPalette;
-}
-
-static void setFromRawData(Image *image, int width, int height, unsigned char *rawData) {
-    int x, y;
-	for (y = 0; y < height; y++) {
-		for (x = 0; x < width; x++)
-			image->putPixel(x, y, 
-				rawData[(y * width + x) * 4], 
-				rawData[(y * width + x) * 4 + 1], 
-				rawData[(y * width + x) * 4 + 2],
-				rawData[(y * width + x) * 4 + 3]
-			);
-	}
 }
 
 static void xu4_u4raw_ega_conv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
@@ -153,11 +140,11 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	
 	if (bpp == 8) { // VGA
 		xu4_u4raw_vga_conv(width, height, raw, converted, true);
-		setFromRawData(image, width, height, (unsigned char*)converted);
+		memcpy((uint32_t*)image->surface->pixels, converted, sizeof(uint32_t) * width * height);
 	}
 	else if (bpp == 4) { // EGA
 		xu4_u4raw_ega_conv(width, height, raw, converted, true);
-		setFromRawData(image, width, height, (unsigned char*)converted);
+		memcpy((uint32_t*)image->surface->pixels, converted, sizeof(uint32_t) * width * height);
 	}
 	
 	free(raw);
@@ -169,7 +156,7 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 Image* xu4_png_load(const char *filename, int *x, int *y) {
 	unsigned char *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
 	Image *image = Image::create(*x, *y);
-	setFromRawData(image, *x, *y, pixels);
+	memcpy((uint32_t*)image->surface->pixels, (uint32_t*)pixels, sizeof(uint32_t) * *x * *y);
 	stbi_image_free(pixels);
 	return image;
 }
