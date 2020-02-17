@@ -71,8 +71,8 @@ void ImageMgr::init() {
 
     screenInfo->name = "screen";
     screenInfo->filename = "";
-    screenInfo->width = screen->width();
-    screenInfo->height = screen->height();
+    screenInfo->width = screen->w;
+    screenInfo->height = screen->h;
     screenInfo->depth = 0;
     screenInfo->prescale = 0;
     screenInfo->filetype = "";
@@ -340,8 +340,8 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
     /* -----------------------------
      * draw "Lord British" signature
      * ----------------------------- */
-    color = im->setColor(0, 255, 255);  // cyan for EGA
-    int blue[16] = {255, 250, 226, 226, 210, 194, 161, 161,
+    color = RGBA{0, 255, 255, 255};  // cyan for EGA
+    unsigned int blue[16] = {255, 250, 226, 226, 210, 194, 161, 161,
                     129,  97,  97,  64,  64,  32,  32,   0};
     i = 0;
     while (sigData[i] != 0) {
@@ -352,7 +352,7 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
         if (settings.videoType) // Not EGA
         {
             // yellow gradient
-            color = im->setColor(255, (y == 1 ? 250 : 255), blue[y]);
+            color = RGBA{255, (unsigned int)(y == 1 ? 250 : 255), blue[y], 255};
         }
 
         im->fillRect(x * prescale, y * prescale,
@@ -367,11 +367,11 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
     /* we're still working with an unscaled surface */
     if (settings.videoType) // Not EGA
     {
-        color = im->setColor(0, 0, 161);    // dark blue
+        color = RGBA{0, 0, 161, 255};    // dark blue
     }
     else
     {
-        color = im->setColor(128, 0, 0);    // dark red for EGA
+        color = RGBA{128, 0, 0, 255};    // dark red for EGA
     }
     for (i = 84; i < 236; i++)  // 152 px wide
         im->fillRect(i * prescale, 31 * prescale,
@@ -387,23 +387,23 @@ void ImageMgr::fixupAbyssVision(Image *im, int prescale) {
      * vision components to get the actual image.
      */
     if (data != NULL) {
-        for (int y = 0; y < im->height(); y++) {
-            for (int x = 0; x < im->width(); x++) {
+        for (unsigned int y = 0; y < im->h; y++) {
+            for (unsigned int x = 0; x < im->w; x++) {
                 unsigned int index;
                 im->getPixelIndex(x, y, index);
-                index ^= data[y * im->width() + x];
+                index ^= data[y * im->w + x];
                 im->putPixelIndex(x, y, index);
             }
         }
     } else {
-        data = new unsigned int[im->width() * im->height()];
+        data = new unsigned int[im->w * im->h];
     }
 
-    for (int y = 0; y < im->height(); y++) {
-        for (int x = 0; x < im->width(); x++) {
+    for (unsigned int y = 0; y < im->h; y++) {
+        for (unsigned int x = 0; x < im->w; x++) {
             unsigned int index;
             im->getPixelIndex(x, y, index);
-            data[y * im->width() + x] = index;
+            data[y * im->w + x] = index;
         }
     }
 }
@@ -431,8 +431,8 @@ void ImageMgr::fixupAbacus(Image *im, int prescale) {
  * south.
  */
 void ImageMgr::fixupDungNS(Image *im, int prescale) {
-    for (int y = 0; y < im->height(); y++) {
-        for (int x = 0; x < im->width(); x++) {
+    for (unsigned int y = 0; y < im->h; y++) {
+        for (unsigned int x = 0; x < im->w; x++) {
             unsigned int index;
             im->getPixelIndex(x, y, index);
             if (index == 1)
@@ -576,8 +576,8 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 			case XU4_IMG_RAW: case XU4_IMG_RLE: case XU4_IMG_LZW:
 				unscaled = xu4_img_load(file, info->width, info->height, info->depth, imgtype);
 				if (info->width == -1) {
-					info->width = unscaled->width();
-					info->height = unscaled->height();
+					info->width = unscaled->w;
+					info->height = unscaled->h;
 				}
 				break;
 			

@@ -517,7 +517,7 @@ void screenDrawImageInMapArea(const string &name) {
  * Change the current text color
  */
 void screenTextColor(int color) {
-    if (charsetInfo == NULL) {
+    /*if (charsetInfo == NULL) {
         charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!charsetInfo)
             xu4_error(XU4_LOG_ERR, "ERROR 1003: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
@@ -537,7 +537,7 @@ void screenTextColor(int color) {
 		case FG_YELLOW:
 		case FG_WHITE:
 			charsetInfo->image->setFontColorFG((ColorFG)color);
-	}
+	}*/
 }
 
 /**
@@ -550,9 +550,9 @@ void screenShowChar(int chr, int x, int y) {
             xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
     }
     
-    charsetInfo->image->drawSubRect(x * charsetInfo->image->width(), y * (CHAR_HEIGHT * settings.scale),
+    charsetInfo->image->drawSubRect(x * charsetInfo->image->w, y * (CHAR_HEIGHT * settings.scale),
                                     0, chr * (CHAR_HEIGHT * settings.scale),
-                                    charsetInfo->image->width(), CHAR_HEIGHT * settings.scale);
+                                    charsetInfo->image->w, CHAR_HEIGHT * settings.scale);
 }
 
 /**
@@ -564,17 +564,17 @@ void screenScrollMessageArea() {
     Image *screen = imageMgr->get("screen")->image;
     
     screen->drawSubRectOn(screen, 
-                          TEXT_AREA_X * charsetInfo->image->width(), 
+                          TEXT_AREA_X * charsetInfo->image->w, 
                           TEXT_AREA_Y * CHAR_HEIGHT * settings.scale,
-                          TEXT_AREA_X * charsetInfo->image->width(),
+                          TEXT_AREA_X * charsetInfo->image->w,
                           (TEXT_AREA_Y + 1) * CHAR_HEIGHT * settings.scale,
-                          TEXT_AREA_W * charsetInfo->image->width(),
+                          TEXT_AREA_W * charsetInfo->image->w,
                           (TEXT_AREA_H - 1) * CHAR_HEIGHT * settings.scale);
     
     
-    screen->fillRect(TEXT_AREA_X * charsetInfo->image->width(),
+    screen->fillRect(TEXT_AREA_X * charsetInfo->image->w,
                      TEXT_AREA_Y * CHAR_HEIGHT * settings.scale + (TEXT_AREA_H - 1) * CHAR_HEIGHT * settings.scale,
-                     TEXT_AREA_W * charsetInfo->image->width(),
+                     TEXT_AREA_W * charsetInfo->image->w,
                      CHAR_HEIGHT * settings.scale,
                      0, 0, 0);
     

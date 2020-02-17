@@ -15,17 +15,17 @@
  * A simple row and column duplicating scaler. FIXME use OpenGL instead
  */
 Image *scalePoint(Image *src, int scale, int n) {
-    int x, y, i, j;
+    unsigned int x, y;
     Image *dest;
 
-    dest = Image::create(src->width() * scale, src->height() * scale);
+    dest = Image::create(src->w * scale, src->h * scale);
     if (!dest)
         return NULL;
 
-    for (y = 0; y < src->height(); y++) {
-        for (x = 0; x < src->width(); x++) {
-            for (i = 0; i < scale; i++) {
-                for (j = 0; j < scale; j++) {
+    for (y = 0; y < src->h; y++) {
+        for (x = 0; x < src->w; x++) {
+            for (int i = 0; i < scale; i++) {
+                for (int j = 0; j < scale; j++) {
                     unsigned int index;
                     src->getPixelIndex(x, y, index);
                     dest->putPixelIndex(x * scale + j, y * scale + i, index);
@@ -104,13 +104,13 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
  * original dimensions.  The original image is no longer deleted.
  */
 Image *screenScaleDown(Image *src, int scale) {
-    int x, y;
+    unsigned int x, y;
     Image *dest;
     bool alpha = src->isAlphaOn();
 
     src->alphaOff();
 
-    dest = Image::create(src->width() / scale, src->height() / scale);
+    dest = Image::create(src->w / scale, src->h / scale);
     if (!dest) {
         return NULL;
     }
@@ -119,8 +119,8 @@ Image *screenScaleDown(Image *src, int scale) {
 		dest = Image::duplicate(src);
     }
 
-    for (y = 0; y < src->height(); y+=scale) {
-        for (x = 0; x < src->width(); x+=scale) {
+    for (y = 0; y < src->h; y+=scale) {
+        for (x = 0; x < src->w; x+=scale) {
             unsigned int index;
             src->getPixelIndex(x, y, index);                
             dest->putPixelIndex(x / scale, y / scale, index);

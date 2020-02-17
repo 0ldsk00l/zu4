@@ -138,15 +138,15 @@ string TextView::colorizeString(string input, ColorFG color, unsigned int colors
 }
 
 void TextView::setFontColor(ColorFG fg, ColorBG bg) {
-    charset->setFontColorFG(fg);
-    charset->setFontColorBG(bg);
+    //charset->setFontColorFG(fg);
+    //charset->setFontColorBG(bg);
 }
 
 void TextView::setFontColorFG(ColorFG fg) {
-    charset->setFontColorFG(fg);
+    //charset->setFontColorFG(fg);
 }
 void TextView::setFontColorBG(ColorBG bg) {
-    charset->setFontColorBG(bg);
+    //charset->setFontColorBG(bg);
 }
 
 void TextView::textAt(int x, int y, const char *fmt, ...) {

@@ -37,13 +37,6 @@ public:
     static Image *duplicate(Image *image);
     ~Image();
 
-    bool setFontColor(ColorFG fg, ColorBG bg);
-    bool setFontColorFG(ColorFG fg);
-    bool setFontColorBG(ColorBG bg);
-
-    RGBA getPaletteColor(int index);       // returns the color of the specified palette index
-    RGBA setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = IM_OPAQUE);
-
     /* alpha handling */
     bool isAlphaOn() const;
     void alphaOn();
@@ -92,14 +85,13 @@ public:
     void drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const;
     void drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const;
 
-    int width() const { return w; }
-    int height() const { return h; }
+    //int width() const { return w; }
+    //int height() const { return h; }
+    unsigned int w, h;
 
     SDL_Surface* getSurface() { return surface; }
-    void drawHighlighted();
 
 private:
-    unsigned int w, h;
     RGBA backgroundColor;
     Image();                    /* use create method to construct images */
 

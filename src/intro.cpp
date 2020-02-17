@@ -1568,7 +1568,7 @@ void IntroController::getTitleSourceData()
     }
 
     // get the transparent color
-    transparentColor = info->image->getPaletteColor(transparentIndex);
+    transparentColor = RGBA{0, 0, 0, 0};
 
     // turn alpha off, if necessary
     bool alpha = info->image->isAlphaOn();
@@ -1604,8 +1604,8 @@ void IntroController::getTitleSourceData()
                 // PLOT: "Lord British"
                 srcData = intro->getSigData();
 
-                RGBA color = info->image->setColor(0, 255, 255);    // cyan for EGA
-                int blue[16] = {255, 250, 226, 226, 210, 194, 161, 161,
+                RGBA color = RGBA{0, 255, 255, 255};    // cyan for EGA
+                unsigned int blue[16] = {255, 250, 226, 226, 210, 194, 161, 161,
                                 129,  97,  97,  64,  64,  32,  32,   0};
                 uint8_t x = 0;
                 uint8_t y = 0;
@@ -1618,7 +1618,7 @@ void IntroController::getTitleSourceData()
                     if (settings.videoType) // Not EGA
                     {
                         // yellow gradient
-                        color = info->image->setColor(255, (y == 2 ? 250 : 255), blue[y-1]);
+                        color = RGBA{255, (unsigned int)(y == 1 ? 250 : 255), blue[y], 255};
                     }
                     AnimPlot plot = {
                         x,
@@ -1734,7 +1734,7 @@ bool IntroController::updateTitle()
         {
             // clear the screen
             Image *screen = imageMgr->get("screen")->image;
-            screen->fillRect(0, 0, screen->width(), screen->height(), 0, 0, 0);
+            screen->fillRect(0, 0, screen->w, screen->h, 0, 0, 0);
         }
         if (title->method == TITLE)
         {
@@ -1788,7 +1788,7 @@ bool IntroController::updateTitle()
             while (animStepTarget > title->animStep)
             {
                 title->animStep++;
-                color = title->destImage->setColor(128, 0, 0); // dark red for the underline
+                color = RGBA{128, 0, 0, 255}; // dark red for the underline
 
                 // blit bar to the canvas
                 title->destImage->fillRect(
@@ -1825,10 +1825,10 @@ bool IntroController::updateTitle()
             title->srcImage->drawSubRectOn(
                 title->destImage,
                 1,
-                title->destImage->height() - 1 - title->animStep,
+                title->destImage->h - 1 - title->animStep,
                 0,
                 0,
-                title->srcImage->width(),
+                title->srcImage->w,
                 title->animStep);
             break;
         }
@@ -1849,8 +1849,8 @@ bool IntroController::updateTitle()
                 1,
                 1,
                 0,
-                title->srcImage->height() - title->animStep,
-                title->srcImage->width(),
+                title->srcImage->h - title->animStep,
+                title->srcImage->w,
                 title->animStep);
             break;
         }
@@ -1905,7 +1905,7 @@ bool IntroController::updateTitle()
                 y+1,
                 0,
                 y,
-                title->srcImage->width(),
+                title->srcImage->w,
                 1 + ((title->animStep - 1) * 2));
             break;
         }
@@ -1930,7 +1930,7 @@ bool IntroController::updateTitle()
                 0,
                 0,
                 SCALED( (step+1) * 8 ),
-                SCALED( title->srcImage->height()) );
+                SCALED( title->srcImage->h) );
             title->srcImage->drawSubRectOn(
                 title->destImage,
                 SCALED( 161 ),
@@ -1938,7 +1938,7 @@ bool IntroController::updateTitle()
                 SCALED( 312-(step*8) ),
                 0,
                 SCALED( (step+1) * 8 ),
-                SCALED( title->srcImage->height()) );
+                SCALED( title->srcImage->h) );
 
 
             // create a destimage for the map tiles

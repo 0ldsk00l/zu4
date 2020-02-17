@@ -152,12 +152,12 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     }
 
     if (tiledWall) {
-    	int i_x = SCALED((VIEWPORT_W * tileWidth  / 2) + this->x) - (scaled->width() / 2);
-    	int i_y = SCALED((VIEWPORT_H * tileHeight / 2) + this->y) - (scaled->height() / 2);
-    	int f_x = i_x + scaled->width();
-    	int f_y = i_y + scaled->height();
-    	int d_x = animated->width();
-    	int d_y = animated->height();
+    	int i_x = SCALED((VIEWPORT_W * tileWidth  / 2) + this->x) - (scaled->w / 2);
+    	int i_y = SCALED((VIEWPORT_H * tileHeight / 2) + this->y) - (scaled->h / 2);
+    	int f_x = i_x + scaled->w;
+    	int f_y = i_y + scaled->h;
+    	int d_x = animated->w;
+    	int d_y = animated->h;
 
     	for (int x = i_x; x < f_x; x+=d_x)
     		for (int y = i_y; y < f_y; y+=d_y)
@@ -172,8 +172,8 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     }
     else {
     	int y_offset = std::max(0,(dscale[distance] - offset_adj) * offset_multiplier);
-    	int x = SCALED((VIEWPORT_W * tileWidth / 2) + this->x) - (scaled->width() / 2);
-    	int y = SCALED((VIEWPORT_H * tileHeight / 2) + this->y + y_offset) - (scaled->height() / 8);
+    	int x = SCALED((VIEWPORT_W * tileWidth / 2) + this->x) - (scaled->w / 2);
+    	int y = SCALED((VIEWPORT_H * tileHeight / 2) + this->y + y_offset) - (scaled->h / 8);
 
 		scaled->drawSubRectOn(	this->screen,
 								x,

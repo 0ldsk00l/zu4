@@ -69,7 +69,7 @@ Image *Image::createScreenImage() {
  */
 Image *Image::duplicate(Image *image) {    
     bool alphaOn = image->isAlphaOn();
-    Image *im = create(image->width(), image->height());
+    Image *im = create(image->w, image->h);
 
     /* Turn alpha off before blitting to non-screen surfaces */
     if (alphaOn)
@@ -90,79 +90,6 @@ Image *Image::duplicate(Image *image) {
  */
 Image::~Image() {
     SDL_FreeSurface(surface);
-}
-
-
-// returns the color of the specified palette index
-RGBA Image::getPaletteColor(int index) {
-	RGBA color = {0, 0, 0, 0};// = RGBA(0, 0, 0, 0);
-    return color;
-}
-
-RGBA Image::setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    return (RGBA){r, g, b, a};
-}
-
-/* sets the specified font colors */
-bool Image::setFontColor(ColorFG fg, ColorBG bg) {
-    if (!setFontColorFG(fg)) return false;
-    if (!setFontColorBG(bg)) return false;
-    return true;
-}
-
-/* sets the specified font colors */
-bool Image::setFontColorFG(ColorFG fg) {
-    /*switch (fg) {
-        case FG_GREY:
-            if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(153,153,153))) return false;
-            if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(102,102,102))) return false;
-            if (!setPaletteIndex(TEXT_FG_SHADOW_INDEX,    setColor(51,51,51))) return false;
-            break;
-        case FG_BLUE:
-            if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(102,102,255))) return false;
-            if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(51,51,204))) return false;
-            if (!setPaletteIndex(TEXT_FG_SHADOW_INDEX,    setColor(51,51,51))) return false;
-            break;
-        case FG_PURPLE:
-            if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(255,102,255))) return false;
-            if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(204,51,204))) return false;
-            if (!setPaletteIndex(TEXT_FG_SHADOW_INDEX,    setColor(51,51,51))) return false;
-            break;
-        case FG_GREEN:
-            if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(102,255,102))) return false;
-            if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(0,153,0))) return false;
-            if (!setPaletteIndex(TEXT_FG_SHADOW_INDEX,    setColor(51,51,51))) return false;
-            break;
-        case FG_RED:
-            if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(255,102,102))) return false;
-            if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(204,51,51))) return false;
-            if (!setPaletteIndex(TEXT_FG_SHADOW_INDEX,    setColor(51,51,51))) return false;
-            break;
-        case FG_YELLOW:
-            if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(255,255,51))) return false;
-            if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(204,153,51))) return false;
-            if (!setPaletteIndex(TEXT_FG_SHADOW_INDEX,    setColor(51,51,51))) return false;
-            break;
-        default:
-            if (!setPaletteIndex(TEXT_FG_PRIMARY_INDEX,   setColor(255,255,255))) return false;
-            if (!setPaletteIndex(TEXT_FG_SECONDARY_INDEX, setColor(204,204,204))) return false;
-            if (!setPaletteIndex(TEXT_FG_SHADOW_INDEX,    setColor(68,68,68))) return false;
-    }*/
-    return true;
-}
-
-/* sets the specified font colors */
-bool Image::setFontColorBG(ColorBG bg) {
-    /*switch (bg) {
-        case BG_BRIGHT:
-            if (!setPaletteIndex(TEXT_BG_INDEX, setColor(0,0,102)))
-                return false;
-            break;
-        default:
-            if (!setPaletteIndex(TEXT_BG_INDEX, setColor(0,0,0)))
-                return false;
-    }*/
-    return true;
 }
 
 void Image::initializeToBackgroundColor(RGBA backgroundColor)
@@ -291,7 +218,6 @@ void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh
     dest.y = y;
     /* dest w & h unused */
 
-
     SDL_BlitSurface(surface, &src, destSurface, &dest);
 }
 
@@ -319,21 +245,5 @@ void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw
         /* dest w & h unused */
 
         SDL_BlitSurface(surface, &src, destSurface, &dest);
-    }
-}
-
-/**
- * Dumps the image to a file.  The file is always saved in .bmp
- * format.  This is mainly used for debugging.
- */
-
-
-void Image::drawHighlighted() {
-    RGBA c;
-    for (unsigned i = 0; i < h; i++) {
-        for (unsigned j = 0; j < w; j++) {
-            getPixel(j, i, c.r, c.g, c.b, c.a);
-            putPixel(j, i, 0xff - c.r, 0xff - c.g, 0xff - c.b, c.a);
-        }
     }
 }
