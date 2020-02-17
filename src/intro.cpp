@@ -1646,7 +1646,11 @@ void IntroController::getTitleSourceData()
                 {
                     for (int x=0; x < titles[i].rw ; x++)
                     {
-                        titles[i].srcImage->getPixel(x*info->prescale, y*info->prescale, r, g, b, a);
+                        uint32_t pixIndex = titles[i].srcImage->getPixel(x*info->prescale, y*info->prescale);
+                        r = pixIndex & 0xff;
+						g = (pixIndex & 0xff00) >> 8;
+						b = (pixIndex & 0xff0000) >> 16;
+						a = (pixIndex & 0xff000000) >> 24;
                         if (r || g || b)
                         {
                             AnimPlot plot = {(uint8_t)(x+1), (uint8_t)(y+1), (uint8_t)r, (uint8_t)g, (uint8_t)b, (uint8_t)a};

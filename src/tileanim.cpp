@@ -178,8 +178,11 @@ void TileAnimPixelColorTransform::draw(Image *dest, Tile *tile, MapTile &mapTile
     for (int j = y * scale; j < (y * scale) + (h * scale); j++) {
         for (int i = x * scale; i < (x * scale) + (w * scale); i++) {
             RGBA pixelAt;
-            
-            tileImage->getPixel(i, j + (mapTile.frame * tile->getHeight()), pixelAt.r, pixelAt.g, pixelAt.b, pixelAt.a);
+            uint32_t pixIndex = tileImage->getPixel(i, j + (mapTile.frame * tile->getHeight()));
+            pixelAt.r = pixIndex & 0xff;
+            pixelAt.g = (pixIndex & 0xff00) >> 8;
+            pixelAt.b = (pixIndex & 0xff0000) >> 16;
+            pixelAt.a = (pixIndex & 0xff000000) >> 24;
             if (pixelAt.r >= start->r && pixelAt.r <= end->r &&
                 pixelAt.g >= start->g && pixelAt.g <= end->g &&
                 pixelAt.b >= start->b && pixelAt.b <= end->b) {

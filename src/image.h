@@ -46,11 +46,9 @@ public:
     /* Will clear the image to the background color, and set the internal backgroundColor variable */
     void initializeToBackgroundColor(RGBA backgroundColor = DARK_GRAY_HALO);
 
-    void putPixel(int x, int y, uint32_t);
+    uint32_t getPixel(int x, int y);
+    void putPixel(int x, int y, uint32_t value);
     void fillRect(int x, int y, int w, int h, int r, int g, int b, int a=IM_OPAQUE);
-
-    void getPixel(int x, int y, unsigned int &r, unsigned int &g, unsigned int &b, unsigned int &a) const;
-    void getPixelIndex(int x, int y, unsigned int &index) const;
 
     /**
      * Draws the entire image onto the screen at the given offset.

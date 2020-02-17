@@ -389,8 +389,7 @@ void ImageMgr::fixupAbyssVision(Image *im, int prescale) {
     if (data != NULL) {
         for (unsigned int y = 0; y < im->h; y++) {
             for (unsigned int x = 0; x < im->w; x++) {
-                unsigned int index;
-                im->getPixelIndex(x, y, index);
+                uint32_t index = im->getPixel(x, y);
                 index ^= data[y * im->w + x];
                 im->putPixel(x, y, index);
             }
@@ -401,8 +400,7 @@ void ImageMgr::fixupAbyssVision(Image *im, int prescale) {
 
     for (unsigned int y = 0; y < im->h; y++) {
         for (unsigned int x = 0; x < im->w; x++) {
-            unsigned int index;
-            im->getPixelIndex(x, y, index);
+            uint32_t index = im->getPixel(x, y);
             data[y * im->w + x] = index;
         }
     }
@@ -433,8 +431,7 @@ void ImageMgr::fixupAbacus(Image *im, int prescale) {
 void ImageMgr::fixupDungNS(Image *im, int prescale) {
     for (unsigned int y = 0; y < im->h; y++) {
         for (unsigned int x = 0; x < im->w; x++) {
-            unsigned int index;
-            im->getPixelIndex(x, y, index);
+            uint32_t index = im->getPixel(x, y);
             if (index == 1)
                 im->putPixel(x, y, 2);
             else if (index == 2)

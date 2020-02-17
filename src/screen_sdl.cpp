@@ -26,8 +26,7 @@ Image *scalePoint(Image *src, int scale, int n) {
         for (x = 0; x < src->w; x++) {
             for (int i = 0; i < scale; i++) {
                 for (int j = 0; j < scale; j++) {
-                    unsigned int index;
-                    src->getPixelIndex(x, y, index);
+                    uint32_t index = src->getPixel(x, y);
                     dest->putPixel(x * scale + j, y * scale + i, index);
                 }
             }
@@ -121,8 +120,7 @@ Image *screenScaleDown(Image *src, int scale) {
 
     for (y = 0; y < src->h; y+=scale) {
         for (x = 0; x < src->w; x+=scale) {
-            unsigned int index;
-            src->getPixelIndex(x, y, index);                
+            uint32_t index = src->getPixel(x, y);
             dest->putPixel(x / scale, y / scale, index);
         }
     }

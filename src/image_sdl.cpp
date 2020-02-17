@@ -9,9 +9,6 @@
 /**
  * Creates a new image.  Scale is stored to allow drawing using U4
  * (320x200) coordinates, regardless of the actual image scale.
- * Indexed is true for palette based images, or false for RGB images.
- * Image type determines whether to create a hardware (i.e. video ram)
- * or software (i.e. normal ram) image.
  */
 Image *Image::create(int w, int h) {
     Uint32 rmask, gmask, bmask, amask;
@@ -111,13 +108,12 @@ void Image::alphaOff()
     surface->flags &= ~SDL_SRCALPHA;
 }
 
-/**
- * Sets the palette index of a single pixel.  If the image is in
- * indexed mode, then the index is simply the palette entry number.
- * If the image is RGB, it is a packed RGB triplet.
- */
+uint32_t Image::getPixel(int x, int y) {
+	return *((uint32_t*)(surface->pixels) + (y * w) + x);
+}
+
 void Image::putPixel(int x, int y, uint32_t value) {
-    *((uint32_t*)(surface->pixels) + (y * w) + x) = value;
+	*((uint32_t*)(surface->pixels) + (y * w) + x) = value;
 }
 
 /**
@@ -134,32 +130,6 @@ void Image::fillRect(int x, int y, int w, int h, int r, int g, int b, int a) {
     dest.h = h;
 
     SDL_FillRect(surface, &dest, pixel);
-}
-
-/**
- * Gets the color of a single pixel.
- */
-void Image::getPixel(int x, int y, unsigned int &r, unsigned int &g, unsigned int &b, unsigned int &a) const {
-    unsigned int index;
-    Uint8 r1, g1, b1, a1;
-
-    getPixelIndex(x, y, index);
-
-    SDL_GetRGBA(index, surface->format, &r1, &g1, &b1, &a1);
-    r = r1;
-    g = g1;
-    b = b1;
-    a = a1;
-}
-
-/**
- * Gets the palette index of a single pixel.  If the image is in
- * indexed mode, then the index is simply the palette entry number.
- * If the image is RGB, it is a packed RGB triplet.
- */
-void Image::getPixelIndex(int x, int y, unsigned int &index) const {
-    Uint8 *p = static_cast<Uint8 *>(surface->pixels) + y * surface->pitch + x * sizeof(uint32_t);
-    index = *reinterpret_cast<Uint32 *>(p);
 }
 
 /**
