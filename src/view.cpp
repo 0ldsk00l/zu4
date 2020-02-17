@@ -65,7 +65,7 @@ void View::unhighlight() {
 }
 
 void View::drawHighlighted() {
-    /*Image *screen = imageMgr->get("screen")->image;
+    Image *screen = imageMgr->get("screen")->image;
     
     Image *tmp = Image::create(SCALED(highlightW), SCALED(highlightH));
     if (!tmp)
@@ -74,5 +74,5 @@ void View::drawHighlighted() {
     screen->drawSubRectOn(tmp, 0, 0, SCALED(this->x + highlightX), SCALED(this->y + highlightY), SCALED(highlightW), SCALED(highlightH));
     tmp->drawHighlighted();
     tmp->draw(SCALED(this->x + highlightX), SCALED(this->y + highlightY));
-    delete tmp;*/
+    delete tmp;
 }

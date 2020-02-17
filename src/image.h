@@ -17,7 +17,7 @@ struct SDL_Surface;
 using std::string;
 
 typedef struct RGBA {
-    unsigned int r, g, b, a;
+    uint8_t r, g, b, a;
 } RGBA;
 
 #define DARK_GRAY_HALO (RGBA){14,15,16,255}
@@ -49,6 +49,7 @@ public:
     uint32_t getPixel(int x, int y);
     void putPixel(int x, int y, uint32_t value);
     void fillRect(int x, int y, int w, int h, int r, int g, int b, int a=IM_OPAQUE);
+    void drawHighlighted();
 
     /**
      * Draws the entire image onto the screen at the given offset.

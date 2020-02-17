@@ -1605,7 +1605,7 @@ void IntroController::getTitleSourceData()
                 srcData = intro->getSigData();
 
                 RGBA color = RGBA{0, 255, 255, 255};    // cyan for EGA
-                unsigned int blue[16] = {255, 250, 226, 226, 210, 194, 161, 161,
+                uint8_t blue[16] = {255, 250, 226, 226, 210, 194, 161, 161,
                                 129,  97,  97,  64,  64,  32,  32,   0};
                 uint8_t x = 0;
                 uint8_t y = 0;
@@ -1618,7 +1618,7 @@ void IntroController::getTitleSourceData()
                     if (settings.videoType) // Not EGA
                     {
                         // yellow gradient
-                        color = RGBA{255, (unsigned int)(y == 1 ? 250 : 255), blue[y], 255};
+                        color = RGBA{255, (uint8_t)(y == 1 ? 250 : 255), blue[y], 255};
                     }
                     AnimPlot plot = {
                         x,

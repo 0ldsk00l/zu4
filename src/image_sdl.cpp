@@ -30,7 +30,7 @@ Image *Image::create(int w, int h) {
     amask = 0xff000000;
 #endif
 
-    flags = SDL_SWSURFACE | SDL_SRCALPHA;
+    flags = SDL_SWSURFACE;
 
     im->surface = SDL_CreateRGBSurface(flags, w, h, 32, rmask, gmask, bmask, amask);
 
@@ -202,4 +202,18 @@ void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw
     }
 }
 
-// FIXME: drawHighlighted needs to be reimplemented
+void Image::drawHighlighted() {
+	uint32_t pixel;
+	RGBA c;
+	for (unsigned i = 0; i < h; i++) {
+		for (unsigned j = 0; j < w; j++) {
+			pixel = getPixel(j, i);
+			c.r = 0xff - (pixel & 0xff);
+			c.g = 0xff - ((pixel & 0xff00) >> 8);
+			c.b = 0xff - ((pixel & 0xff0000) >> 16);
+			c.a = (pixel & 0xff000000) >> 24;
+			pixel = c.a << 24 | c.b << 16 | c.g << 8 | c.r;
+			putPixel(j, i, pixel);
+        }
+    }
+}
