@@ -75,7 +75,6 @@ void ImageMgr::init() {
     screenInfo->filetype = "";
     screenInfo->tiles = 0;
     screenInfo->introOnly = false;
-    screenInfo->transparentIndex = -1;
     screenInfo->xu4Graphic = false;
     screenInfo->fixup = FIXUP_NONE;
     screenInfo->image = screen;
@@ -141,7 +140,6 @@ ImageInfo *ImageMgr::loadImageInfoFromConf(const ConfigElement &conf) {
     info->filetype = conf.getString("filetype");
     info->tiles = conf.getInt("tiles");
     info->introOnly = conf.getBool("introOnly");
-    info->transparentIndex = conf.getInt("transparentIndex", -1);
 
     info->xu4Graphic = conf.getBool("xu4Graphic");
     info->fixup = static_cast<ImageFixup>(conf.getEnum("fixup", fixupEnumStrings));

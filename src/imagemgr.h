@@ -85,7 +85,6 @@ public:
     std::string filetype;
     int tiles;                  /**< used to scale the without bleeding colors between adjacent tiles */
     bool introOnly;             /**< whether can be freed after the intro */
-    int transparentIndex;       /**< color index to consider transparent */
     bool xu4Graphic;            /**< an original xu4 graphic not part of u4dos or the VGA upgrade */
     ImageFixup fixup;           /**< a routine to do miscellaneous fixes to the image */
     Image *image;               /**< the image we're describing */
