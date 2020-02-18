@@ -1670,12 +1670,6 @@ void IntroController::getTitleSourceData()
                     transparentColor.g,
                     transparentColor.b, 255);
 
-                Image *scaled;      // the scaled and filtered image
-                scaled = screenScale(titles[i].srcImage, 1, 1, 1);
-
-                delete titles[i].srcImage;
-                titles[i].srcImage = scaled;
-
                 titles[i].animStepMax = 20;
                 break;
             }
@@ -1702,11 +1696,6 @@ void IntroController::getTitleSourceData()
     {
         info->image->alphaOn();
     }
-
-    // scale the original image now
-    Image *scaled = screenScale(info->image, 1, false, 1);
-    delete info->image;
-    info->image = scaled;
 }
 
 
@@ -2040,12 +2029,9 @@ void IntroController::compactTitle()
 //
 void IntroController::drawTitle()
 {
-    Image *scaled;      // the scaled and filtered image
+    Image *t = Image::duplicate(title->destImage);
 
-    // blit the scaled and filtered surface to the screen
-    scaled = screenScale(title->destImage, 1, 1, 1);
-
-    scaled->drawSubRect(
+    t->drawSubRect(
         title->rx,    // dest x, y
         title->ry,
         1,              // src x, y, w, h
@@ -2053,8 +2039,8 @@ void IntroController::drawTitle()
         title->rw,
         title->rh);
 
-    delete scaled;
-    scaled = NULL;
+    delete t;
+    t = NULL;
 }
 
 
