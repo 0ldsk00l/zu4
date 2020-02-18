@@ -166,7 +166,7 @@ void GameController::initScreen()
 {
     Image *screen = imageMgr->get("screen")->image;
 
-    screen->fillRect(0, 0, screen->w, screen->h, 0, 0, 0);
+    screen->fillRect(0, 0, screen->w, screen->h, 0, 0, 0, 255);
     screenRedrawScreen();
 }
 

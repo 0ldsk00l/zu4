@@ -576,7 +576,7 @@ void screenScrollMessageArea() {
                      TEXT_AREA_Y * CHAR_HEIGHT * settings.scale + (TEXT_AREA_H - 1) * CHAR_HEIGHT * settings.scale,
                      TEXT_AREA_W * charsetInfo->image->w,
                      CHAR_HEIGHT * settings.scale,
-                     0, 0, 0);
+                     0, 0, 0, 255);
     
     screenRedrawScreen();
 }
@@ -1002,7 +1002,7 @@ void screenEraseMapArea() {
                      BORDER_WIDTH * settings.scale,
                      VIEWPORT_W * TILE_WIDTH * settings.scale,
                      VIEWPORT_H * TILE_HEIGHT * settings.scale,
-                     0, 0, 0);
+                     0, 0, 0, 255);
 }
 
 void screenEraseTextArea(int x, int y, int width, int height) {
@@ -1011,7 +1011,7 @@ void screenEraseTextArea(int x, int y, int width, int height) {
                      y * CHAR_HEIGHT * settings.scale,
                      width * CHAR_WIDTH * settings.scale,
                      height * CHAR_HEIGHT * settings.scale,
-                     0, 0, 0);
+                     0, 0, 0, 255);
 }
 
 /**
@@ -1042,7 +1042,7 @@ void screenShake(int iterations) {
             // shift the screen down and make the top row black
             screen->drawSubRectOn(screen, 0, SCALED(shakeOffset), 0, 0, SCALED(320), SCALED(200-(shakeOffset+1)));
             bottom->drawOn(screen, 0, SCALED(200-(shakeOffset)));
-            screen->fillRect(0, 0, SCALED(320), SCALED(shakeOffset), 0, 0, 0);
+            screen->fillRect(0, 0, SCALED(320), SCALED(shakeOffset), 0, 0, 0, 255);
             screenRedrawScreen();
             EventHandler::sleep(settings.shakeInterval);
             
@@ -1100,7 +1100,7 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
                              (layout->viewport.y + (y * layout->tileshape.height)) * settings.scale,
                              layout->tileshape.width * settings.scale,
                              layout->tileshape.height * settings.scale,
-                             0, 0, 0);
+                             0, 0, 0, 255);
         }
     }
 }
@@ -1131,7 +1131,7 @@ void screenGemUpdate() {
                      BORDER_HEIGHT * settings.scale,
                      VIEWPORT_W * TILE_WIDTH * settings.scale, 
                      VIEWPORT_H * TILE_HEIGHT * settings.scale,
-                     0, 0, 0);
+                     0, 0, 0, 255);
     
     Layout *layout = screenGetGemLayout(c->location->map);
     

@@ -116,20 +116,13 @@ void Image::putPixel(int x, int y, uint32_t value) {
 	*((uint32_t*)(surface->pixels) + (y * w) + x) = value;
 }
 
-/**
- * Fills a rectangle in the image with a given color.
- */
-void Image::fillRect(int x, int y, int w, int h, int r, int g, int b, int a) {
-    SDL_Rect dest;
-    uint32_t pixel;
-
-    pixel = SDL_MapRGBA(surface->format, static_cast<Uint8>(r), static_cast<Uint8>(g), static_cast<Uint8>(b), static_cast<Uint8>(a));
-    dest.x = x;
-    dest.y = y;
-    dest.w = w;
-    dest.h = h;
-
-    SDL_FillRect(surface, &dest, pixel);
+void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, int a) {
+    uint32_t pixel = (isAlphaOn() ? a & 0xff : 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
+    for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			*((uint32_t*)surface->pixels + ((y * w) + x) + (i * w) + j) = pixel;
+		}
+	}
 }
 
 /**

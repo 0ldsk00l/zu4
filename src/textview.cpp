@@ -64,7 +64,7 @@ void TextView::drawCharMasked(int chr, int x, int y, unsigned char mask) {
                              SCALED(this->y + (y * CHAR_HEIGHT) + i),
                              SCALED(CHAR_WIDTH),
                              SCALED(1),
-                             0, 0, 0);
+                             0, 0, 0, 255);
         }
     }
 }
@@ -201,7 +201,7 @@ void TextView::scroll() {
                      SCALED(y + (CHAR_HEIGHT * (rows - 1))),
                      SCALED(width),
                      SCALED(CHAR_HEIGHT),
-                     0, 0, 0);
+                     0, 0, 0, 255);
 
     update();
 }

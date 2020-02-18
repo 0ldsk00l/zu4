@@ -1669,7 +1669,7 @@ void IntroController::getTitleSourceData()
                     8, 8, 304, 80,
                     transparentColor.r,
                     transparentColor.g,
-                    transparentColor.b);
+                    transparentColor.b, 255);
 
                 Image *scaled;      // the scaled and filtered image
                 scaled = screenScale(titles[i].srcImage, settings.scale / info->prescale, 1, 1);
@@ -1738,7 +1738,7 @@ bool IntroController::updateTitle()
         {
             // clear the screen
             Image *screen = imageMgr->get("screen")->image;
-            screen->fillRect(0, 0, screen->w, screen->h, 0, 0, 0);
+            screen->fillRect(0, 0, screen->w, screen->h, 0, 0, 0, 255);
         }
         if (title->method == TITLE)
         {
@@ -1780,7 +1780,7 @@ bool IntroController::updateTitle()
                     1,
                     title->plotData[title->animStep].r,
                     title->plotData[title->animStep].g,
-                    title->plotData[title->animStep].b);
+                    title->plotData[title->animStep].b, 255);
                 title->animStep++;
             }
             break;
@@ -1802,7 +1802,7 @@ bool IntroController::updateTitle()
                     1,
                     color.r,
                     color.g,
-                    color.b);
+                    color.b, 255);
             }
             break;
         }
@@ -1865,7 +1865,7 @@ bool IntroController::updateTitle()
             title->animStep = animStepTarget;
 
             random_shuffle(title->plotData.begin(), title->plotData.end());
-            title->destImage->fillRect(1, 1, title->rw, title->rh, 0, 0, 0);
+            title->destImage->fillRect(1, 1, title->rw, title->rh, 0, 0, 0, 255);
 
             // @TODO: animStepTarget (for this loop) should not exceed
             // half of animStepMax.  If so, instead draw the entire
@@ -1887,7 +1887,7 @@ bool IntroController::updateTitle()
                 75, 1, 54, 5,
                 transparentColor.r,
                 transparentColor.g,
-                transparentColor.b);
+                transparentColor.b, 255);
             break;
         }
 

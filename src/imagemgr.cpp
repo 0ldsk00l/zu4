@@ -306,7 +306,7 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
     /* ----------------------------
      * erase the original "present"
      * ---------------------------- */
-    im->fillRect(135 * prescale, 0 * prescale, 56 * prescale, 5 * prescale, 0, 0, 0);
+    im->fillRect(135 * prescale, 0 * prescale, 56 * prescale, 5 * prescale, 0, 0, 0, 255);
 
     /* -------------------------
      * update the colors for VGA
@@ -357,7 +357,7 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
 
         im->fillRect(x * prescale, y * prescale,
                      2 * prescale, prescale,
-                     color.r, color.g, color.b);
+                     color.r, color.g, color.b, 255);
         i += 2;
     }
 
@@ -376,7 +376,7 @@ void ImageMgr::fixupIntro(Image *im, int prescale) {
     for (i = 84; i < 236; i++)  // 152 px wide
         im->fillRect(i * prescale, 31 * prescale,
                      prescale, prescale,
-                     color.r, color.g, color.b);
+                     color.r, color.g, color.b, 255);
 }
 
 void ImageMgr::fixupAbyssVision(Image *im, int prescale) {
@@ -413,15 +413,15 @@ void ImageMgr::fixupAbacus(Image *im, int prescale) {
      * when scaling
      */
 
-    im->fillRect(7 * prescale, 186 * prescale, prescale, 14 * prescale, 0, 255, 80); /* green */
-    im->fillRect(16 * prescale, 186 * prescale, prescale, 14 * prescale, 0, 255, 80); /* green */
-    im->fillRect(8 * prescale, 186 * prescale, prescale * 8, prescale, 0, 255, 80); /* green */
-    im->fillRect(8 * prescale, 199 * prescale, prescale * 8, prescale, 0, 255, 80); /* green */
+    im->fillRect(7 * prescale, 186 * prescale, prescale, 14 * prescale, 0, 255, 80, 255); /* green */
+    im->fillRect(16 * prescale, 186 * prescale, prescale, 14 * prescale, 0, 255, 80, 255); /* green */
+    im->fillRect(8 * prescale, 186 * prescale, prescale * 8, prescale, 0, 255, 80, 255); /* green */
+    im->fillRect(8 * prescale, 199 * prescale, prescale * 8, prescale, 0, 255, 80, 255); /* green */
 
-    im->fillRect(23 * prescale, 186 * prescale, prescale, 14 * prescale, 0, 255, 80); /* green */
-    im->fillRect(32 * prescale, 186 * prescale, prescale, 14 * prescale, 0, 255, 80); /* green */
-    im->fillRect(24 * prescale, 186 * prescale, prescale * 8, prescale, 0, 255, 80); /* green */
-    im->fillRect(24 * prescale, 199 * prescale, prescale * 8, prescale, 0, 255, 80); /* green */
+    im->fillRect(23 * prescale, 186 * prescale, prescale, 14 * prescale, 0, 255, 80, 255); /* green */
+    im->fillRect(32 * prescale, 186 * prescale, prescale, 14 * prescale, 0, 255, 80, 255); /* green */
+    im->fillRect(24 * prescale, 186 * prescale, prescale * 8, prescale, 0, 255, 80, 255); /* green */
+    im->fillRect(24 * prescale, 199 * prescale, prescale * 8, prescale, 0, 255, 80, 255); /* green */
 }
 
 /**

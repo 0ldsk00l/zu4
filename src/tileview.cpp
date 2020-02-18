@@ -181,28 +181,28 @@ void TileView::drawFocus(int x, int y) {
                          SCALED(y * tileHeight + this->y),
                          SCALED(2),
                          SCALED(tileHeight),
-                         0xff, 0xff, 0xff);
+                         0xff, 0xff, 0xff, 0xff);
 
         /* top edge */
         screen->fillRect(SCALED(x * tileWidth + this->x),
                          SCALED(y * tileHeight + this->y),
                          SCALED(tileWidth),
                          SCALED(2),
-                         0xff, 0xff, 0xff);
+                         0xff, 0xff, 0xff, 0xff);
 
         /* right edge */
         screen->fillRect(SCALED((x + 1) * tileWidth + this->x - 2),
                          SCALED(y * tileHeight + this->y),
                          SCALED(2),
                          SCALED(tileHeight),
-                         0xff, 0xff, 0xff);
+                         0xff, 0xff, 0xff, 0xff);
 
         /* bottom edge */
         screen->fillRect(SCALED(x * tileWidth + this->x),
                          SCALED((y + 1) * tileHeight + this->y - 2),
                          SCALED(tileWidth),
                          SCALED(2),
-                         0xff, 0xff, 0xff);
+                         0xff, 0xff, 0xff, 0xff);
     }
 }
 

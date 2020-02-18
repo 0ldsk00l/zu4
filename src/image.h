@@ -48,7 +48,7 @@ public:
 
     uint32_t getPixel(int x, int y);
     void putPixel(int x, int y, uint32_t value);
-    void fillRect(int x, int y, int w, int h, int r, int g, int b, int a=IM_OPAQUE);
+    void fillRect(int x, int y, int width, int height, int r, int g, int b, int a);
     void drawHighlighted();
 
     /**

@@ -26,7 +26,7 @@ void View::reinit() {
  */
 void View::clear() {
     unhighlight();
-    screen->fillRect(SCALED(x), SCALED(y), SCALED(width), SCALED(height), 0, 0, 0);
+    screen->fillRect(SCALED(x), SCALED(y), SCALED(width), SCALED(height), 0, 0, 0, 255);
 }
 
 /**
