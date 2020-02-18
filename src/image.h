@@ -39,7 +39,7 @@ public:
     ~Image();
 
     /* alpha handling */
-    bool isAlphaOn() const;
+    bool isAlphaOn();
     void alphaOn();
     void alphaOff();
 
@@ -54,7 +54,7 @@ public:
     /**
      * Draws the entire image onto the screen at the given offset.
      */
-    void draw(int x, int y) const {
+    void draw(int x, int y) {
         drawOn(NULL, x, y);
     }
 
@@ -63,7 +63,7 @@ public:
      * The area of the image to draw is defined by the rectangle rx, ry,
      * rw, rh.
      */
-    void drawSubRect(int x, int y, int rx, int ry, int rw, int rh) const {
+    void drawSubRect(int x, int y, int rx, int ry, int rw, int rh) {
         drawSubRectOn(NULL, x, y, rx, ry, rw, rh);
     }
 
@@ -72,14 +72,14 @@ public:
      * The area of the image to draw is defined by the rectangle rx, ry,
      * rw, rh.
      */
-    void drawSubRectInverted(int x, int y, int rx, int ry, int rw, int rh) const {
+    void drawSubRectInverted(int x, int y, int rx, int ry, int rw, int rh) {
         drawSubRectInvertedOn(NULL, x, y, rx, ry, rw, rh);
     }
 
     /* image drawing methods for drawing onto another image instead of the screen */
-    void drawOn(Image *d, int x, int y) const;
-    void drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const;
-    void drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const;
+    void drawOn(Image *d, int x, int y);
+    void drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh);
+    void drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh);
 
     unsigned int w, h;
     RGBA backgroundColor;

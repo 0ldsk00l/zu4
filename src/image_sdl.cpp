@@ -94,18 +94,15 @@ void Image::initializeToBackgroundColor(RGBA backgroundColor)
     		backgroundColor.a);
 }
 
-bool Image::isAlphaOn() const
-{
+bool Image::isAlphaOn() {
     return surface->flags & SDL_SRCALPHA;
 }
 
-void Image::alphaOn()
-{
+void Image::alphaOn() {
     surface->flags |= SDL_SRCALPHA;
 }
 
-void Image::alphaOff()
-{
+void Image::alphaOff() {
     surface->flags &= ~SDL_SRCALPHA;
 }
 
@@ -129,7 +126,7 @@ void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, i
 /**
  * Draws the image onto another image.
  */
-void Image::drawOn(Image *d, int x, int y) const {
+void Image::drawOn(Image *d, int x, int y) {
     if (d == NULL) {
         d = imageMgr->get("screen")->image;
 	}
@@ -145,7 +142,7 @@ void Image::drawOn(Image *d, int x, int y) const {
 /**
  * Draws a piece of the image onto another image.
  */
-void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const {
+void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) {
     SDL_Rect src, dest;
     if (d == NULL) {
         d = imageMgr->get("screen")->image;
@@ -166,7 +163,7 @@ void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh
 /**
  * Draws a piece of the image onto another image, inverted.
  */
-void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const {
+void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) {
     int i;
     SDL_Rect src, dest;
 
