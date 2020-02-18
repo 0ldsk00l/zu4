@@ -489,10 +489,10 @@ void screenDrawImage(const string &name, int x, int y) {
         
         if (info) {
             info->image->drawSubRect(x, y,
-                                     subimage->x * (1 / info->prescale),
-                                     subimage->y * (1 / info->prescale),
-                                     subimage->width * (1 / info->prescale),
-                                     subimage->height * (1 / info->prescale));
+                                     subimage->x,
+                                     subimage->y,
+                                     subimage->width,
+                                     subimage->height);
             return;
         }
     }

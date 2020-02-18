@@ -142,8 +142,8 @@ void Tile::loadImage() {
         	info->image->alphaOff();
 
         if (info) {
-            w = (subimage ? subimage->width : info->width / info->prescale);
-            h = (subimage ? (subimage->height) / frames : (info->height / info->prescale) / frames);
+            w = (subimage ? subimage->width : info->width);
+            h = (subimage ? (subimage->height) / frames : info->height / frames);
             image = Image::create(w, h * frames);
 
 

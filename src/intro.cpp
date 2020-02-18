@@ -1536,8 +1536,7 @@ void IntroController::addTitle(int x, int y, int w, int h, AnimType method, int 
         duration,           // total animation time
         NULL,               // storage for the source image
         NULL,               // storage for the animation frame
-        std::vector<AnimPlot>(),
-        false};             // prescaled
+        std::vector<AnimPlot>()};
     titles.push_back(data);
 }
 
@@ -1561,7 +1560,7 @@ void IntroController::getTitleSourceData()
         xu4_error(XU4_LOG_ERR, "ERROR 1007: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
     }
 
-    if (info->width / info->prescale != 320 || info->height / info->prescale != 200)
+    if (info->width != 320 || info->height != 200)
     {
         // the image appears to have been scaled already
     	xu4_error(XU4_LOG_WRN, "ERROR 1008: The title image (\"%s\") has been scaled too early!\t\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
@@ -1582,18 +1581,18 @@ void IntroController::getTitleSourceData()
         {
             // create a place to store the source image
             titles[i].srcImage = Image::create(
-                titles[i].rw * info->prescale,
-                titles[i].rh * info->prescale);
+                titles[i].rw,
+                titles[i].rh);
 
             // get the source image
             info->image->drawSubRectOn(
                 titles[i].srcImage,
                 0,
                 0,
-                titles[i].rx * info->prescale,
-                titles[i].ry * info->prescale,
-                titles[i].rw * info->prescale,
-                titles[i].rh * info->prescale);
+                titles[i].rx,
+                titles[i].ry,
+                titles[i].rw,
+                titles[i].rh);
         }
 
         // after getting the srcImage
@@ -1646,7 +1645,7 @@ void IntroController::getTitleSourceData()
                 {
                     for (int x=0; x < titles[i].rw ; x++)
                     {
-                        uint32_t pixIndex = titles[i].srcImage->getPixel(x*info->prescale, y*info->prescale);
+                        uint32_t pixIndex = titles[i].srcImage->getPixel(x, y);
                         r = pixIndex & 0xff;
 						g = (pixIndex & 0xff00) >> 8;
 						b = (pixIndex & 0xff0000) >> 16;
@@ -1672,9 +1671,8 @@ void IntroController::getTitleSourceData()
                     transparentColor.b, 255);
 
                 Image *scaled;      // the scaled and filtered image
-                scaled = screenScale(titles[i].srcImage, 1 / info->prescale, 1, 1);
+                scaled = screenScale(titles[i].srcImage, 1, 1, 1);
 
-                titles[i].prescaled = true;
                 delete titles[i].srcImage;
                 titles[i].srcImage = scaled;
 
@@ -1695,8 +1693,8 @@ void IntroController::getTitleSourceData()
 
         // create the initial animation frame
         titles[i].destImage = Image::create(
-            2 + (titles[i].prescaled ? titles[i].rw : titles[i].rw) * info->prescale ,
-            2 + (titles[i].prescaled ? titles[i].rh : titles[i].rh) * info->prescale);
+            2 + titles[i].rw,
+            2 + titles[i].rh);
     }
 
     // turn alpha back on
@@ -1706,7 +1704,7 @@ void IntroController::getTitleSourceData()
     }
 
     // scale the original image now
-    Image *scaled = screenScale(info->image, 1 / info->prescale, false, 1);
+    Image *scaled = screenScale(info->image, 1, false, 1);
     delete info->image;
     info->image = scaled;
 }
@@ -2045,10 +2043,7 @@ void IntroController::drawTitle()
     Image *scaled;      // the scaled and filtered image
 
     // blit the scaled and filtered surface to the screen
-    if (title->prescaled)
-        scaled = title->destImage;
-    else
-        scaled = screenScale(title->destImage, 1, 1, 1);
+    scaled = screenScale(title->destImage, 1, 1, 1);
 
     scaled->drawSubRect(
         title->rx,    // dest x, y
@@ -2058,11 +2053,8 @@ void IntroController::drawTitle()
         title->rw,
         title->rh);
 
-    if (!title->prescaled)
-    {
-        delete scaled;
-        scaled = NULL;
-    }
+    delete scaled;
+    scaled = NULL;
 }
 
 

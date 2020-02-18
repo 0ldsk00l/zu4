@@ -31,10 +31,10 @@ void ImageView::draw(const string &imageName, int x, int y) {
 
         if (info) {
             info->image->drawSubRect(this->x + x, this->y + y,
-                                     subimage->x / info->prescale,
-                                     subimage->y / info->prescale,
-                                     subimage->width / info->prescale,
-                                     subimage->height / info->prescale);
+                                     subimage->x,
+                                     subimage->y,
+                                     subimage->width,
+                                     subimage->height);
             return;
         }
     }

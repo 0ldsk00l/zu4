@@ -82,7 +82,6 @@ public:
     std::string name;
     std::string filename;
     int width, height, depth;
-    int prescale;
     std::string filetype;
     int tiles;                  /**< used to scale the without bleeding colors between adjacent tiles */
     bool introOnly;             /**< whether can be freed after the intro */
@@ -125,10 +124,10 @@ private:
 
     std::string guessFileType(const string &filename);
 
-    void fixupIntro(Image *im, int prescale);
-    void fixupAbyssVision(Image *im, int prescale);
-    void fixupAbacus(Image *im, int prescale);
-    void fixupDungNS(Image *im, int prescale);
+    void fixupIntro(Image *im);
+    void fixupAbyssVision(Image *im);
+    void fixupAbacus(Image *im);
+    void fixupDungNS(Image *im);
 
     void update(SettingsData *newSettings);
 

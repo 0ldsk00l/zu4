@@ -255,7 +255,6 @@ private:
         Image *srcImage;                    // storage for the source image
         Image *destImage;                   // storage for the animation frame
         std::vector <AnimPlot> plotData;    // plot data
-        bool prescaled;
     };
 
     void addTitle(int x, int y, int w, int h, AnimType method, int delay, int duration);
