@@ -489,10 +489,10 @@ void screenDrawImage(const string &name, int x, int y) {
         
         if (info) {
             info->image->drawSubRect(x, y,
-                                     subimage->x * (settings.scale / info->prescale),
-                                     subimage->y * (settings.scale / info->prescale),
-                                     subimage->width * (settings.scale / info->prescale),
-                                     subimage->height * (settings.scale / info->prescale));
+                                     subimage->x * (1 / info->prescale),
+                                     subimage->y * (1 / info->prescale),
+                                     subimage->width * (1 / info->prescale),
+                                     subimage->height * (1 / info->prescale));
             return;
         }
     }
@@ -506,10 +506,10 @@ void screenDrawImageInMapArea(const string &name) {
     if (!info)
         xu4_error(XU4_LOG_ERR, "ERROR 1004: Unable to load data files.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/");
     
-    info->image->drawSubRect(BORDER_WIDTH * settings.scale, BORDER_HEIGHT * settings.scale,
-                             BORDER_WIDTH * settings.scale, BORDER_HEIGHT * settings.scale,
-                             VIEWPORT_W * TILE_WIDTH * settings.scale, 
-                             VIEWPORT_H * TILE_HEIGHT * settings.scale);
+    info->image->drawSubRect(BORDER_WIDTH, BORDER_HEIGHT,
+                             BORDER_WIDTH, BORDER_HEIGHT,
+                             VIEWPORT_W * TILE_WIDTH, 
+                             VIEWPORT_H * TILE_HEIGHT);
 }
 
 
@@ -550,9 +550,9 @@ void screenShowChar(int chr, int x, int y) {
             xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
     }
     
-    charsetInfo->image->drawSubRect(x * charsetInfo->image->w, y * (CHAR_HEIGHT * settings.scale),
-                                    0, chr * (CHAR_HEIGHT * settings.scale),
-                                    charsetInfo->image->w, CHAR_HEIGHT * settings.scale);
+    charsetInfo->image->drawSubRect(x * charsetInfo->image->w, y * CHAR_HEIGHT,
+                                    0, chr * CHAR_HEIGHT,
+                                    charsetInfo->image->w, CHAR_HEIGHT);
 }
 
 /**
@@ -565,17 +565,17 @@ void screenScrollMessageArea() {
     
     screen->drawSubRectOn(screen, 
                           TEXT_AREA_X * charsetInfo->image->w, 
-                          TEXT_AREA_Y * CHAR_HEIGHT * settings.scale,
+                          TEXT_AREA_Y * CHAR_HEIGHT,
                           TEXT_AREA_X * charsetInfo->image->w,
-                          (TEXT_AREA_Y + 1) * CHAR_HEIGHT * settings.scale,
+                          (TEXT_AREA_Y + 1) * CHAR_HEIGHT,
                           TEXT_AREA_W * charsetInfo->image->w,
-                          (TEXT_AREA_H - 1) * CHAR_HEIGHT * settings.scale);
+                          (TEXT_AREA_H - 1) * CHAR_HEIGHT);
     
     
     screen->fillRect(TEXT_AREA_X * charsetInfo->image->w,
-                     TEXT_AREA_Y * CHAR_HEIGHT * settings.scale + (TEXT_AREA_H - 1) * CHAR_HEIGHT * settings.scale,
+                     TEXT_AREA_Y * CHAR_HEIGHT + (TEXT_AREA_H - 1) * CHAR_HEIGHT,
                      TEXT_AREA_W * charsetInfo->image->w,
-                     CHAR_HEIGHT * settings.scale,
+                     CHAR_HEIGHT,
                      0, 0, 0, 255);
     
     screenRedrawScreen();
@@ -998,19 +998,19 @@ void screenRedrawMapArea() {
 
 void screenEraseMapArea() {
     Image *screen = imageMgr->get("screen")->image;
-    screen->fillRect(BORDER_WIDTH * settings.scale,
-                     BORDER_WIDTH * settings.scale,
-                     VIEWPORT_W * TILE_WIDTH * settings.scale,
-                     VIEWPORT_H * TILE_HEIGHT * settings.scale,
+    screen->fillRect(BORDER_WIDTH,
+                     BORDER_WIDTH,
+                     VIEWPORT_W * TILE_WIDTH,
+                     VIEWPORT_H * TILE_HEIGHT,
                      0, 0, 0, 255);
 }
 
 void screenEraseTextArea(int x, int y, int width, int height) {
     Image *screen = imageMgr->get("screen")->image;
-    screen->fillRect(x * CHAR_WIDTH * settings.scale,
-                     y * CHAR_HEIGHT * settings.scale,
-                     width * CHAR_WIDTH * settings.scale,
-                     height * CHAR_HEIGHT * settings.scale,
+    screen->fillRect(x * CHAR_WIDTH,
+                     y * CHAR_HEIGHT,
+                     width * CHAR_WIDTH,
+                     height * CHAR_HEIGHT,
                      0, 0, 0, 255);
 }
 
@@ -1033,22 +1033,22 @@ void screenShake(int iterations) {
         // specify the size of the offset, and create a buffer
         // to store the offset row plus 1
         shakeOffset = 1;
-        bottom = Image::create(SCALED(320), SCALED(shakeOffset+1));
+        bottom = Image::create(320, (shakeOffset+1));
         
         for (i = 0; i < iterations; i++) {
             // store the bottom row
-            screen->drawOn(bottom, 0, SCALED((shakeOffset+1)-200));
+            screen->drawOn(bottom, 0, ((shakeOffset+1)-200));
             
             // shift the screen down and make the top row black
-            screen->drawSubRectOn(screen, 0, SCALED(shakeOffset), 0, 0, SCALED(320), SCALED(200-(shakeOffset+1)));
-            bottom->drawOn(screen, 0, SCALED(200-(shakeOffset)));
-            screen->fillRect(0, 0, SCALED(320), SCALED(shakeOffset), 0, 0, 0, 255);
+            screen->drawSubRectOn(screen, 0, (shakeOffset), 0, 0, 320, (200-(shakeOffset+1)));
+            bottom->drawOn(screen, 0, (200-(shakeOffset)));
+            screen->fillRect(0, 0, (320), (shakeOffset), 0, 0, 0, 255);
             screenRedrawScreen();
             EventHandler::sleep(settings.shakeInterval);
             
             // shift the screen back up, and replace the bottom row
-            screen->drawOn(screen, 0, 0-SCALED(shakeOffset));
-            bottom->drawOn(screen, 0, SCALED(200-(shakeOffset+1)));
+            screen->drawOn(screen, 0, 0-(shakeOffset));
+            bottom->drawOn(screen, 0, (200-(shakeOffset+1)));
             screenRedrawScreen();
             EventHandler::sleep(settings.shakeInterval);
         }
@@ -1072,12 +1072,12 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
         xu4_assert(charsetInfo, "charset not initialized");
         std::map<string, int>::iterator charIndex = dungeonTileChars.find(t.getTileType()->getName());
         if (charIndex != dungeonTileChars.end()) {
-            charsetInfo->image->drawSubRect((layout->viewport.x + (x * layout->tileshape.width)) * settings.scale,
-                                            (layout->viewport.y + (y * layout->tileshape.height)) * settings.scale,
+            charsetInfo->image->drawSubRect((layout->viewport.x + (x * layout->tileshape.width)),
+                                            (layout->viewport.y + (y * layout->tileshape.height)),
                                             0, 
-                                            charIndex->second * layout->tileshape.height * settings.scale, 
-                                            layout->tileshape.width * settings.scale,
-                                            layout->tileshape.height * settings.scale);
+                                            charIndex->second * layout->tileshape.height, 
+                                            layout->tileshape.width,
+                                            layout->tileshape.height);
         }
     }
     else {
@@ -1088,18 +1088,18 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
         }
         
         if (tile < 128) {
-            gemTilesInfo->image->drawSubRect((layout->viewport.x + (x * layout->tileshape.width)) * settings.scale,
-                                             (layout->viewport.y + (y * layout->tileshape.height)) * settings.scale,
+            gemTilesInfo->image->drawSubRect((layout->viewport.x + (x * layout->tileshape.width)),
+                                             (layout->viewport.y + (y * layout->tileshape.height)),
                                              0, 
-                                             tile * layout->tileshape.height * settings.scale,
-                                             layout->tileshape.width * settings.scale,
-                                             layout->tileshape.height * settings.scale);
+                                             tile * layout->tileshape.height,
+                                             layout->tileshape.width,
+                                             layout->tileshape.height);
         } else {
             Image *screen = imageMgr->get("screen")->image;
-            screen->fillRect((layout->viewport.x + (x * layout->tileshape.width)) * settings.scale,
-                             (layout->viewport.y + (y * layout->tileshape.height)) * settings.scale,
-                             layout->tileshape.width * settings.scale,
-                             layout->tileshape.height * settings.scale,
+            screen->fillRect((layout->viewport.x + (x * layout->tileshape.width)),
+                             (layout->viewport.y + (y * layout->tileshape.height)),
+                             layout->tileshape.width,
+                             layout->tileshape.height,
                              0, 0, 0, 255);
         }
     }
@@ -1127,10 +1127,10 @@ void screenGemUpdate() {
     int x, y;
     Image *screen = imageMgr->get("screen")->image;
     
-    screen->fillRect(BORDER_WIDTH * settings.scale, 
-                     BORDER_HEIGHT * settings.scale,
-                     VIEWPORT_W * TILE_WIDTH * settings.scale, 
-                     VIEWPORT_H * TILE_HEIGHT * settings.scale,
+    screen->fillRect(BORDER_WIDTH, 
+                     BORDER_HEIGHT,
+                     VIEWPORT_W * TILE_WIDTH, 
+                     VIEWPORT_H * TILE_HEIGHT,
                      0, 0, 0, 255);
     
     Layout *layout = screenGetGemLayout(c->location->map);

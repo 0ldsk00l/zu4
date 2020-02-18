@@ -18,16 +18,16 @@ ProgressBar::ProgressBar(int x, int y, int width, int height, int _min, int _max
 ProgressBar& ProgressBar::operator++()  { current++; draw(); return *this; }
 ProgressBar& ProgressBar::operator--()  { current--; draw(); return *this; }
 void ProgressBar::draw() {
-    Image *bar = Image::create(SCALED(width), SCALED(height));
+    Image *bar = Image::create(width, height);
     int pos = static_cast<int>((double(current - min) / double(max - min)) * (width - (bwidth * 2)));
 
     // border color
-    bar->fillRect(0, 0, SCALED(width), SCALED(height), bcolor.r, bcolor.g, bcolor.b, 255); 
+    bar->fillRect(0, 0, width, height, bcolor.r, bcolor.g, bcolor.b, 255); 
 
     // color
-    bar->fillRect(SCALED(bwidth), SCALED(bwidth), SCALED(pos), SCALED(height - (bwidth * 2)), color.r, color.g, color.b, 255); 
+    bar->fillRect(bwidth, bwidth, pos, (height - (bwidth * 2)), color.r, color.g, color.b, 255); 
 
-    bar->drawOn(screen, SCALED(x), SCALED(y));
+    bar->drawOn(screen, x, y);
     update();
 
     delete bar;

@@ -112,8 +112,6 @@ Image *Tile::getImage() {
  */ 
 void Tile::loadImage() {
     if (!image) {
-        scale = settings.scale;
-
     	SubImage *subimage = NULL;
 
         ImageInfo *info = imageMgr->get(imageName);
@@ -144,8 +142,8 @@ void Tile::loadImage() {
         	info->image->alphaOff();
 
         if (info) {
-            w = (subimage ? subimage->width * scale : info->width * scale / info->prescale);
-            h = (subimage ? (subimage->height * scale) / frames : (info->height * scale / info->prescale) / frames);
+            w = (subimage ? subimage->width : info->width / info->prescale);
+            h = (subimage ? (subimage->height) / frames : (info->height / info->prescale) / frames);
             image = Image::create(w, h * frames);
 
 
@@ -154,7 +152,7 @@ void Tile::loadImage() {
             /* draw the tile from the image we found to our tile image */
             if (subimage) {
                 Image *tiles = info->image;
-                tiles->drawSubRectOn(image, 0, 0, subimage->x * scale, subimage->y * scale, subimage->width * scale, subimage->height * scale);
+                tiles->drawSubRectOn(image, 0, 0, subimage->x, subimage->y, subimage->width, subimage->height);
             }
             else info->image->drawOn(image, 0, 0);
         }

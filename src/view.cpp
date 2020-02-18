@@ -26,7 +26,7 @@ void View::reinit() {
  */
 void View::clear() {
     unhighlight();
-    screen->fillRect(SCALED(x), SCALED(y), SCALED(width), SCALED(height), 0, 0, 0, 255);
+    screen->fillRect(x, y, width, height, 0, 0, 0, 255);
 }
 
 /**
@@ -67,12 +67,12 @@ void View::unhighlight() {
 void View::drawHighlighted() {
     Image *screen = imageMgr->get("screen")->image;
     
-    Image *tmp = Image::create(SCALED(highlightW), SCALED(highlightH));
+    Image *tmp = Image::create(highlightW, highlightH);
     if (!tmp)
         return;
     
-    screen->drawSubRectOn(tmp, 0, 0, SCALED(this->x + highlightX), SCALED(this->y + highlightY), SCALED(highlightW), SCALED(highlightH));
+    screen->drawSubRectOn(tmp, 0, 0, this->x + highlightX, this->y + highlightY, highlightW, highlightH);
     tmp->drawHighlighted();
-    tmp->draw(SCALED(this->x + highlightX), SCALED(this->y + highlightY));
+    tmp->draw((this->x + highlightX), (this->y + highlightY));
     delete tmp;
 }

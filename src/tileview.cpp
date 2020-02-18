@@ -22,7 +22,7 @@ TileView::TileView(int x, int y, int columns, int rows) : View(x, y, columns * T
     this->tileWidth = TILE_WIDTH;
     this->tileHeight = TILE_HEIGHT;
     this->tileset = Tileset::get("base");
-    animated = Image::create(SCALED(tileWidth), SCALED(tileHeight));
+    animated = Image::create(tileWidth, tileHeight);
 }
 
 TileView::TileView(int x, int y, int columns, int rows, const string &tileset) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
@@ -31,7 +31,7 @@ TileView::TileView(int x, int y, int columns, int rows, const string &tileset) :
     this->tileWidth = TILE_WIDTH;
     this->tileHeight = TILE_HEIGHT;
     this->tileset = Tileset::get(tileset);
-    animated = Image::create(SCALED(tileWidth), SCALED(tileHeight));
+    animated = Image::create(tileWidth, tileHeight);
 }
 
 TileView::~TileView() {
@@ -48,7 +48,7 @@ void TileView::reinit() {
     	delete animated;
     	animated = NULL;
     }
-    animated = Image::create(SCALED(tileWidth), SCALED(tileHeight));
+    animated = Image::create(tileWidth, tileHeight);
 }
 
 void TileView::loadTile(MapTile &mapTile)
@@ -70,14 +70,14 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
     xu4_assert(y < rows, "y value of %d out of range", y);
 
     //Blank scratch pad
-	animated->fillRect(0,0,SCALED(tileWidth),SCALED(tileHeight),0,0,0, 255);
+	animated->fillRect(0,0,tileWidth,tileHeight,0,0,0,255);
 	//Draw blackness on the tile.
-	animated->drawSubRect(SCALED(x * tileWidth + this->x),
-						  SCALED(y * tileHeight + this->y),
+	animated->drawSubRect(x * tileWidth + this->x,
+						  y * tileHeight + this->y,
 						  0,
 						  0,
-						  SCALED(tileWidth),
-						  SCALED(tileHeight));
+						  tileWidth,
+						  tileHeight);
 
     // draw the tile to the screen
     if (tile->getAnim()) {
@@ -85,20 +85,20 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
         tile->getAnim()->draw(animated, tile, mapTile, DIR_NONE);
 
         // Then draw it to the screen
-        animated->drawSubRect(SCALED(x * tileWidth + this->x),
-                              SCALED(y * tileHeight + this->y),
+        animated->drawSubRect(x * tileWidth + this->x,
+                              y * tileHeight + this->y,
                               0, 
                               0, 
-                              SCALED(tileWidth), 
-                              SCALED(tileHeight));
+                              tileWidth, 
+                              tileHeight);
     }
     else {
-        image->drawSubRect(SCALED(x * tileWidth + this->x), 
-                           SCALED(y * tileHeight + this->y),
+        image->drawSubRect(x * tileWidth + this->x, 
+                           y * tileHeight + this->y,
                            0,
-                           SCALED(tileHeight * mapTile.frame),
-                           SCALED(tileWidth),
-                           SCALED(tileHeight));
+                           tileHeight * mapTile.frame,
+                           tileWidth,
+                           tileHeight);
     }
 
     // draw the focus around the tile if it has the focus
@@ -110,13 +110,13 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 	xu4_assert(x < columns, "x value of %d out of range", x);
 	xu4_assert(y < rows, "y value of %d out of range", y);
 
-	animated->fillRect(0,0,SCALED(tileWidth),SCALED(tileHeight),0,0,0, 255);
-	animated->drawSubRect(SCALED(x * tileWidth + this->x),
-						  SCALED(y * tileHeight + this->y),
+	animated->fillRect(0,0,tileWidth,tileHeight,0,0,0,255);
+	animated->drawSubRect(x * tileWidth + this->x,
+						  y * tileHeight + this->y,
 						  0,
 						  0,
-						  SCALED(tileWidth),
-						  SCALED(tileHeight));
+						  tileWidth,
+						  tileHeight);
 
 	//int layer = 0;
 
@@ -146,17 +146,17 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
                 return; //This is a problem //FIXME, error message it. 
 			image->drawSubRectOn(animated,
 								0, 0,
-								0, SCALED(tileHeight * frontTile.frame),
-								SCALED(tileWidth),  SCALED(tileHeight));
+								0, tileHeight * frontTile.frame,
+								tileWidth,  tileHeight);
 		}
 
 		// Then draw it to the screen
-		animated->drawSubRect(SCALED(x * tileWidth + this->x),
-							  SCALED(y * tileHeight + this->y),
+		animated->drawSubRect(x * tileWidth + this->x,
+							  y * tileHeight + this->y,
 							  0,
 							  0,
-							  SCALED(tileWidth),
-							  SCALED(tileHeight));
+							  tileWidth,
+							  tileHeight);
 	}
 
 
@@ -177,31 +177,31 @@ void TileView::drawFocus(int x, int y) {
      */
     if ((screenCurrentCycle * 4 / SCR_CYCLE_PER_SECOND) % 2) {
         /* left edge */
-        screen->fillRect(SCALED(x * tileWidth + this->x),
-                         SCALED(y * tileHeight + this->y),
-                         SCALED(2),
-                         SCALED(tileHeight),
+        screen->fillRect(x * tileWidth + this->x,
+                         y * tileHeight + this->y,
+                         2,
+                         tileHeight,
                          0xff, 0xff, 0xff, 0xff);
 
         /* top edge */
-        screen->fillRect(SCALED(x * tileWidth + this->x),
-                         SCALED(y * tileHeight + this->y),
-                         SCALED(tileWidth),
-                         SCALED(2),
+        screen->fillRect(x * tileWidth + this->x,
+                         y * tileHeight + this->y,
+                         tileWidth,
+                         2,
                          0xff, 0xff, 0xff, 0xff);
 
         /* right edge */
-        screen->fillRect(SCALED((x + 1) * tileWidth + this->x - 2),
-                         SCALED(y * tileHeight + this->y),
-                         SCALED(2),
-                         SCALED(tileHeight),
+        screen->fillRect((x + 1) * tileWidth + this->x - 2,
+                         y * tileHeight + this->y,
+                         2,
+                         tileHeight,
                          0xff, 0xff, 0xff, 0xff);
 
         /* bottom edge */
-        screen->fillRect(SCALED(x * tileWidth + this->x),
-                         SCALED((y + 1) * tileHeight + this->y - 2),
-                         SCALED(tileWidth),
-                         SCALED(2),
+        screen->fillRect(x * tileWidth + this->x,
+                         (y + 1) * tileHeight + this->y - 2,
+                         tileWidth,
+                         2,
                          0xff, 0xff, 0xff, 0xff);
     }
 }

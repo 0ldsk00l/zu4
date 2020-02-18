@@ -3,6 +3,7 @@
  */
 
 #include "image.h"
+#include "imagemgr.h"
 #include "settings.h"
 #include "error.h"
 
@@ -129,19 +130,16 @@ void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, i
  * Draws the image onto another image.
  */
 void Image::drawOn(Image *d, int x, int y) const {
+    if (d == NULL) {
+        d = imageMgr->get("screen")->image;
+	}
+
     SDL_Rect r;
-    SDL_Surface *destSurface;
-
-    if (d == NULL)
-        destSurface = SDL_GetVideoSurface();
-    else
-        destSurface = d->surface;
-
     r.x = x;
     r.y = y;
     r.w = w;
     r.h = h;
-    SDL_BlitSurface(surface, NULL, destSurface, &r);
+    SDL_BlitSurface(surface, NULL, d->surface, &r);
 }
 
 /**
@@ -149,12 +147,9 @@ void Image::drawOn(Image *d, int x, int y) const {
  */
 void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const {
     SDL_Rect src, dest;
-    SDL_Surface *destSurface;
-
-    if (d == NULL)
-        destSurface = SDL_GetVideoSurface();
-    else
-        destSurface = d->surface;
+    if (d == NULL) {
+        d = imageMgr->get("screen")->image;
+	}
 
     src.x = rx;
     src.y = ry;
@@ -165,7 +160,7 @@ void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh
     dest.y = y;
     /* dest w & h unused */
 
-    SDL_BlitSurface(surface, &src, destSurface, &dest);
+    SDL_BlitSurface(surface, &src, d->surface, &dest);
 }
 
 /**
@@ -174,12 +169,10 @@ void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh
 void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) const {
     int i;
     SDL_Rect src, dest;
-    SDL_Surface *destSurface;
 
-    if (d == NULL)
-        destSurface = SDL_GetVideoSurface();
-    else
-        destSurface = d->surface;
+    if (d == NULL) {
+        d = imageMgr->get("screen")->image;
+	}
 
     for (i = 0; i < rh; i++) {
         src.x = rx;
@@ -191,7 +184,7 @@ void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw
         dest.y = y + rh - i - 1;
         /* dest w & h unused */
 
-        SDL_BlitSurface(surface, &src, destSurface, &dest);
+        SDL_BlitSurface(surface, &src, d->surface, &dest);
     }
 }
 

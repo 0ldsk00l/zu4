@@ -61,7 +61,7 @@ void screenRedrawScreen() {
 }
 
 void screenRedrawTextArea(int x, int y, int width, int height) {
-	SDL_UpdateRect(SDL_GetVideoSurface(), x * CHAR_WIDTH * settings.scale, y * CHAR_HEIGHT * settings.scale, width * CHAR_WIDTH * settings.scale, height * CHAR_HEIGHT * settings.scale);
+	SDL_UpdateRect(SDL_GetVideoSurface(), x * CHAR_WIDTH, y * CHAR_HEIGHT, width * CHAR_WIDTH, height * CHAR_HEIGHT);
 }
 
 /**

@@ -1672,7 +1672,7 @@ void IntroController::getTitleSourceData()
                     transparentColor.b, 255);
 
                 Image *scaled;      // the scaled and filtered image
-                scaled = screenScale(titles[i].srcImage, settings.scale / info->prescale, 1, 1);
+                scaled = screenScale(titles[i].srcImage, 1 / info->prescale, 1, 1);
 
                 titles[i].prescaled = true;
                 delete titles[i].srcImage;
@@ -1695,8 +1695,8 @@ void IntroController::getTitleSourceData()
 
         // create the initial animation frame
         titles[i].destImage = Image::create(
-            2 + (titles[i].prescaled ? SCALED(titles[i].rw) : titles[i].rw) * info->prescale ,
-            2 + (titles[i].prescaled ? SCALED(titles[i].rh) : titles[i].rh) * info->prescale);
+            2 + (titles[i].prescaled ? titles[i].rw : titles[i].rw) * info->prescale ,
+            2 + (titles[i].prescaled ? titles[i].rh : titles[i].rh) * info->prescale);
     }
 
     // turn alpha back on
@@ -1706,7 +1706,7 @@ void IntroController::getTitleSourceData()
     }
 
     // scale the original image now
-    Image *scaled = screenScale(info->image, settings.scale / info->prescale, false, 1);
+    Image *scaled = screenScale(info->image, 1 / info->prescale, false, 1);
     delete info->image;
     info->image = scaled;
 }
@@ -1929,20 +1929,20 @@ bool IntroController::updateTitle()
             // blit src to the canvas one row at a time, center out
             title->srcImage->drawSubRectOn(
                 title->destImage,
-                SCALED( 153-(step*8) ),
-                SCALED( 1 ),
+                153-(step*8),
+                1,
                 0,
                 0,
-                SCALED( (step+1) * 8 ),
-                SCALED( title->srcImage->h) );
+                (step+1) * 8,
+                title->srcImage->h);
             title->srcImage->drawSubRectOn(
                 title->destImage,
-                SCALED( 161 ),
-                SCALED( 1 ),
-                SCALED( 312-(step*8) ),
+                161,
+                1,
+                312-(step*8),
                 0,
-                SCALED( (step+1) * 8 ),
-                SCALED( title->srcImage->h) );
+                (step+1) * 8,
+                title->srcImage->h);
 
 
             // create a destimage for the map tiles
@@ -1957,24 +1957,24 @@ bool IntroController::updateTitle()
 
                 screen->drawSubRectOn(
                     title->srcImage,
-                    SCALED(8),
-                    SCALED(8),
-                    SCALED(8),
-                    SCALED(13*8),
-                    SCALED(38*8),
-                    SCALED(10*8));
+                    8,
+                    8,
+                    8,
+                    13*8,
+                    38*8,
+                    10*8);
 
                 title->timeDuration = newtime + 250/4;
             }
 
             title->srcImage->drawSubRectOn(
                 title->destImage,
-                SCALED( 161 - (step * 8) ),
-                SCALED( 9 ),
-                SCALED( 160 - (step * 8) ),
-                SCALED( 8 ),
-                SCALED( (step * 2) * 8 ),
-                SCALED( (10 * 8) ) );
+                161 - (step * 8),
+                9,
+                160 - (step * 8),
+                8,
+                (step * 2) * 8,
+                (10 * 8));
 
             break;
         }
@@ -2048,15 +2048,15 @@ void IntroController::drawTitle()
     if (title->prescaled)
         scaled = title->destImage;
     else
-        scaled = screenScale(title->destImage, settings.scale, 1, 1);
+        scaled = screenScale(title->destImage, 1, 1, 1);
 
     scaled->drawSubRect(
-        SCALED(title->rx),    // dest x, y
-        SCALED(title->ry),
-        SCALED(1),              // src x, y, w, h
-        SCALED(1),
-        SCALED(title->rw),
-        SCALED(title->rh));
+        title->rx,    // dest x, y
+        title->ry,
+        1,              // src x, y, w, h
+        1,
+        title->rw,
+        title->rh);
 
     if (!title->prescaled)
     {

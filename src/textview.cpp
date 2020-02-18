@@ -43,11 +43,11 @@ void TextView::drawChar(int chr, int x, int y) {
     xu4_assert(x < columns, "x value of %d out of range", x);
     xu4_assert(y < rows, "y value of %d out of range", y);
 
-    charset->drawSubRect(SCALED(this->x + (x * CHAR_WIDTH)),
-                         SCALED(this->y + (y * CHAR_HEIGHT)),
-                         0, SCALED(chr * CHAR_HEIGHT),
-                         SCALED(CHAR_WIDTH),
-                         SCALED(CHAR_HEIGHT));
+    charset->drawSubRect(this->x + (x * CHAR_WIDTH),
+                         this->y + (y * CHAR_HEIGHT),
+                         0, chr * CHAR_HEIGHT,
+                         CHAR_WIDTH,
+                         CHAR_HEIGHT);
 }
 
 /**
@@ -60,10 +60,10 @@ void TextView::drawCharMasked(int chr, int x, int y, unsigned char mask) {
     drawChar(chr, x, y);
     for (int i = 0; i < 8; i++) {
         if (mask & (1 << i)) {
-            screen->fillRect(SCALED(this->x + (x * CHAR_WIDTH)),
-                             SCALED(this->y + (y * CHAR_HEIGHT) + i),
-                             SCALED(CHAR_WIDTH),
-                             SCALED(1),
+            screen->fillRect(this->x + (x * CHAR_WIDTH),
+                             this->y + (y * CHAR_HEIGHT) + i,
+                             CHAR_WIDTH,
+                             1,
                              0, 0, 0, 255);
         }
     }
@@ -190,17 +190,17 @@ void TextView::textAt(int x, int y, const char *fmt, ...) {
 
 void TextView::scroll() {
     screen->drawSubRectOn(screen,
-                          SCALED(x),
-                          SCALED(y),
-                          SCALED(x),
-                          SCALED(y) + SCALED(CHAR_HEIGHT),
-                          SCALED(width),
-                          SCALED(height) - SCALED(CHAR_HEIGHT));
+                          x,
+                          y,
+                          x,
+                          y + CHAR_HEIGHT,
+                          width,
+                          height - CHAR_HEIGHT);
 
-    screen->fillRect(SCALED(x),
-                     SCALED(y + (CHAR_HEIGHT * (rows - 1))),
-                     SCALED(width),
-                     SCALED(CHAR_HEIGHT),
+    screen->fillRect(x,
+                     y + (CHAR_HEIGHT * (rows - 1)),
+                     width,
+                     CHAR_HEIGHT,
                      0, 0, 0, 255);
 
     update();

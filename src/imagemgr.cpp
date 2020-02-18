@@ -16,8 +16,6 @@ using std::map;
 using std::string;
 using std::vector;
 
-Image *screenScale(Image *src, int scale, int n, int filter);
-
 bool ImageInfo::hasBlackBackground()
 {
 	return this->filetype == "image/x-u4raw";
@@ -616,25 +614,8 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         fixupDungNS(unscaled, info->prescale);
         break;
     }
-
-    if (returnUnscaled)
-    {
-        info->image = unscaled;
-        return info;
-    }
-
-    int imageScale = settings.scale;
-    if ((settings.scale % info->prescale) != 0) {
-        int orig_scale = settings.scale;
-        settings.scale = info->prescale;
-        xu4_settings_write();
-    	xu4_error(XU4_LOG_ERR, "image %s is prescaled to an incompatible size: %d\nResetting the scale to %d. Sorry about the inconvenience, please restart.", info->filename.c_str(), orig_scale, settings.scale);
-    }
-    imageScale /= info->prescale;
-
-    info->image = screenScale(unscaled, imageScale, info->tiles, 1);
-
-    delete unscaled;
+    
+    info->image = unscaled;
     return info;
 }
 

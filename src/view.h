@@ -5,8 +5,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#define SCALED(n) ((n) * settings.scale)
-
 class Image;
 
 /**

@@ -152,8 +152,8 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     }
 
     if (tiledWall) {
-    	int i_x = SCALED((VIEWPORT_W * tileWidth  / 2) + this->x) - (scaled->w / 2);
-    	int i_y = SCALED((VIEWPORT_H * tileHeight / 2) + this->y) - (scaled->h / 2);
+    	int i_x = ((VIEWPORT_W * tileWidth  / 2) + this->x) - (scaled->w / 2);
+    	int i_y = ((VIEWPORT_H * tileHeight / 2) + this->y) - (scaled->h / 2);
     	int f_x = i_x + scaled->w;
     	int f_y = i_y + scaled->h;
     	int d_x = animated->w;
@@ -172,16 +172,16 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     }
     else {
     	int y_offset = std::max(0,(dscale[distance] - offset_adj) * offset_multiplier);
-    	int x = SCALED((VIEWPORT_W * tileWidth / 2) + this->x) - (scaled->w / 2);
-    	int y = SCALED((VIEWPORT_H * tileHeight / 2) + this->y + y_offset) - (scaled->h / 8);
+    	int x = ((VIEWPORT_W * tileWidth / 2) + this->x) - (scaled->w / 2);
+    	int y = ((VIEWPORT_H * tileHeight / 2) + this->y + y_offset) - (scaled->h / 8);
 
 		scaled->drawSubRectOn(	this->screen,
 								x,
 								y,
 								0,
 								0,
-								SCALED(tileWidth * VIEWPORT_W + this->x) - x ,
-								SCALED(tileHeight * VIEWPORT_H + this->y) - y );
+								tileWidth * VIEWPORT_W + this->x - x ,
+								tileHeight * VIEWPORT_H + this->y - y );
     }
 
     delete scaled;
@@ -425,19 +425,19 @@ void DungeonView::drawWall(int xoffset, int distance, Direction orientation, Dun
         y = subimage->y;
     }
 
-    screenDrawImage(dngGraphicInfo[index].subimage, (BORDER_WIDTH + x) * settings.scale,
-                    (BORDER_HEIGHT + y) * settings.scale);
+    screenDrawImage(dngGraphicInfo[index].subimage, (BORDER_WIDTH + x),
+                    (BORDER_HEIGHT + y));
 
     if (dngGraphicInfo[index].subimage2 != NULL) {
         // FIXME: subimage2 is a horrible hack, needs to be cleaned up
         if (!settings.videoType) // EGA
             screenDrawImage(dngGraphicInfo[index].subimage2,
-                            (8 + dngGraphicInfo[index].ega_x2) * settings.scale,
-                            (8 + dngGraphicInfo[index].ega_y2) * settings.scale);
+                            (8 + dngGraphicInfo[index].ega_x2),
+                            (8 + dngGraphicInfo[index].ega_y2));
         else
             screenDrawImage(dngGraphicInfo[index].subimage2,
-                            (8 + dngGraphicInfo[index].vga_x2) * settings.scale,
-                            (8 + dngGraphicInfo[index].vga_y2) * settings.scale);
+                            (8 + dngGraphicInfo[index].vga_x2),
+                            (8 + dngGraphicInfo[index].vga_y2));
     }
 }
 
