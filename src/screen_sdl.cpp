@@ -60,10 +60,6 @@ void screenRedrawScreen() {
     SDL_Flip(SDL_GetVideoSurface());
 }
 
-void screenRedrawTextArea(int x, int y, int width, int height) {
-	SDL_UpdateRect(SDL_GetVideoSurface(), x * CHAR_WIDTH, y * CHAR_HEIGHT, width * CHAR_WIDTH, height * CHAR_HEIGHT);
-}
-
 /**
  * Scale an image up.  The resulting image will be scale * the
  * original dimensions.  The original image is no longer deleted.

@@ -685,7 +685,6 @@ void GameController::finishTurn() {
 
     /* draw a prompt */
     screenPrompt();
-    screenRedrawTextArea(TEXT_AREA_X, TEXT_AREA_Y, TEXT_AREA_W, TEXT_AREA_H);
 }
 
 /**
@@ -2975,7 +2974,6 @@ void GameController::timerFired() {
          
             /* pass the turn, and redraw the text area so the prompt is shown */
             controller->keyPressed(U4_SPACE);
-            screenRedrawTextArea(TEXT_AREA_X, TEXT_AREA_Y, TEXT_AREA_W, TEXT_AREA_H);
         }
     }
 

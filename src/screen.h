@@ -83,7 +83,6 @@ void screenMessage(const char *fmt, ...) PRINTF_LIKE(1, 2);
 void screenPrompt(void);
 void screenRedrawMapArea(void);
 void screenRedrawScreen(void);
-void screenRedrawTextArea(int x, int y, int width, int height);
 void screenScrollMessageArea(void);
 void screenShake(int iterations);
 void screenShowChar(int chr, int x, int y);
