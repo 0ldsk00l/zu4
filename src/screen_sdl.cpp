@@ -126,12 +126,9 @@ void screenRedrawScreen() {
  */
 Image *screenScale(Image *src, int scale, int n, int filter) {
     Image *dest = NULL;
-	bool alpha = src->isAlphaOn();
 
 	if (n == 0)
 		n = 1;
-
-	src->alphaOff();
 
 	while (filter && (scale % 2 == 0)) {
 		dest = scalePoint(src, 2, n);
@@ -145,9 +142,6 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
 	if (!dest)
 		dest = Image::duplicate(src);
 
-	if (alpha)
-		src->alphaOn();
-
     return dest;
 }
 
@@ -158,9 +152,6 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
 Image *screenScaleDown(Image *src, int scale) {
     unsigned int x, y;
     Image *dest;
-    bool alpha = src->isAlphaOn();
-
-    src->alphaOff();
 
     dest = Image::create(src->w / scale, src->h / scale);
     if (!dest) {
@@ -177,9 +168,6 @@ Image *screenScaleDown(Image *src, int scale) {
             dest->putPixel(x / scale, y / scale, index);
         }
     }
-
-    if (alpha)
-        src->alphaOn();
 
     return dest;
 }

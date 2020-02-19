@@ -41,20 +41,9 @@ Image *Image::createScreenImage() {
  * Creates a duplicate of another image
  */
 Image *Image::duplicate(Image *image) {    
-    bool alphaOn = image->isAlphaOn();
     Image *im = create(image->w, image->h);
-
-    /* Turn alpha off before blitting to non-screen surfaces */
-    if (alphaOn)
-        image->alphaOff();
-    
     image->drawOn(im, 0, 0);
-
-    if (alphaOn)
-        image->alphaOn();
-
     im->backgroundColor = image->backgroundColor;
-
     return im;
 }
 
@@ -77,18 +66,6 @@ void Image::initializeToBackgroundColor(RGBA backgroundColor)
     		backgroundColor.a);
 }
 
-bool Image::isAlphaOn() {
-    return false;//return surface->flags & SDL_SRCALPHA;
-}
-
-void Image::alphaOn() {
-    //surface->flags |= SDL_SRCALPHA;
-}
-
-void Image::alphaOff() {
-    //surface->flags &= ~SDL_SRCALPHA;
-}
-
 uint32_t Image::getPixel(int x, int y) {
 	if (x > (int)(w - 1) || y > (int)(h - 1) || x < 0 || y < 0) {
 		//printf("getPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
@@ -106,7 +83,7 @@ void Image::putPixel(int x, int y, uint32_t value) {
 }
 
 void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, int a) {
-    uint32_t pixel = (isAlphaOn() ? a & 0xff : 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
+    uint32_t pixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
     for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			*((uint32_t*)surface->pixels + ((y * w) + x) + (i * w) + j) = pixel;

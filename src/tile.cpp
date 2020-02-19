@@ -137,10 +137,6 @@ void Tile::loadImage() {
         		frames = 4;
         }
 
-
-        if (info->image)
-        	info->image->alphaOff();
-
         if (info) {
             w = (subimage ? subimage->width : info->width);
             h = (subimage ? (subimage->height) / frames : info->height / frames);

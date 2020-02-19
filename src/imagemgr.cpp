@@ -194,11 +194,9 @@ SubImage *ImageMgr::loadSubImageFromConf(const ImageInfo *info, const ConfigElem
 void ImageMgr::fixupIntro(Image *im) {
     const unsigned char *sigData;
     int i, x, y;
-    bool alpha = im->isAlphaOn();
     RGBA color;
 
     sigData = intro->getSigData();
-    im->alphaOff();
     /* ----------------------------
      * update the position of "and"
      * ---------------------------- */
@@ -292,11 +290,6 @@ void ImageMgr::fixupIntro(Image *im) {
                       56,
                       5);
 
-    if (alpha)
-    {
-        im->alphaOn();
-    }
-
     /* ----------------------------
      * erase the original "present"
      * ---------------------------- */
@@ -317,7 +310,6 @@ void ImageMgr::fixupIntro(Image *im) {
         borderInfo = imageMgr->get(BKGD_BORDERS, true);
 
         // update the border appearance
-        borderInfo->image->alphaOff();
         borderInfo->image->drawSubRectOn(im, 0, 96, 0, 0, 16, 56);
         for (int i=0; i < 9; i++)
         {
@@ -325,7 +317,6 @@ void ImageMgr::fixupIntro(Image *im) {
         }
         im->drawSubRectInvertedOn(im, 0, 144, 0, 104, 320, 40);
         im->drawSubRectOn(im, 0, 184, 0, 96, 320, 8);
-        borderInfo->image->alphaOn();
 
         delete borderInfo->image;
         borderInfo->image = NULL;

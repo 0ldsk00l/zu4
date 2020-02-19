@@ -41,11 +41,6 @@ public:
     static Image *duplicate(Image *image);
     ~Image();
 
-    /* alpha handling */
-    bool isAlphaOn();
-    void alphaOn();
-    void alphaOff();
-
     /* Will clear the image to the background color, and set the internal backgroundColor variable */
     void initializeToBackgroundColor(RGBA backgroundColor = DARK_GRAY_HALO);
 

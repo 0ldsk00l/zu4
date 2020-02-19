@@ -474,7 +474,6 @@ void screenUpdate(TileView *view, bool showmap, bool blackout) {
 void screenDrawImage(const string &name, int x, int y) {
     ImageInfo *info = imageMgr->get(name);
     if (info) {
-    	info->image->alphaOn();
         info->image->draw(x, y);
         return;
     }
@@ -484,17 +483,13 @@ void screenDrawImage(const string &name, int x, int y) {
         info = imageMgr->get(subimage->srcImageName);
     }
     
-	if (info) {
-		info->image->alphaOn();
-        
-        if (info) {
-            info->image->drawSubRect(x, y,
-                                     subimage->x,
-                                     subimage->y,
-                                     subimage->width,
-                                     subimage->height);
-            return;
-        }
+    if (info) {
+        info->image->drawSubRect(x, y,
+                                 subimage->x,
+                                 subimage->y,
+                                 subimage->width,
+                                 subimage->height);
+        return;
     }
     xu4_error(XU4_LOG_ERR, "ERROR 1006: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", name.c_str());
 }

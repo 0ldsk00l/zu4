@@ -1569,10 +1569,6 @@ void IntroController::getTitleSourceData()
     // get the transparent color
     transparentColor = RGBA{0, 0, 0, 0};
 
-    // turn alpha off, if necessary
-    bool alpha = info->image->isAlphaOn();
-    info->image->alphaOff();
-
     // for each element, get the source data
     for (unsigned i=0; i < titles.size(); i++)
     {
@@ -1681,20 +1677,10 @@ void IntroController::getTitleSourceData()
             }
         }
 
-        // permanently disable alpha
-        if (titles[i].srcImage)
-            titles[i].srcImage->alphaOff();
-
         // create the initial animation frame
         titles[i].destImage = Image::create(
             2 + titles[i].rw,
             2 + titles[i].rh);
-    }
-
-    // turn alpha back on
-    if (alpha)
-    {
-        info->image->alphaOn();
     }
 }
 
