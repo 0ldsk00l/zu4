@@ -21,7 +21,7 @@ ImageView::~ImageView() {
 void ImageView::draw(const string &imageName, int x, int y) {
     ImageInfo *info = imageMgr->get(imageName);
     if (info) {
-        info->image->draw(this->x + x, this->y + y);
+        xu4_img_draw(info->image, this->x + x, this->y + y);
         return;
     }
 
@@ -30,7 +30,7 @@ void ImageView::draw(const string &imageName, int x, int y) {
         info = imageMgr->get(subimage->srcImageName);
 
         if (info) {
-            info->image->drawSubRect(this->x + x, this->y + y,
+            xu4_img_draw_subrect(info->image, this->x + x, this->y + y,
                                      subimage->x,
                                      subimage->y,
                                      subimage->width,

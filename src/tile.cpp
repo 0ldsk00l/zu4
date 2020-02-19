@@ -148,9 +148,9 @@ void Tile::loadImage() {
             /* draw the tile from the image we found to our tile image */
             if (subimage) {
                 Image *tiles = info->image;
-                tiles->drawSubRectOn(image, 0, 0, subimage->x, subimage->y, subimage->width, subimage->height);
+                xu4_img_draw_subrect_on(image, tiles, 0, 0, subimage->x, subimage->y, subimage->width, subimage->height);
             }
-            else info->image->drawOn(image, 0, 0);
+            else xu4_img_draw_on(image, info->image, 0, 0);
         }
 
         if (animationRule.size() > 0) {

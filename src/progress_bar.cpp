@@ -22,12 +22,12 @@ void ProgressBar::draw() {
     int pos = static_cast<int>((double(current - min) / double(max - min)) * (width - (bwidth * 2)));
 
     // border color
-    bar->fillRect(0, 0, width, height, bcolor.r, bcolor.g, bcolor.b, 255); 
+    xu4_img_fill(bar, 0, 0, width, height, bcolor.r, bcolor.g, bcolor.b, 255); 
 
     // color
-    bar->fillRect(bwidth, bwidth, pos, (height - (bwidth * 2)), color.r, color.g, color.b, 255); 
+    xu4_img_fill(bar, bwidth, bwidth, pos, (height - (bwidth * 2)), color.r, color.g, color.b, 255); 
 
-    bar->drawOn(screen, x, y);
+    xu4_img_draw_on(screen, bar, x, y);
     update();
 
     delete bar;

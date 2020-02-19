@@ -39,8 +39,7 @@ Image *Image::createScreenImage() {
 
 Image *Image::duplicate(Image *image) {    
     Image *im = create(image->w, image->h);
-    image->drawOn(im, 0, 0);
-    im->backgroundColor = image->backgroundColor;
+    xu4_img_draw_on(im, image, 0, 0);
     return im;
 }
 
@@ -49,88 +48,90 @@ Image::~Image() {
     free(surface);
 }
 
-void Image::initializeToBackgroundColor(RGBA backgroundColor)
-{
-	this->backgroundColor = backgroundColor;
-    this->fillRect(0,0,this->w,this->h,
-    		backgroundColor.r,
-    		backgroundColor.g,
-    		backgroundColor.b,
-    		backgroundColor.a);
-}
-
-uint32_t Image::getPixel(int x, int y) {
-	if (x > (w - 1) || y > (h - 1) || x < 0 || y < 0) {
+uint32_t xu4_img_get_pixel(Image *s, int x, int y) {
+	if (x > (s->w - 1) || y > (s->h - 1) || x < 0 || y < 0) {
 		//printf("getPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return 0;
 	}
-	return *((uint32_t*)(surface->pixels) + (y * w) + x);
+	return *((uint32_t*)(s->surface->pixels) + (y * s->w) + x);
 }
 
-void Image::putPixel(int x, int y, uint32_t value) {
-	if (x > (w - 1) || y > (h - 1) || x < 0 || y < 0) {
+void xu4_img_set_pixel(Image *d, int x, int y, uint32_t value) {
+	if (x > (d->w - 1) || y > (d->h - 1) || x < 0 || y < 0) {
 		//printf("putPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return;
 	}
-	*((uint32_t*)(surface->pixels) + (y * w) + x) = value;
+	*((uint32_t*)(d->surface->pixels) + (y * d->w) + x) = value;
 }
 
-void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, int a) {
+void xu4_img_fill(Image *d, int x, int y, int width, int height, int r, int g, int b, int a) {
 	uint32_t pixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			*((uint32_t*)surface->pixels + ((y * w) + x) + (i * w) + j) = pixel;
+			*((uint32_t*)d->surface->pixels + ((y * d->w) + x) + (i * d->w) + j) = pixel;
 		}
 	}
 }
 
-void Image::drawOn(Image *d, int x, int y) {
+void xu4_img_draw_on(Image *d, Image *s, int x, int y) {
 	if (d == NULL) {
-		d = imageMgr->get("screen")->image;
+		d = xu4_img_get_screen();
 	}
 	
-	for (int i = 0; i < h; i++) {
+	for (int i = 0; i < s->h; i++) {
 		memcpy((uint32_t*)d->surface->pixels + ((y * d->w) + x) + (i * d->w),
-			(uint32_t*)surface->pixels + (i * w), w * sizeof(uint32_t));
+			(uint32_t*)s->surface->pixels + (i * s->w), s->w * sizeof(uint32_t));
 	}
 }
 
-void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) {
+void xu4_img_draw(Image *s, int x, int y) {
+	xu4_img_draw_on(NULL, s, x, y);
+}
+
+void xu4_img_draw_subrect_on(Image *d, Image *s, int x, int y, int rx, int ry, int rw, int rh) {
 	if (d == NULL) {
-		d = imageMgr->get("screen")->image;
+		d = xu4_img_get_screen();
 	}
 	
 	for (int i = 0; i < rh; i++) {
 		for (int j = 0; j < rw; j++) {
-			d->putPixel(x + j, y + i, getPixel(rx + j, ry + i));
+			xu4_img_set_pixel(d, x + j, y + i, xu4_img_get_pixel(s, rx + j, ry + i));
 		}
 	}
 }
 
-void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) {
+void xu4_img_draw_subrect(Image *s, int x, int y, int rx, int ry, int rw, int rh) {
+    xu4_img_draw_subrect_on(NULL, s, x, y, rx, ry, rw, rh);
+}
+
+void xu4_img_draw_subrect_inv(Image *d, Image *s, int x, int y, int rx, int ry, int rw, int rh) {
 	if (d == NULL) {
-		d = imageMgr->get("screen")->image;
+		d = xu4_img_get_screen();
 	}
 	
 	for (int i = 0; i < rh; i++) {
 		for (int j = 0; j < rw; j++) {
-			d->putPixel(x + j, y + rh - 1 - i, getPixel(rx + j, ry + i));
+			xu4_img_set_pixel(d, x + j, y + rh - 1 - i, xu4_img_get_pixel(s, rx + j, ry + i));
 		}
 	}
 }
 
-void Image::drawHighlighted() {
+void xu4_img_draw_highlighted(Image *d) {
 	uint32_t pixel;
 	RGBA c;
-	for (int i = 0; i < h; i++) {
-		for (int j = 0; j < w; j++) {
-			pixel = getPixel(j, i);
+	for (int i = 0; i < d->h; i++) {
+		for (int j = 0; j < d->w; j++) {
+			pixel = xu4_img_get_pixel(d, j, i);
 			c.r = 0xff - (pixel & 0xff);
 			c.g = 0xff - ((pixel & 0xff00) >> 8);
 			c.b = 0xff - ((pixel & 0xff0000) >> 16);
 			c.a = (pixel & 0xff000000) >> 24;
 			pixel = c.a << 24 | c.b << 16 | c.g << 8 | c.r;
-			putPixel(j, i, pixel);
+			xu4_img_set_pixel(d, j, i, pixel);
         }
     }
+}
+
+Image* xu4_img_get_screen() {
+	return imageMgr->get("screen")->image;
 }

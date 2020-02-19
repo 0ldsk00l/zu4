@@ -130,7 +130,7 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     const int *dscale = tiledWall ? lscale : nscale;
 
     //Clear scratchpad and set a background color
-    animated->initializeToBackgroundColor();
+    xu4_img_fill(animated, 0, 0, animated->w, animated->h, 14, 15, 16, 255);
     //Put tile on animated scratchpad
     if (tile->getAnim()) {
         MapTile mt = tile->getId();
@@ -138,7 +138,7 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     }
     else
     {
-        tile->getImage()->drawOn(animated, 0, 0);
+        xu4_img_draw_on(animated, tile->getImage(), 0, 0);
     }
 
     /* scale is based on distance; 1 means half size, 2 regular, 4 means scale by 2x, etc. */
@@ -161,7 +161,7 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
 
     	for (int x = i_x; x < f_x; x+=d_x)
     		for (int y = i_y; y < f_y; y+=d_y)
-    			animated->drawSubRectOn(this->screen,
+    			xu4_img_draw_subrect_on(this->screen, animated,
     					x,
     					y,
     					0,
@@ -175,13 +175,13 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     	int x = ((VIEWPORT_W * tileWidth / 2) + this->x) - (scaled->w / 2);
     	int y = ((VIEWPORT_H * tileHeight / 2) + this->y + y_offset) - (scaled->h / 8);
 
-		scaled->drawSubRectOn(	this->screen,
+		xu4_img_draw_subrect_on(this->screen, scaled,
 								x,
 								y,
 								0,
 								0,
 								tileWidth * VIEWPORT_W + this->x - x ,
-								tileHeight * VIEWPORT_H + this->y - y );
+								tileHeight * VIEWPORT_H + this->y - y);
     }
 
     delete scaled;

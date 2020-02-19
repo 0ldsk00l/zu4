@@ -1012,12 +1012,12 @@ void IntroController::timerFired() {
         switch (title->method) {
 			case SIGNATURE:
 				if (notblanked) {
-					title->destImage->fillRect(0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
+					xu4_img_fill(title->destImage, 0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
 					notblanked = false;
 				}
 				break;
 			case BAR: case ORIGIN: case PRESENT: case MAP:
-				title->destImage->fillRect(0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
+				xu4_img_fill(title->destImage, 0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
 				break;
 			default: break;
 		}
@@ -1599,8 +1599,8 @@ void IntroController::getTitleSourceData()
                 titles[i].rh);
 
             // get the source image
-            info->image->drawSubRectOn(
-                titles[i].srcImage,
+            xu4_img_draw_subrect_on(
+                titles[i].srcImage, info->image,
                 0,
                 0,
                 titles[i].rx,
@@ -1659,7 +1659,7 @@ void IntroController::getTitleSourceData()
                 {
                     for (int x=0; x < titles[i].rw ; x++)
                     {
-                        uint32_t pixIndex = titles[i].srcImage->getPixel(x, y);
+                        uint32_t pixIndex = xu4_img_get_pixel(titles[i].srcImage, x, y);
                         r = pixIndex & 0xff;
 						g = (pixIndex & 0xff00) >> 8;
 						b = (pixIndex & 0xff0000) >> 16;
@@ -1678,7 +1678,7 @@ void IntroController::getTitleSourceData()
             case MAP:
             {
                 // fill the map area with the transparent color
-                titles[i].srcImage->fillRect(
+                xu4_img_fill(titles[i].srcImage,
                     8, 8, 304, 80,
                     transparentColor.r,
                     transparentColor.g,
@@ -1728,8 +1728,8 @@ bool IntroController::updateTitle()
         if (title == titles.begin())
         {
             // clear the screen
-            Image *screen = imageMgr->get("screen")->image;
-            screen->fillRect(0, 0, screen->w, screen->h, 0, 0, 0, 255);
+            Image *screen = xu4_img_get_screen();
+            xu4_img_fill(screen, 0, 0, screen->w, screen->h, 0, 0, 0, 255);
         }
         if (title->method == TITLE)
         {
@@ -1764,7 +1764,7 @@ bool IntroController::updateTitle()
             while (animStepTarget > title->animStep)
             {
                 // blit the pixel-pair to the src surface
-                title->destImage->fillRect(
+                xu4_img_fill(title->destImage,
                     title->plotData[title->animStep].x,
                     title->plotData[title->animStep].y,
                     2,
@@ -1786,7 +1786,7 @@ bool IntroController::updateTitle()
                 color = RGBA{128, 0, 0, 255}; // dark red for the underline
 
                 // blit bar to the canvas
-                title->destImage->fillRect(
+                xu4_img_fill(title->destImage,
                     1,
                     1,
                     title->animStep,
@@ -1801,7 +1801,7 @@ bool IntroController::updateTitle()
         case AND:
         {
             // blit the entire src to the canvas
-            title->srcImage->drawOn(title->destImage, 1, 1);
+            xu4_img_draw_on(title->destImage, title->srcImage, 1, 1);
             title->animStep = title->animStepMax;
             break;
         }
@@ -1817,8 +1817,8 @@ bool IntroController::updateTitle()
             }
 
             // blit src to the canvas one row at a time, bottom up
-            title->srcImage->drawSubRectOn(
-                title->destImage,
+            xu4_img_draw_subrect_on(
+                title->destImage, title->srcImage,
                 1,
                 title->destImage->h - 1 - title->animStep,
                 0,
@@ -1839,8 +1839,8 @@ bool IntroController::updateTitle()
             }
 
             // blit src to the canvas one row at a time, top down
-            title->srcImage->drawSubRectOn(
-                title->destImage,
+            xu4_img_draw_subrect_on(
+                title->destImage, title->srcImage,
                 1,
                 1,
                 0,
@@ -1856,7 +1856,7 @@ bool IntroController::updateTitle()
             title->animStep = animStepTarget;
 
             random_shuffle(title->plotData.begin(), title->plotData.end());
-            title->destImage->fillRect(1, 1, title->rw, title->rh, 0, 0, 0, 255);
+            xu4_img_fill(title->destImage, 1, 1, title->rw, title->rh, 0, 0, 0, 255);
 
             // @TODO: animStepTarget (for this loop) should not exceed
             // half of animStepMax.  If so, instead draw the entire
@@ -1864,7 +1864,7 @@ bool IntroController::updateTitle()
             // this should speed the loop up at the end
             for (int i=0; i < animStepTarget; ++i)
             {
-                title->destImage->putPixel(
+                xu4_img_set_pixel(title->destImage,
                     title->plotData[i].x,
                     title->plotData[i].y,
                     title->plotData[i].r |
@@ -1874,7 +1874,7 @@ bool IntroController::updateTitle()
             }
 
             // cover the "present" area with the transparent color
-            title->destImage->fillRect(
+            xu4_img_fill(title->destImage,
                 75, 1, 54, 5,
                 transparentColor.r,
                 transparentColor.g,
@@ -1894,8 +1894,8 @@ bool IntroController::updateTitle()
 
             // blit src to the canvas one row at a time, center out
             int y = int(title->rh / 2) - title->animStep + 1;
-            title->srcImage->drawSubRectOn(
-                title->destImage,
+            xu4_img_draw_subrect_on(
+                title->destImage, title->srcImage,
                 1,
                 y+1,
                 0,
@@ -1918,16 +1918,16 @@ bool IntroController::updateTitle()
             int step = (title->animStep == title->animStepMax ? title->animStepMax - 1 : title->animStep);
 
             // blit src to the canvas one row at a time, center out
-            title->srcImage->drawSubRectOn(
-                title->destImage,
+            xu4_img_draw_subrect_on(
+                title->destImage, title->srcImage,
                 153-(step*8),
                 1,
                 0,
                 0,
                 (step+1) * 8,
                 title->srcImage->h);
-            title->srcImage->drawSubRectOn(
-                title->destImage,
+            xu4_img_draw_subrect_on(
+                title->destImage, title->srcImage,
                 161,
                 1,
                 312-(step*8),
@@ -1941,13 +1941,13 @@ bool IntroController::updateTitle()
             if (newtime > title->timeDuration + 250/4)
             {
                 // grab the map from the screen
-                Image *screen = imageMgr->get("screen")->image;
+                Image *screen = xu4_img_get_screen();
 
                 // draw the updated map display
                 intro->drawMapStatic();
 
-                screen->drawSubRectOn(
-                    title->srcImage,
+                xu4_img_draw_subrect_on(
+                    title->srcImage, screen,
                     8,
                     8,
                     8,
@@ -1958,8 +1958,8 @@ bool IntroController::updateTitle()
                 title->timeDuration = newtime + 250/4;
             }
 
-            title->srcImage->drawSubRectOn(
-                title->destImage,
+            xu4_img_draw_subrect_on(
+                title->destImage, title->srcImage,
                 161 - (step * 8),
                 9,
                 160 - (step * 8),
@@ -2035,7 +2035,7 @@ void IntroController::drawTitle()
 {
     Image *t = Image::duplicate(title->destImage);
 
-    t->drawSubRect(
+    xu4_img_draw_subrect(t,
         title->rx,    // dest x, y
         title->ry,
         1,              // src x, y, w, h

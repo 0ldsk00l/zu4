@@ -70,9 +70,9 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
     xu4_assert(y < rows, "y value of %d out of range", y);
 
     //Blank scratch pad
-	animated->fillRect(0,0,tileWidth,tileHeight,0,0,0,255);
+	xu4_img_fill(animated, 0,0,tileWidth,tileHeight,0,0,0,255);
 	//Draw blackness on the tile.
-	animated->drawSubRect(x * tileWidth + this->x,
+	xu4_img_draw_subrect(animated, x * tileWidth + this->x,
 						  y * tileHeight + this->y,
 						  0,
 						  0,
@@ -85,7 +85,7 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
         tile->getAnim()->draw(animated, tile, mapTile, DIR_NONE);
 
         // Then draw it to the screen
-        animated->drawSubRect(x * tileWidth + this->x,
+        xu4_img_draw_subrect(animated, x * tileWidth + this->x,
                               y * tileHeight + this->y,
                               0, 
                               0, 
@@ -93,7 +93,7 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
                               tileHeight);
     }
     else {
-        image->drawSubRect(x * tileWidth + this->x, 
+        xu4_img_draw_subrect(image, x * tileWidth + this->x, 
                            y * tileHeight + this->y,
                            0,
                            tileHeight * mapTile.frame,
@@ -110,8 +110,8 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 	xu4_assert(x < columns, "x value of %d out of range", x);
 	xu4_assert(y < rows, "y value of %d out of range", y);
 
-	animated->fillRect(0,0,tileWidth,tileHeight,0,0,0,255);
-	animated->drawSubRect(x * tileWidth + this->x,
+	xu4_img_fill(animated, 0,0,tileWidth,tileHeight,0,0,0,255);
+	xu4_img_draw_subrect(animated, x * tileWidth + this->x,
 						  y * tileHeight + this->y,
 						  0,
 						  0,
@@ -144,14 +144,14 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 		else {
             if (!image)
                 return; //This is a problem //FIXME, error message it. 
-			image->drawSubRectOn(animated,
+			xu4_img_draw_subrect_on(animated, image,
 								0, 0,
 								0, tileHeight * frontTile.frame,
 								tileWidth,  tileHeight);
 		}
 
 		// Then draw it to the screen
-		animated->drawSubRect(x * tileWidth + this->x,
+		xu4_img_draw_subrect(animated, x * tileWidth + this->x,
 							  y * tileHeight + this->y,
 							  0,
 							  0,
@@ -177,28 +177,28 @@ void TileView::drawFocus(int x, int y) {
      */
     if ((screenCurrentCycle * 4 / SCR_CYCLE_PER_SECOND) % 2) {
         /* left edge */
-        screen->fillRect(x * tileWidth + this->x,
+        xu4_img_fill(screen, x * tileWidth + this->x,
                          y * tileHeight + this->y,
                          2,
                          tileHeight,
                          0xff, 0xff, 0xff, 0xff);
 
         /* top edge */
-        screen->fillRect(x * tileWidth + this->x,
+        xu4_img_fill(screen, x * tileWidth + this->x,
                          y * tileHeight + this->y,
                          tileWidth,
                          2,
                          0xff, 0xff, 0xff, 0xff);
 
         /* right edge */
-        screen->fillRect((x + 1) * tileWidth + this->x - 2,
+        xu4_img_fill(screen, (x + 1) * tileWidth + this->x - 2,
                          y * tileHeight + this->y,
                          2,
                          tileHeight,
                          0xff, 0xff, 0xff, 0xff);
 
         /* bottom edge */
-        screen->fillRect(x * tileWidth + this->x,
+        xu4_img_fill(screen, x * tileWidth + this->x,
                          (y + 1) * tileHeight + this->y - 2,
                          tileWidth,
                          2,

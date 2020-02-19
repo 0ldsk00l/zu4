@@ -164,16 +164,15 @@ GameController::GameController() : mapArea(BORDER_WIDTH, BORDER_HEIGHT, VIEWPORT
 
 void GameController::initScreen()
 {
-    Image *screen = imageMgr->get("screen")->image;
-
-    screen->fillRect(0, 0, screen->w, screen->h, 0, 0, 0, 255);
+    Image *screen = xu4_img_get_screen();
+    xu4_img_fill(screen, 0, 0, screen->w, screen->h, 0, 0, 0, 255);
     screenRedrawScreen();
 }
 
 void GameController::initScreenWithoutReloadingState()
 {
     xu4_music_play(c->location->map->music);
-    imageMgr->get(BKGD_BORDERS)->image->draw(0, 0);
+    xu4_img_draw(imageMgr->get(BKGD_BORDERS)->image, 0, 0);
     c->stats->update(); /* draw the party stats */
 
     screenMessage("Press Alt-h for help\n");

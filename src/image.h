@@ -26,8 +26,6 @@ typedef struct RGBA {
     uint8_t r, g, b, a;
 } RGBA;
 
-#define DARK_GRAY_HALO (RGBA){14,15,16,255}
-
 typedef struct SubImage {
     string name;
     string srcImageName;
@@ -44,47 +42,25 @@ public:
     static Image *duplicate(Image *image);
     ~Image();
 
-    /* Will clear the image to the background color, and set the internal backgroundColor variable */
-    void initializeToBackgroundColor(RGBA backgroundColor = DARK_GRAY_HALO);
-
-    uint32_t getPixel(int x, int y);
-    void putPixel(int x, int y, uint32_t value);
-    void fillRect(int x, int y, int width, int height, int r, int g, int b, int a);
-    void drawHighlighted();
-
-    /**
-     * Draws the entire image onto the screen at the given offset.
-     */
-    void draw(int x, int y) {
-        drawOn(NULL, x, y);
-    }
-
-    /**
-     * Draws a piece of the image onto the screen at the given offset.
-     * The area of the image to draw is defined by the rectangle rx, ry,
-     * rw, rh.
-     */
-    void drawSubRect(int x, int y, int rx, int ry, int rw, int rh) {
-        drawSubRectOn(NULL, x, y, rx, ry, rw, rh);
-    }
-
-    /**
-     * Draws a piece of the image onto the screen at the given offset, inverted.
-     * The area of the image to draw is defined by the rectangle rx, ry,
-     * rw, rh.
-     */
-    void drawSubRectInverted(int x, int y, int rx, int ry, int rw, int rh) {
-        drawSubRectInvertedOn(NULL, x, y, rx, ry, rw, rh);
-    }
-
-    /* image drawing methods for drawing onto another image instead of the screen */
-    void drawOn(Image *d, int x, int y);
-    void drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh);
-    void drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh);
-
     int w, h;
-    RGBA backgroundColor;
     xu4_vsurface_t *surface;
 };
 
-#endif /* IMAGE_H */
+Image* xu4_img_get_screen();
+
+uint32_t xu4_img_get_pixel(Image *s, int x, int y);
+void xu4_img_set_pixel(Image *d, int x, int y, uint32_t value);
+
+void xu4_img_fill(Image *d, int x, int y, int width, int height, int r, int g, int b, int a);
+
+void xu4_img_draw_on(Image *d, Image *s, int x, int y);
+void xu4_img_draw(Image *s, int x, int y);
+
+void xu4_img_draw_subrect_on(Image *d, Image *s, int x, int y, int rx, int ry, int rw, int rh);
+void xu4_img_draw_subrect(Image *s, int x, int y, int rx, int ry, int rw, int rh);
+
+void xu4_img_draw_subrect_inv(Image *d, Image *s, int x, int y, int rx, int ry, int rw, int rh);
+
+void xu4_img_draw_highlighted(Image *d);
+
+#endif

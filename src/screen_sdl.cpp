@@ -7,7 +7,6 @@
 
 #include "error.h"
 #include "image.h"
-#include "imagemgr.h"
 #include "settings.h"
 #include "screen.h"
 #include "u4.h"
@@ -37,7 +36,7 @@ static void ogl_init() {
 }
 
 void ogl_swap() {
-	Image *screen = imageMgr->get("screen")->image;
+	Image *screen = xu4_img_get_screen();
 	glTexImage2D(GL_TEXTURE_2D,
 				0,
 				GL_RGB,
@@ -77,8 +76,8 @@ Image *scalePoint(Image *src, int scale, int n) {
         for (int x = 0; x < src->w; x++) {
             for (int i = 0; i < scale; i++) {
                 for (int j = 0; j < scale; j++) {
-                    uint32_t index = src->getPixel(x, y);
-                    dest->putPixel(x * scale + j, y * scale + i, index);
+                    uint32_t index = xu4_img_get_pixel(src, x, y);
+                    xu4_img_set_pixel(dest, x * scale + j, y * scale + i, index);
                 }
             }
         }
@@ -135,8 +134,8 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
 		scale /= 2;
 	}
 
-	if (scale != 1)
-		dest = scalePoint(src, scale, n);
+	//if (scale != 1)
+	//	dest = scalePoint(src, scale, n);
 
 	if (!dest)
 		dest = Image::duplicate(src);
@@ -162,8 +161,8 @@ Image *screenScaleDown(Image *src, int scale) {
 
     for (int y = 0; y < src->h; y+=scale) {
         for (int x = 0; x < src->w; x+=scale) {
-            uint32_t index = src->getPixel(x, y);
-            dest->putPixel(x / scale, y / scale, index);
+            uint32_t index = xu4_img_get_pixel(src, x, y);
+            xu4_img_set_pixel(dest, x / scale, y / scale, index);
         }
     }
 

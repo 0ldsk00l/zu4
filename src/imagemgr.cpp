@@ -199,33 +199,33 @@ void ImageMgr::fixupIntro(Image *im) {
 	sigData = intro->getSigData();
 	
 	// update the position of "and"
-	im->drawSubRectOn(im, 148, 17, 153, 17, 11, 4);
-	im->drawSubRectOn(im, 159, 17, 165, 18, 1, 4);
-	im->drawSubRectOn(im, 160, 17, 164, 17, 16, 4);
+	xu4_img_draw_subrect_on(im, im, 148, 17, 153, 17, 11, 4);
+	xu4_img_draw_subrect_on(im, im, 159, 17, 165, 18, 1, 4);
+	xu4_img_draw_subrect_on(im, im, 160, 17, 164, 17, 16, 4);
 	
 	// update the position of "Origin Systems, Inc."
-	//im->drawSubRectOn(im, 86, 21, 88, 21, 114, 9);
-	//im->drawSubRectOn(im, 199, 21, 202, 21, 6, 9);
-	im->drawSubRectOn(im, 207, 21, 208, 21, 28, 9);
+	//xu4_img_draw_subrect_on(im, im, 86, 21, 88, 21, 114, 9);
+	//xu4_img_draw_subrect_on(im, im, 199, 21, 202, 21, 6, 9);
+	xu4_img_draw_subrect_on(im, im, 207, 21, 208, 21, 28, 9);
 	
 	// update the position of "Ultima IV" -  move this prior to moving "present"
-	im->drawSubRectOn(im, 59, 33, 61, 33, 204, 46);
+	xu4_img_draw_subrect_on(im, im, 59, 33, 61, 33, 204, 46);
 	
 	// update the position of "Quest of the Avatar"
-	//im->drawSubRectOn(im, 69, 80, 70, 80, 11, 13); // quEst
-	//im->drawSubRectOn(im, 82, 80, 84, 80, 27, 13); // queST
-	//im->drawSubRectOn(im, 131, 80, 132, 80, 11, 13); // oF
-	//im->drawSubRectOn(im, 150, 80, 149, 80, 40, 13); // THE
-	//im->drawSubRectOn(im, 166, 80, 165, 80, 11, 13); // tHe
-	im->drawSubRectOn(im, 200, 80, 201, 80, 81, 13); // AVATAR
-	//im->drawSubRectOn(im, 227, 80, 228, 80, 11, 13); // avAtar
+	//xu4_img_draw_subrect_on(im, im, 69, 80, 70, 80, 11, 13); // quEst
+	//xu4_img_draw_subrect_on(im, im, 82, 80, 84, 80, 27, 13); // queST
+	//xu4_img_draw_subrect_on(im, im, 131, 80, 132, 80, 11, 13); // oF
+	//xu4_img_draw_subrect_on(im, im, 150, 80, 149, 80, 40, 13); // THE
+	//xu4_img_draw_subrect_on(im, im, 166, 80, 165, 80, 11, 13); // tHe
+	xu4_img_draw_subrect_on(im, im, 200, 80, 201, 80, 81, 13); // AVATAR
+	//xu4_img_draw_subrect_on(im, im, 227, 80, 228, 80, 11, 13); // avAtar
 	
 	// copy "present" to new location between "Origin Systems, Inc." and
 	// "Ultima IV" - do this after moving "Ultima IV"
-	im->drawSubRectOn(im, 132, 33, 135, 0, 56,5);
+	xu4_img_draw_subrect_on(im, im, 132, 33, 135, 0, 56,5);
 	
 	// erase the original "present"
-	im->fillRect(135, 0, 56, 5, 0, 0, 0, 255);
+	xu4_img_fill(im, 135, 0, 56, 5, 0, 0, 0, 255);
 	
 	// update the colors for VGA
 	if (settings.videoType == 1) { // VGA
@@ -238,12 +238,12 @@ void ImageMgr::fixupIntro(Image *im) {
 		borderInfo = imageMgr->get(BKGD_BORDERS, true);
 
 		// update the border appearance
-		borderInfo->image->drawSubRectOn(im, 0, 96, 0, 0, 16, 56);
+		xu4_img_draw_subrect_on(im, borderInfo->image, 0, 96, 0, 0, 16, 56);
 		for (int i=0; i < 9; i++) {
-			borderInfo->image->drawSubRectOn(im, 16+(i*32), 96, 144, 0, 48, 48);
+			xu4_img_draw_subrect_on(im, borderInfo->image, 16+(i*32), 96, 144, 0, 48, 48);
 		}
-		im->drawSubRectInvertedOn(im, 0, 144, 0, 104, 320, 40);
-		im->drawSubRectOn(im, 0, 184, 0, 96, 320, 8);
+		xu4_img_draw_subrect_inv(im, im, 0, 144, 0, 104, 320, 40);
+		xu4_img_draw_subrect_on(im, im, 0, 184, 0, 96, 320, 8);
 
 		delete borderInfo->image;
 		borderInfo->image = NULL;
@@ -266,7 +266,7 @@ void ImageMgr::fixupIntro(Image *im) {
 			color = RGBA{255, (uint8_t)(y == 1 ? 250 : 255), blue[y], 255};
 		}
 		
-		im->fillRect(x, y, 2, 1, color.r, color.g, color.b, 255);
+		xu4_img_fill(im, x, y, 2, 1, color.r, color.g, color.b, 255);
 		i += 2;
 	}
 	
@@ -279,7 +279,7 @@ void ImageMgr::fixupIntro(Image *im) {
 	}
 	
 	for (i = 84; i < 236; i++) { // 152 px wide
-		im->fillRect(i, 31, 1, 1, color.r, color.g, color.b, 255);
+		xu4_img_fill(im, i, 31, 1, 1, color.r, color.g, color.b, 255);
 	}
 }
 
@@ -293,9 +293,9 @@ void ImageMgr::fixupAbyssVision(Image *im) {
     if (data != NULL) {
         for (int y = 0; y < im->h; y++) {
             for (int x = 0; x < im->w; x++) {
-                uint32_t index = im->getPixel(x, y);
+                uint32_t index = xu4_img_get_pixel(im, x, y);
                 index ^= data[y * im->w + x];
-                im->putPixel(x, y, index);
+                xu4_img_set_pixel(im, x, y, index);
             }
         }
     } else {
@@ -304,7 +304,7 @@ void ImageMgr::fixupAbyssVision(Image *im) {
 
     for (int y = 0; y < im->h; y++) {
         for (int x = 0; x < im->w; x++) {
-            uint32_t index = im->getPixel(x, y);
+            uint32_t index = xu4_img_get_pixel(im, x, y);
             data[y * im->w + x] = index;
         }
     }
@@ -317,11 +317,11 @@ void ImageMgr::fixupAbyssVision(Image *im) {
 void ImageMgr::fixupDungNS(Image *im) {
     for (int y = 0; y < im->h; y++) {
         for (int x = 0; x < im->w; x++) {
-            uint32_t index = im->getPixel(x, y);
+            uint32_t index = xu4_img_get_pixel(im, x, y);
             if (index == 1)
-                im->putPixel(x, y, 2);
+                xu4_img_set_pixel(im, x, y, 2);
             else if (index == 2)
-                im->putPixel(x, y, 1);
+                xu4_img_set_pixel(im, x, y, 1);
         }
     }
 }

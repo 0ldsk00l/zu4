@@ -474,7 +474,7 @@ void screenUpdate(TileView *view, bool showmap, bool blackout) {
 void screenDrawImage(const string &name, int x, int y) {
     ImageInfo *info = imageMgr->get(name);
     if (info) {
-        info->image->draw(x, y);
+        xu4_img_draw(info->image, x, y);
         return;
     }
     
@@ -484,7 +484,7 @@ void screenDrawImage(const string &name, int x, int y) {
     }
     
     if (info) {
-        info->image->drawSubRect(x, y,
+        xu4_img_draw_subrect(info->image, x, y,
                                  subimage->x,
                                  subimage->y,
                                  subimage->width,
@@ -501,7 +501,7 @@ void screenDrawImageInMapArea(const string &name) {
     if (!info)
         xu4_error(XU4_LOG_ERR, "ERROR 1004: Unable to load data files.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/");
     
-    info->image->drawSubRect(BORDER_WIDTH, BORDER_HEIGHT,
+    xu4_img_draw_subrect(info->image, BORDER_WIDTH, BORDER_HEIGHT,
                              BORDER_WIDTH, BORDER_HEIGHT,
                              VIEWPORT_W * TILE_WIDTH, 
                              VIEWPORT_H * TILE_HEIGHT);
@@ -545,7 +545,7 @@ void screenShowChar(int chr, int x, int y) {
             xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
     }
     
-    charsetInfo->image->drawSubRect(x * charsetInfo->image->w, y * CHAR_HEIGHT,
+    xu4_img_draw_subrect(charsetInfo->image, x * charsetInfo->image->w, y * CHAR_HEIGHT,
                                     0, chr * CHAR_HEIGHT,
                                     charsetInfo->image->w, CHAR_HEIGHT);
 }
@@ -556,9 +556,9 @@ void screenShowChar(int chr, int x, int y) {
 void screenScrollMessageArea() {
     xu4_assert(charsetInfo != NULL && charsetInfo->image != NULL, "charset not initialized!");
     
-    Image *screen = imageMgr->get("screen")->image;
+    Image *screen = xu4_img_get_screen();
     
-    screen->drawSubRectOn(screen, 
+    xu4_img_draw_subrect_on(screen, screen,
                           TEXT_AREA_X * charsetInfo->image->w, 
                           TEXT_AREA_Y * CHAR_HEIGHT,
                           TEXT_AREA_X * charsetInfo->image->w,
@@ -567,7 +567,7 @@ void screenScrollMessageArea() {
                           (TEXT_AREA_H - 1) * CHAR_HEIGHT);
     
     
-    screen->fillRect(TEXT_AREA_X * charsetInfo->image->w,
+    xu4_img_fill(screen, TEXT_AREA_X * charsetInfo->image->w,
                      TEXT_AREA_Y * CHAR_HEIGHT + (TEXT_AREA_H - 1) * CHAR_HEIGHT,
                      TEXT_AREA_W * charsetInfo->image->w,
                      CHAR_HEIGHT,
@@ -987,8 +987,8 @@ void screenRedrawMapArea() {
 }
 
 void screenEraseMapArea() {
-    Image *screen = imageMgr->get("screen")->image;
-    screen->fillRect(BORDER_WIDTH,
+    Image *screen = xu4_img_get_screen();
+    xu4_img_fill(screen, BORDER_WIDTH,
                      BORDER_WIDTH,
                      VIEWPORT_W * TILE_WIDTH,
                      VIEWPORT_H * TILE_HEIGHT,
@@ -996,8 +996,8 @@ void screenEraseMapArea() {
 }
 
 void screenEraseTextArea(int x, int y, int width, int height) {
-    Image *screen = imageMgr->get("screen")->image;
-    screen->fillRect(x * CHAR_WIDTH,
+    Image *screen = xu4_img_get_screen();
+    xu4_img_fill(screen, x * CHAR_WIDTH,
                      y * CHAR_HEIGHT,
                      width * CHAR_WIDTH,
                      height * CHAR_HEIGHT,
@@ -1011,7 +1011,7 @@ void screenShake(int iterations) {
     return; // FIXME - reimplement this properly after redoing video
     /*int shakeOffset;
     unsigned short i;
-    Image *screen = imageMgr->get("screen")->image;
+    Image *screen = xu4_img_get_screen();
     Image *bottom;
     
     // the MSVC8 binary was generating a Access Violation when using
@@ -1033,7 +1033,7 @@ void screenShake(int iterations) {
             // shift the screen down and make the top row black
             screen->drawSubRectOn(screen, 0, (shakeOffset), 0, 0, 320, (200-(shakeOffset+1)));
             bottom->drawOn(screen, 0, (200-(shakeOffset)));
-            screen->fillRect(0, 0, (320), (shakeOffset), 0, 0, 0, 255);
+            xu4_img_fill(screen, 0, 0, (320), (shakeOffset), 0, 0, 0, 255);
             screenRedrawScreen();
             EventHandler::sleep(settings.shakeInterval);
             
@@ -1063,7 +1063,7 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
         xu4_assert(charsetInfo, "charset not initialized");
         std::map<string, int>::iterator charIndex = dungeonTileChars.find(t.getTileType()->getName());
         if (charIndex != dungeonTileChars.end()) {
-            charsetInfo->image->drawSubRect((layout->viewport.x + (x * layout->tileshape.width)),
+            xu4_img_draw_subrect(charsetInfo->image, (layout->viewport.x + (x * layout->tileshape.width)),
                                             (layout->viewport.y + (y * layout->tileshape.height)),
                                             0, 
                                             charIndex->second * layout->tileshape.height, 
@@ -1079,15 +1079,15 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
         }
         
         if (tile < 128) {
-            gemTilesInfo->image->drawSubRect((layout->viewport.x + (x * layout->tileshape.width)),
+            xu4_img_draw_subrect(gemTilesInfo->image, (layout->viewport.x + (x * layout->tileshape.width)),
                                              (layout->viewport.y + (y * layout->tileshape.height)),
                                              0, 
                                              tile * layout->tileshape.height,
                                              layout->tileshape.width,
                                              layout->tileshape.height);
         } else {
-            Image *screen = imageMgr->get("screen")->image;
-            screen->fillRect((layout->viewport.x + (x * layout->tileshape.width)),
+            Image *screen = xu4_img_get_screen();
+            xu4_img_fill(screen, (layout->viewport.x + (x * layout->tileshape.width)),
                              (layout->viewport.y + (y * layout->tileshape.height)),
                              layout->tileshape.width,
                              layout->tileshape.height,
@@ -1116,9 +1116,9 @@ Layout *screenGetGemLayout(const Map *map) {
 void screenGemUpdate() {
     MapTile tile;
     int x, y;
-    Image *screen = imageMgr->get("screen")->image;
+    Image *screen = xu4_img_get_screen();
     
-    screen->fillRect(BORDER_WIDTH, 
+    xu4_img_fill(screen, BORDER_WIDTH, 
                      BORDER_HEIGHT,
                      VIEWPORT_W * TILE_WIDTH, 
                      VIEWPORT_H * TILE_HEIGHT,
