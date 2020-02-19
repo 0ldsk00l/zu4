@@ -29,6 +29,8 @@
 
 using namespace std;
 
+static bool notblanked = true;
+
 extern bool useProfile;
 extern string profileName;
 extern bool quit;
@@ -1005,15 +1007,31 @@ void IntroController::timerFired() {
     screenCycle();
     screenUpdateCursor();
 
-    if (mode == INTRO_TITLES)
+    if (mode == INTRO_TITLES) {
+        // Dirty hack to make sure animation backgrounds are black - FIXME
+        switch (title->method) {
+			case SIGNATURE:
+				if (notblanked) {
+					title->destImage->fillRect(0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
+					notblanked = false;
+				}
+				break;
+			case BAR: case ORIGIN: case PRESENT: case MAP:
+				title->destImage->fillRect(0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
+				break;
+			default: break;
+		}
+        
         if (updateTitle() == false)
         {
             // setup the map screen
             mode = INTRO_MAP;
+            notblanked = false;
             beastiesVisible = true;
             xu4_music_play(TRACK_TOWNS);
             updateScreen();
         }
+	}
 
     if (mode == INTRO_MAP)
         drawMap();

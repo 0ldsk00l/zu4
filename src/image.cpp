@@ -102,7 +102,6 @@ void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh
 	
 	for (int i = 0; i < rh; i++) {
 		for (int j = 0; j < rw; j++) {
-			//d->putPixel(x + j, y + i, getPixel(rx + j, ry + i));
 			d->putPixel(x + j, y + i, getPixel(rx + j, ry + i));
 		}
 	}
