@@ -11,6 +11,9 @@
 #include "u4file.h"
 #include "textcolor.h"
 
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 200
+
 using std::string;
 
 typedef struct xu4_vsurface_t {

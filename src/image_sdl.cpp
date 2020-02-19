@@ -30,8 +30,8 @@ Image *Image::createScreenImage() {
     Image *screen = new Image();
     screen->surface = (xu4_vsurface_t*)malloc(sizeof(xu4_vsurface_t));
     screen->surface->pixels = (uint32_t*)malloc(sizeof(uint32_t) * 320 * 200);
-    screen->surface->w = 320;
-    screen->surface->h = 200;
+    screen->surface->w = SCREEN_WIDTH;
+    screen->surface->h = SCREEN_HEIGHT;
     screen->w = screen->surface->w;
     screen->h = screen->surface->h;
     return screen;
@@ -76,7 +76,7 @@ void Image::putPixel(int x, int y, uint32_t value) {
 }
 
 void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, int a) {
-    uint32_t pixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
+    uint32_t pixel = 0xff << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
     for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			*((uint32_t*)surface->pixels + ((y * w) + x) + (i * w) + j) = pixel;

@@ -23,7 +23,7 @@ static void ogl_init() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glViewport(0, 0, 320.0 * settings.scale, 200.0 * settings.scale);
+	glViewport(0, 0, SCREEN_WIDTH * settings.scale, SCREEN_HEIGHT * settings.scale);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_BLEND);
@@ -31,7 +31,7 @@ static void ogl_init() {
 	glDisable(GL_TEXTURE_3D_EXT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, 320.0 * settings.scale, 200.0 * settings.scale, 0.0, -1.0, 1.0);
+	glOrtho(0.0, SCREEN_WIDTH * settings.scale, SCREEN_HEIGHT * settings.scale, 0.0, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -41,7 +41,7 @@ void ogl_swap() {
 	glTexImage2D(GL_TEXTURE_2D,
 				0,
 				GL_RGB,
-				320.0, 200.0,
+				SCREEN_WIDTH, SCREEN_HEIGHT,
 				0,
 				GL_RGBA,
 				GL_UNSIGNED_BYTE,
@@ -49,16 +49,16 @@ void ogl_swap() {
 	
 	glBegin(GL_QUADS);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(320.0 * settings.scale, 200.0 * settings.scale);
+		glVertex2f(SCREEN_WIDTH * settings.scale, SCREEN_HEIGHT * settings.scale);
 		
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(320.0 * settings.scale, 0.0);
+		glVertex2f(SCREEN_WIDTH * settings.scale, 0.0);
 		
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0.0, 0.0);
 		
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0, 200.0 * settings.scale);
+		glVertex2f(0, SCREEN_HEIGHT * settings.scale);
 	glEnd();
 	SDL_GL_SwapBuffers();
 }
@@ -92,15 +92,14 @@ void screenInit_sys() {
     /* start SDL */
     if (u4_SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
         xu4_error(XU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());    
-    SDL_EnableUNICODE(1);
+    
     SDL_SetGamma(settings.gamma / 100.0f, settings.gamma / 100.0f, settings.gamma / 100.0f);
     atexit(SDL_Quit);
 
     SDL_WM_SetCaption("Ultima IV", NULL);
     
-    //if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 0, SDL_HWSURFACE | SDL_ANYFORMAT))
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 16, SDL_ANYFORMAT | SDL_DOUBLEBUF | SDL_OPENGL))
+    if (!SDL_SetVideoMode(SCREEN_WIDTH * settings.scale, SCREEN_HEIGHT * settings.scale, 16, SDL_ANYFORMAT | SDL_DOUBLEBUF | SDL_OPENGL))
         xu4_error(XU4_LOG_ERR, "unable to set video: %s", SDL_GetError());
 
     SDL_ShowCursor(SDL_DISABLE);

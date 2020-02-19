@@ -69,9 +69,9 @@ void ImageMgr::init() {
 
     screenInfo->name = "screen";
     screenInfo->filename = "";
-    screenInfo->width = 320;
-    screenInfo->height = 200;
-    screenInfo->depth = 4;
+    screenInfo->width = SCREEN_WIDTH;
+    screenInfo->height = SCREEN_HEIGHT;
+    screenInfo->depth = sizeof(uint32_t);
     screenInfo->filetype = "";
     screenInfo->tiles = 0;
     screenInfo->introOnly = false;
