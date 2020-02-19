@@ -37,9 +37,6 @@ Image *Image::createScreenImage() {
     return screen;
 }
 
-/**
- * Creates a duplicate of another image
- */
 Image *Image::duplicate(Image *image) {    
     Image *im = create(image->w, image->h);
     image->drawOn(im, 0, 0);
@@ -47,11 +44,7 @@ Image *Image::duplicate(Image *image) {
     return im;
 }
 
-/**
- * Frees the image.
- */
 Image::~Image() {
-    //SDL_FreeSurface(surface);
     free(surface->pixels);
     free(surface);
 }
@@ -91,26 +84,20 @@ void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, i
 	}
 }
 
-/**
- * Draws the image onto another image.
- */
 void Image::drawOn(Image *d, int x, int y) {
-    if (d == NULL) {
-        d = imageMgr->get("screen")->image;
+	if (d == NULL) {
+		d = imageMgr->get("screen")->image;
 	}
 	
-    for (unsigned int i = 0; i < h; i++) {
+	for (unsigned int i = 0; i < h; i++) {
 		memcpy((uint32_t*)d->surface->pixels + ((y * d->w) + x) + (i * d->w),
 			(uint32_t*)surface->pixels + (i * w), w * sizeof(uint32_t));
 	}
 }
 
-/**
- * Draws a piece of the image onto another image.
- */
 void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) {
-    if (d == NULL) {
-        d = imageMgr->get("screen")->image;
+	if (d == NULL) {
+		d = imageMgr->get("screen")->image;
 	}
 	
 	for (int i = 0; i < rh; i++) {
@@ -120,27 +107,16 @@ void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh
 	}
 }
 
-/**
- * Draws a piece of the image onto another image, inverted.
- */
 void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) {
-    if (d == NULL) {
-        d = imageMgr->get("screen")->image;
+	if (d == NULL) {
+		d = imageMgr->get("screen")->image;
 	}
-
-    /*SDL_Rect src, dest;
-    for (int i = 0; i < rh; i++) {
-        src.x = rx;
-        src.y = ry + i;
-        src.w = rw;
-        src.h = 1;
-
-        dest.x = x;
-        dest.y = y + rh - i - 1;
-
-        SDL_BlitSurface(surface, &src, d->surface, &dest);
-    }//*/
-    // FIXME - reimplement this
+	
+	for (int i = 0; i < rh; i++) {
+		for (int j = 0; j < rw; j++) {
+			d->putPixel(x + j, y + rh - 1 - i, getPixel(rx + j, ry + i));
+		}
+	}
 }
 
 void Image::drawHighlighted() {
