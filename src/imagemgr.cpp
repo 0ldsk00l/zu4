@@ -310,24 +310,6 @@ void ImageMgr::fixupAbyssVision(Image *im) {
     }
 }
 
-void ImageMgr::fixupAbacus(Image *im) {
-
-    /* 
-     * surround each bead with a row green pixels to avoid artifacts
-     * when scaling
-     */
-
-    im->fillRect(7, 186, 1, 14, 0, 255, 80, 255); /* green */
-    im->fillRect(16, 186, 1, 14, 0, 255, 80, 255); /* green */
-    im->fillRect(8, 186, 8, 1, 0, 255, 80, 255); /* green */
-    im->fillRect(8, 199, 8, 1, 0, 255, 80, 255); /* green */
-
-    im->fillRect(23, 186, 1, 14, 0, 255, 80, 255); /* green */
-    im->fillRect(32, 186, 1, 14, 0, 255, 80, 255); /* green */
-    im->fillRect(24, 186, 8, 1, 0, 255, 80, 255); /* green */
-    im->fillRect(24, 199, 8, 1, 0, 255, 80, 255); /* green */
-}
-
 /**
  * Swap blue and green for the dungeon walls when facing north or
  * south.
@@ -509,9 +491,6 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         break;
     case FIXUP_ABYSS:
         fixupAbyssVision(unscaled);
-        break;
-    case FIXUP_ABACUS:
-        fixupAbacus(unscaled);
         break;
     case FIXUP_DUNGNS:
         fixupDungNS(unscaled);

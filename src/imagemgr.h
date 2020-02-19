@@ -68,7 +68,6 @@ enum ImageFixup {
     FIXUP_NONE,
     FIXUP_INTRO,
     FIXUP_ABYSS,
-    FIXUP_ABACUS,
     FIXUP_DUNGNS,
 };
 
@@ -125,7 +124,6 @@ private:
 
     void fixupIntro(Image *im);
     void fixupAbyssVision(Image *im);
-    void fixupAbacus(Image *im);
     void fixupDungNS(Image *im);
 
     void update(SettingsData *newSettings);
