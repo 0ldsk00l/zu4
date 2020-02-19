@@ -82,7 +82,7 @@ public:
     void drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh);
     void drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh);
 
-    unsigned int w, h;
+    int w, h;
     RGBA backgroundColor;
     xu4_vsurface_t *surface;
 };

@@ -67,15 +67,14 @@ void ogl_swap() {
  * A simple row and column duplicating scaler. FIXME use OpenGL instead
  */
 Image *scalePoint(Image *src, int scale, int n) {
-    unsigned int x, y;
     Image *dest;
 
     dest = Image::create(src->w * scale, src->h * scale);
     if (!dest)
         return NULL;
 
-    for (y = 0; y < src->h; y++) {
-        for (x = 0; x < src->w; x++) {
+    for (int y = 0; y < src->h; y++) {
+        for (int x = 0; x < src->w; x++) {
             for (int i = 0; i < scale; i++) {
                 for (int j = 0; j < scale; j++) {
                     uint32_t index = src->getPixel(x, y);
@@ -149,7 +148,6 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
  * original dimensions.  The original image is no longer deleted.
  */
 Image *screenScaleDown(Image *src, int scale) {
-    unsigned int x, y;
     Image *dest;
 
     dest = Image::create(src->w / scale, src->h / scale);
@@ -161,8 +159,8 @@ Image *screenScaleDown(Image *src, int scale) {
 		dest = Image::duplicate(src);
     }
 
-    for (y = 0; y < src->h; y+=scale) {
-        for (x = 0; x < src->w; x+=scale) {
+    for (int y = 0; y < src->h; y+=scale) {
+        for (int x = 0; x < src->w; x+=scale) {
             uint32_t index = src->getPixel(x, y);
             dest->putPixel(x / scale, y / scale, index);
         }

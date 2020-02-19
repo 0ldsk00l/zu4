@@ -372,8 +372,8 @@ void ImageMgr::fixupAbyssVision(Image *im) {
      * vision components to get the actual image.
      */
     if (data != NULL) {
-        for (unsigned int y = 0; y < im->h; y++) {
-            for (unsigned int x = 0; x < im->w; x++) {
+        for (int y = 0; y < im->h; y++) {
+            for (int x = 0; x < im->w; x++) {
                 uint32_t index = im->getPixel(x, y);
                 index ^= data[y * im->w + x];
                 im->putPixel(x, y, index);
@@ -383,8 +383,8 @@ void ImageMgr::fixupAbyssVision(Image *im) {
         data = new unsigned int[im->w * im->h];
     }
 
-    for (unsigned int y = 0; y < im->h; y++) {
-        for (unsigned int x = 0; x < im->w; x++) {
+    for (int y = 0; y < im->h; y++) {
+        for (int x = 0; x < im->w; x++) {
             uint32_t index = im->getPixel(x, y);
             data[y * im->w + x] = index;
         }
@@ -414,8 +414,8 @@ void ImageMgr::fixupAbacus(Image *im) {
  * south.
  */
 void ImageMgr::fixupDungNS(Image *im) {
-    for (unsigned int y = 0; y < im->h; y++) {
-        for (unsigned int x = 0; x < im->w; x++) {
+    for (int y = 0; y < im->h; y++) {
+        for (int x = 0; x < im->w; x++) {
             uint32_t index = im->getPixel(x, y);
             if (index == 1)
                 im->putPixel(x, y, 2);

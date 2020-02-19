@@ -29,7 +29,7 @@ Image *Image::create(int w, int h) {
 Image *Image::createScreenImage() {
     Image *screen = new Image();
     screen->surface = (xu4_vsurface_t*)malloc(sizeof(xu4_vsurface_t));
-    screen->surface->pixels = (uint32_t*)malloc(sizeof(uint32_t) * 320 * 200);
+    screen->surface->pixels = (uint32_t*)malloc(sizeof(uint32_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
     screen->surface->w = SCREEN_WIDTH;
     screen->surface->h = SCREEN_HEIGHT;
     screen->w = screen->surface->w;
@@ -60,7 +60,7 @@ void Image::initializeToBackgroundColor(RGBA backgroundColor)
 }
 
 uint32_t Image::getPixel(int x, int y) {
-	if (x > (int)(w - 1) || y > (int)(h - 1) || x < 0 || y < 0) {
+	if (x > (w - 1) || y > (h - 1) || x < 0 || y < 0) {
 		//printf("getPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return 0;
 	}
@@ -68,7 +68,7 @@ uint32_t Image::getPixel(int x, int y) {
 }
 
 void Image::putPixel(int x, int y, uint32_t value) {
-	if (x > (int)(w - 1) || y > (int)(h - 1) || x < 0 || y < 0) {
+	if (x > (w - 1) || y > (h - 1) || x < 0 || y < 0) {
 		//printf("putPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return;
 	}
@@ -76,7 +76,7 @@ void Image::putPixel(int x, int y, uint32_t value) {
 }
 
 void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, int a) {
-    uint32_t pixel = 0xff << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
+    uint32_t pixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
     for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			*((uint32_t*)surface->pixels + ((y * w) + x) + (i * w) + j) = pixel;
@@ -89,7 +89,7 @@ void Image::drawOn(Image *d, int x, int y) {
 		d = imageMgr->get("screen")->image;
 	}
 	
-	for (unsigned int i = 0; i < h; i++) {
+	for (int i = 0; i < h; i++) {
 		memcpy((uint32_t*)d->surface->pixels + ((y * d->w) + x) + (i * d->w),
 			(uint32_t*)surface->pixels + (i * w), w * sizeof(uint32_t));
 	}
@@ -122,8 +122,8 @@ void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw
 void Image::drawHighlighted() {
 	uint32_t pixel;
 	RGBA c;
-	for (unsigned i = 0; i < h; i++) {
-		for (unsigned j = 0; j < w; j++) {
+	for (int i = 0; i < h; i++) {
+		for (int j = 0; j < w; j++) {
 			pixel = getPixel(j, i);
 			c.r = 0xff - (pixel & 0xff);
 			c.g = 0xff - ((pixel & 0xff00) >> 8);
