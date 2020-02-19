@@ -3,13 +3,65 @@
  */
 
 #include <SDL.h>
+#include <GL/glu.h>
 
 #include "error.h"
 #include "image.h"
+#include "imagemgr.h"
 #include "settings.h"
 #include "screen.h"
 #include "u4.h"
 #include "u4_sdl.h"
+
+static GLuint texID = 0;
+
+static void ogl_init() {
+	glEnable(GL_TEXTURE_2D);
+
+	glGenTextures(1, &texID);
+	glBindTexture(GL_TEXTURE_2D, texID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glViewport(0, 0, 320.0 * settings.scale, 200.0 * settings.scale);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_TEXTURE_3D_EXT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0.0, 320.0 * settings.scale, 200.0 * settings.scale, 0.0, -1.0, 1.0);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+void ogl_swap() {
+	Image *screen = imageMgr->get("screen")->image;
+	glTexImage2D(GL_TEXTURE_2D,
+				0,
+				GL_RGB,
+				320.0, 200.0,
+				0,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+		screen->surface->pixels);
+	
+	glBegin(GL_QUADS);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(320.0 * settings.scale, 200.0 * settings.scale);
+		
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(320.0 * settings.scale, 0.0);
+		
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(0.0, 0.0);
+		
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(0, 200.0 * settings.scale);
+	glEnd();
+	SDL_GL_SwapBuffers();
+}
 
 /**
  * A simple row and column duplicating scaler. FIXME use OpenGL instead
@@ -46,8 +98,13 @@ void screenInit_sys() {
 
     SDL_WM_SetCaption("Ultima IV", NULL);
     
-    if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 0, SDL_HWSURFACE | SDL_ANYFORMAT))
+    //if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 0, SDL_HWSURFACE | SDL_ANYFORMAT))
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    if (!SDL_SetVideoMode(320 * settings.scale, 200 * settings.scale, 16, SDL_ANYFORMAT | SDL_DOUBLEBUF | SDL_OPENGL))
         xu4_error(XU4_LOG_ERR, "unable to set video: %s", SDL_GetError());
+
+    SDL_ShowCursor(SDL_DISABLE);
+    ogl_init();
 
     SDL_ShowCursor(SDL_DISABLE);
 }
@@ -57,7 +114,7 @@ void screenDelete_sys() {
 }
 
 void screenRedrawScreen() {
-    SDL_Flip(SDL_GetVideoSurface());
+    ogl_swap();
 }
 
 /**

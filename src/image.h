@@ -7,14 +7,17 @@
 
 #include <string>
 #include <stdint.h>
-#include <SDL.h> // very very temporary
 #include "types.h"
 #include "u4file.h"
 #include "textcolor.h"
 
-struct SDL_Surface;
-
 using std::string;
+
+typedef struct xu4_vsurface_t {
+	int w;
+	int h;
+	void *pixels;
+} xu4_vsurface_t;
 
 typedef struct RGBA {
     uint8_t r, g, b, a;
@@ -83,7 +86,7 @@ public:
 
     unsigned int w, h;
     RGBA backgroundColor;
-    SDL_Surface *surface;
+    xu4_vsurface_t *surface;
 };
 
 #endif /* IMAGE_H */

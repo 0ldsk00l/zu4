@@ -5,7 +5,7 @@ bindir = $(prefix)/bin
 libdir = $(prefix)/lib
 datadir = $(prefix)/share
 
-UILIBS = $(shell sdl-config --libs)
+UILIBS = $(shell sdl-config --libs) -lGL -lGLU
 UIFLAGS = $(shell sdl-config --cflags)
 
 CXXFLAGS = -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags)

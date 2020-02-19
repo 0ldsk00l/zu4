@@ -7,33 +7,16 @@
 #include "settings.h"
 #include "error.h"
 
-/**
- * Creates a new image.  Scale is stored to allow drawing using U4
- * (320x200) coordinates, regardless of the actual image scale.
- */
 Image *Image::create(int w, int h) {
-    Uint32 rmask, gmask, bmask, amask;
-    Uint32 flags;
     Image *im = new Image;
 
     im->w = w;
     im->h = h;
 
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    rmask = 0xff000000;
-    gmask = 0x00ff0000;
-    bmask = 0x0000ff00;
-    amask = 0x000000ff;
-#else
-    rmask = 0x000000ff;
-    gmask = 0x0000ff00;
-    bmask = 0x00ff0000;
-    amask = 0xff000000;
-#endif
-
-    flags = SDL_SWSURFACE;
-
-    im->surface = SDL_CreateRGBSurface(flags, w, h, 32, rmask, gmask, bmask, amask);
+    im->surface = (xu4_vsurface_t*)malloc(sizeof(xu4_vsurface_t));
+    im->surface->pixels = (uint32_t*)malloc(sizeof(uint32_t) * w * h);
+    im->surface->w = w;
+    im->surface->h = h;
 
     if (!im->surface) {
         delete im;
@@ -43,14 +26,12 @@ Image *Image::create(int w, int h) {
     return im;
 }
 
-/**
- * Create a special purpose image the represents the whole screen.
- */
 Image *Image::createScreenImage() {
     Image *screen = new Image();
-
-    screen->surface = SDL_GetVideoSurface();
-    xu4_assert(screen->surface != NULL, "SDL_GetVideoSurface() returned a NULL screen surface!");
+    screen->surface = (xu4_vsurface_t*)malloc(sizeof(xu4_vsurface_t));
+    screen->surface->pixels = (uint32_t*)malloc(sizeof(uint32_t) * 320 * 200);
+    screen->surface->w = 320;
+    screen->surface->h = 200;
     screen->w = screen->surface->w;
     screen->h = screen->surface->h;
     return screen;
@@ -81,7 +62,9 @@ Image *Image::duplicate(Image *image) {
  * Frees the image.
  */
 Image::~Image() {
-    SDL_FreeSurface(surface);
+    //SDL_FreeSurface(surface);
+    free(surface->pixels);
+    free(surface);
 }
 
 void Image::initializeToBackgroundColor(RGBA backgroundColor)
