@@ -95,22 +95,30 @@ void Image::initializeToBackgroundColor(RGBA backgroundColor)
 }
 
 bool Image::isAlphaOn() {
-    return surface->flags & SDL_SRCALPHA;
+    return false;//return surface->flags & SDL_SRCALPHA;
 }
 
 void Image::alphaOn() {
-    surface->flags |= SDL_SRCALPHA;
+    //surface->flags |= SDL_SRCALPHA;
 }
 
 void Image::alphaOff() {
-    surface->flags &= ~SDL_SRCALPHA;
+    //surface->flags &= ~SDL_SRCALPHA;
 }
 
 uint32_t Image::getPixel(int x, int y) {
+	if (x > (int)(w - 1) || y > (int)(h - 1) || x < 0 || y < 0) {
+		//printf("getPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
+		return 0;
+	}
 	return *((uint32_t*)(surface->pixels) + (y * w) + x);
 }
 
 void Image::putPixel(int x, int y, uint32_t value) {
+	if (x > (int)(w - 1) || y > (int)(h - 1) || x < 0 || y < 0) {
+		//printf("putPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
+		return;
+	}
 	*((uint32_t*)(surface->pixels) + (y * w) + x) = value;
 }
 
@@ -130,48 +138,38 @@ void Image::drawOn(Image *d, int x, int y) {
     if (d == NULL) {
         d = imageMgr->get("screen")->image;
 	}
-
-    SDL_Rect r;
-    r.x = x;
-    r.y = y;
-    r.w = w;
-    r.h = h;
-    SDL_BlitSurface(surface, NULL, d->surface, &r);
+	
+    for (unsigned int i = 0; i < h; i++) {
+		memcpy((uint32_t*)d->surface->pixels + ((y * d->w) + x) + (i * d->w),
+			(uint32_t*)surface->pixels + (i * w), w * sizeof(uint32_t));
+	}
 }
 
 /**
  * Draws a piece of the image onto another image.
  */
 void Image::drawSubRectOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) {
-    SDL_Rect src, dest;
     if (d == NULL) {
         d = imageMgr->get("screen")->image;
 	}
-
-    src.x = rx;
-    src.y = ry;
-    src.w = rw;
-    src.h = rh;
-
-    dest.x = x;
-    dest.y = y;
-    /* dest w & h unused */
-
-    SDL_BlitSurface(surface, &src, d->surface, &dest);
+	
+	for (int i = 0; i < rh; i++) {
+		for (int j = 0; j < rw; j++) {
+			d->putPixel(x + j, y + i, getPixel(rx + j, ry + i));
+		}
+	}
 }
 
 /**
  * Draws a piece of the image onto another image, inverted.
  */
 void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw, int rh) {
-    int i;
-    SDL_Rect src, dest;
-
     if (d == NULL) {
         d = imageMgr->get("screen")->image;
 	}
 
-    for (i = 0; i < rh; i++) {
+    /*SDL_Rect src, dest;
+    for (int i = 0; i < rh; i++) {
         src.x = rx;
         src.y = ry + i;
         src.w = rw;
@@ -179,10 +177,10 @@ void Image::drawSubRectInvertedOn(Image *d, int x, int y, int rx, int ry, int rw
 
         dest.x = x;
         dest.y = y + rh - i - 1;
-        /* dest w & h unused */
 
         SDL_BlitSurface(surface, &src, d->surface, &dest);
-    }
+    }//*/
+    // FIXME - reimplement this
 }
 
 void Image::drawHighlighted() {

@@ -1013,7 +1013,8 @@ void screenEraseTextArea(int x, int y, int width, int height) {
  * Do the tremor spell effect where the screen shakes.
  */
 void screenShake(int iterations) {
-    int shakeOffset;
+    return; // FIXME - reimplement this properly after redoing video
+    /*int shakeOffset;
     unsigned short i;
     Image *screen = imageMgr->get("screen")->image;
     Image *bottom;
@@ -1049,7 +1050,7 @@ void screenShake(int iterations) {
         }
         // free the bottom row image
         delete bottom;
-    }
+    }*/
 }
 
 /**
