@@ -92,6 +92,7 @@ void screenInit_sys() {
     if (u4_SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
         xu4_error(XU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());    
     
+    SDL_EnableUNICODE(1);
     SDL_SetGamma(settings.gamma / 100.0f, settings.gamma / 100.0f, settings.gamma / 100.0f);
     atexit(SDL_Quit);
 

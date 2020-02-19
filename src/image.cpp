@@ -76,8 +76,8 @@ void Image::putPixel(int x, int y, uint32_t value) {
 }
 
 void Image::fillRect(int x, int y, int width, int height, int r, int g, int b, int a) {
-    uint32_t pixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
-    for (int i = 0; i < height; i++) {
+	uint32_t pixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
+	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			*((uint32_t*)surface->pixels + ((y * w) + x) + (i * w) + j) = pixel;
 		}
