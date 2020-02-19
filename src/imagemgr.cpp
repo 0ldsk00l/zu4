@@ -192,176 +192,95 @@ SubImage *ImageMgr::loadSubImageFromConf(const ImageInfo *info, const ConfigElem
 }
 
 void ImageMgr::fixupIntro(Image *im) {
-    const unsigned char *sigData;
-    int i, x, y;
-    RGBA color;
+	const unsigned char *sigData;
+	int i, x, y;
+	RGBA color;
+	
+	sigData = intro->getSigData();
+	
+	// update the position of "and"
+	im->drawSubRectOn(im, 148, 17, 153, 17, 11, 4);
+	im->drawSubRectOn(im, 159, 17, 165, 18, 1, 4);
+	im->drawSubRectOn(im, 160, 17, 164, 17, 16, 4);
+	
+	// update the position of "Origin Systems, Inc."
+	//im->drawSubRectOn(im, 86, 21, 88, 21, 114, 9);
+	//im->drawSubRectOn(im, 199, 21, 202, 21, 6, 9);
+	im->drawSubRectOn(im, 207, 21, 208, 21, 28, 9);
+	
+	// update the position of "Ultima IV" -  move this prior to moving "present"
+	im->drawSubRectOn(im, 59, 33, 61, 33, 204, 46);
+	
+	// update the position of "Quest of the Avatar"
+	//im->drawSubRectOn(im, 69, 80, 70, 80, 11, 13); // quEst
+	//im->drawSubRectOn(im, 82, 80, 84, 80, 27, 13); // queST
+	//im->drawSubRectOn(im, 131, 80, 132, 80, 11, 13); // oF
+	//im->drawSubRectOn(im, 150, 80, 149, 80, 40, 13); // THE
+	//im->drawSubRectOn(im, 166, 80, 165, 80, 11, 13); // tHe
+	im->drawSubRectOn(im, 200, 80, 201, 80, 81, 13); // AVATAR
+	//im->drawSubRectOn(im, 227, 80, 228, 80, 11, 13); // avAtar
+	
+	// copy "present" to new location between "Origin Systems, Inc." and
+	// "Ultima IV" - do this after moving "Ultima IV"
+	im->drawSubRectOn(im, 132, 33, 135, 0, 56,5);
+	
+	// erase the original "present"
+	im->fillRect(135, 0, 56, 5, 0, 0, 0, 255);
+	
+	// update the colors for VGA
+	if (settings.videoType == 1) { // VGA
+		ImageInfo *borderInfo = imageMgr->get(BKGD_BORDERS, true);
+		if (!borderInfo)
+			xu4_error(XU4_LOG_ERR, "Unable to load the \"%s\" data file.\n", BKGD_BORDERS);
 
-    sigData = intro->getSigData();
-    /* ----------------------------
-     * update the position of "and"
-     * ---------------------------- */
-    im->drawSubRectOn(im, 148, 17,
-                      153,
-                      17,
-                      11,
-                      4);
-    im->drawSubRectOn(im, 159, 17,
-                      165,
-                      18,
-                      1,
-                      4);
-    im->drawSubRectOn(im, 160, 17,
-                      164,
-                      17,
-                      16,
-                      4);
-    /* ---------------------------------------------
-     * update the position of "Origin Systems, Inc."
-     * --------------------------------------------- */
-    im->drawSubRectOn(im, 86, 21,
-                      88,
-                      21,
-                      114,
-                      9);
-    im->drawSubRectOn(im, 199, 21,
-                      202,
-                      21,
-                      6,
-                      9);
-    im->drawSubRectOn(im, 207, 21,
-                      208,
-                      21,
-                      28,
-                      9);
-    /* ---------------------------------------------
-     * update the position of "Ultima IV"
-     * --------------------------------------------- */
-    // move this *prior* to moving "present"
-    im->drawSubRectOn(im, 59, 33,
-                      61,
-                      33,
-                      204,
-                      46);
-    /* ---------------------------------------------
-     * update the position of "Quest of the Avatar"
-     * --------------------------------------------- */
-    im->drawSubRectOn(im, 69, 80,     // quEst
-                      70,
-                      80,
-                      11,
-                      13);
-    im->drawSubRectOn(im, 82, 80,     // queST
-                      84,
-                      80,
-                      27,
-                      13);
-    im->drawSubRectOn(im, 131, 80,    // oF
-                      132,
-                      80,
-                      11,
-                      13);
-    im->drawSubRectOn(im, 150, 80,    // THE
-                      149,
-                      80,
-                      40,
-                      13);
-    im->drawSubRectOn(im, 166, 80,    // tHe
-                      165,
-                      80,
-                      11,
-                      13);
-    im->drawSubRectOn(im, 200, 80,    // AVATAR
-                      201,
-                      80,
-                      81,
-                      13);
-    im->drawSubRectOn(im, 227, 80,    // avAtar
-                      228,
-                      80,
-                      11,
-                      13);
-    /* -----------------------------------------------------------------------------
-     * copy "present" to new location between "Origin Systems, Inc." and "Ultima IV"
-     * ----------------------------------------------------------------------------- */
-    // do this *after* moving "Ultima IV"
-    im->drawSubRectOn(im, 132, 33,
-                      135,
-                      0,
-                      56,
-                      5);
+		delete borderInfo->image;
+		borderInfo->image = NULL;
+		borderInfo = imageMgr->get(BKGD_BORDERS, true);
 
-    /* ----------------------------
-     * erase the original "present"
-     * ---------------------------- */
-    im->fillRect(135, 0, 56, 5, 0, 0, 0, 255);
+		// update the border appearance
+		borderInfo->image->drawSubRectOn(im, 0, 96, 0, 0, 16, 56);
+		for (int i=0; i < 9; i++) {
+			borderInfo->image->drawSubRectOn(im, 16+(i*32), 96, 144, 0, 48, 48);
+		}
+		im->drawSubRectInvertedOn(im, 0, 144, 0, 104, 320, 40);
+		im->drawSubRectOn(im, 0, 184, 0, 96, 320, 8);
 
-    /* -------------------------
-     * update the colors for VGA
-     * ------------------------- */
-    if (settings.videoType == 1) // VGA
-    {
-        ImageInfo *borderInfo = imageMgr->get(BKGD_BORDERS, true);
-//        ImageInfo *charsetInfo = imageMgr->get(BKGD_CHARSET);
-        if (!borderInfo)
-            xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_BORDERS);
+		delete borderInfo->image;
+		borderInfo->image = NULL;
+	}
 
-        delete borderInfo->image;
-        borderInfo->image = NULL;
-        borderInfo = imageMgr->get(BKGD_BORDERS, true);
-
-        // update the border appearance
-        borderInfo->image->drawSubRectOn(im, 0, 96, 0, 0, 16, 56);
-        for (int i=0; i < 9; i++)
-        {
-            borderInfo->image->drawSubRectOn(im, 16+(i*32), 96, 144, 0, 48, 48);
-        }
-        im->drawSubRectInvertedOn(im, 0, 144, 0, 104, 320, 40);
-        im->drawSubRectOn(im, 0, 184, 0, 96, 320, 8);
-
-        delete borderInfo->image;
-        borderInfo->image = NULL;
-    }
-
-    /* -----------------------------
-     * draw "Lord British" signature
-     * ----------------------------- */
-    color = RGBA{0, 255, 255, 255};  // cyan for EGA
-    uint8_t blue[16] = {255, 250, 226, 226, 210, 194, 161, 161,
-                    129,  97,  97,  64,  64,  32,  32,   0};
-    i = 0;
-    while (sigData[i] != 0) {
-        /* (x/y) are unscaled coordinates, i.e. in 320x200 */
-        x = sigData[i] + 0x14;
-        y = 0xBF - sigData[i+1];
-
-        if (settings.videoType) // Not EGA
-        {
-            // yellow gradient
-            color = RGBA{255, (uint8_t)(y == 1 ? 250 : 255), blue[y], 255};
-        }
-
-        im->fillRect(x, y,
-                     2, 1,
-                     color.r, color.g, color.b, 255);
-        i += 2;
-    }
-
-    /* --------------------------------------------------------------
-     * draw the red line between "Origin Systems, Inc." and "present"
-     * -------------------------------------------------------------- */
-    /* we're still working with an unscaled surface */
-    if (settings.videoType) // Not EGA
-    {
-        color = RGBA{0, 0, 161, 255};    // dark blue
-    }
-    else
-    {
-        color = RGBA{128, 0, 0, 255};    // dark red for EGA
-    }
-    for (i = 84; i < 236; i++)  // 152 px wide
-        im->fillRect(i, 31,
-                     1, 1,
-                     color.r, color.g, color.b, 255);
+	// draw "Lord British" signature
+	color = RGBA{0, 255, 255, 255};  // cyan for EGA
+	uint8_t blue[16] = {
+		255, 250, 226, 226, 210, 194, 161, 161,
+		129, 97, 97, 64, 64, 32, 32, 0
+	};
+	
+	i = 0;
+	while (sigData[i] != 0) {
+		x = sigData[i] + 0x14;
+		y = 0xBF - sigData[i+1];
+		
+		if (settings.videoType) { // Not EGA
+			// yellow gradient
+			color = RGBA{255, (uint8_t)(y == 1 ? 250 : 255), blue[y], 255};
+		}
+		
+		im->fillRect(x, y, 2, 1, color.r, color.g, color.b, 255);
+		i += 2;
+	}
+	
+	// draw the red line between "Origin Systems, Inc." and "present"
+	if (settings.videoType) { // Not EGA
+		color = RGBA{0, 0, 161, 255}; // dark blue
+	}
+	else {
+		color = RGBA{128, 0, 0, 255}; // dark red for EGA
+	}
+	
+	for (i = 84; i < 236; i++) { // 152 px wide
+		im->fillRect(i, 31, 1, 1, color.r, color.g, color.b, 255);
+	}
 }
 
 void ImageMgr::fixupAbyssVision(Image *im) {
