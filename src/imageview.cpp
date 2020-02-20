@@ -2,6 +2,7 @@
  * $Id: imageview.cpp 2671 2006-09-04 18:56:09Z solus $
  */
 
+#include <stdint.h>
 
 #include "error.h"
 #include "image.h"

@@ -16,6 +16,7 @@
 
 #include "view.h"
 #include "image.h"
+#include "textcolor.h"
 
 /**
  * A view of a text area.  Keeps track of the cursor position.

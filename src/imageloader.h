@@ -1,6 +1,8 @@
 #ifndef IMAGELOADER_H
 #define IMAGELOADER_H
 
+#include "u4file.h"
+
 enum ImageType {
 	XU4_IMG_RAW,
 	XU4_IMG_RLE,

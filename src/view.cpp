@@ -67,7 +67,7 @@ void View::unhighlight() {
 void View::drawHighlighted() {
     Image *screen = xu4_img_get_screen();
     
-    Image *tmp = Image::create(highlightW, highlightH);
+    Image *tmp = xu4_img_create(highlightW, highlightH);
     if (!tmp)
         return;
     

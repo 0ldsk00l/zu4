@@ -13,7 +13,6 @@
 #include "u4file.h"
 
 using std::map;
-using std::string;
 using std::vector;
 
 bool ImageInfo::hasBlackBackground()
@@ -64,7 +63,7 @@ void ImageMgr::init() {
     /*
      * register the "screen" image representing the entire screen
      */
-    Image *screen = Image::createScreenImage();
+    Image *screen = xu4_img_create_screen();
     ImageInfo *screenInfo = new ImageInfo;
 
     screenInfo->name = "screen";
@@ -164,10 +163,10 @@ SubImage *ImageMgr::loadSubImageFromConf(const ImageInfo *info, const ConfigElem
                last_height = 0;    
 
     subimage = new SubImage;
-    subimage->name = conf.getString("name");    
+    snprintf(subimage->name, sizeof(subimage->name), "%s", conf.getString("name").c_str());    
     subimage->width = conf.getInt("width");
     subimage->height = conf.getInt("height");
-    subimage->srcImageName = info->name;
+    snprintf(subimage->srcImageName, sizeof(subimage->srcImageName), "%s", info->name.c_str());
     if (conf.exists("x") && conf.exists("y")) {
         x = subimage->x = conf.getInt("x");
         y = subimage->y = conf.getInt("y");

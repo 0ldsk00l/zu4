@@ -1,14 +1,39 @@
 /*
- * $Id: image_sdl.cpp 3066 2014-07-21 00:18:48Z darren_janeczek $
+ * image.c
+ * Copyright (C) 2014 Darren Janeczek
+ * Copyright (C) 2012 twschulz
+ * Copyright (C) 2020 R. Danbrook
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
  */
 
+#include <stdlib.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <string.h>
+
 #include "image.h"
-#include "imagemgr.h"
 #include "settings.h"
 #include "error.h"
 
-Image *Image::create(int w, int h) {
-    Image *im = new Image;
+static Image *screen = NULL;
+
+Image* xu4_img_create(int w, int h) {
+    Image *im = (Image*)malloc(sizeof(Image));
 
     im->w = w;
     im->h = h;
@@ -19,15 +44,15 @@ Image *Image::create(int w, int h) {
     im->surface->h = h;
 
     if (!im->surface) {
-        delete im;
+        xu4_img_free(im);
         return NULL;
     }
 
     return im;
 }
 
-Image *Image::createScreenImage() {
-    Image *screen = new Image();
+Image* xu4_img_create_screen() {
+    screen = (Image*)malloc(sizeof(Image));
     screen->surface = (xu4_vsurface_t*)malloc(sizeof(xu4_vsurface_t));
     screen->surface->pixels = (uint32_t*)malloc(sizeof(uint32_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
     screen->surface->w = SCREEN_WIDTH;
@@ -37,15 +62,16 @@ Image *Image::createScreenImage() {
     return screen;
 }
 
-Image *Image::duplicate(Image *image) {    
-    Image *im = create(image->w, image->h);
+Image* xu4_img_dup(Image *image) {    
+    Image *im = xu4_img_create(image->w, image->h);
     xu4_img_draw_on(im, image, 0, 0);
     return im;
 }
 
-Image::~Image() {
-    free(surface->pixels);
-    free(surface);
+void xu4_img_free(Image *image) {
+	if (image->surface->pixels) free(image->surface->pixels);
+	if (image->surface) free(image->surface);
+    if (image) free(image);
 }
 
 uint32_t xu4_img_get_pixel(Image *s, int x, int y) {
@@ -133,5 +159,5 @@ void xu4_img_draw_highlighted(Image *d) {
 }
 
 Image* xu4_img_get_screen() {
-	return imageMgr->get("screen")->image;
+	return screen;
 }

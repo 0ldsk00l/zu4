@@ -140,7 +140,7 @@ void Tile::loadImage() {
         if (info) {
             w = (subimage ? subimage->width : info->width);
             h = (subimage ? (subimage->height) / frames : info->height / frames);
-            image = Image::create(w, h * frames);
+            image = xu4_img_create(w, h * frames);
 
 
             //info->image->alphaOff();

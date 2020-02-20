@@ -2,6 +2,7 @@
  * $Id: progress_bar.cpp 2679 2007-01-01 20:00:21Z solus $
  */
 
+#include <stdint.h>
 
 #include "progress_bar.h"
 
@@ -18,7 +19,7 @@ ProgressBar::ProgressBar(int x, int y, int width, int height, int _min, int _max
 ProgressBar& ProgressBar::operator++()  { current++; draw(); return *this; }
 ProgressBar& ProgressBar::operator--()  { current--; draw(); return *this; }
 void ProgressBar::draw() {
-    Image *bar = Image::create(width, height);
+    Image *bar = xu4_img_create(width, height);
     int pos = static_cast<int>((double(current - min) / double(max - min)) * (width - (bwidth * 2)));
 
     // border color
@@ -30,7 +31,7 @@ void ProgressBar::draw() {
     xu4_img_draw_on(screen, bar, x, y);
     update();
 
-    delete bar;
+    xu4_img_free(bar);
 }
 
 void ProgressBar::setBorderColor(int r, int g, int b, int a) {

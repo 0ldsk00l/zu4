@@ -68,7 +68,7 @@ void ogl_swap() {
 Image *scalePoint(Image *src, int scale, int n) {
     Image *dest;
 
-    dest = Image::create(src->w * scale, src->h * scale);
+    dest = xu4_img_create(src->w * scale, src->h * scale);
     if (!dest)
         return NULL;
 
@@ -134,11 +134,11 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
 		scale /= 2;
 	}
 
-	//if (scale != 1)
-	//	dest = scalePoint(src, scale, n);
+	if (scale != 1)
+		dest = scalePoint(src, scale, n);
 
 	if (!dest)
-		dest = Image::duplicate(src);
+		dest = xu4_img_dup(src);
 
     return dest;
 }
@@ -150,13 +150,13 @@ Image *screenScale(Image *src, int scale, int n, int filter) {
 Image *screenScaleDown(Image *src, int scale) {
     Image *dest;
 
-    dest = Image::create(src->w / scale, src->h / scale);
+    dest = xu4_img_create(src->w / scale, src->h / scale);
     if (!dest) {
         return NULL;
     }
 
 	if (!dest) {
-		dest = Image::duplicate(src);
+		dest = xu4_img_dup(src);
     }
 
     for (int y = 0; y < src->h; y+=scale) {

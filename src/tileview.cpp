@@ -2,6 +2,7 @@
  * $Id: tileview.cpp 3019 2012-03-18 11:31:13Z daniel_santos $
  */
 
+#include <stdint.h>
 
 #include "image.h"
 #include "imagemgr.h"
@@ -22,7 +23,7 @@ TileView::TileView(int x, int y, int columns, int rows) : View(x, y, columns * T
     this->tileWidth = TILE_WIDTH;
     this->tileHeight = TILE_HEIGHT;
     this->tileset = Tileset::get("base");
-    animated = Image::create(tileWidth, tileHeight);
+    animated = xu4_img_create(tileWidth, tileHeight);
 }
 
 TileView::TileView(int x, int y, int columns, int rows, const string &tileset) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
@@ -31,7 +32,7 @@ TileView::TileView(int x, int y, int columns, int rows, const string &tileset) :
     this->tileWidth = TILE_WIDTH;
     this->tileHeight = TILE_HEIGHT;
     this->tileset = Tileset::get(tileset);
-    animated = Image::create(tileWidth, tileHeight);
+    animated = xu4_img_create(tileWidth, tileHeight);
 }
 
 TileView::~TileView() {
@@ -48,7 +49,7 @@ void TileView::reinit() {
     	delete animated;
     	animated = NULL;
     }
-    animated = Image::create(tileWidth, tileHeight);
+    animated = xu4_img_create(tileWidth, tileHeight);
 }
 
 void TileView::loadTile(MapTile &mapTile)

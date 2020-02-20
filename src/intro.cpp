@@ -1594,7 +1594,7 @@ void IntroController::getTitleSourceData()
             && (titles[i].method != BAR))
         {
             // create a place to store the source image
-            titles[i].srcImage = Image::create(
+            titles[i].srcImage = xu4_img_create(
                 titles[i].rw,
                 titles[i].rh);
 
@@ -1696,7 +1696,7 @@ void IntroController::getTitleSourceData()
         }
 
         // create the initial animation frame
-        titles[i].destImage = Image::create(
+        titles[i].destImage = xu4_img_create(
             2 + titles[i].rw,
             2 + titles[i].rh);
     }
@@ -2033,7 +2033,7 @@ void IntroController::compactTitle()
 //
 void IntroController::drawTitle()
 {
-    Image *t = Image::duplicate(title->destImage);
+    Image *t = xu4_img_dup(title->destImage);
 
     xu4_img_draw_subrect(t,
         title->rx,    // dest x, y
@@ -2043,7 +2043,7 @@ void IntroController::drawTitle()
         title->rw,
         title->rh);
 
-    delete t;
+    xu4_img_free(t);
     t = NULL;
 }
 

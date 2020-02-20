@@ -12,6 +12,9 @@
 #include "image.h"
 #include "observer.h"
 #include "settings.h"
+#include "u4file.h"
+
+using std::string;
 
 class ConfigElement;
 class ImageSet;
