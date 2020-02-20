@@ -136,8 +136,7 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
         MapTile mt = tile->getId();
         tile->getAnim()->draw(animated, tile, mt, orientation);
     }
-    else
-    {
+    else {
         xu4_img_draw_on(animated, tile->getImage(), 0, 0);
     }
 
@@ -145,11 +144,9 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     if (dscale[distance] == 0)
 		return;
     else if (dscale[distance] == 1)
-        scaled = screenScaleDown(animated, 2);
+        scaled = xu4_img_scaledown(animated, 2);
     else
-    {
-        scaled = screenScale(animated, dscale[distance] / 2, 1, 0);
-    }
+        scaled = xu4_img_scaleup(animated, dscale[distance] / 2);
 
     if (tiledWall) {
     	int i_x = ((VIEWPORT_W * tileWidth  / 2) + this->x) - (scaled->w / 2);
@@ -162,13 +159,7 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     	for (int x = i_x; x < f_x; x+=d_x)
     		for (int y = i_y; y < f_y; y+=d_y)
     			xu4_img_draw_subrect_on(this->screen, animated,
-    					x,
-    					y,
-    					0,
-    					0,
-    					f_x - x,
-    					f_y - y
-    			);
+    					x, y, 0, 0, f_x - x, f_y - y);
     }
     else {
     	int y_offset = std::max(0,(dscale[distance] - offset_adj) * offset_multiplier);
@@ -176,15 +167,10 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     	int y = ((VIEWPORT_H * tileHeight / 2) + this->y + y_offset) - (scaled->h / 8);
 
 		xu4_img_draw_subrect_on(this->screen, scaled,
-								x,
-								y,
-								0,
-								0,
-								tileWidth * VIEWPORT_W + this->x - x ,
-								tileHeight * VIEWPORT_H + this->y - y);
+								x, y, 0, 0, scaled->w, scaled->h);
     }
 
-    delete scaled;
+    xu4_img_free(scaled);
 }
 
 int DungeonView::graphicIndex(int xoffset, int distance, Direction orientation, DungeonGraphicType type) {

@@ -1,7 +1,7 @@
 /*
  * image.c
- * Copyright (C) 2014 Darren Janeczek
  * Copyright (C) 2012 twschulz
+ * Copyright (C) 2014 Darren Janeczek
  * Copyright (C) 2020 R. Danbrook
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -58,6 +58,53 @@ Image* xu4_img_dup(Image *image) {
     Image *im = xu4_img_create(image->w, image->h);
     xu4_img_draw_on(im, image, 0, 0);
     return im;
+}
+
+Image* xu4_img_scaleup(Image *s, int scale) {
+    Image *d = NULL;
+	
+	if (scale != 1) {
+		d = xu4_img_create(s->w * scale, s->h * scale);
+		
+		for (int y = 0; y < s->h; y++) {
+			for (int x = 0; x < s->w; x++) {
+				for (int i = 0; i < scale; i++) {
+					for (int j = 0; j < scale; j++) {
+						uint32_t v = xu4_img_get_pixel(s, x, y);
+						xu4_img_set_pixel(d, x * scale + j, y * scale + i, v);
+					}
+				}
+			}
+		}
+	}
+	
+	if (!d) {
+		d = xu4_img_dup(s);
+	}
+	
+    return d;
+}
+
+Image* xu4_img_scaledown(Image *s, int scale) {
+	Image *d;
+	
+	d = xu4_img_create(s->w / scale, s->h / scale);
+	if (!d) {
+		return NULL;
+	}
+	
+	if (!d) {
+		d = xu4_img_dup(s);
+	}
+	
+	for (int y = 0; y < s->h; y += scale) {
+		for (int x = 0; x < s->w; x += scale) {
+			uint32_t v = xu4_img_get_pixel(s, x, y);
+			xu4_img_set_pixel(d, x / scale, y / scale, v);
+		}
+	}
+	
+	return d;
 }
 
 void xu4_img_free(Image *image) {

@@ -8,8 +8,6 @@
 #include "error.h"
 #include "image.h"
 #include "settings.h"
-#include "screen.h"
-#include "u4.h"
 #include "u4_sdl.h"
 
 static GLuint texID = 0;
@@ -62,34 +60,10 @@ void ogl_swap() {
 	SDL_GL_SwapBuffers();
 }
 
-/**
- * A simple row and column duplicating scaler. FIXME use OpenGL instead
- */
-Image *scalePoint(Image *src, int scale, int n) {
-    Image *dest;
-
-    dest = xu4_img_create(src->w * scale, src->h * scale);
-    if (!dest)
-        return NULL;
-
-    for (int y = 0; y < src->h; y++) {
-        for (int x = 0; x < src->w; x++) {
-            for (int i = 0; i < scale; i++) {
-                for (int j = 0; j < scale; j++) {
-                    uint32_t index = xu4_img_get_pixel(src, x, y);
-                    xu4_img_set_pixel(dest, x * scale + j, y * scale + i, index);
-                }
-            }
-        }
-    }
-
-    return dest;
-}
-
 void screenInit_sys() {
-    /* start SDL */
-    if (u4_SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
-        xu4_error(XU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());    
+    if (u4_SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+        xu4_error(XU4_LOG_ERR, "Unable to init SDL: %s", SDL_GetError());
+	}
     
     SDL_EnableUNICODE(1);
     SDL_SetGamma(settings.gamma / 100.0f, settings.gamma / 100.0f, settings.gamma / 100.0f);
@@ -103,8 +77,6 @@ void screenInit_sys() {
 
     SDL_ShowCursor(SDL_DISABLE);
     ogl_init();
-
-    SDL_ShowCursor(SDL_DISABLE);
 }
 
 void screenDelete_sys() {
@@ -113,58 +85,4 @@ void screenDelete_sys() {
 
 void screenRedrawScreen() {
     ogl_swap();
-}
-
-/**
- * Scale an image up.  The resulting image will be scale * the
- * original dimensions.  The original image is no longer deleted.
- * n is the number of tiles in the image; each tile is filtered 
- * seperately. filter determines whether or not to filter the 
- * resulting image.
- */
-Image *screenScale(Image *src, int scale, int n, int filter) {
-    Image *dest = NULL;
-
-	if (n == 0)
-		n = 1;
-
-	while (filter && (scale % 2 == 0)) {
-		dest = scalePoint(src, 2, n);
-		src = dest;
-		scale /= 2;
-	}
-
-	if (scale != 1)
-		dest = scalePoint(src, scale, n);
-
-	if (!dest)
-		dest = xu4_img_dup(src);
-
-    return dest;
-}
-
-/**
- * Scale an image down.  The resulting image will be 1/scale * the
- * original dimensions.  The original image is no longer deleted.
- */
-Image *screenScaleDown(Image *src, int scale) {
-    Image *dest;
-
-    dest = xu4_img_create(src->w / scale, src->h / scale);
-    if (!dest) {
-        return NULL;
-    }
-
-	if (!dest) {
-		dest = xu4_img_dup(src);
-    }
-
-    for (int y = 0; y < src->h; y+=scale) {
-        for (int x = 0; x < src->w; x+=scale) {
-            uint32_t index = xu4_img_get_pixel(src, x, y);
-            xu4_img_set_pixel(dest, x / scale, y / scale, index);
-        }
-    }
-
-    return dest;
 }

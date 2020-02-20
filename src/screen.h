@@ -102,9 +102,6 @@ void screenEnableCursor(void);
 void screenDisableCursor(void);
 void screenSetCursorPos(int x, int y);
 
-Image *screenScale(Image *src, int scale, int n, int filter);
-Image *screenScaleDown(Image *src, int scale);
-
 extern int screenCurrentCycle;
 
 #define SCR_CYCLE_MAX 16
