@@ -177,7 +177,7 @@ void Tile::deleteImage()
         delete image;
         image = NULL;
     }
-    scale = settings.scale;
+    scale = 1;
 }
 
 /**
