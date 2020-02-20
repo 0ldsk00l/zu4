@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include <stdint.h>
 
 #include "image.h"
 #include "imagemgr.h"

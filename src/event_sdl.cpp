@@ -2,7 +2,6 @@
  * $Id: event_sdl.cpp 3059 2013-01-06 22:37:10Z darren_janeczek $
  */
 
-
 #include <SDL.h>
 #include "u4.h"
 
@@ -27,7 +26,7 @@ KeyHandler::KeyHandler(Callback func, void *d, bool asyncronous) :
  * Sets the key-repeat characteristics of the keyboard.
  */
 int KeyHandler::setKeyRepeat(int delay, int interval) {
-    return SDL_EnableKeyRepeat(delay, interval);
+    return 0;//SDL_EnableKeyRepeat(delay, interval);
 }
 
 /**
@@ -143,7 +142,7 @@ TimedEventMgr::TimedEventMgr(int i) : baseInterval(i) {
             xu4_error(XU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());
     }
 
-    id = static_cast<void*>(SDL_AddTimer(i, &TimedEventMgr::callback, this));
+    id = SDL_AddTimer(i, &TimedEventMgr::callback, this);
     instances++;
 }
 
@@ -154,7 +153,7 @@ TimedEventMgr::TimedEventMgr(int i) : baseInterval(i) {
  * objects.
  */
 TimedEventMgr::~TimedEventMgr() {
-    SDL_RemoveTimer(static_cast<SDL_TimerID>(id));
+    SDL_RemoveTimer(id);
     id = NULL;
     
     if (instances == 1)
@@ -190,14 +189,14 @@ void TimedEventMgr::reset(unsigned int interval) {
 
 void TimedEventMgr::stop() {
     if (id) {
-        SDL_RemoveTimer(static_cast<SDL_TimerID>(id));
+        SDL_RemoveTimer(id);
         id = NULL;
     }
 }
 
 void TimedEventMgr::start() {
     if (!id)
-        id = static_cast<void*>(SDL_AddTimer(baseInterval, &TimedEventMgr::callback, this));
+        id = SDL_AddTimer(baseInterval, &TimedEventMgr::callback, this);
 }
 
 /**
@@ -207,21 +206,21 @@ EventHandler::EventHandler() : timer(eventTimerGranularity), updateScreen(NULL) 
 }
 
 static void handleActiveEvent(const SDL_Event &event, updateScreenCallback updateScreen) {
-    if (event.active.state & SDL_APPACTIVE) {            
+    /*if (event.active.state & SDL_APPACTIVE) {            
         // application was previously iconified and is now being restored
         if (event.active.gain) {
             if (updateScreen)
                 (*updateScreen)();
             screenRedrawScreen();
         }                
-    }
+    }*/
 }
 
 static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, updateScreenCallback updateScreen) {
     int processed;
     int key;
     
-    if (event.key.keysym.unicode != 0)
+    /*if (event.key.keysym.unicode != 0)
         key = event.key.keysym.unicode & 0x7F;
     else
         key = event.key.keysym.sym;
@@ -229,7 +228,7 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
     if (event.key.keysym.mod & KMOD_ALT)
         key += U4_ALT;
     if (event.key.keysym.mod & KMOD_META)
-        key += U4_META;
+        key += U4_META;*/
     
     if (event.key.keysym.sym == SDLK_UP)
         key = U4_UP;
@@ -243,12 +242,12 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
              event.key.keysym.sym == SDLK_DELETE)
         key = U4_BACKSPACE;
     
-    if (verbose)
+    /*if (verbose)
         printf("key event: unicode = %d, sym = %d, mod = %d; translated = %d\n", 
                event.key.keysym.unicode, 
                event.key.keysym.sym, 
                event.key.keysym.mod, 
-               key);
+               key);*/
     
     /* handle the keypress */
     processed = controller->notifyKeyPressed(key);
@@ -292,9 +291,9 @@ void EventHandler::sleep(unsigned int usec) {
 			case SDL_KEYUP:
 				// Discard the event.
 				break;
-			case SDL_ACTIVEEVENT:
-				handleActiveEvent(event, eventHandler->updateScreen);
-				break;
+			//case SDL_ACTIVEEVENT:
+			//	handleActiveEvent(event, eventHandler->updateScreen);
+			//	break;
 			case SDL_USEREVENT:
 				if (event.user.code == 0) {
 					eventHandler->getTimer()->tick();
@@ -331,9 +330,9 @@ void EventHandler::run() {
 				eventHandler->getTimer()->tick();
 				break;
 
-			case SDL_ACTIVEEVENT:
+			/*case SDL_ACTIVEEVENT:
 				handleActiveEvent(event, updateScreen);
-				break;
+				break;*/
 
 			case SDL_QUIT:
 				::exit(0);
@@ -352,11 +351,11 @@ void EventHandler::setScreenUpdate(void (*updateScreen)(void)) {
  * Returns true if the queue is empty of events that match 'mask'. 
  */
  bool EventHandler::timerQueueEmpty() {
-    SDL_Event event;
+    //SDL_Event event;
 
-    if (SDL_PeepEvents(&event, 1, SDL_PEEKEVENT, SDL_EVENTMASK(SDL_USEREVENT)))
-        return false;
-    else
+    //if (SDL_PeepEvents(&event, 1, SDL_PEEKEVENT, SDL_EVENTMASK(SDL_USEREVENT)))
+    //    return false;
+    //else
         return true;
 }
 

@@ -11,7 +11,7 @@ suggestions or bug reports are welcome.
 
 #### How to Compile
 Currently, the following dependencies are required:
-libxml2, libsdl1.2
+libsdl2, libxml2
 ```
 make
 ```

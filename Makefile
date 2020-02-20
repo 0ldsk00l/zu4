@@ -5,8 +5,8 @@ bindir = $(prefix)/bin
 libdir = $(prefix)/lib
 datadir = $(prefix)/share
 
-UILIBS = $(shell sdl-config --libs) -lGL -lGLU
-UIFLAGS = $(shell sdl-config --cflags)
+UILIBS = $(shell sdl2-config --libs) -lGL -lGLU
+UIFLAGS = $(shell sdl2-config --cflags)
 
 CXXFLAGS = -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags)
 #CXXFLAGS += -ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3

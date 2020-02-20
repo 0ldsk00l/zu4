@@ -1,6 +1,5 @@
 /*
  * video.c
- * Copyright (C) 2015 Darren Janeczek
  * Copyright (C) 2020 R. Danbrook
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -27,6 +26,9 @@
 #include "image.h"
 #include "settings.h"
 #include "u4_sdl.h"
+
+static SDL_Window *window;
+static SDL_GLContext glcontext;
 
 static GLuint texID = 0;
 
@@ -75,29 +77,31 @@ void xu4_ogl_swap() {
 		glTexCoord2f(0.0f, 1.0f);
 		glVertex2f(0, SCREEN_HEIGHT * settings.scale);
 	glEnd();
-	SDL_GL_SwapBuffers();
+	SDL_GL_SwapWindow(window);
 }
 
 void xu4_video_init() {
     if (u4_SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
         xu4_error(XU4_LOG_ERR, "Unable to init SDL: %s", SDL_GetError());
 	}
-    
-    SDL_EnableUNICODE(1);
-    SDL_SetGamma(settings.gamma / 100.0f, settings.gamma / 100.0f, settings.gamma / 100.0f);
+	
     atexit(SDL_Quit);
-
-    SDL_WM_SetCaption("Ultima IV", NULL);
     
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    if (!SDL_SetVideoMode(SCREEN_WIDTH * settings.scale, SCREEN_HEIGHT * settings.scale, 16, SDL_ANYFORMAT | SDL_DOUBLEBUF | SDL_OPENGL))
-        xu4_error(XU4_LOG_ERR, "unable to set video: %s", SDL_GetError());
-
-    SDL_ShowCursor(SDL_DISABLE);
-    xu4_ogl_init();
+	SDL_ShowCursor(SDL_DISABLE);
+	
+	window = SDL_CreateWindow("Ultima IV",
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		SCREEN_WIDTH * settings.scale, SCREEN_HEIGHT * settings.scale,
+		SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
+	
+	glcontext = SDL_GL_CreateContext(window);
+	SDL_GL_MakeCurrent(window, glcontext);
+	SDL_GL_SetSwapInterval(1);
+	xu4_ogl_init();
 }
 
 void xu4_video_deinit() {
+    SDL_DestroyWindow(window);
     u4_SDL_QuitSubSystem(SDL_INIT_VIDEO);
     if (texID) { glDeleteTextures(1, &texID); }
 }

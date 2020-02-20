@@ -245,7 +245,7 @@ protected:
     /* Static properties */
     static unsigned int instances;
 
-    void *id;
+    int id;
     int baseInterval;
     bool locked;
     List events;
