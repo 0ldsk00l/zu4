@@ -8,15 +8,6 @@ extern "C" {
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 200
 
-#define IM_OPAQUE (unsigned int) 255
-#define IM_TRANSPARENT 0
-
-typedef struct xu4_vsurface_t {
-	int w;
-	int h;
-	void *pixels;
-} xu4_vsurface_t;
-
 typedef struct RGBA {
     uint8_t r, g, b, a;
 } RGBA;
@@ -29,7 +20,7 @@ typedef struct SubImage {
 
 typedef struct Image {
     int w, h;
-    xu4_vsurface_t *surface;
+    void *pixels;
 } Image;
 
 Image* xu4_img_create(int w, int h);

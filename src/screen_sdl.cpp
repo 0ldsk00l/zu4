@@ -44,7 +44,7 @@ void ogl_swap() {
 				0,
 				GL_RGBA,
 				GL_UNSIGNED_BYTE,
-		screen->surface->pixels);
+		screen->pixels);
 	
 	glBegin(GL_QUADS);
 		glTexCoord2f(1.0f, 1.0f);

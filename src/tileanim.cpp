@@ -95,7 +95,7 @@ RGBA *TileAnimTransform::loadColorFromConf(const ConfigElement &conf) {
     rgba->r = conf.getInt("red");
     rgba->g = conf.getInt("green");
     rgba->b = conf.getInt("blue");
-    rgba->a = IM_OPAQUE;
+    rgba->a = 255;
 
     return rgba;
 }

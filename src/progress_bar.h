@@ -15,9 +15,9 @@ public:
     virtual ProgressBar& operator++();
     virtual ProgressBar& operator--();
     virtual void draw();
-    void setBorderColor(int r, int g, int b, int a = IM_OPAQUE);
+    void setBorderColor(int r, int g, int b, int a = 255);
     void setBorderWidth(unsigned int width);
-    void setColor(int r, int g, int b, int a = IM_OPAQUE);
+    void setColor(int r, int g, int b, int a = 255);
     
 protected:
     int min, max;

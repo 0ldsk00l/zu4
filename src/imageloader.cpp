@@ -140,11 +140,11 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	
 	if (bpp == 8) { // VGA
 		xu4_u4raw_vga_conv(width, height, raw, converted, true);
-		memcpy((uint32_t*)image->surface->pixels, converted, sizeof(uint32_t) * width * height);
+		memcpy((uint32_t*)image->pixels, converted, sizeof(uint32_t) * width * height);
 	}
 	else if (bpp == 4) { // EGA
 		xu4_u4raw_ega_conv(width, height, raw, converted, true);
-		memcpy((uint32_t*)image->surface->pixels, converted, sizeof(uint32_t) * width * height);
+		memcpy((uint32_t*)image->pixels, converted, sizeof(uint32_t) * width * height);
 	}
 	
 	free(raw);
@@ -156,7 +156,7 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 Image* xu4_png_load(const char *filename, int *x, int *y) {
 	unsigned char *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
 	Image *image = xu4_img_create(*x, *y);
-	memcpy((uint32_t*)image->surface->pixels, (uint32_t*)pixels, sizeof(uint32_t) * *x * *y);
+	memcpy((uint32_t*)image->pixels, (uint32_t*)pixels, sizeof(uint32_t) * *x * *y);
 	stbi_image_free(pixels);
 	return image;
 }

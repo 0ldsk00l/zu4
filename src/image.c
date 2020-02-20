@@ -34,16 +34,11 @@ static Image *screen = NULL;
 
 Image* xu4_img_create(int w, int h) {
     Image *im = (Image*)malloc(sizeof(Image));
-
     im->w = w;
     im->h = h;
+    im->pixels = (uint32_t*)malloc(sizeof(uint32_t) * w * h);
 
-    im->surface = (xu4_vsurface_t*)malloc(sizeof(xu4_vsurface_t));
-    im->surface->pixels = (uint32_t*)malloc(sizeof(uint32_t) * w * h);
-    im->surface->w = w;
-    im->surface->h = h;
-
-    if (!im->surface) {
+    if (!im->pixels) {
         xu4_img_free(im);
         return NULL;
     }
@@ -53,12 +48,9 @@ Image* xu4_img_create(int w, int h) {
 
 Image* xu4_img_create_screen() {
     screen = (Image*)malloc(sizeof(Image));
-    screen->surface = (xu4_vsurface_t*)malloc(sizeof(xu4_vsurface_t));
-    screen->surface->pixels = (uint32_t*)malloc(sizeof(uint32_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
-    screen->surface->w = SCREEN_WIDTH;
-    screen->surface->h = SCREEN_HEIGHT;
-    screen->w = screen->surface->w;
-    screen->h = screen->surface->h;
+    screen->pixels = (uint32_t*)malloc(sizeof(uint32_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
+    screen->w = SCREEN_WIDTH;
+    screen->h = SCREEN_HEIGHT;
     return screen;
 }
 
@@ -69,8 +61,7 @@ Image* xu4_img_dup(Image *image) {
 }
 
 void xu4_img_free(Image *image) {
-	if (image->surface->pixels) free(image->surface->pixels);
-	if (image->surface) free(image->surface);
+	if (image->pixels) free(image->pixels);
     if (image) free(image);
 }
 
@@ -79,7 +70,7 @@ uint32_t xu4_img_get_pixel(Image *s, int x, int y) {
 		//printf("getPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return 0;
 	}
-	return *((uint32_t*)(s->surface->pixels) + (y * s->w) + x);
+	return *((uint32_t*)(s->pixels) + (y * s->w) + x);
 }
 
 void xu4_img_set_pixel(Image *d, int x, int y, uint32_t value) {
@@ -87,14 +78,14 @@ void xu4_img_set_pixel(Image *d, int x, int y, uint32_t value) {
 		//printf("putPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return;
 	}
-	*((uint32_t*)(d->surface->pixels) + (y * d->w) + x) = value;
+	*((uint32_t*)(d->pixels) + (y * d->w) + x) = value;
 }
 
 void xu4_img_fill(Image *d, int x, int y, int width, int height, int r, int g, int b, int a) {
 	uint32_t pixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			*((uint32_t*)d->surface->pixels + ((y * d->w) + x) + (i * d->w) + j) = pixel;
+			*((uint32_t*)d->pixels + ((y * d->w) + x) + (i * d->w) + j) = pixel;
 		}
 	}
 }
@@ -105,8 +96,8 @@ void xu4_img_draw_on(Image *d, Image *s, int x, int y) {
 	}
 	
 	for (int i = 0; i < s->h; i++) {
-		memcpy((uint32_t*)d->surface->pixels + ((y * d->w) + x) + (i * d->w),
-			(uint32_t*)s->surface->pixels + (i * s->w), s->w * sizeof(uint32_t));
+		memcpy((uint32_t*)d->pixels + ((y * d->w) + x) + (i * d->w),
+			(uint32_t*)s->pixels + (i * s->w), s->w * sizeof(uint32_t));
 	}
 }
 
