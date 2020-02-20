@@ -23,10 +23,11 @@ typedef struct Image {
     void *pixels;
 } Image;
 
+Image* xu4_img_get_screen();
+
 Image* xu4_img_create(int w, int h);
 Image* xu4_img_create_screen();
 Image* xu4_img_dup(Image *image);
-Image* xu4_img_get_screen();
 
 Image* xu4_img_scaleup(Image *s, int scale);
 Image* xu4_img_scaledown(Image *s, int scale);

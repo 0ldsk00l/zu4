@@ -1,5 +1,23 @@
 /*
- * $Id: screen_sdl.cpp 3087 2015-01-24 03:44:46Z darren_janeczek $
+ * video.c
+ * Copyright (C) 2015 Darren Janeczek
+ * Copyright (C) 2020 R. Danbrook
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
  */
 
 #include <SDL.h>
@@ -12,7 +30,7 @@
 
 static GLuint texID = 0;
 
-static void ogl_init() {
+static void xu4_ogl_init() {
 	glEnable(GL_TEXTURE_2D);
 
 	glGenTextures(1, &texID);
@@ -33,7 +51,7 @@ static void ogl_init() {
 	glLoadIdentity();
 }
 
-void ogl_swap() {
+void xu4_ogl_swap() {
 	Image *screen = xu4_img_get_screen();
 	glTexImage2D(GL_TEXTURE_2D,
 				0,
@@ -60,7 +78,7 @@ void ogl_swap() {
 	SDL_GL_SwapBuffers();
 }
 
-void screenInit_sys() {
+void xu4_video_init() {
     if (u4_SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
         xu4_error(XU4_LOG_ERR, "Unable to init SDL: %s", SDL_GetError());
 	}
@@ -76,13 +94,10 @@ void screenInit_sys() {
         xu4_error(XU4_LOG_ERR, "unable to set video: %s", SDL_GetError());
 
     SDL_ShowCursor(SDL_DISABLE);
-    ogl_init();
+    xu4_ogl_init();
 }
 
-void screenDelete_sys() {
+void xu4_video_deinit() {
     u4_SDL_QuitSubSystem(SDL_INIT_VIDEO);
-}
-
-void screenRedrawScreen() {
-    ogl_swap();
+    if (texID) { glDeleteTextures(1, &texID); }
 }

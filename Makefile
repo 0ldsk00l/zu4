@@ -37,9 +37,9 @@ CSRCS=\
 		src/stb_vorbis.c \
 		src/xmlparse.c \
 		src/u4_sdl.c \
+		src/video.c \
 		src/weapon.c \
 		src/yxml.c
-
 
 CXXSRCS=\
 		src/annotation.cpp \
@@ -84,7 +84,6 @@ CXXSRCS=\
 		src/progress_bar.cpp \
 		src/script.cpp \
 		src/screen.cpp \
-		src/screen_sdl.cpp \
 		src/shrine.cpp \
 		src/spell.cpp \
 		src/stats.cpp \

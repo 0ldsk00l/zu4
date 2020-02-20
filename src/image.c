@@ -32,6 +32,8 @@
 
 static Image *screen = NULL;
 
+Image* xu4_img_get_screen() { return screen; }
+
 Image* xu4_img_create(int w, int h) {
     Image *im = (Image*)malloc(sizeof(Image));
     im->w = w;
@@ -194,8 +196,4 @@ void xu4_img_draw_highlighted(Image *d) {
 			xu4_img_set_pixel(d, j, i, pixel);
         }
     }
-}
-
-Image* xu4_img_get_screen() {
-	return screen;
 }

@@ -7,6 +7,7 @@
 #include <cfloat>
 #include <cstring>
 #include "u4.h"
+#include "video.h"
 
 #include "screen.h"
 
@@ -82,10 +83,6 @@ static const int BufferSize = 1024;
 
 extern bool verbose;
 
-// Just extern the system functions here. That way people aren't tempted to call them as part of the public API.
-extern void screenInit_sys();
-extern void screenDelete_sys();
-
 void screenInit() {
     filterNames.clear();
     filterNames.push_back("point");
@@ -99,7 +96,7 @@ void screenInit() {
     
     screenLoadGraphicsFromConf();
       
-    screenInit_sys();
+    xu4_video_init();
     
     /* if we can't use vga, reset to default:ega */
     if (!u4isUpgradeAvailable() && settings.videoType == 1)
@@ -149,11 +146,14 @@ void screenDelete() {
     for (i = layouts.begin(); i != layouts.end(); i++)
         delete(*i);
     layouts.clear();
-    screenDelete_sys();
+    xu4_video_deinit();
     
     ImageMgr::destroy();
 }
 
+void screenRedrawScreen() {
+    xu4_ogl_swap();
+}
 
 /**
  * Re-initializes the screen and implements any changes made in settings
