@@ -232,7 +232,7 @@ void ImageMgr::fixupIntro(Image *im) {
 		if (!borderInfo)
 			xu4_error(XU4_LOG_ERR, "Unable to load the \"%s\" data file.\n", BKGD_BORDERS);
 
-		delete borderInfo->image;
+		xu4_img_free(borderInfo->image);
 		borderInfo->image = NULL;
 		borderInfo = imageMgr->get(BKGD_BORDERS, true);
 
@@ -244,7 +244,7 @@ void ImageMgr::fixupIntro(Image *im) {
 		xu4_img_draw_subrect_inv(im, im, 0, 144, 0, 104, 320, 40);
 		xu4_img_draw_subrect_on(im, im, 0, 184, 0, 96, 320, 8);
 
-		delete borderInfo->image;
+		xu4_img_free(borderInfo->image);
 		borderInfo->image = NULL;
 	}
 
@@ -531,7 +531,7 @@ void ImageMgr::freeIntroBackgrounds() {
         for (std::map<string, ImageInfo *>::iterator j = set->info.begin(); j != set->info.end(); j++) {
             ImageInfo *info = j->second;
             if (info->image != NULL && info->introOnly) {
-                delete info->image;
+                xu4_img_free(info->image);
                 info->image = NULL;
             }
         }
@@ -563,5 +563,5 @@ ImageInfo::~ImageInfo() {
     for (std::map<string, SubImage *>::iterator i = subImages.begin(); i != subImages.end(); i++)
         delete i->second;
     if (image != NULL)
-        delete image;
+        xu4_img_free(image);
 }

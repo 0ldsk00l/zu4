@@ -2021,7 +2021,7 @@ void IntroController::compactTitle()
 {
     if (title->srcImage)
     {
-        delete title->srcImage;
+        xu4_img_free(title->srcImage);
         title->srcImage = NULL;
     }
     title->plotData.clear();
