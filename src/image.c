@@ -32,38 +32,43 @@
 
 static Image *screen = NULL;
 
+// Return the address of the main "screen" image
 Image* xu4_img_get_screen() { return screen; }
 
 Image* xu4_img_create(int w, int h) {
-    Image *im = (Image*)malloc(sizeof(Image));
-    im->w = w;
-    im->h = h;
-    im->pixels = (uint32_t*)malloc(sizeof(uint32_t) * w * h);
+	// Create a new image
+	Image *im = (Image*)malloc(sizeof(Image));
+	im->w = w;
+	im->h = h;
+	im->pixels = (uint32_t*)malloc(sizeof(uint32_t) * w * h);
 
-    if (!im->pixels) {
-        xu4_img_free(im);
-        return NULL;
-    }
+	if (!im->pixels) {
+		xu4_img_free(im);
+		return NULL;
+	}
 
-    return im;
+	return im;
 }
 
 Image* xu4_img_create_screen() {
-    screen = (Image*)malloc(sizeof(Image));
-    screen->pixels = (uint32_t*)malloc(sizeof(uint32_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
-    screen->w = SCREEN_WIDTH;
-    screen->h = SCREEN_HEIGHT;
-    return screen;
+	// Create the main screen image
+	screen = (Image*)malloc(sizeof(Image));
+	screen->pixels = (uint32_t*)malloc(sizeof(uint32_t) * SCREEN_WIDTH * SCREEN_HEIGHT);
+	screen->w = SCREEN_WIDTH;
+	screen->h = SCREEN_HEIGHT;
+	return screen;
 }
 
-Image* xu4_img_dup(Image *image) {    
-    Image *im = xu4_img_create(image->w, image->h);
-    xu4_img_draw_on(im, image, 0, 0);
-    return im;
+Image* xu4_img_dup(Image *image) {
+	// Duplicate an image
+	Image *im = xu4_img_create(image->w, image->h);
+	xu4_img_draw_on(im, image, 0, 0);
+	return im;
 }
 
 Image* xu4_img_scaleup(Image *s, int scale) {
-    Image *d = NULL;
+	// Scale an image up
+	Image *d = NULL;
 	
 	if (scale != 1) {
 		d = xu4_img_create(s->w * scale, s->h * scale);
@@ -84,10 +89,11 @@ Image* xu4_img_scaleup(Image *s, int scale) {
 		d = xu4_img_dup(s);
 	}
 	
-    return d;
+	return d;
 }
 
 Image* xu4_img_scaledown(Image *s, int scale) {
+	// Scale an image down
 	Image *d;
 	
 	d = xu4_img_create(s->w / scale, s->h / scale);
@@ -110,11 +116,14 @@ Image* xu4_img_scaledown(Image *s, int scale) {
 }
 
 void xu4_img_free(Image *image) {
+	// Free resources allocated for an image
 	if (image->pixels) free(image->pixels);
-    if (image) free(image);
+	if (image) free(image);
+	image = NULL;
 }
 
 uint32_t xu4_img_get_pixel(Image *s, int x, int y) {
+	// Get a pixel's value
 	if (x > (s->w - 1) || y > (s->h - 1) || x < 0 || y < 0) {
 		//printf("getPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return 0;
@@ -123,6 +132,7 @@ uint32_t xu4_img_get_pixel(Image *s, int x, int y) {
 }
 
 void xu4_img_set_pixel(Image *d, int x, int y, uint32_t value) {
+	// Set a pixel's value
 	if (x > (d->w - 1) || y > (d->h - 1) || x < 0 || y < 0) {
 		//printf("putPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return;
@@ -131,6 +141,7 @@ void xu4_img_set_pixel(Image *d, int x, int y, uint32_t value) {
 }
 
 void xu4_img_fill(Image *d, int x, int y, int width, int height, int r, int g, int b, int a) {
+	// Create a rectangle and fill it
 	uint32_t pixel = (a & 0xff) << 24 | (b & 0xff) << 16 | (g & 0xff) << 8 | (r & 0xff);
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
@@ -140,6 +151,7 @@ void xu4_img_fill(Image *d, int x, int y, int width, int height, int r, int g, i
 }
 
 void xu4_img_draw_on(Image *d, Image *s, int x, int y) {
+	// Draw an image onto another
 	if (d == NULL) {
 		d = xu4_img_get_screen();
 	}
@@ -151,10 +163,12 @@ void xu4_img_draw_on(Image *d, Image *s, int x, int y) {
 }
 
 void xu4_img_draw(Image *s, int x, int y) {
+	// Draw an image onto the main screen image
 	xu4_img_draw_on(NULL, s, x, y);
 }
 
 void xu4_img_draw_subrect_on(Image *d, Image *s, int x, int y, int rx, int ry, int rw, int rh) {
+	// Draw a portion of an image onto another
 	if (d == NULL) {
 		d = xu4_img_get_screen();
 	}
@@ -167,10 +181,12 @@ void xu4_img_draw_subrect_on(Image *d, Image *s, int x, int y, int rx, int ry, i
 }
 
 void xu4_img_draw_subrect(Image *s, int x, int y, int rx, int ry, int rw, int rh) {
-    xu4_img_draw_subrect_on(NULL, s, x, y, rx, ry, rw, rh);
+	// Draw a portion of an image onto the main screen image
+	xu4_img_draw_subrect_on(NULL, s, x, y, rx, ry, rw, rh);
 }
 
 void xu4_img_draw_subrect_inv(Image *d, Image *s, int x, int y, int rx, int ry, int rw, int rh) {
+	// Draw a portion of an image with inverted y coordinates
 	if (d == NULL) {
 		d = xu4_img_get_screen();
 	}
@@ -183,6 +199,7 @@ void xu4_img_draw_subrect_inv(Image *d, Image *s, int x, int y, int rx, int ry, 
 }
 
 void xu4_img_draw_highlighted(Image *d) {
+	// Draw an image with highlights
 	uint32_t pixel;
 	RGBA c;
 	for (int i = 0; i < d->h; i++) {
@@ -194,6 +211,6 @@ void xu4_img_draw_highlighted(Image *d) {
 			c.a = (pixel & 0xff000000) >> 24;
 			pixel = c.a << 24 | c.b << 16 | c.g << 8 | c.r;
 			xu4_img_set_pixel(d, j, i, pixel);
-        }
-    }
+		}
+	}
 }
