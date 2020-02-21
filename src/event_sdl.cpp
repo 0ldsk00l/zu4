@@ -26,7 +26,7 @@ KeyHandler::KeyHandler(Callback func, void *d, bool asyncronous) :
  * Sets the key-repeat characteristics of the keyboard.
  */
 int KeyHandler::setKeyRepeat(int delay, int interval) {
-    return 0;//SDL_EnableKeyRepeat(delay, interval);
+    return 0;
 }
 
 /**
@@ -205,30 +205,16 @@ void TimedEventMgr::start() {
 EventHandler::EventHandler() : timer(eventTimerGranularity), updateScreen(NULL) {
 }
 
-static void handleActiveEvent(const SDL_Event &event, updateScreenCallback updateScreen) {
-    /*if (event.active.state & SDL_APPACTIVE) {            
-        // application was previously iconified and is now being restored
-        if (event.active.gain) {
-            if (updateScreen)
-                (*updateScreen)();
-            screenRedrawScreen();
-        }                
-    }*/
-}
-
 static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, updateScreenCallback updateScreen) {
     int processed;
     int key;
     
-    /*if (event.key.keysym.unicode != 0)
-        key = event.key.keysym.unicode & 0x7F;
-    else
-        key = event.key.keysym.sym;
+    key = event.key.keysym.sym;
     
     if (event.key.keysym.mod & KMOD_ALT)
         key += U4_ALT;
-    if (event.key.keysym.mod & KMOD_META)
-        key += U4_META;*/
+    if (event.key.keysym.mod & KMOD_GUI)
+        key += U4_META;
     
     if (event.key.keysym.sym == SDLK_UP)
         key = U4_UP;
@@ -241,13 +227,6 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
     else if (event.key.keysym.sym == SDLK_BACKSPACE ||
              event.key.keysym.sym == SDLK_DELETE)
         key = U4_BACKSPACE;
-    
-    /*if (verbose)
-        printf("key event: unicode = %d, sym = %d, mod = %d; translated = %d\n", 
-               event.key.keysym.unicode, 
-               event.key.keysym.sym, 
-               event.key.keysym.mod, 
-               key);*/
     
     /* handle the keypress */
     processed = controller->notifyKeyPressed(key);
@@ -291,9 +270,6 @@ void EventHandler::sleep(unsigned int usec) {
 			case SDL_KEYUP:
 				// Discard the event.
 				break;
-			//case SDL_ACTIVEEVENT:
-			//	handleActiveEvent(event, eventHandler->updateScreen);
-			//	break;
 			case SDL_USEREVENT:
 				if (event.user.code == 0) {
 					eventHandler->getTimer()->tick();
@@ -330,10 +306,6 @@ void EventHandler::run() {
 				eventHandler->getTimer()->tick();
 				break;
 
-			/*case SDL_ACTIVEEVENT:
-				handleActiveEvent(event, updateScreen);
-				break;*/
-
 			case SDL_QUIT:
 				::exit(0);
 				break;
@@ -351,11 +323,11 @@ void EventHandler::setScreenUpdate(void (*updateScreen)(void)) {
  * Returns true if the queue is empty of events that match 'mask'. 
  */
  bool EventHandler::timerQueueEmpty() {
-    //SDL_Event event;
+    SDL_Event event;
 
-    //if (SDL_PeepEvents(&event, 1, SDL_PEEKEVENT, SDL_EVENTMASK(SDL_USEREVENT)))
-    //    return false;
-    //else
+    if (SDL_PeepEvents(&event, 1, SDL_PEEKEVENT, SDL_USEREVENT, SDL_USEREVENT))
+        return false;
+    else
         return true;
 }
 
