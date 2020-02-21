@@ -12,6 +12,7 @@
 #include "screen.h"
 #include "settings.h"
 #include "u4_sdl.h"
+#include "video.h"
 
 extern bool verbose, quit;
 extern int eventTimerGranularity;
@@ -238,7 +239,6 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
     if (processed) {
         if (updateScreen)
             (*updateScreen)();
-        screenRedrawScreen();
     }
 }
 
@@ -286,13 +286,13 @@ void EventHandler::sleep(unsigned int usec) {
 				break;
 			}
 		}
+		xu4_ogl_swap();
     }
 }
 
 void EventHandler::run() {
     if (updateScreen)
         (*updateScreen)();
-    screenRedrawScreen();
 
     while (!ended && !controllerDone) {
         SDL_Event event;
@@ -314,6 +314,7 @@ void EventHandler::run() {
 				break;
 			}
 		}
+		xu4_ogl_swap();
     }
 }
 

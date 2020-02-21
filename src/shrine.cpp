@@ -165,7 +165,6 @@ void Shrine::meditationCycle() {
         eventHandler->pushController(&controller);
         controller.wait();
         screenMessage(".");
-        screenRedrawScreen();
     }
     askMantra();
 }
@@ -173,7 +172,6 @@ void Shrine::meditationCycle() {
 void Shrine::askMantra() {
     screenEnableCursor();
     screenMessage("\nMantra: ");
-    screenRedrawScreen();       // FIXME: needed?
     string mantra;
     mantra = ReadStringController::get(4, TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
     screenMessage("\n");

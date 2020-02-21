@@ -151,10 +151,6 @@ void screenDelete() {
     ImageMgr::destroy();
 }
 
-void screenRedrawScreen() {
-    xu4_ogl_swap();
-}
-
 /**
  * Re-initializes the screen and implements any changes made in settings
  */
@@ -572,14 +568,11 @@ void screenScrollMessageArea() {
                      TEXT_AREA_W * charsetInfo->image->w,
                      CHAR_HEIGHT,
                      0, 0, 0, 255);
-    
-    screenRedrawScreen();
 }
 
 void screenCycle() {
     if (++screenCurrentCycle >= SCR_CYCLE_MAX)
         screenCurrentCycle = 0;
-    screenRedrawScreen();
 }
 
 void screenUpdateCursor() {
@@ -1034,13 +1027,11 @@ void screenShake(int iterations) {
             screen->drawSubRectOn(screen, 0, (shakeOffset), 0, 0, 320, (200-(shakeOffset+1)));
             bottom->drawOn(screen, 0, (200-(shakeOffset)));
             xu4_img_fill(screen, 0, 0, (320), (shakeOffset), 0, 0, 0, 255);
-            screenRedrawScreen();
             EventHandler::sleep(settings.shakeInterval);
             
             // shift the screen back up, and replace the bottom row
             screen->drawOn(screen, 0, 0-(shakeOffset));
             bottom->drawOn(screen, 0, (200-(shakeOffset+1)));
-            screenRedrawScreen();
             EventHandler::sleep(settings.shakeInterval);
         }
         // free the bottom row image

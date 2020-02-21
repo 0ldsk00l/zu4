@@ -178,7 +178,6 @@ void InnController::begin() {
 
     screenMessage("\nMorning!\n");
     screenPrompt();
-    screenRedrawScreen();
 
     xu4_music_fadein(INN_FADE_IN_TIME, true);
 }
