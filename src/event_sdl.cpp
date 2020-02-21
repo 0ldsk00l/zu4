@@ -215,6 +215,10 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
         key += U4_ALT;
     if (event.key.keysym.mod & KMOD_GUI)
         key += U4_META;
+    if ((event.key.keysym.mod & KMOD_SHIFT) // dirty hack to allow capitals
+		&& event.key.keysym.sym >= SDLK_a   // without using SDL_TEXTINPUT
+		&& event.key.keysym.sym <= SDLK_z)
+        key -= 0x20;
     
     if (event.key.keysym.sym == SDLK_UP)
         key = U4_UP;
@@ -236,7 +240,6 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
             (*updateScreen)();
         screenRedrawScreen();
     }
-    
 }
 
 static Uint32 sleepTimerCallback(Uint32 interval, void *) {
@@ -312,7 +315,6 @@ void EventHandler::run() {
 			}
 		}
     }
-
 }
 
 void EventHandler::setScreenUpdate(void (*updateScreen)(void)) {
