@@ -1,10 +1,6 @@
 /*
  * $Id: u4_sdl.c 3019 2012-03-18 11:31:13Z daniel_santos $
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <SDL.h>
 #include "u4_sdl.h"
 
@@ -31,6 +27,3 @@ void u4_SDL_QuitSubSystem(Uint32 flags) {
         u4_SDL_Delete();
     else SDL_QuitSubSystem(flags);
 }
-#ifdef __cplusplus
-}
-#endif

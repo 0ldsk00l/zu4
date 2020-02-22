@@ -137,6 +137,7 @@ void xu4_img_set_pixel(Image *d, int x, int y, uint32_t value) {
 		//printf("putPixel %d,%d out of range - max %d,%d\n", x, y, w-1, h-1);
 		return;
 	}
+	if ((value >> 24) == 0x00) return;
 	*((uint32_t*)(d->pixels) + (y * d->w) + x) = value;
 }
 
