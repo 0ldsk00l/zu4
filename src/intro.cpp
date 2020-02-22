@@ -1012,7 +1012,7 @@ void IntroController::timerFired() {
 					notblanked = false;
 				}
 				break;
-			case BAR: case ORIGIN: case PRESENT: case MAP:
+			case BAR: case ORIGIN: case PRESENT: case MAP: case SUBTITLE:
 				xu4_img_fill(title->destImage, 0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
 				break;
 			default: break;

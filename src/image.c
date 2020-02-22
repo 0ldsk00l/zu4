@@ -158,8 +158,9 @@ void xu4_img_draw_on(Image *d, Image *s, int x, int y) {
 	}
 	
 	for (int i = 0; i < s->h; i++) {
-		memcpy((uint32_t*)d->pixels + ((y * d->w) + x) + (i * d->w),
-			(uint32_t*)s->pixels + (i * s->w), s->w * sizeof(uint32_t));
+		for (int j = 0; j < s->w; j++) {
+			xu4_img_set_pixel(d, x + j, y + i, xu4_img_get_pixel(s, j, i));
+		}
 	}
 }
 
