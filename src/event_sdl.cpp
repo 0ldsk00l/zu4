@@ -214,6 +214,8 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
     
     if (event.key.keysym.mod & KMOD_ALT)
         key += U4_ALT;
+    if (event.key.keysym.mod & KMOD_CTRL)
+        key += U4_CTRL;
     if (event.key.keysym.mod & KMOD_GUI)
         key += U4_META;
     if ((event.key.keysym.mod & KMOD_SHIFT) // dirty hack to allow capitals

@@ -882,9 +882,10 @@ bool GameController::keyPressed(int key) {
         if (key == U4_ENTER) key = 's';
     }
 
-    if ((c->location->context & CTX_DUNGEON) && strchr("abefjlotxy", key))
+    if ((c->location->context & CTX_DUNGEON) && strchr("abefjlotxy", key)) {
         screenMessage("%cNot here!%c\n", FG_GREY, FG_WHITE);
-    else 
+	}
+    else {
         switch (key) {
 
         case U4_UP:
@@ -961,7 +962,7 @@ bool GameController::keyPressed(int key) {
             else valid = false;
             break;
 
-        case 3:                     /* ctrl-C */
+        case U4_CTRL + 'c':                     /* ctrl-C */
             if (settings.debug) {
                 screenMessage("Cmd (h = help):");
                 CheatMenuController cheatMenuController(this);
@@ -971,14 +972,14 @@ bool GameController::keyPressed(int key) {
             else valid = false;
             break;
 
-        case 4:                     /* ctrl-D */
+        case U4_CTRL + 'd':                     /* ctrl-D */
             if (settings.debug) {
                 destroy();
             }
             else valid = false;
             break;    
 
-        case 8:                     /* ctrl-H */
+        case U4_CTRL + 'h':                     /* ctrl-H */
             if (settings.debug) {
                 screenMessage("Help!\n");
                 screenPrompt();
@@ -992,7 +993,7 @@ bool GameController::keyPressed(int key) {
             else valid = false;
             break;    
 
-        case 22:                    /* ctrl-V */
+        case U4_CTRL + 'v':                    /* ctrl-V */
             {
                 if (settings.debug && c->location->context == CTX_DUNGEON) {
                     screenMessage("3-D view %s\n", DungeonViewer.toggle3DDungeonView() ? "on" : "off");
@@ -1439,6 +1440,7 @@ bool GameController::keyPressed(int key) {
             valid = false;
             break;
         }
+	}
     
     if (valid && endTurn) {
         if (eventHandler->getController() == game)
