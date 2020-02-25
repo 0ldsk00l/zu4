@@ -32,7 +32,7 @@ using std::string;
 #define U4_CTRL         512
 #define U4_KEYPAD_ENTER 271
 #define U4_META         323
-#define U4_FKEY         282
+#define U4_FKEY         1073741882
 #define U4_RIGHT_SHIFT  303
 #define U4_LEFT_SHIFT   304
 #define U4_RIGHT_CTRL   305

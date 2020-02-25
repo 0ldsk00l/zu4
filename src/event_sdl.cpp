@@ -223,17 +223,14 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
 		&& event.key.keysym.sym <= SDLK_z)
         key -= 0x20;
     
-    if (event.key.keysym.sym == SDLK_UP)
-        key = U4_UP;
-    else if (event.key.keysym.sym == SDLK_DOWN)
-        key = U4_DOWN;
-    else if (event.key.keysym.sym == SDLK_LEFT)
-        key = U4_LEFT;
-    else if (event.key.keysym.sym == SDLK_RIGHT)
-        key = U4_RIGHT;
-    else if (event.key.keysym.sym == SDLK_BACKSPACE ||
-             event.key.keysym.sym == SDLK_DELETE)
-        key = U4_BACKSPACE;
+    switch (event.key.keysym.sym) {
+		case SDLK_UP: key = U4_UP; break;
+		case SDLK_DOWN: key = U4_DOWN; break;
+		case SDLK_LEFT: key = U4_LEFT; break;
+		case SDLK_RIGHT: key = U4_RIGHT; break;
+		case SDLK_BACKSPACE: case SDLK_DELETE: key = U4_BACKSPACE; break;
+		default: break;
+	}
     
     /* handle the keypress */
     processed = controller->notifyKeyPressed(key);
