@@ -55,11 +55,6 @@ public:
 	virtual ~U4FILE() {}
 	
 	virtual void close() = 0;
-	virtual int getc() = 0;
-	virtual int putc(int c) = 0;
-	virtual long length() = 0;
-	
-	int getshort();
 	
 	FILE *file;
 	mz_zip_archive zip_archive;
@@ -75,6 +70,10 @@ U4FILE *u4fopen(const std::string &fname);
 U4FILE *u4fopen_stdio(const std::string &fname);
 U4FILE *u4fopen_zip(const std::string &fname, U4ZipPackage *package);
 void u4fclose(U4FILE *f);
+
+std::vector<std::string> u4read_stringtable(U4FILE *f, long offset, int nstrings);
+
+/////////////////////////////////
 int u4fseek(U4FILE *f, long offset, int whence);
 long u4ftell(U4FILE *f);
 size_t u4fread(U4FILE *f, void *ptr, size_t size, size_t nmemb);
@@ -82,9 +81,6 @@ int u4fgetc(U4FILE *f);
 int u4fgetshort(U4FILE *f);
 int u4fputc(int c, U4FILE *f);
 long u4flength(U4FILE *f);
-std::vector<std::string> u4read_stringtable(U4FILE *f, long offset, int nstrings);
-
-/////////////////////////////////
 void u4find_path(char *path, size_t psize, const char *fname, const char *subpath);
 void u4find_conf(char *path, size_t psize, const char *fname);
 void u4find_graphics(char *path, size_t psize, const char *fname);
@@ -100,5 +96,16 @@ long xu4_file_zip_tell(U4FILE *u4f);
 
 size_t xu4_file_stdio_read(U4FILE*, void*, size_t, size_t);
 size_t xu4_file_zip_read(U4FILE*, void*, size_t, size_t);
+
+long xu4_file_stdio_length(U4FILE *u4f);
+long xu4_file_zip_length(U4FILE *u4f);
+
+int xu4_file_stdio_getc(U4FILE *u4f);
+int xu4_file_zip_getc(U4FILE *u4f);
+
+int xu4_file_stdio_putc(U4FILE *u4f, int c);
+int xu4_file_zip_putc(U4FILE *u4f, int c);
+
+int xu4_file_getshort(U4FILE *u4f);
 
 #endif

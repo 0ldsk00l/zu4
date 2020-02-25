@@ -32,6 +32,9 @@ void (*xu4_file_close)(U4FILE*);
 int (*xu4_file_seek)(U4FILE*, long offset, int whence);
 long (*xu4_file_tell)(U4FILE*);
 size_t (*xu4_file_read)(U4FILE*, void *ptr, size_t size, size_t nmemb);
+long (*xu4_file_length)(U4FILE*);
+int (*xu4_file_getc)(U4FILE*);
+int (*xu4_file_putc)(U4FILE*, int);
 
 using std::map;
 using std::string;
@@ -53,9 +56,6 @@ public:
 	static U4FILE *open(const string &fname);
 	
 	virtual void close();
-	virtual int getc();
-	virtual int putc(int c);
-	virtual long length();
 };
 
 /**
@@ -67,9 +67,6 @@ public:
 	static U4FILE *open(const string &fname, const U4ZipPackage *package);
 	
 	virtual void close();
-	virtual int getc();
-	virtual int putc(int c);
-	virtual long length();
 };
 
 /**
@@ -97,7 +94,7 @@ bool u4isUpgradeInstalled() {
 	/* FIXME: Is there a better way to determine this? */
 	u4f = u4fopen("ega.drv");
 	if (u4f) {
-		filelength = u4f->length();
+		filelength = u4flength(u4f);
 		u4fclose(u4f);
 		/* see if (ega.drv > 5k).  If so, the upgrade is installed */
 		if (filelength > (5 * 1024)) { result = true; }
@@ -215,11 +212,6 @@ U4ZipPackageMgr::~U4ZipPackageMgr() {
 	}
 }
 
-int U4FILE::getshort() {
-	int byteLow = getc();
-	return byteLow | (getc() << 8);
-}
-
 U4FILE *U4FILE_stdio::open(const string &fname) {
 	U4FILE_stdio *u4f;
 	FILE *f;
@@ -231,25 +223,6 @@ U4FILE *U4FILE_stdio::open(const string &fname) {
 	u4f->file = f;
 	
 	return u4f;
-}
-
-int U4FILE_stdio::getc() {
-	return fgetc(file);
-}
-
-int U4FILE_stdio::putc(int c) {
-	return fputc(c, file);
-}
-
-long U4FILE_stdio::length() {
-	long curr, len;
-	
-	curr = ftell(file);
-	fseek(file, 0L, SEEK_END);
-	len = ftell(file);
-	fseek(file, curr, SEEK_SET);
-	
-	return len;
 }
 
 /**
@@ -287,20 +260,6 @@ U4FILE *U4FILE_zip::open(const string &fname, const U4ZipPackage *package) {
 	return u4f;
 }
 
-int U4FILE_zip::getc() {
-	unsigned char *retptr = (unsigned char*)fptr;
-	return (int)retptr[cur++];
-}
-
-int U4FILE_zip::putc(int c) {
-	xu4_assert(0, "zipfiles must be read-only!");
-	return c;
-}
-
-long U4FILE_zip::length() {
-	return za_stat.m_uncomp_size;
-}
-
 /**
  * Open a data file from the Ultima 4 for DOS installation.  This
  * function checks the various places where it can be installed, and
@@ -330,6 +289,9 @@ U4FILE *u4fopen(const string &fname) {
 			xu4_file_seek = &xu4_file_zip_seek;
 			xu4_file_tell = &xu4_file_zip_tell;
 			xu4_file_read = &xu4_file_zip_read;
+			xu4_file_length = &xu4_file_zip_length;
+			xu4_file_getc = &xu4_file_zip_getc;
+			xu4_file_putc = &xu4_file_zip_putc;
 			return u4f; /* file was found, return it! */
 		}
 	}
@@ -371,6 +333,9 @@ U4FILE *u4fopen(const string &fname) {
 	xu4_file_seek = &xu4_file_stdio_seek;
 	xu4_file_tell = &xu4_file_stdio_tell;
 	xu4_file_read = &xu4_file_stdio_read;
+	xu4_file_length = &xu4_file_stdio_length;
+	xu4_file_getc = &xu4_file_stdio_getc;
+	xu4_file_putc = &xu4_file_stdio_putc;
 	return u4f;
 }
 
@@ -410,22 +375,23 @@ size_t u4fread(U4FILE *f, void *ptr, size_t size, size_t nmemb) {
 }
 
 int u4fgetc(U4FILE *f) {
-	return f->getc();
+	return xu4_file_getc(f);
 }
 
 int u4fgetshort(U4FILE *f) {
-	return f->getshort();
+	return xu4_file_getshort(f);
 }
 
 int u4fputc(int c, U4FILE *f) {
-	return f->putc(c);
+	return xu4_file_putc(f, c);
 }
 
 /**
  * Returns the length in bytes of a file.
  */
 long u4flength(U4FILE *f) {
-	return f->length();
+	//return f->length();
+	return xu4_file_length(f);
 }
 
 /**
@@ -446,7 +412,7 @@ vector<string> u4read_stringtable(U4FILE *f, long offset, int nstrings) {
 		char c;
 		buffer.erase();
 
-		while ((c = f->getc()) != '\0')
+		while ((c = xu4_file_getc(f)) != '\0')
 			buffer += c;
 		
 		strs.push_back(buffer);
@@ -553,3 +519,40 @@ size_t xu4_file_zip_read(U4FILE *u4f, void *ptr, size_t size, size_t nmemb) {
 	return retval;
 }
 
+long xu4_file_stdio_length(U4FILE *u4f) {
+	long curr, len;
+	
+	curr = ftell(u4f->file);
+	fseek(u4f->file, 0L, SEEK_END);
+	len = ftell(u4f->file);
+	fseek(u4f->file, curr, SEEK_SET);
+	
+	return len;
+}
+
+long xu4_file_zip_length(U4FILE *u4f) {
+	return u4f->za_stat.m_uncomp_size;
+}
+
+int xu4_file_stdio_getc(U4FILE *u4f) {
+	return fgetc(u4f->file);
+}
+
+int xu4_file_zip_getc(U4FILE *u4f) {
+	unsigned char *retptr = (unsigned char*)(u4f->fptr);
+	return (int)retptr[u4f->cur++];
+}
+
+int xu4_file_stdio_putc(U4FILE *u4f, int c) {
+	return fputc(c, u4f->file);
+}
+
+int xu4_file_zip_putc(U4FILE *u4f, int c) {
+	xu4_assert(0, "zipfiles must be read-only!");
+	return c;
+}
+
+int xu4_file_getshort(U4FILE *u4f) {
+	int byteLow = xu4_file_getc(u4f);
+	return byteLow | (xu4_file_getc(u4f) << 8);
+}

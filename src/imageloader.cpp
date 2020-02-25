@@ -107,19 +107,19 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	long compressedLen;
 	
 	if (type == XU4_IMG_RAW) {
-		rawLen = file->length();
+		rawLen = u4flength(file);
 		raw = (uint8_t*)malloc(rawLen);
 		u4fread(file, raw, 1, rawLen);
 	}
 	else if (type == XU4_IMG_RLE) {
-		compressedLen = file->length();
+		compressedLen = u4flength(file);
 		compressed = (uint8_t*)malloc(compressedLen);
 		u4fread(file, compressed, 1, compressedLen);
 		rawLen = rleDecompressMemory(compressed, compressedLen, (void **) &raw);
 		free(compressed);
 	}
 	else if (type == XU4_IMG_LZW) {
-		compressedLen = file->length();
+		compressedLen = u4flength(file);
 		compressed = (uint8_t*)malloc(compressedLen);
 		u4fread(file, compressed, 1, compressedLen);
 		rawLen = decompress_u4_memory(compressed, compressedLen, (void **) &raw);
