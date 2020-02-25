@@ -90,38 +90,6 @@ void xu4_file_set_paths() {
 	u4paths = { "./", "ultima4", "./", "conf", "graphics" };
 }
 
-U4PATH * U4PATH::instance = NULL;
-U4PATH * U4PATH::getInstance() {
-	if (!instance) {
-		instance = new U4PATH();
-		instance->initDefaultPaths();
-	}
-	return instance;
-}
-
-void U4PATH::initDefaultPaths() {
-	if (defaultsHaveBeenInitd) { return; }
-	
-	//The first part of the path searched will be one of these root directories
-	
-	/*Try to cover all root possibilities. These can be added to by separate modules*/
-	rootResourcePaths.push_back("./");
-	
-	//The second (specific) part of the path searched will be these various subdirectories
-	
-	/* the possible paths where u4 for DOS can be installed */
-	u4ForDOSPaths.push_back("ultima4");
-	
-	/* the possible paths where the u4 zipfiles can be installed */
-	u4ZipPaths.push_back("./");
-	
-	/* the possible paths where the u4 config files can be installed */
-	configPaths.push_back("conf");
-	
-	/* the possible paths where the u4 graphics files can be installed */
-	graphicsPaths.push_back("graphics");
-}
-
 /**
  * Returns true if the upgrade is present.
  */
@@ -198,7 +166,9 @@ void U4ZipPackageMgr::add(U4ZipPackage *package) {
 }
 
 U4ZipPackageMgr::U4ZipPackageMgr() {
-	string upg_pathname(u4find_path("u4upgrad.zip", u4paths.zippath));
+	char upgpath[64];
+	u4find_path(upgpath, sizeof(upgpath), "u4upgrad.zip", u4paths.zippath);
+	string upg_pathname = (string)upgpath;
 	if (!upg_pathname.empty()) {
 		/* upgrade zip is present */
 		U4ZipPackage *upgrade = new U4ZipPackage(upg_pathname, "", false);
@@ -233,22 +203,17 @@ U4ZipPackageMgr::U4ZipPackageMgr() {
 	}
 	
 	// Check for the default zip packages
-	int flag = 0;
-	string pathname;
+	char path[64];
+	u4find_path(path, sizeof(path), "ultima4.zip", u4paths.zippath);
+	string pathname = (string)path;
 	
-	// We check for all manner of generic packages, though.
-	pathname = u4find_path("ultima4.zip", u4paths.zippath);
 	if (!pathname.empty()) {
-		flag = 1;
-	}
-
-	if (flag) {
 		// Open the zip
 		mz_zip_archive zip_archive;
 		memset(&zip_archive, 0, sizeof(zip_archive));
 		
 		// Check zip file validity
-		if (!mz_zip_reader_init_file(&zip_archive, pathname.c_str(), 0)) {
+		if (!mz_zip_reader_init_file(&zip_archive, path, 0)) {
 			xu4_error(XU4_LOG_ERR, "Archive corrupt, exiting...\n");
 		}
 		
@@ -448,12 +413,15 @@ U4FILE *u4fopen(const string &fname) {
 	 */
 	string fname_copy(fname);
 	
-	string pathname = u4find_path(fname_copy.c_str(), u4paths.dospath);
+	char path[64];
+	u4find_path(path, sizeof(path), fname_copy.c_str(), u4paths.dospath);
+	string pathname = (string)path;
 	if (pathname.empty()) {
 		using namespace std;
 		if (islower(fname_copy[0])) {
 			fname_copy[0] = toupper(fname_copy[0]);
-			pathname = u4find_path(fname_copy.c_str(), u4paths.dospath);
+			u4find_path(path, sizeof(path), fname_copy.c_str(), u4paths.dospath);
+			pathname = (string)path;
 		}
 		
 		if (pathname.empty()) {
@@ -461,7 +429,8 @@ U4FILE *u4fopen(const string &fname) {
 				if (islower(fname_copy[i]))
 					fname_copy[i] = toupper(fname_copy[i]);
 			}
-			pathname = u4find_path(fname_copy.c_str(), u4paths.dospath);
+			u4find_path(path, sizeof(path), fname_copy.c_str(), u4paths.dospath);
+			pathname = (string)path;
 		}
 	}
 	
@@ -556,41 +525,36 @@ vector<string> u4read_stringtable(U4FILE *f, long offset, int nstrings) {
 	return strs;
 }
 
-string u4find_path(const char *fname, const char *subpath) {
+void u4find_path(char *path, size_t psize, const char *fname, const char *subpath) {
 	FILE *f = NULL;
-	char path[256];
 	
 	f = fopen(fname, "rb");
-	if (f) { snprintf(path, sizeof(path), "%s", fname); }
+	if (f) { snprintf(path, psize, "%s", fname); }
 	
 	// Try paths
 	if (f == NULL) {
-		snprintf(path, sizeof(path), "%s/%s/%s", u4paths.rootpath, subpath, fname);
+		snprintf(path, psize, "%s/%s/%s", u4paths.rootpath, subpath, fname);
 		
-		if (verbose) {
-			printf("trying to open %s\n", path);
-		}
+		xu4_error(XU4_LOG_DBG, "trying to open %s\n", path);
+		
 		if ((f = fopen(path, "rb")) != NULL) {
 			xu4_error(XU4_LOG_DBG, "u4file opened %s\n", path);
 		}
+		else {
+			memset(path, '\0', psize);
+		}
 	}
 	
-	if (verbose) {
-		if (f != NULL) { printf("%s successfully found\n", path); }
-		else { printf("%s not found\n", fname); }
-	}
+	f != NULL ? xu4_error(XU4_LOG_DBG, "%s successfully found\n", path) :
+	xu4_error(XU4_LOG_DBG, "%s not found\n", fname);
 	
-	if (f) {
-		fclose(f);
-		return path;
-	}
-	else { return ""; }
+	if (f) { fclose(f); }
 }
 
-string u4find_conf(const string &fname) {
-	return u4find_path(fname.c_str(), u4paths.confpath);
+void u4find_conf(char *path, size_t psize, const char *fname) {
+	u4find_path(path, psize, fname, u4paths.confpath);
 }
 
-string u4find_graphics(const string &fname) {
-	return u4find_path(fname.c_str(), u4paths.graphicspath);
+void u4find_graphics(char *path, size_t psize, const char *fname) {
+	u4find_path(path, psize, fname, u4paths.graphicspath);
 }

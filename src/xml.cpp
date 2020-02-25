@@ -26,7 +26,9 @@ int ioRegistered = 0;
 
 void *xmlXu4FileOpen (const char *filename) {
     void *result;
-    string pathname(u4find_conf(filename));
+    char path[64];
+    u4find_conf(path, sizeof(path), filename);
+    string pathname = (string)path;
 
     if (pathname.empty())
         return NULL;

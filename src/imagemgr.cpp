@@ -411,7 +411,9 @@ U4FILE * ImageMgr::getImageFile(ImageInfo *info)
 
     U4FILE *file = NULL;
     if (info->xu4Graphic) {
-        string pathname(u4find_graphics(filename));
+        char path[64];
+        u4find_graphics(path, sizeof(path), filename.c_str());
+        string pathname = (string)path;
 
         if (!pathname.empty())
             file = u4fopen_stdio(pathname);
@@ -464,7 +466,9 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 				break;
 			
 			case XU4_IMG_PNG:
-				unscaled = xu4_png_load(u4find_graphics(info->filename).c_str(), &info->width, &info->height);
+				char imgpath[64];
+				u4find_graphics(imgpath, sizeof(imgpath), info->filename.c_str());
+				unscaled = xu4_png_load(imgpath, &info->width, &info->height);
 				break;
 			default: break;
 		}

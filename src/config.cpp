@@ -98,7 +98,9 @@ void Config::setGame(const string &name) {
 
 void *Config::fileOpen(const char *filename) {
     void *result;
-    string pathname(u4find_conf(filename));
+    char path[64];
+    u4find_conf(path, sizeof(path), filename);
+    string pathname = (string)path;
 
     if (pathname.empty())
         return NULL;

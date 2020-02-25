@@ -63,25 +63,6 @@ public:
 	int getshort();
 };
 
-/** A replacement class to manage path searching. Very open-concept */
-#define u4Path (*U4PATH::getInstance())
-class U4PATH {
-public:
-	U4PATH() : defaultsHaveBeenInitd(false){}
-	void initDefaultPaths();
-	static U4PATH * instance;
-	static U4PATH * getInstance();
-
-	std::list<std::string> rootResourcePaths;
-	std::list<std::string> u4ForDOSPaths;
-	std::list<std::string> u4ZipPaths;
-	std::list<std::string> configPaths;
-	std::list<std::string> graphicsPaths;
-	
-private:
-	bool defaultsHaveBeenInitd;
-};
-
 bool u4isUpgradeAvailable();
 bool u4isUpgradeInstalled();
 U4FILE *u4fopen(const std::string &fname);
@@ -96,11 +77,12 @@ int u4fgetshort(U4FILE *f);
 int u4fputc(int c, U4FILE *f);
 long u4flength(U4FILE *f);
 std::vector<std::string> u4read_stringtable(U4FILE *f, long offset, int nstrings);
-std::string u4find_path(const char *fname, const char *subpath);
-std::string u4find_conf(const std::string &fname);
-std::string u4find_graphics(const std::string &fname);
 
 /////////////////////////////////
 void xu4_file_set_paths();
+
+void u4find_path(char *path, size_t psize, const char *fname, const char *subpath);
+void u4find_conf(char *path, size_t psize, const char *fname);
+void u4find_graphics(char *path, size_t psize, const char *fname);
 
 #endif
