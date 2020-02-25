@@ -99,8 +99,8 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 
 	xu4_assert(bpp == 4 || bpp == 8, "invalid bpp: %d", bpp);
 	
-	unsigned char *raw = NULL;
-	unsigned char *compressed = NULL;
+	uint8_t *raw = NULL;
+	uint8_t *compressed = NULL;
 	uint32_t *converted = (uint32_t*)malloc(width * height * sizeof(uint32_t));
 	
 	long rawLen;
@@ -108,20 +108,20 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	
 	if (type == XU4_IMG_RAW) {
 		rawLen = file->length();
-		raw = (unsigned char *)malloc(rawLen);
-		file->read(raw, 1, rawLen);
+		raw = (uint8_t*)malloc(rawLen);
+		u4fread(file, raw, 1, rawLen);
 	}
 	else if (type == XU4_IMG_RLE) {
 		compressedLen = file->length();
-		compressed = (unsigned char *) malloc(compressedLen);
-		file->read(compressed, 1, compressedLen);
+		compressed = (uint8_t*)malloc(compressedLen);
+		u4fread(file, compressed, 1, compressedLen);
 		rawLen = rleDecompressMemory(compressed, compressedLen, (void **) &raw);
 		free(compressed);
 	}
 	else if (type == XU4_IMG_LZW) {
 		compressedLen = file->length();
-		compressed = (unsigned char *) malloc(compressedLen);
-		file->read(compressed, 1, compressedLen);
+		compressed = (uint8_t*)malloc(compressedLen);
+		u4fread(file, compressed, 1, compressedLen);
 		rawLen = decompress_u4_memory(compressed, compressedLen, (void **) &raw);
 		free(compressed);
 	}
@@ -154,7 +154,7 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 }
 
 Image* xu4_png_load(const char *filename, int *x, int *y) {
-	unsigned char *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
+	uint8_t *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
 	Image *image = xu4_img_create(*x, *y);
 	memcpy((uint32_t*)image->pixels, (uint32_t*)pixels, sizeof(uint32_t) * *x * *y);
 	stbi_image_free(pixels);

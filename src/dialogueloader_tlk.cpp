@@ -30,7 +30,7 @@ Dialogue* U4TlkDialogueLoader::load(void *source) {
     
     /* there's no dialogues left in the file */
     char tlk_buffer[288];
-    if (u4fread(tlk_buffer, 1, sizeof(tlk_buffer), file) != sizeof(tlk_buffer))
+    if (u4fread(file, tlk_buffer, 1, sizeof(tlk_buffer)) != sizeof(tlk_buffer))
         return NULL;
     
     char *ptr = &tlk_buffer[3];    

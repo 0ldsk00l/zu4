@@ -19,26 +19,30 @@
  * MA 02110-1301, USA.
  * 
  */
-#include <ctype.h>
+
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
-#include <libgen.h>
 
-#include "u4file.h"
 #include "error.h"
+#include "u4file.h"
 
-#include "miniz.h"
+void (*xu4_file_close)(U4FILE*);
+int (*xu4_file_seek)(U4FILE*, long offset, int whence);
+long (*xu4_file_tell)(U4FILE*);
+size_t (*xu4_file_read)(U4FILE*, void *ptr, size_t size, size_t nmemb);
 
 using std::map;
 using std::string;
 using std::vector;
 
 static struct _u4paths {
-	const char *rootpath;
-	const char *dospath;
-	const char *zippath;
-	const char *confpath;
-	const char *graphicspath;
+	const char *rootpath = "./";
+	const char *dospath = "ultima4";
+	const char *zippath = "./";
+	const char *confpath = "conf";
+	const char *graphicspath = "graphics";
 } u4paths;
 
 /**
@@ -49,15 +53,9 @@ public:
 	static U4FILE *open(const string &fname);
 	
 	virtual void close();
-	virtual int seek(long offset, int whence);
-	virtual long tell();
-	virtual size_t read(void *ptr, size_t size, size_t nmemb);
 	virtual int getc();
 	virtual int putc(int c);
 	virtual long length();
-	
-private:
-	FILE *file;
 };
 
 /**
@@ -69,26 +67,10 @@ public:
 	static U4FILE *open(const string &fname, const U4ZipPackage *package);
 	
 	virtual void close();
-	virtual int seek(long offset, int whence);
-	virtual long tell();
-	virtual size_t read(void *ptr, size_t size, size_t nmemb);
 	virtual int getc();
 	virtual int putc(int c);
 	virtual long length();
-	
-private:
-	mz_zip_archive zip_archive;
-	mz_zip_archive_file_stat za_stat;
-	int za_index;
-	void *fptr;
-	long cur;
 };
-
-extern bool verbose;
-
-void xu4_file_set_paths() {
-	u4paths = { "./", "ultima4", "./", "conf", "graphics" };
-}
 
 /**
  * Returns true if the upgrade is present.
@@ -121,7 +103,7 @@ bool u4isUpgradeInstalled() {
 		if (filelength > (5 * 1024)) { result = true; }
 	}
 	
-	if (verbose) { printf("u4isUpgradeInstalled %d\n", (int) result); }
+	xu4_error(XU4_LOG_DBG, "u4isUpgradeInstalled %d\n", (int)result);
 	
 	return result;
 }
@@ -251,22 +233,6 @@ U4FILE *U4FILE_stdio::open(const string &fname) {
 	return u4f;
 }
 
-void U4FILE_stdio::close() {
-	fclose(file);
-}
-
-int U4FILE_stdio::seek(long offset, int whence) {
-	return fseek(file, offset, whence);
-}
-
-long U4FILE_stdio::tell() {
-	return ftell(file);
-}
-
-size_t U4FILE_stdio::read(void *ptr, size_t size, size_t nmemb) {
-	return fread(ptr, size, nmemb, file);
-}
-
 int U4FILE_stdio::getc() {
 	return fgetc(file);
 }
@@ -321,49 +287,6 @@ U4FILE *U4FILE_zip::open(const string &fname, const U4ZipPackage *package) {
 	return u4f;
 }
 
-void U4FILE_zip::close() {
-	mz_zip_reader_end(&zip_archive);
-	free(fptr);
-}
-
-int U4FILE_zip::seek(long offset, int whence) {
-	long pos;
-	
-	xu4_assert(whence != SEEK_END, "seeking with whence == SEEK_END not allowed with zipfiles");
-	pos = cur;
-	
-	if (whence == SEEK_CUR) {
-		offset = pos + offset;
-	}
-	
-	if (offset == pos) {
-		return 0;
-	}
-	
-	if (offset < pos) {
-		pos = 0;
-		cur = 0;
-	}
-	
-	xu4_assert(offset - pos > 0, "error in U4FILE_zip::seek");
-	cur += offset - pos;
-	return 0;
-}
-
-long U4FILE_zip::tell() {
-	return cur;
-}
-
-size_t U4FILE_zip::read(void *ptr, size_t size, size_t nmemb) {
-	size_t retval = nmemb * size;
-	if (retval) {
-		unsigned char *temp = (unsigned char*)fptr;
-		memcpy(ptr, temp + cur, retval);
-		cur += retval;
-	}
-	return retval;
-}
-
 int U4FILE_zip::getc() {
 	unsigned char *retptr = (unsigned char*)fptr;
 	return (int)retptr[cur++];
@@ -394,9 +317,7 @@ U4FILE *u4fopen(const string &fname) {
 	U4FILE *u4f = NULL;
 	unsigned int i;
 	
-	if (verbose) {
-		printf("looking for %s\n", fname.c_str());
-	}
+	xu4_error(XU4_LOG_DBG, "looking for %s\n", fname.c_str());
 	
 	/**
 	 * search for file within zipfiles (ultima4.zip, u4upgrad.zip, etc.)
@@ -404,8 +325,13 @@ U4FILE *u4fopen(const string &fname) {
 	const vector<U4ZipPackage *> &packages = U4ZipPackageMgr::getInstance()->getPackages(); 
 	for (std::vector<U4ZipPackage *>::const_reverse_iterator j = packages.rbegin(); j != packages.rend(); j++) {
 		u4f = U4FILE_zip::open(fname, *j);
-		if (u4f)
+		if (u4f) {
+			//xu4_file_close = &xu4_file_zip_close;
+			xu4_file_seek = &xu4_file_zip_seek;
+			xu4_file_tell = &xu4_file_zip_tell;
+			xu4_file_read = &xu4_file_zip_read;
 			return u4f; /* file was found, return it! */
+		}
 	}
 	
 	/*
@@ -436,11 +362,15 @@ U4FILE *u4fopen(const string &fname) {
 	
 	if (!pathname.empty()) {
 		u4f = U4FILE_stdio::open(pathname);
-		if (verbose && u4f != NULL) {
-			printf("%s successfully opened\n", pathname.c_str());
+		if (u4f != NULL) {
+			xu4_error(XU4_LOG_DBG, "%s successfully opened\n", pathname.c_str());
 		}
 	}
 	
+	//xu4_file_close = &xu4_file_stdio_close;
+	xu4_file_seek = &xu4_file_stdio_seek;
+	xu4_file_tell = &xu4_file_stdio_tell;
+	xu4_file_read = &xu4_file_stdio_read;
 	return u4f;
 }
 
@@ -459,24 +389,24 @@ U4FILE *u4fopen_zip(const string &fname, U4ZipPackage *package) {
 	return U4FILE_zip::open(fname, package);
 }
 
-/**
- * Closes a data file from the Ultima 4 for DOS installation.
- */
 void u4fclose(U4FILE *f) {
 	f->close();
-	delete f;
+	//xu4_file_close(f);
 }
 
 int u4fseek(U4FILE *f, long offset, int whence) {
-	return f->seek(offset, whence);
+	//return f->seek(offset, whence);
+	return xu4_file_seek(f, offset, whence);
 }
 
 long u4ftell(U4FILE *f) {
-	return f->tell();
+	//return f->tell();
+	return xu4_file_tell(f);
 }
 
-size_t u4fread(void *ptr, size_t size, size_t nmemb, U4FILE *f) {
-	return f->read(ptr, size, nmemb);
+size_t u4fread(U4FILE *f, void *ptr, size_t size, size_t nmemb) {
+	//return f->read(ptr, size, nmemb);
+	return xu4_file_read(f, ptr, size, nmemb);
 }
 
 int u4fgetc(U4FILE *f) {
@@ -510,7 +440,7 @@ vector<string> u4read_stringtable(U4FILE *f, long offset, int nstrings) {
 
 	xu4_assert(offset < u4flength(f), "offset begins beyond end of file");
 	
-	if (offset != -1) { f->seek(offset, SEEK_SET); }
+	if (offset != -1) { u4fseek(f, offset, SEEK_SET); }
 	
 	for (i = 0; i < nstrings; i++) {
 		char c;
@@ -558,3 +488,68 @@ void u4find_conf(char *path, size_t psize, const char *fname) {
 void u4find_graphics(char *path, size_t psize, const char *fname) {
 	u4find_path(path, psize, fname, u4paths.graphicspath);
 }
+
+void U4FILE_stdio::close() {
+	fclose(file);
+}
+
+void U4FILE_zip::close() {
+	mz_zip_reader_end(&zip_archive);
+	free(fptr);
+}
+
+int xu4_file_stdio_seek(U4FILE *u4f, long offset, int whence) {
+	return fseek(u4f->file, offset, whence);
+}
+
+int xu4_file_zip_seek(U4FILE *u4f, long offset, int whence) {
+	long pos;
+	
+	xu4_assert(whence != SEEK_END, "seeking with whence == SEEK_END not allowed with zipfiles");
+	pos = u4f->cur;
+	
+	if (whence == SEEK_CUR) {
+		offset = pos + offset;
+	}
+	
+	if (offset == pos) {
+		return 0;
+	}
+	
+	if (offset < pos) {
+		pos = 0;
+		u4f->cur = 0;
+	}
+	
+	xu4_assert(offset - pos > 0, "error in U4FILE_zip::seek");
+	u4f->cur += offset - pos;
+	return 0;
+}
+
+//void xu4_file_stdio_close(U4FILE *u4f) {
+//	fclose(u4f->file);
+//	delete u4f;
+//}
+
+long xu4_file_stdio_tell(U4FILE *u4f) {
+	return ftell(u4f->file);
+}
+
+long xu4_file_zip_tell(U4FILE *u4f) {
+	return u4f->cur;
+}
+
+size_t xu4_file_stdio_read(U4FILE *u4f, void *ptr, size_t size, size_t nmemb) {
+	return fread(ptr, size, nmemb, u4f->file);
+}
+
+size_t xu4_file_zip_read(U4FILE *u4f, void *ptr, size_t size, size_t nmemb) {
+	size_t retval = nmemb * size;
+	if (retval) {
+		uint8_t *temp = (uint8_t*)(u4f->fptr);
+		memcpy(ptr, temp + u4f->cur, retval);
+		u4f->cur += retval;
+	}
+	return retval;
+}
+

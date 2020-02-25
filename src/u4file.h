@@ -6,6 +6,8 @@
 #include <vector>
 #include <list>
 
+#include "miniz.h"
+
 /**
  * Represents zip files that game resources can be loaded from.
  */
@@ -53,14 +55,18 @@ public:
 	virtual ~U4FILE() {}
 	
 	virtual void close() = 0;
-	virtual int seek(long offset, int whence) = 0;
-	virtual long tell() = 0;
-	virtual size_t read(void *ptr, size_t size, size_t nmemb) = 0;
 	virtual int getc() = 0;
 	virtual int putc(int c) = 0;
 	virtual long length() = 0;
 	
 	int getshort();
+	
+	FILE *file;
+	mz_zip_archive zip_archive;
+	mz_zip_archive_file_stat za_stat;
+	int za_index;
+	void *fptr;
+	long cur;
 };
 
 bool u4isUpgradeAvailable();
@@ -71,7 +77,7 @@ U4FILE *u4fopen_zip(const std::string &fname, U4ZipPackage *package);
 void u4fclose(U4FILE *f);
 int u4fseek(U4FILE *f, long offset, int whence);
 long u4ftell(U4FILE *f);
-size_t u4fread(void *ptr, size_t size, size_t nmemb, U4FILE *f);
+size_t u4fread(U4FILE *f, void *ptr, size_t size, size_t nmemb);
 int u4fgetc(U4FILE *f);
 int u4fgetshort(U4FILE *f);
 int u4fputc(int c, U4FILE *f);
@@ -79,10 +85,20 @@ long u4flength(U4FILE *f);
 std::vector<std::string> u4read_stringtable(U4FILE *f, long offset, int nstrings);
 
 /////////////////////////////////
-void xu4_file_set_paths();
-
 void u4find_path(char *path, size_t psize, const char *fname, const char *subpath);
 void u4find_conf(char *path, size_t psize, const char *fname);
 void u4find_graphics(char *path, size_t psize, const char *fname);
+
+void xu4_file_stdio_close(U4FILE *u4f);
+void xu4_file_zip_close(U4FILE *u4f);
+
+int xu4_file_stdio_seek(U4FILE *u4f, long offset, int whence);
+int xu4_file_zip_seek(U4FILE *u4f, long offset, int whence);
+
+long xu4_file_stdio_tell(U4FILE *u4f);
+long xu4_file_zip_tell(U4FILE *u4f);
+
+size_t xu4_file_stdio_read(U4FILE*, void*, size_t, size_t);
+size_t xu4_file_zip_read(U4FILE*, void*, size_t, size_t);
 
 #endif

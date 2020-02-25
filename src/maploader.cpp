@@ -328,19 +328,19 @@ bool DngMapLoader::load(Map *map) {
             dungeon->rooms[i].triggers[j].change_y2 = tmp & 0x0F;
         }
 
-        u4fread(dungeon->rooms[i].creature_tiles, sizeof(dungeon->rooms[i].creature_tiles), 1, dng);
-        u4fread(dungeon->rooms[i].creature_start_x, sizeof(dungeon->rooms[i].creature_start_x), 1, dng);
-        u4fread(dungeon->rooms[i].creature_start_y, sizeof(dungeon->rooms[i].creature_start_y), 1, dng);
-        u4fread(dungeon->rooms[i].party_north_start_x, sizeof(dungeon->rooms[i].party_north_start_x), 1, dng);
-        u4fread(dungeon->rooms[i].party_north_start_y, sizeof(dungeon->rooms[i].party_north_start_y), 1, dng);
-        u4fread(dungeon->rooms[i].party_east_start_x, sizeof(dungeon->rooms[i].party_east_start_x), 1, dng);
-        u4fread(dungeon->rooms[i].party_east_start_y, sizeof(dungeon->rooms[i].party_east_start_y), 1, dng);
-        u4fread(dungeon->rooms[i].party_south_start_x, sizeof(dungeon->rooms[i].party_south_start_x), 1, dng);
-        u4fread(dungeon->rooms[i].party_south_start_y, sizeof(dungeon->rooms[i].party_south_start_y), 1, dng);
-        u4fread(dungeon->rooms[i].party_west_start_x, sizeof(dungeon->rooms[i].party_west_start_x), 1, dng);
-        u4fread(dungeon->rooms[i].party_west_start_y, sizeof(dungeon->rooms[i].party_west_start_y), 1, dng);
-        u4fread(room_tiles, sizeof(room_tiles), 1, dng);
-        u4fread(dungeon->rooms[i].buffer, sizeof(dungeon->rooms[i].buffer), 1, dng);
+        u4fread(dng, dungeon->rooms[i].creature_tiles, sizeof(dungeon->rooms[i].creature_tiles), 1);
+        u4fread(dng, dungeon->rooms[i].creature_start_x, sizeof(dungeon->rooms[i].creature_start_x), 1);
+        u4fread(dng, dungeon->rooms[i].creature_start_y, sizeof(dungeon->rooms[i].creature_start_y), 1);
+        u4fread(dng, dungeon->rooms[i].party_north_start_x, sizeof(dungeon->rooms[i].party_north_start_x), 1);
+        u4fread(dng, dungeon->rooms[i].party_north_start_y, sizeof(dungeon->rooms[i].party_north_start_y), 1);
+        u4fread(dng, dungeon->rooms[i].party_east_start_x, sizeof(dungeon->rooms[i].party_east_start_x), 1);
+        u4fread(dng, dungeon->rooms[i].party_east_start_y, sizeof(dungeon->rooms[i].party_east_start_y), 1);
+        u4fread(dng, dungeon->rooms[i].party_south_start_x, sizeof(dungeon->rooms[i].party_south_start_x), 1);
+        u4fread(dng, dungeon->rooms[i].party_south_start_y, sizeof(dungeon->rooms[i].party_south_start_y), 1);
+        u4fread(dng, dungeon->rooms[i].party_west_start_x, sizeof(dungeon->rooms[i].party_west_start_x), 1);
+        u4fread(dng, dungeon->rooms[i].party_west_start_y, sizeof(dungeon->rooms[i].party_west_start_y), 1);
+        u4fread(dng, room_tiles, sizeof(room_tiles), 1);
+        u4fread(dng, dungeon->rooms[i].buffer, sizeof(dungeon->rooms[i].buffer), 1);
 
         /* translate each creature tile to a tile id */
         for (j = 0; j < sizeof(dungeon->rooms[i].creature_tiles); j++)

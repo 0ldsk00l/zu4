@@ -118,7 +118,7 @@ bool IntroBinData::load() {
         delete sigData;
     sigData = new unsigned char[533];
     u4fseek(title, INTRO_FIXUPDATA_OFFSET, SEEK_SET);
-    u4fread(sigData, 1, 533, title);
+    u4fread(title, sigData, 1, 533);
 
     u4fseek(title, INTRO_MAP_OFFSET, SEEK_SET);
     introMap.resize(INTRO_MAP_WIDTH * INTRO_MAP_HEIGHT, MapTile(0));

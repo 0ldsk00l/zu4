@@ -33,8 +33,6 @@ string profileName = "";
 using namespace std;
 
 int main(int argc, char *argv[]) {
-	xu4_file_set_paths();
-	
 	if (!u4fopen("AVATAR.EXE")) {
 		xu4_error(XU4_LOG_ERR, 	"xu4 requires the PC version of Ultima IV to be present.\n");
 	}
