@@ -45,10 +45,6 @@ private:
 	std::vector<U4ZipPackage *> packages;
 };
 
-#ifdef putc
-#undef putc
-#endif
-
 /**
  * An abstract interface for file access.
  */
@@ -100,8 +96,11 @@ int u4fgetshort(U4FILE *f);
 int u4fputc(int c, U4FILE *f);
 long u4flength(U4FILE *f);
 std::vector<std::string> u4read_stringtable(U4FILE *f, long offset, int nstrings);
-std::string u4find_path(const std::string &fname, std::list<std::string> specificSubPaths);
+std::string u4find_path(const char *fname, const char *subpath);
 std::string u4find_conf(const std::string &fname);
 std::string u4find_graphics(const std::string &fname);
+
+/////////////////////////////////
+void xu4_file_set_paths();
 
 #endif
