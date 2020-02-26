@@ -378,10 +378,12 @@ bool ImageMgr::imageExists(ImageInfo * info)
 {
 	if (info->filename == "") //If it is an abstract image like "screen"
 		return true;
+	
 	U4FILE * file = getImageFile(info);
 	if (file)
 	{
-		u4fclose(file);
+		if (info->xu4Graphic) xu4_file_stdio_close(file);
+		else u4fclose(file);
 		return true;
 	}
 	return false;
@@ -416,10 +418,10 @@ U4FILE * ImageMgr::getImageFile(ImageInfo *info)
         string pathname = (string)path;
 
         if (!pathname.empty())
-            file = u4fopen_stdio(pathname);
+            file = u4fopen_stdio(path);
     }
     else {
-        file = u4fopen(filename);
+        file = u4fopen(filename.c_str());
     }
     return file;
 }
@@ -472,7 +474,8 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 				break;
 			default: break;
 		}
-        u4fclose(file);
+        if (info->xu4Graphic) xu4_file_stdio_close(file);
+		else u4fclose(file);
     }
     else
     {

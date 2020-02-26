@@ -50,30 +50,27 @@ private:
 /**
  * An abstract interface for file access.
  */
-class U4FILE {
-public:
-	virtual ~U4FILE() {}
-	
-	virtual void close() = 0;
-	
+typedef struct U4FILE {
 	FILE *file;
 	mz_zip_archive zip_archive;
 	mz_zip_archive_file_stat za_stat;
 	int za_index;
-	void *fptr;
+	uint8_t *fptr;
 	long cur;
-};
+} U4FILE;
 
-bool u4isUpgradeAvailable();
-bool u4isUpgradeInstalled();
-U4FILE *u4fopen(const std::string &fname);
-U4FILE *u4fopen_stdio(const std::string &fname);
 U4FILE *u4fopen_zip(const std::string &fname, U4ZipPackage *package);
-void u4fclose(U4FILE *f);
 
 std::vector<std::string> u4read_stringtable(U4FILE *f, long offset, int nstrings);
 
 /////////////////////////////////
+bool u4isUpgradeAvailable();
+bool u4isUpgradeInstalled();
+
+U4FILE *u4fopen(const char *fname);
+U4FILE *u4fopen_stdio(const char *fname);
+
+void u4fclose(U4FILE *f);
 int u4fseek(U4FILE *f, long offset, int whence);
 long u4ftell(U4FILE *f);
 size_t u4fread(U4FILE *f, void *ptr, size_t size, size_t nmemb);
