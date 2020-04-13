@@ -78,15 +78,15 @@ enum SoundEffect {
 	SOUND_MAX
 };
 
-void xu4_snd_play(int sound, bool onlyOnce, int specificDurationInTicks); // true, -1
+void zu4_snd_play(int sound, bool onlyOnce, int specificDurationInTicks); // true, -1
 
-void xu4_snd_stop();
-void xu4_snd_vol(double);
-int xu4_snd_vol_dec();
-int xu4_snd_vol_inc();
+void zu4_snd_stop();
+void zu4_snd_vol(double);
+int zu4_snd_vol_dec();
+int zu4_snd_vol_inc();
 
-void xu4_snd_init();
-void xu4_snd_deinit();
+void zu4_snd_init();
+void zu4_snd_deinit();
 
 #ifdef __cplusplus
 }

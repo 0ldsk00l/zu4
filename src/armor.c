@@ -37,19 +37,19 @@ static armor_t armor[ARMR_MAX] = {
 	{ ARMR_MYSTICROBES, "Mystic Robe", 0xff, 248 },
 };
 
-armor_t* xu4_armor(ArmorType type) {
+armor_t* zu4_armor(ArmorType type) {
 	return &armor[type];
 }
 
-int xu4_armor_defense(ArmorType type) {
+int zu4_armor_defense(ArmorType type) {
 	return armor[type].defense;
 }
 
-const char* xu4_armor_name(ArmorType type) {
+const char* zu4_armor_name(ArmorType type) {
 	return armor[type].name;
 }
 
-ArmorType xu4_armor_type(const char* aname) {
+ArmorType zu4_armor_type(const char* aname) {
 	for (int i = ARMR_NONE; i < ARMR_MAX; i++) {
 		if (!strcasecmp(aname, armor[i].name)) {
 			return armor[i].type;
@@ -58,6 +58,6 @@ ArmorType xu4_armor_type(const char* aname) {
 	return ARMR_NONE;
 }
 
-bool xu4_armor_wearable(ArmorType type, ClassType klass) {
+bool zu4_armor_wearable(ArmorType type, ClassType klass) {
 	return armor[type].wearable & (1 << klass);
 }

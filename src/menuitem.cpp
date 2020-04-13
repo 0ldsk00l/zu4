@@ -23,7 +23,7 @@ MenuItem::MenuItem(string t, short xpos, short ypos, int sc) :
     closesMenu(false)
 {
     // if the sc/scOffset is outside the range of the text string, assert
-    xu4_assert(sc==-1 || (sc >= 0 && sc <= (int)text.length()), "sc value of %d out of range!", sc);
+    zu4_assert(sc==-1 || (sc >= 0 && sc <= (int)text.length()), "sc value of %d out of range!", sc);
     if (sc != -1) addShortcutKey(tolower(text[sc]));
 }
 
@@ -118,7 +118,7 @@ void StringMenuItem::activate(MenuEvent &event) {
     vector<string>::const_iterator current = find(validSettings.begin(), validSettings.end(), *val);
 
     if (current == validSettings.end())
-        xu4_error(XU4_LOG_ERR, "Error: menu string '%s' not a valid choice", val->c_str());
+        zu4_error(ZU4_LOG_ERR, "Error: menu string '%s' not a valid choice", val->c_str());
             
     if (event.getType() == MenuEvent::INCREMENT || event.getType() == MenuEvent::ACTIVATE) {
         /* move to the next valid choice, wrapping if necessary */

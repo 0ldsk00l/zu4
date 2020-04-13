@@ -121,7 +121,7 @@ void moveAvatarInDungeon(MoveEvent &event) {
     MapTile *tile;
     
     /* we're not in a dungeon, failed! */
-    xu4_assert(c->location->context & CTX_DUNGEON, "moveAvatarInDungeon() called outside of dungeon, failed!");    
+    zu4_assert(c->location->context & CTX_DUNGEON, "moveAvatarInDungeon() called outside of dungeon, failed!");    
         
     /* you must turn first! */
     if (!advancing && !retreating) {        
@@ -183,7 +183,7 @@ int moveObject(Map *map, Creature *obj, Coords avatar) {
     case MOVEMENT_WANDER:
         /* World map wandering creatures always move, whereas
            town creatures that wander sometimes stay put */
-        if (map->isWorldMap() || xu4_random(2) == 0)
+        if (map->isWorldMap() || zu4_random(2) == 0)
             dir = dirRandomDir(map->getValidMoves(new_coords, obj->getTile()));
         break;
 
@@ -194,7 +194,7 @@ int moveObject(Map *map, Creature *obj, Coords avatar) {
         /* If the pirate ship turned last move instead of moving, this time it must
            try to move, not turn again */
         if (obj->getTile().getTileType()->isPirateShip() && DIR_IN_MASK(obj->getTile().getDirection(), dirmask) &&
-            (obj->getTile() != obj->getPrevTile()) && xu4_coords_equal(obj->getPrevCoords(), obj->getCoords())) {
+            (obj->getTile() != obj->getPrevTile()) && zu4_coords_equal(obj->getPrevCoords(), obj->getCoords())) {
             dir = obj->getTile().getDirection();
             break;
         }
@@ -240,7 +240,7 @@ int moveObject(Map *map, Creature *obj, Coords avatar) {
     /**
      * Set the new coordinates
      */ 
-    if (!xu4_coords_equal(new_coords, obj->getCoords()) && 
+    if (!zu4_coords_equal(new_coords, obj->getCoords()) && 
         !MAP_IS_OOB(map, new_coords))
     {
     	obj->setCoords(new_coords);
@@ -268,7 +268,7 @@ int moveCombatObject(int act, Map *map, Creature *obj, Coords target) {
         dir = pathAway(new_coords, target, valid_dirs);
     
     } else {
-        xu4_assert(action == CA_ADVANCE, "action must be CA_ADVANCE or CA_FLEE");
+        zu4_assert(action == CA_ADVANCE, "action must be CA_ADVANCE or CA_FLEE");
         // If they're not fleeing, make sure they don't flee on accident
         if (new_coords.x == 0)
             valid_dirs = DIR_REMOVE_FROM_MASK(DIR_WEST, valid_dirs);
@@ -382,7 +382,7 @@ void movePartyMember(MoveEvent &event) {
                 Coords trigger = {triggers[i].x, triggers[i].y, c->location->coords.z};
 
                 /* see if we're on a trigger */
-                if (xu4_coords_equal(newCoords, trigger)) {
+                if (zu4_coords_equal(newCoords, trigger)) {
                     Coords change1 = {triggers[i].change_x1, triggers[i].change_y1, c->location->coords.z};
                     Coords change2 = {triggers[i].change_x2, triggers[i].change_y2, c->location->coords.z};
 
@@ -420,13 +420,13 @@ bool slowedByTile(const Tile *tile) {
     
     switch (tile->getSpeed()) {
     case SLOW:
-        slow = xu4_random(8) == 0;
+        slow = zu4_random(8) == 0;
         break;
     case VSLOW:
-        slow = xu4_random(4) == 0;
+        slow = zu4_random(4) == 0;
         break;
     case VVSLOW:
-        slow = xu4_random(2) == 0;
+        slow = zu4_random(2) == 0;
         break;
     case FAST:
     default:

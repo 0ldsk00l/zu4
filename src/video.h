@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-void xu4_video_init();
-void xu4_video_deinit();
-void xu4_ogl_swap();
+void zu4_video_init();
+void zu4_video_deinit();
+void zu4_ogl_swap();
 
 #ifdef __cplusplus
 }

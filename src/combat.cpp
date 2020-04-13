@@ -132,7 +132,7 @@ void CombatController::initDungeonRoom(int room, Direction from) {
     int offset, i;
     init(NULL);
 
-    xu4_assert(c->location->prev->context & CTX_DUNGEON, "Error: called initDungeonRoom from non-dungeon context");
+    zu4_assert(c->location->prev->context & CTX_DUNGEON, "Error: called initDungeonRoom from non-dungeon context");
     {
         Dungeon *dng = dynamic_cast<Dungeon*>(c->location->prev->map);
         unsigned char
@@ -173,7 +173,7 @@ void CombatController::initDungeonRoom(int room, Direction from) {
         case DIR_ADVANCE:
         case DIR_RETREAT:
         default: 
-            xu4_assert(0, "Invalid 'from' direction passed to initDungeonRoom()");
+            zu4_assert(0, "Invalid 'from' direction passed to initDungeonRoom()");
         }
 
         for (i = 0; i < AREA_PLAYERS; i++) {
@@ -223,7 +223,7 @@ void CombatController::begin() {
     
     /* FIXME: there should be a better way to accomplish this */
     if (!camping) {
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
     }
 
     /* Set focus to the first active party member, if there is one */ 
@@ -258,7 +258,7 @@ void CombatController::end(bool adjustKarma) {
         bool won = isWon();    
     
         game->exitToParentMap();
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
     
         if (winOrLose) {
             if (won) {
@@ -296,7 +296,7 @@ void CombatController::end(bool adjustKarma) {
                 case DIR_NONE:  break;
                 case DIR_ADVANCE:
                 case DIR_RETREAT:
-                default: xu4_assert(0, "Invalid exit dir %d", exitDir); break;
+                default: zu4_assert(0, "Invalid exit dir %d", exitDir); break;
                 }
 
                 if (action != ACTION_NONE)
@@ -343,15 +343,15 @@ void CombatController::fillCreatureTable(const Creature *creature) {
             current = baseCreature;
 
             /* find a free spot in the creature table */
-            do {j = xu4_random(AREA_CREATURES) ;} while (creatureTable[j] != NULL);
+            do {j = zu4_random(AREA_CREATURES) ;} while (creatureTable[j] != NULL);
             
             /* see if creature is a leader or leader's leader */
             if (creatureMgr->getById(baseCreature->getLeader()) != baseCreature && /* leader is a different creature */
                 i != (numCreatures - 1)) { /* must have at least 1 creature of type encountered */
                 
-                if (xu4_random(32) == 0)       /* leader's leader */
+                if (zu4_random(32) == 0)       /* leader's leader */
                     current = creatureMgr->getById(creatureMgr->getById(baseCreature->getLeader())->getLeader());
-                else if (xu4_random(8) == 0)   /* leader */
+                else if (zu4_random(8) == 0)   /* leader */
                     current = creatureMgr->getById(baseCreature->getLeader());
             }
 
@@ -371,17 +371,17 @@ int  CombatController::initialNumberOfCreatures(const Creature *creature) const 
     /* if in an unusual combat situation, generally we stick to normal encounter sizes,
        (such as encounters from sleeping in an inn, etc.) */
     if (forceStandardEncounterSize || map->isWorldMap() || (c->location->prev && c->location->prev->context & CTX_DUNGEON)) {
-        ncreatures = xu4_random(8) + 1;
+        ncreatures = zu4_random(8) + 1;
         
         if (ncreatures == 1) {
             if (creature && creature->getEncounterSize() > 0)
-                ncreatures = xu4_random(creature->getEncounterSize()) + creature->getEncounterSize() + 1;
+                ncreatures = zu4_random(creature->getEncounterSize()) + creature->getEncounterSize() + 1;
             else
                 ncreatures = 8;
         }
 
         while (ncreatures > 2 * c->saveGame->members) {
-            ncreatures = xu4_random(16) + 1;
+            ncreatures = zu4_random(16) + 1;
         }
     } else {
         if (creature && creature->getId() == GUARD_ID)
@@ -515,10 +515,10 @@ void CombatController::awardLoot() {
 }
 
 bool CombatController::attackHit(Creature *attacker, Creature *defender) {
-    xu4_assert(attacker != NULL, "attacker must not be NULL");
-    xu4_assert(defender != NULL, "defender must not be NULL");
+    zu4_assert(attacker != NULL, "attacker must not be NULL");
+    zu4_assert(defender != NULL, "defender must not be NULL");
 
-    int attackValue = xu4_random(0x100) + attacker->getAttackBonus();
+    int attackValue = zu4_random(0x100) + attacker->getAttackBonus();
     int defenseValue = defender->getDefense();
 
     return attackValue > defenseValue;
@@ -558,7 +558,7 @@ bool CombatController::attackAt(const Coords &coords, PartyMember *attacker, int
 
         /* show the 'hit' tile */
     	GameController::flashTile(coords, misstile, 1);
-        xu4_snd_play(SOUND_NPC_STRUCK, false, -1); // NPC_STRUCK, melee hit
+        zu4_snd_play(SOUND_NPC_STRUCK, false, -1); // NPC_STRUCK, melee hit
         GameController::flashTile(coords, hittile, 3);
 
         /* apply the damage to the creature */
@@ -598,7 +598,7 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
         
     case EFFECT_ELECTRICITY:
         /* FIXME: are there any special effects here? */
-        xu4_snd_play(SOUND_PC_STRUCK, false, -1);
+        zu4_snd_play(SOUND_PC_STRUCK, false, -1);
         screenMessage("\n%s %cElectrified%c!\n", target->getName().c_str(), FG_BLUE, FG_WHITE);
         attacker->dealDamage(target, attacker->getDamage());
         break;
@@ -606,10 +606,10 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
     case EFFECT_POISON:
     case EFFECT_POISONFIELD:
         /* see if the player is poisoned */
-        if ((xu4_random(2) == 0) && (target->getStatus() != STAT_POISONED))
+        if ((zu4_random(2) == 0) && (target->getStatus() != STAT_POISONED))
         {
             // POISON_EFFECT, ranged hit
-            xu4_snd_play(SOUND_POISON_EFFECT, false, -1);
+            zu4_snd_play(SOUND_POISON_EFFECT, false, -1);
             screenMessage("\n%s %cPoisoned%c!\n", target->getName().c_str(), FG_GREEN, FG_WHITE);
             target->addStatus(STAT_POISONED);
         }
@@ -618,10 +618,10 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
         
     case EFFECT_SLEEP:
         /* see if the player is put to sleep */
-        if (xu4_random(2) == 0)
+        if (zu4_random(2) == 0)
         {
             // SLEEP, ranged hit, plays even if sleep failed or PC already asleep
-            xu4_snd_play(SOUND_SLEEP, false, -1);
+            zu4_snd_play(SOUND_SLEEP, false, -1);
             screenMessage("\n%s %cSlept%c!\n", target->getName().c_str(), FG_PURPLE, FG_WHITE);
             target->putToSleep();
         }
@@ -631,7 +631,7 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
     case EFFECT_LAVA:
     case EFFECT_FIRE:
         /* FIXME: are there any special effects here? */
-        xu4_snd_play(SOUND_PC_STRUCK, false, -1);
+        zu4_snd_play(SOUND_PC_STRUCK, false, -1);
         screenMessage("\n%s %c%s Hit%c!\n", target->getName().c_str(), FG_RED,
                       effect == EFFECT_LAVA ? "Lava" : "Fiery", FG_WHITE);
         attacker->dealDamage(target, attacker->getDamage());
@@ -639,7 +639,7 @@ bool CombatController::rangedAttack(const Coords &coords, Creature *attacker) {
 
     default: 
         /* show the appropriate 'hit' message */
-        // xu4_snd_play(SOUND_PC_STRUCK, false, -1);
+        // zu4_snd_play(SOUND_PC_STRUCK, false, -1);
         if (hittile == Tileset::findTileByName("magic_flash")->getId())
             screenMessage("\n%s %cMagical Hit%c!\n", target->getName().c_str(), FG_BLUE, FG_WHITE);
         else screenMessage("\n%s Hit!\n", target->getName().c_str());
@@ -693,7 +693,7 @@ void CombatController::finishTurn() {
         player->applyEffect(c->location->map->tileTypeAt(player->getCoords(), WITH_GROUND_OBJECTS)->getEffect());
     }
 
-    quick = (c->aura->type == AURA_QUICKNESS) && player && (xu4_random(2) == 0) ? 1 : 0;
+    quick = (c->aura->type == AURA_QUICKNESS) && player && (zu4_random(2) == 0) ? 1 : 0;
 
     /* check to see if the player gets to go again (and is still alive) */
     if (!quick || player->isDisabled()){    
@@ -704,7 +704,7 @@ void CombatController::finishTurn() {
             /* put a sleeping person in place of the player,
                or restore an awakened member to their original state */            
             if (player) {                
-                if (player->getStatus() == STAT_SLEEPING && (xu4_random(8) == 0))
+                if (player->getStatus() == STAT_SLEEPING && (zu4_random(8) == 0))
                     player->wakeUp();                
 
                 /* remove focus from the current party member */
@@ -799,22 +799,22 @@ void CombatController::movePartyMember(MoveEvent &event) {
 
     screenMessage("%s\n", getDirectionName(event.dir));
     if (event.result & MOVE_MUST_USE_SAME_EXIT) {
-        xu4_snd_play(SOUND_ERROR, true, -1); // ERROR move, all PCs must use the same exit
+        zu4_snd_play(SOUND_ERROR, true, -1); // ERROR move, all PCs must use the same exit
         screenMessage("All must use same exit!\n");
     }
     else if (event.result & MOVE_BLOCKED) {
-        xu4_snd_play(SOUND_BLOCKED, true, -1);// BLOCKED move
+        zu4_snd_play(SOUND_BLOCKED, true, -1);// BLOCKED move
         screenMessage("%cBlocked!%c\n", FG_GREY, FG_WHITE);
     }
     else if (event.result & MOVE_SLOWED) {
-        xu4_snd_play(SOUND_WALK_SLOWED, true, -1); // WALK_SLOWED move
+        zu4_snd_play(SOUND_WALK_SLOWED, true, -1); // WALK_SLOWED move
         screenMessage("%cSlow progress!%c\n", FG_GREY, FG_WHITE);
     }
     else if (winOrLose && getCreature()->isEvil() && (event.result & (MOVE_EXIT_TO_PARENT | MOVE_MAP_CHANGE))) {
-        xu4_snd_play(SOUND_FLEE, true, -1); // FLEE move
+        zu4_snd_play(SOUND_FLEE, true, -1); // FLEE move
     }
     else {
-        xu4_snd_play(SOUND_WALK_COMBAT, true, -1); // WALK_COMBAT move
+        zu4_snd_play(SOUND_WALK_COMBAT, true, -1); // WALK_COMBAT move
     }
 }
 
@@ -882,26 +882,26 @@ bool CombatController::keyPressed(int key) {
     /* handle music volume adjustments */
     case ',':
         // decrease the volume if possible
-        screenMessage("Music: %d%s\n", xu4_music_vol_dec(), "%");
+        screenMessage("Music: %d%s\n", zu4_music_vol_dec(), "%");
         endTurn = false;
         break;
     case '.':
         // increase the volume if possible
-        screenMessage("Music: %d%s\n", xu4_music_vol_inc(), "%");
+        screenMessage("Music: %d%s\n", zu4_music_vol_inc(), "%");
         endTurn = false;
         break;
 
     /* handle sound volume adjustments */
     case '<':
         // decrease the volume if possible
-        screenMessage("Sound: %d%s\n", xu4_snd_vol_dec(), "%");
-        xu4_snd_play(SOUND_FLEE, true, -1);
+        screenMessage("Sound: %d%s\n", zu4_snd_vol_dec(), "%");
+        zu4_snd_play(SOUND_FLEE, true, -1);
         endTurn = false;
         break;
     case '>':
         // increase the volume if possible
-        screenMessage("Sound: %d%s\n", xu4_snd_vol_inc(), "%");
-        xu4_snd_play(SOUND_FLEE, true, -1);
+        screenMessage("Sound: %d%s\n", zu4_snd_vol_inc(), "%");
+        zu4_snd_play(SOUND_FLEE, true, -1);
         endTurn = false;
         break;
 
@@ -965,7 +965,7 @@ bool CombatController::keyPressed(int key) {
         break;
 
     case 'v':
-        if (xu4_music_toggle())
+        if (zu4_music_toggle())
             screenMessage("Volume On!\n");
         else
             screenMessage("Volume Off!\n");
@@ -1073,7 +1073,7 @@ void CombatController::attack() {
 
     // the attack was already made, even if there is no valid target
     // so play the attack sound
-    xu4_snd_play(SOUND_PC_ATTACK, false, -1); // PC_ATTACK, melee and ranged
+    zu4_snd_play(SOUND_PC_ATTACK, false, -1); // PC_ATTACK, melee and ranged
 
 
     vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, 
@@ -1168,7 +1168,7 @@ PartyMember *CombatMap::partyMemberAt(Coords coords) {
     PartyMemberVector::iterator i;
     
     for (i = party.begin(); i != party.end(); i++) {
-        if (xu4_coords_equal((*i)->getCoords(), coords))
+        if (zu4_coords_equal((*i)->getCoords(), coords))
             return *i;
     }
     return NULL;
@@ -1183,7 +1183,7 @@ Creature *CombatMap::creatureAt(Coords coords) {
     CreatureVector::iterator i;
 
     for (i = creatures.begin(); i != creatures.end(); i++) {
-        if (xu4_coords_equal((*i)->getCoords(), coords))
+        if (zu4_coords_equal((*i)->getCoords(), coords))
             return *i;
     }
     return NULL;

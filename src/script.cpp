@@ -42,7 +42,7 @@ Script::Variable::Variable(const string &v) : set(true) {
 
 Script::Variable::Variable(const int &v) : set(true) {
     i_val = v;
-    s_val = xu4_to_string(v);
+    s_val = zu4_to_string(v);
 }
 
 int&    Script::Variable::getInt()      { return i_val; }
@@ -146,7 +146,7 @@ bool Script::load(const string &filename, const string &baseId, const string &su
     this->vendorScriptDoc = xmlParse(filename.c_str());
     root = xmlDocGetRootElement(vendorScriptDoc);
     if (xmlStrcmp(root->name, (const xmlChar *) "scripts") != 0)
-        xu4_error(XU4_LOG_ERR, "malformed %s", filename.c_str());
+        zu4_error(ZU4_LOG_ERR, "malformed %s", filename.c_str());
 
     /**
      * Get a new global item name or id name
@@ -216,8 +216,8 @@ bool Script::load(const string &filename, const string &baseId, const string &su
     }
     else {    
         if (subNodeName.empty())
-            xu4_error(XU4_LOG_ERR, "Couldn't find script '%s' in %s", baseId.c_str(), filename.c_str());
-        else xu4_error(XU4_LOG_ERR, "Couldn't find subscript '%s' where id='%s' in script '%s' in %s", subNodeName.c_str(), subNodeId.c_str(), baseId.c_str(), filename.c_str());
+            zu4_error(ZU4_LOG_ERR, "Couldn't find script '%s' in %s", baseId.c_str(), filename.c_str());
+        else zu4_error(ZU4_LOG_ERR, "Couldn't find subscript '%s' where id='%s' in script '%s' in %s", subNodeName.c_str(), subNodeId.c_str(), baseId.c_str(), filename.c_str());
     }
 
     this->state = STATE_UNLOADED;
@@ -256,7 +256,7 @@ void Script::unload() {
     scriptNode = find(this->scriptNode, script, search_id);
 
     if (!scriptNode)
-        xu4_error(XU4_LOG_ERR, "Script '%s' not found in vendorScript.xml", script.c_str());
+        zu4_error(ZU4_LOG_ERR, "Script '%s' not found in vendorScript.xml", script.c_str());
 
     execute(scriptNode);
 }
@@ -444,7 +444,7 @@ void Script::translate(string *text) {
                          close = current.find_first_of("}");
 
             if (close == current.length())
-                xu4_error(XU4_LOG_ERR, "Error: no closing } found in script.");
+                zu4_error(ZU4_LOG_ERR, "Error: no closing } found in script.");
 
             if (open < close) {
                 num_embedded++;
@@ -485,7 +485,7 @@ void Script::translate(string *text) {
         }        
         // Get the current iterator for our loop
         else if (item == "iterator")
-            prop = xu4_to_string(this->iterator);
+            prop = zu4_to_string(this->iterator);
         else if ((pos = item.find("show_inventory:")) < item.length()) {
             pos = item.find(":");
             string itemScript = item.substr(pos+1);
@@ -591,9 +591,9 @@ void Script::translate(string *text) {
                 /* perform the <math> function on the content */
                 if (funcName == "math") {
                     if (content.empty())
-                        xu4_error(XU4_LOG_WRN, "Error: empty math() function");
+                        zu4_error(ZU4_LOG_WRN, "Error: empty math() function");
 
-                    prop = xu4_to_string(mathValue(content));
+                    prop = zu4_to_string(mathValue(content));
                 }
 
                 /**
@@ -625,7 +625,7 @@ void Script::translate(string *text) {
                 
                 /* generate a random number */
                 else if (funcName == "random")
-                    prop = xu4_to_string(xu4_random((int)strtol(content.c_str(), NULL, 10)));
+                    prop = zu4_to_string(zu4_random((int)strtol(content.c_str(), NULL, 10)));
                 
                 /* replaced with "true" if content is empty, or "false" if not */
                 else if (funcName == "isempty") {                    
@@ -831,7 +831,7 @@ Script::ReturnCode Script::redirect(xmlNodePtr script, xmlNodePtr current) {
     
     xmlNodePtr newScript = find(this->scriptNode, target, search_id);
     if (!newScript)
-        xu4_error(XU4_LOG_ERR, "Error: redirect failed -- could not find target script '%s' with %s=\"%s\"", target.c_str(), idPropName.c_str(), search_id.c_str());
+        zu4_error(ZU4_LOG_ERR, "Error: redirect failed -- could not find target script '%s' with %s=\"%s\"", target.c_str(), idPropName.c_str(), search_id.c_str());
 
     if (debug) {
         fprintf(debug, "\nRedirected to <%s", target.c_str());
@@ -853,7 +853,7 @@ Script::ReturnCode Script::include(xmlNodePtr script, xmlNodePtr current) {
 
     xmlNodePtr newScript = find(this->scriptNode, scriptName, id);
     if (!newScript)
-        xu4_error(XU4_LOG_ERR, "Error: include failed -- could not find target script '%s' with %s=\"%s\"", scriptName.c_str(), idPropName.c_str(), id.c_str());
+        zu4_error(ZU4_LOG_ERR, "Error: include failed -- could not find target script '%s' with %s=\"%s\"", scriptName.c_str(), idPropName.c_str(), id.c_str());
 
     if (debug) {
         fprintf(debug, "\nIncluded script <%s", scriptName.c_str());
@@ -912,7 +912,7 @@ Script::ReturnCode Script::forLoop(xmlNodePtr script, xmlNodePtr current) {
  */ 
 Script::ReturnCode Script::random(xmlNodePtr script, xmlNodePtr current) {
     int perc = getPropAsInt(current, "chance");
-    int num = xu4_random(100);
+    int num = zu4_random(100);
     Script::ReturnCode retval = RET_OK;
 
     if (num < perc)
@@ -977,7 +977,7 @@ Script::ReturnCode Script::pay(xmlNodePtr script, xmlNodePtr current) {
     string cantpay = getPropAsStr(current, "cantpay");
 
     if (price < 0)
-        xu4_error(XU4_LOG_ERR, "Error: could not find price for item");
+        zu4_error(ZU4_LOG_ERR, "Error: could not find price for item");
 
     if (debug) {
         fprintf(debug, "\nPay: price(%d) quantity(%d)", price, quant);                
@@ -1140,7 +1140,7 @@ Script::ReturnCode Script::add(xmlNodePtr script, xmlNodePtr current) {
             c->party->notifyOfChange(0, PartyEvent::INVENTORY_ADDED);
             c->stats->resetReagentsMenu();
         }
-        else xu4_error(XU4_LOG_WRN, "Error: reagent '%s' not found", subtype.c_str());
+        else zu4_error(ZU4_LOG_WRN, "Error: reagent '%s' not found", subtype.c_str());
     }
 
     if (debug)
@@ -1270,18 +1270,18 @@ Script::ReturnCode Script::karma(xmlNodePtr script, xmlNodePtr current) {
  */ 
 Script::ReturnCode Script::music(xmlNodePtr script, xmlNodePtr current) {
     if (xmlGetPropAsBool(current, "reset"))        
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
     else {
         string type = getPropAsStr(current, "type");
 
         if (xmlGetPropAsBool(current, "play"))
-            xu4_music_play(c->location->map->music);
+            zu4_music_play(c->location->map->music);
         if (xmlGetPropAsBool(current, "stop"))
-            xu4_music_stop();
+            zu4_music_stop();
         else if (type == "shopping")
-            xu4_music_play(TRACK_SHOPPING);
+            zu4_music_play(TRACK_SHOPPING);
         else if (type == "camp")
-            xu4_music_fadeout(CAMP_FADE_OUT_TIME);
+            zu4_music_fadeout(CAMP_FADE_OUT_TIME);
     }
 
     return RET_OK;
@@ -1373,7 +1373,7 @@ void Script::mathParseChildren(xmlNodePtr math, string *result) {
             string children_results;            
             
             mathParseChildren(current, &children_results);
-            *result = xu4_to_string(mathValue(children_results));            
+            *result = zu4_to_string(mathValue(children_results));            
         }
     }    
 }
@@ -1466,7 +1466,7 @@ int Script::math(int lval, int rval, string &op) {
     else if (op == "<=")
         return lval <= rval;
     else
-        xu4_error(XU4_LOG_ERR, "Error: invalid 'math' operation attempted in vendorScript.xml");
+        zu4_error(ZU4_LOG_ERR, "Error: invalid 'math' operation attempted in vendorScript.xml");
 
     return 0;
 }
@@ -1550,7 +1550,7 @@ void Script::funcParse(const string & str, string *funcName, string *contents) {
         *contents = str.substr(pos+1);
         pos = contents->find_first_of(")");
         if (pos >= contents->length())
-            xu4_error(XU4_LOG_WRN, "Error: No closing ) in function %s()", funcName->c_str());
+            zu4_error(ZU4_LOG_WRN, "Error: No closing ) in function %s()", funcName->c_str());
         else *contents = contents->substr(0, pos);
     }
     else funcName->erase();

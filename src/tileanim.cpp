@@ -110,7 +110,7 @@ TileAnimInvertTransform::TileAnimInvertTransform(int x, int y, int w, int h) {
 bool TileAnimInvertTransform::drawsTile() const { return false; }
 void TileAnimInvertTransform::draw(Image *dest, Tile *tile, MapTile &mapTile) {    
     int scale = tile->getScale();
-    xu4_img_draw_subrect_inv(dest, tile->getImage(), x * scale, y * scale, x * scale,
+    zu4_img_draw_subrect_inv(dest, tile->getImage(), x * scale, y * scale, x * scale,
         (tile->getHeight() * mapTile.frame) + (y * scale), w * scale, h * scale);    
 }
 
@@ -121,9 +121,9 @@ TileAnimPixelTransform::TileAnimPixelTransform(int x, int y) {
 
 bool TileAnimPixelTransform::drawsTile() const { return false; }
 void TileAnimPixelTransform::draw(Image *dest, Tile *tile, MapTile &mapTile) {
-    RGBA *color = colors[xu4_random(colors.size())];
+    RGBA *color = colors[zu4_random(colors.size())];
     int scale = tile->getScale();
-    xu4_img_fill(dest, x * scale, y * scale, scale, scale, color->r, color->g, color->b, color->a);
+    zu4_img_fill(dest, x * scale, y * scale, scale, scale, color->r, color->g, color->b, color->a);
 }
 
 bool TileAnimScrollTransform::drawsTile() const { return true; }
@@ -140,9 +140,9 @@ void TileAnimScrollTransform::draw(Image *dest, Tile *tile, MapTile &mapTile) {
             current = 0;
     }
     
-    xu4_img_draw_subrect_on(dest, tile->getImage(), 0, current, 0, tile->getHeight() * mapTile.frame, tile->getWidth(), tile->getHeight() - current);
+    zu4_img_draw_subrect_on(dest, tile->getImage(), 0, current, 0, tile->getHeight() * mapTile.frame, tile->getWidth(), tile->getHeight() - current);
     if (current != 0)
-        xu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, (tile->getHeight() * mapTile.frame) + tile->getHeight() - current, tile->getWidth(), current);
+        zu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, (tile->getHeight() * mapTile.frame) + tile->getHeight() - current, tile->getWidth(), current);
 
 }
 
@@ -153,7 +153,7 @@ bool TileAnimFrameTransform::drawsTile() const { return true; }
 void TileAnimFrameTransform::draw(Image *dest, Tile *tile, MapTile &mapTile) {
     if (++currentFrame >= tile->getFrames())
     	currentFrame = 0;
-    xu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, currentFrame * tile->getHeight(), tile->getWidth(), tile->getHeight());
+    zu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, currentFrame * tile->getHeight(), tile->getWidth(), tile->getHeight());
 
 
 }
@@ -178,7 +178,7 @@ void TileAnimPixelColorTransform::draw(Image *dest, Tile *tile, MapTile &mapTile
     for (int j = y * scale; j < (y * scale) + (h * scale); j++) {
         for (int i = x * scale; i < (x * scale) + (w * scale); i++) {
             RGBA pixelAt;
-            uint32_t pixIndex = xu4_img_get_pixel(tileImage, i, j + (mapTile.frame * tile->getHeight()));
+            uint32_t pixIndex = zu4_img_get_pixel(tileImage, i, j + (mapTile.frame * tile->getHeight()));
             pixelAt.r = pixIndex & 0xff;
             pixelAt.g = (pixIndex & 0xff00) >> 8;
             pixelAt.b = (pixIndex & 0xff0000) >> 16;
@@ -186,10 +186,10 @@ void TileAnimPixelColorTransform::draw(Image *dest, Tile *tile, MapTile &mapTile
             if (pixelAt.r >= start->r && pixelAt.r <= end->r &&
                 pixelAt.g >= start->g && pixelAt.g <= end->g &&
                 pixelAt.b >= start->b && pixelAt.b <= end->b) {
-                xu4_img_set_pixel(dest, i, j,
-					(start->r + xu4_random(diff.r)) |
-					(start->g + xu4_random(diff.g)) << 8 |
-					(start->b + xu4_random(diff.b)) << 16 |
+                zu4_img_set_pixel(dest, i, j,
+					(start->r + zu4_random(diff.r)) |
+					(start->g + zu4_random(diff.g)) << 8 |
+					(start->b + zu4_random(diff.b)) << 16 |
 					pixelAt.a << 24);
             }
         }
@@ -309,8 +309,8 @@ void TileAnim::draw(Image *dest, Tile *tile, MapTile &mapTile, Direction dir) {
     bool drawn = false;
 
     /* nothing to do, draw the tile and return! */
-    if ((random && xu4_random(100) > random) || (!transforms.size() && !contexts.size()) || mapTile.freezeAnimation) {
-        xu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, mapTile.frame * tile->getHeight(), tile->getWidth(), tile->getHeight());
+    if ((random && zu4_random(100) > random) || (!transforms.size() && !contexts.size()) || mapTile.freezeAnimation) {
+        zu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, mapTile.frame * tile->getHeight(), tile->getWidth(), tile->getHeight());
         return;
     }
     
@@ -320,9 +320,9 @@ void TileAnim::draw(Image *dest, Tile *tile, MapTile &mapTile, Direction dir) {
     for (t = transforms.begin(); t != transforms.end(); t++) {
         TileAnimTransform *transform = *t;
         
-        if (!transform->random || xu4_random(100) < transform->random) {
+        if (!transform->random || zu4_random(100) < transform->random) {
             if (!transform->drawsTile() && !drawn)
-                xu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, mapTile.frame * tile->getHeight(), tile->getWidth(), tile->getHeight());
+                zu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, mapTile.frame * tile->getHeight(), tile->getWidth(), tile->getHeight());
             transform->draw(dest, tile, mapTile);
             drawn = true;
         }
@@ -337,9 +337,9 @@ void TileAnim::draw(Image *dest, Tile *tile, MapTile &mapTile, Direction dir) {
             for (t = ctx_transforms.begin(); t != ctx_transforms.end(); t++) {
                 TileAnimTransform *transform = *t;
 
-                if (!transform->random || xu4_random(100) < transform->random) {
+                if (!transform->random || zu4_random(100) < transform->random) {
                     if (!transform->drawsTile() && !drawn)
-                        xu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, mapTile.frame * tile->getHeight(), tile->getWidth(), tile->getHeight());
+                        zu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, mapTile.frame * tile->getHeight(), tile->getWidth(), tile->getHeight());
                     transform->draw(dest, tile, mapTile);
                     drawn = true;
                 }

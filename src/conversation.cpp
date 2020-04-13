@@ -180,7 +180,7 @@ Dialogue::Keyword *Dialogue::operator[](const string &kw) {
 }
 
 const ResponsePart &Dialogue::getAction() const { 
-    int prob = xu4_random(0x100);
+    int prob = zu4_random(0x100);
 
     /* Does the person turn away from/attack you? */
     if (prob >= turnAwayProb)
@@ -265,7 +265,7 @@ Conversation::InputType Conversation::getInputRequired(int *bufferlen) {
         return INPUT_NONE;
     }
 
-    xu4_assert(0, "invalid state: %d", state);
+    zu4_assert(0, "invalid state: %d", state);
     return INPUT_NONE;
 }
 

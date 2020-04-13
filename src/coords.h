@@ -12,8 +12,8 @@ typedef struct Coords {
 	int z;
 } Coords;
 
-bool xu4_coords_equal(Coords a, Coords b);
-Coords xu4_coords_nowhere();
+bool zu4_coords_equal(Coords a, Coords b);
+Coords zu4_coords_nowhere();
 
 #ifdef __cplusplus
 }

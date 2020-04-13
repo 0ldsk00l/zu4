@@ -46,15 +46,15 @@ static weapon_t weapons[WEAP_MAX] = {
 	{ WEAP_MYSTICSWORD, "Mystic Sword", "^SW", 0xff, 1, 255, "hit_flash", "miss_flash", "", 0x10 },
 };
 
-weapon_t* xu4_weapon(WeaponType type) {
+weapon_t* zu4_weapon(WeaponType type) {
 	return &weapons[type];
 }
 
-const char* xu4_weapon_name(WeaponType type) {
+const char* zu4_weapon_name(WeaponType type) {
 	return weapons[type].name;
 }
 
-WeaponType xu4_weapon_type(const char* wname) {
+WeaponType zu4_weapon_type(const char* wname) {
 	for (int i = WEAP_HANDS; i < WEAP_MAX; i++) {
 		if (!strcasecmp(wname, weapons[i].name)) {
 			return weapons[i].type;
@@ -63,6 +63,6 @@ WeaponType xu4_weapon_type(const char* wname) {
 	return WEAP_HANDS;
 }
 
-bool xu4_weapon_usable(WeaponType type, ClassType klass) {
+bool zu4_weapon_usable(WeaponType type, ClassType klass) {
 	return weapons[type].usable & (1 << klass);
 }

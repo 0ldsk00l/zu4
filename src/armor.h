@@ -14,11 +14,11 @@ typedef struct armor_t {
 	int defense;         // Defense value of the Armor
 } armor_t;
 
-armor_t* xu4_armor(ArmorType type);
-int xu4_armor_defense(ArmorType type);
-const char* xu4_armor_name(ArmorType type);
-ArmorType xu4_armor_type(const char* aname);
-bool xu4_armor_wearable(ArmorType type, ClassType klass);
+armor_t* zu4_armor(ArmorType type);
+int zu4_armor_defense(ArmorType type);
+const char* zu4_armor_name(ArmorType type);
+ArmorType zu4_armor_type(const char* aname);
+bool zu4_armor_wearable(ArmorType type, ClassType klass);
 
 #ifdef __cplusplus
 }

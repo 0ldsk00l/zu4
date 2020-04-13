@@ -26,7 +26,7 @@
 /**
  * Seed the random number generator.
  */
-void xu4_srandom() {
+void zu4_srandom() {
 #if (defined(BSD) && (BSD >= 199103))
 	srandom(time(NULL));
 #else
@@ -40,7 +40,7 @@ void xu4_srandom() {
  * to compensate for older generators that have low entropy in the
  * lower bits (e.g. MacOS X).
  */
-int xu4_random(int upperRange) {
+int zu4_random(int upperRange) {
 #if (defined(BSD) && (BSD >= 199103))
 	int r = random();
 #else

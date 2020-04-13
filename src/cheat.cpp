@@ -67,7 +67,7 @@ bool CheatMenuController::keyPressed(int key) {
         for (i = ARMR_NONE + 1; i < ARMR_MAX; i++)
             c->saveGame->armor[i] = 8;
         for (i = WEAP_HANDS + 1; i < WEAP_MAX; i++) {
-            const weapon_t *weapon = xu4_weapon((WeaponType)i);
+            const weapon_t *weapon = zu4_weapon((WeaponType)i);
             if (weapon->flags & WEAP_LOSE || weapon->flags & WEAP_LOSEWHENRANGED)
                 c->saveGame->weapons[i] = 99;
             else
@@ -109,7 +109,7 @@ bool CheatMenuController::keyPressed(int key) {
         }
         if (!found) {
             Coords coords = c->location->map->getLabel(dest);
-            if (!xu4_coords_equal(coords, xu4_coords_nowhere())) {
+            if (!zu4_coords_equal(coords, zu4_coords_nowhere())) {
                 screenMessage("\n%s\n", dest.c_str());
                 c->location->coords = coords;
                 found = true;
@@ -274,7 +274,7 @@ bool CheatMenuController::keyPressed(int key) {
 
                 screenMessage("Dir: ");
                 movedir(&coords, readDir.waitFor(), c->location->map);
-                if (!xu4_coords_equal(coords, c->location->coords)) {            
+                if (!zu4_coords_equal(coords, c->location->coords)) {            
                     bool ok = false;
                     MapTile *ground = c->location->map->tileAt(coords, WITHOUT_OBJECTS);
 
@@ -319,7 +319,7 @@ bool CheatMenuController::keyPressed(int key) {
         screenMessage("\nX-it!\n");        
         if (!game->exitToParentMap())
             screenMessage("Not Here!\n");
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
         break;
 
     case 'y':
@@ -329,7 +329,7 @@ bool CheatMenuController::keyPressed(int key) {
         else {
             screenMessage("Leaving...\n");
             game->exitToParentMap();
-            xu4_music_play(c->location->map->music);
+            zu4_music_play(c->location->map->music);
         }
         break;
 

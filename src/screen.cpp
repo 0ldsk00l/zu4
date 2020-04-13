@@ -96,7 +96,7 @@ void screenInit() {
     
     screenLoadGraphicsFromConf();
       
-    xu4_video_init();
+    zu4_video_init();
     
     /* if we can't use vga, reset to default:ega */
     if (!u4isUpgradeAvailable() && settings.videoType == 1)
@@ -115,7 +115,7 @@ void screenInit() {
             tileanims = set;
     }
     if (!tileanims)
-        xu4_error(XU4_LOG_ERR, "unable to find tile animations for \"%s\" video mode in graphics.xml", settings.videoType ? "VGA" : "EGA");
+        zu4_error(ZU4_LOG_ERR, "unable to find tile animations for \"%s\" video mode in graphics.xml", settings.videoType ? "VGA" : "EGA");
     
     dungeonTileChars.clear();
     dungeonTileChars["brick_floor"] = CHARSET_FLOOR;
@@ -146,7 +146,7 @@ void screenDelete() {
     for (i = layouts.begin(); i != layouts.end(); i++)
         delete(*i);
     layouts.clear();
-    xu4_video_deinit();
+    zu4_video_deinit();
     
     ImageMgr::destroy();
 }
@@ -309,7 +309,7 @@ void screenLoadGraphicsFromConf() {
         }
     }
     if (!gemlayout)
-        xu4_error(XU4_LOG_ERR, "no gem layout named %s found!\n", settings.gemLayout ? "Full Viewport" : "Standard");
+        zu4_error(ZU4_LOG_ERR, "no gem layout named %s found!\n", settings.gemLayout ? "Full Viewport" : "Standard");
 }
 
 Layout *screenLoadLayoutFromConf(const ConfigElement &conf) {
@@ -415,7 +415,7 @@ bool screenTileUpdate(TileView *view, const Coords &coords, bool redraw)
  * neither is set, the map area is left untouched.
  */
 void screenUpdate(TileView *view, bool showmap, bool blackout) {
-    xu4_assert(c != NULL, "context has not yet been initialized");
+    zu4_assert(c != NULL, "context has not yet been initialized");
 
     //screenLock();
 
@@ -470,7 +470,7 @@ void screenUpdate(TileView *view, bool showmap, bool blackout) {
 void screenDrawImage(const string &name, int x, int y) {
     ImageInfo *info = imageMgr->get(name);
     if (info) {
-        xu4_img_draw(info->image, x, y);
+        zu4_img_draw(info->image, x, y);
         return;
     }
     
@@ -480,14 +480,14 @@ void screenDrawImage(const string &name, int x, int y) {
     }
     
     if (info) {
-        xu4_img_draw_subrect(info->image, x, y,
+        zu4_img_draw_subrect(info->image, x, y,
                                  subimage->x,
                                  subimage->y,
                                  subimage->width,
                                  subimage->height);
         return;
     }
-    xu4_error(XU4_LOG_ERR, "ERROR 1006: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", name.c_str());
+    zu4_error(ZU4_LOG_ERR, "ERROR 1006: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", name.c_str());
 }
 
 void screenDrawImageInMapArea(const string &name) {
@@ -495,9 +495,9 @@ void screenDrawImageInMapArea(const string &name) {
     
     info = imageMgr->get(name);
     if (!info)
-        xu4_error(XU4_LOG_ERR, "ERROR 1004: Unable to load data files.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/");
+        zu4_error(ZU4_LOG_ERR, "ERROR 1004: Unable to load data files.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/");
     
-    xu4_img_draw_subrect(info->image, BORDER_WIDTH, BORDER_HEIGHT,
+    zu4_img_draw_subrect(info->image, BORDER_WIDTH, BORDER_HEIGHT,
                              BORDER_WIDTH, BORDER_HEIGHT,
                              VIEWPORT_W * TILE_WIDTH, 
                              VIEWPORT_H * TILE_HEIGHT);
@@ -511,7 +511,7 @@ void screenTextColor(int color) {
     /*if (charsetInfo == NULL) {
         charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!charsetInfo)
-            xu4_error(XU4_LOG_ERR, "ERROR 1003: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
+            zu4_error(ZU4_LOG_ERR, "ERROR 1003: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
     }
     
 	if (!settings.enhancements || !settings.enhancementsOptions.textColorization) {
@@ -538,10 +538,10 @@ void screenShowChar(int chr, int x, int y) {
     if (charsetInfo == NULL) {
         charsetInfo = imageMgr->get(BKGD_CHARSET);
         if (!charsetInfo)
-            xu4_error(XU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
+            zu4_error(ZU4_LOG_ERR, "ERROR 1001: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_CHARSET);
     }
     
-    xu4_img_draw_subrect(charsetInfo->image, x * charsetInfo->image->w, y * CHAR_HEIGHT,
+    zu4_img_draw_subrect(charsetInfo->image, x * charsetInfo->image->w, y * CHAR_HEIGHT,
                                     0, chr * CHAR_HEIGHT,
                                     charsetInfo->image->w, CHAR_HEIGHT);
 }
@@ -550,11 +550,11 @@ void screenShowChar(int chr, int x, int y) {
  * Scroll the text in the message area up one position.
  */
 void screenScrollMessageArea() {
-    xu4_assert(charsetInfo != NULL && charsetInfo->image != NULL, "charset not initialized!");
+    zu4_assert(charsetInfo != NULL && charsetInfo->image != NULL, "charset not initialized!");
     
-    Image *screen = xu4_img_get_screen();
+    Image *screen = zu4_img_get_screen();
     
-    xu4_img_draw_subrect_on(screen, screen,
+    zu4_img_draw_subrect_on(screen, screen,
                           TEXT_AREA_X * charsetInfo->image->w, 
                           TEXT_AREA_Y * CHAR_HEIGHT,
                           TEXT_AREA_X * charsetInfo->image->w,
@@ -563,7 +563,7 @@ void screenScrollMessageArea() {
                           (TEXT_AREA_H - 1) * CHAR_HEIGHT);
     
     
-    xu4_img_fill(screen, TEXT_AREA_X * charsetInfo->image->w,
+    zu4_img_fill(screen, TEXT_AREA_X * charsetInfo->image->w,
                      TEXT_AREA_Y * CHAR_HEIGHT + (TEXT_AREA_H - 1) * CHAR_HEIGHT,
                      TEXT_AREA_W * charsetInfo->image->w,
                      CHAR_HEIGHT,
@@ -578,7 +578,7 @@ void screenCycle() {
 void screenUpdateCursor() {
     int phase = screenCurrentCycle * SCR_CYCLE_PER_SECOND / SCR_CYCLE_MAX;
 
-    xu4_assert(phase >= 0 && phase < 4, "derived an invalid cursor phase: %d", phase);
+    zu4_assert(phase >= 0 && phase < 4, "derived an invalid cursor phase: %d", phase);
 
     if (screenCursorStatus) {
         screenShowChar(31 - phase, screenCursorX, screenCursorY);
@@ -685,7 +685,7 @@ void screenFindLineOfSight(vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H
     else if (settings.lineOfSight)
         screenFindLineOfSightEnhanced(viewportTiles);
     else
-        xu4_error(XU4_LOG_ERR, "unknown line of sight style %s!\n", settings.lineOfSight ? "Enhanced" : "DOS");
+        zu4_error(ZU4_LOG_ERR, "unknown line of sight style %s!\n", settings.lineOfSight ? "Enhanced" : "DOS");
 }        
 
 
@@ -980,8 +980,8 @@ void screenRedrawMapArea() {
 }
 
 void screenEraseMapArea() {
-    Image *screen = xu4_img_get_screen();
-    xu4_img_fill(screen, BORDER_WIDTH,
+    Image *screen = zu4_img_get_screen();
+    zu4_img_fill(screen, BORDER_WIDTH,
                      BORDER_WIDTH,
                      VIEWPORT_W * TILE_WIDTH,
                      VIEWPORT_H * TILE_HEIGHT,
@@ -989,8 +989,8 @@ void screenEraseMapArea() {
 }
 
 void screenEraseTextArea(int x, int y, int width, int height) {
-    Image *screen = xu4_img_get_screen();
-    xu4_img_fill(screen, x * CHAR_WIDTH,
+    Image *screen = zu4_img_get_screen();
+    zu4_img_fill(screen, x * CHAR_WIDTH,
                      y * CHAR_HEIGHT,
                      width * CHAR_WIDTH,
                      height * CHAR_HEIGHT,
@@ -1004,7 +1004,7 @@ void screenShake(int iterations) {
     return; // FIXME - reimplement this properly after redoing video
     /*int shakeOffset;
     unsigned short i;
-    Image *screen = xu4_img_get_screen();
+    Image *screen = zu4_img_get_screen();
     Image *bottom;
     
     // the MSVC8 binary was generating a Access Violation when using
@@ -1026,7 +1026,7 @@ void screenShake(int iterations) {
             // shift the screen down and make the top row black
             screen->drawSubRectOn(screen, 0, (shakeOffset), 0, 0, 320, (200-(shakeOffset+1)));
             bottom->drawOn(screen, 0, (200-(shakeOffset)));
-            xu4_img_fill(screen, 0, 0, (320), (shakeOffset), 0, 0, 0, 255);
+            zu4_img_fill(screen, 0, 0, (320), (shakeOffset), 0, 0, 0, 255);
             EventHandler::sleep(settings.shakeInterval);
             
             // shift the screen back up, and replace the bottom row
@@ -1051,10 +1051,10 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
     unsigned int tile = map->translateToRawTileIndex(t);
     
     if (map->type == Map::DUNGEON) {
-        xu4_assert(charsetInfo, "charset not initialized");
+        zu4_assert(charsetInfo, "charset not initialized");
         std::map<string, int>::iterator charIndex = dungeonTileChars.find(t.getTileType()->getName());
         if (charIndex != dungeonTileChars.end()) {
-            xu4_img_draw_subrect(charsetInfo->image, (layout->viewport.x + (x * layout->tileshape.width)),
+            zu4_img_draw_subrect(charsetInfo->image, (layout->viewport.x + (x * layout->tileshape.width)),
                                             (layout->viewport.y + (y * layout->tileshape.height)),
                                             0, 
                                             charIndex->second * layout->tileshape.height, 
@@ -1066,19 +1066,19 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
         if (gemTilesInfo == NULL) {
             gemTilesInfo = imageMgr->get(BKGD_GEMTILES);
             if (!gemTilesInfo)
-                xu4_error(XU4_LOG_ERR, "ERROR 1002: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_GEMTILES);
+                zu4_error(ZU4_LOG_ERR, "ERROR 1002: Unable to load the \"%s\" data file.\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_GEMTILES);
         }
         
         if (tile < 128) {
-            xu4_img_draw_subrect(gemTilesInfo->image, (layout->viewport.x + (x * layout->tileshape.width)),
+            zu4_img_draw_subrect(gemTilesInfo->image, (layout->viewport.x + (x * layout->tileshape.width)),
                                              (layout->viewport.y + (y * layout->tileshape.height)),
                                              0, 
                                              tile * layout->tileshape.height,
                                              layout->tileshape.width,
                                              layout->tileshape.height);
         } else {
-            Image *screen = xu4_img_get_screen();
-            xu4_img_fill(screen, (layout->viewport.x + (x * layout->tileshape.width)),
+            Image *screen = zu4_img_get_screen();
+            zu4_img_fill(screen, (layout->viewport.x + (x * layout->tileshape.width)),
                              (layout->viewport.y + (y * layout->tileshape.height)),
                              layout->tileshape.width,
                              layout->tileshape.height,
@@ -1096,7 +1096,7 @@ Layout *screenGetGemLayout(const Map *map) {
             if (layout->type == LAYOUT_DUNGEONGEM)
                 return layout;
         }
-        xu4_error(XU4_LOG_ERR, "no dungeon gem layout found!\n");
+        zu4_error(ZU4_LOG_ERR, "no dungeon gem layout found!\n");
         return NULL;
     }
     else
@@ -1107,9 +1107,9 @@ Layout *screenGetGemLayout(const Map *map) {
 void screenGemUpdate() {
     MapTile tile;
     int x, y;
-    Image *screen = xu4_img_get_screen();
+    Image *screen = zu4_img_get_screen();
     
-    xu4_img_fill(screen, BORDER_WIDTH, 
+    zu4_img_fill(screen, BORDER_WIDTH, 
                      BORDER_HEIGHT,
                      VIEWPORT_W * TILE_WIDTH, 
                      VIEWPORT_H * TILE_HEIGHT,

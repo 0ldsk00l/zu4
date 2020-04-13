@@ -39,7 +39,7 @@ PartyMember::PartyMember(Party *p, SaveGamePlayerRecord *pr) :
 {
     /* FIXME: we need to rename movement behaviors */
     setMovementBehavior(MOVEMENT_ATTACK_AVATAR);
-    weapon_t *w = xu4_weapon(pr->weapon);
+    weapon_t *w = zu4_weapon(pr->weapon);
     // FIXME: converted from original, are all weapons really considered ranged? Broken somewhere else?
     this->ranged = w->range ? 1 : 0;
     setStatus(pr->status);
@@ -65,21 +65,21 @@ string PartyMember::translate(std::vector<string>& parts) {
         return "";
     else if (parts.size() == 1) {
         if (parts[0] == "hp")
-            return xu4_to_string(getHp());
+            return zu4_to_string(getHp());
         else if (parts[0] == "max_hp")
-            return xu4_to_string(getMaxHp());
+            return zu4_to_string(getMaxHp());
         else if (parts[0] == "mp")
-            return xu4_to_string(getMp());
+            return zu4_to_string(getMp());
         else if (parts[0] == "max_mp")
-            return xu4_to_string(getMaxMp());
+            return zu4_to_string(getMaxMp());
         else if (parts[0] == "str")
-            return xu4_to_string(getStr());
+            return zu4_to_string(getStr());
         else if (parts[0] == "dex")
-            return xu4_to_string(getDex());
+            return zu4_to_string(getDex());
         else if (parts[0] == "int")
-            return xu4_to_string(getInt());
+            return zu4_to_string(getInt());
         else if (parts[0] == "exp")
-            return xu4_to_string(getExp());
+            return zu4_to_string(getExp());
         else if (parts[0] == "name")
             return getName();
         else if (parts[0] == "weapon") {
@@ -98,7 +98,7 @@ string PartyMember::translate(std::vector<string>& parts) {
         else if (parts[0] == "class")
             return getClassName(getClass());
         else if (parts[0] == "level")
-            return xu4_to_string(getRealLevel());
+            return zu4_to_string(getRealLevel());
     }
     else if (parts.size() == 2) {
         if (parts[0] == "needs") {
@@ -156,7 +156,7 @@ int PartyMember::getMaxMp() const {
         break;
 
     default:
-        xu4_assert(0, "invalid player class: %d", player->klass);
+        zu4_assert(0, "invalid player class: %d", player->klass);
     }
 
     /* mp always maxes out at 99 */
@@ -166,8 +166,8 @@ int PartyMember::getMaxMp() const {
     return max_mp;
 }
 
-const weapon_t *PartyMember::getWeapon() const { return xu4_weapon(player->weapon); }
-const armor_t *PartyMember::getArmor() const   { return xu4_armor(player->armor); }
+const weapon_t *PartyMember::getWeapon() const { return zu4_weapon(player->weapon); }
+const armor_t *PartyMember::getArmor() const   { return zu4_armor(player->armor); }
 string PartyMember::getName() const          { return player->name; }
 SexType PartyMember::getSex() const          { return player->sex; }
 ClassType PartyMember::getClass() const      { return player->klass; }
@@ -232,9 +232,9 @@ void PartyMember::advanceLevel() {
     player->hp = player->hpMax;
 
     /* improve stats by 1-8 each */
-    player->str   += xu4_random(8) + 1;
-    player->dex   += xu4_random(8) + 1;
-    player->intel += xu4_random(8) + 1;
+    player->str   += zu4_random(8) + 1;
+    player->dex   += zu4_random(8) + 1;
+    player->intel += zu4_random(8) + 1;
 
     if (player->str > 50) player->str = 50;
     if (player->dex > 50) player->dex = 50;
@@ -260,10 +260,10 @@ void PartyMember::applyEffect(TileEffect effect) {
         break;
     case EFFECT_LAVA:
     case EFFECT_FIRE:
-        applyDamage(16 + (xu4_random(32)));
+        applyDamage(16 + (zu4_random(32)));
 
-        /*else if (player == ALL_PLAYERS && xu4_random(2) == 0)
-            playerApplyDamage(&(c->saveGame->players[i]), 10 + (xu4_random(25)));*/
+        /*else if (player == ALL_PLAYERS && zu4_random(2) == 0)
+            playerApplyDamage(&(c->saveGame->players[i]), 10 + (zu4_random(25)));*/
         break;
     case EFFECT_SLEEP:        
         putToSleep();
@@ -271,13 +271,13 @@ void PartyMember::applyEffect(TileEffect effect) {
     case EFFECT_POISONFIELD:
     case EFFECT_POISON:
         if (getStatus() != STAT_POISONED) {
-            xu4_snd_play(SOUND_POISON_EFFECT, false, -1);
+            zu4_snd_play(SOUND_POISON_EFFECT, false, -1);
             addStatus(STAT_POISONED);
         }
         break;
     case EFFECT_ELECTRICITY: break;
     default:
-        xu4_assert(0, "invalid effect: %d", effect);
+        zu4_assert(0, "invalid effect: %d", effect);
     }
 
     if (effect != EFFECT_NONE)
@@ -325,21 +325,21 @@ bool PartyMember::heal(HealType type) {
             player->hp == player->hpMax)
             return false;        
 
-        player->hp += 75 + (xu4_random(0x100) % 0x19);
+        player->hp += 75 + (zu4_random(0x100) % 0x19);
         break;
 
     case HT_CAMPHEAL:
         if (getStatus() == STAT_DEAD ||
             player->hp == player->hpMax)
             return false;        
-        player->hp += 99 + (xu4_random(0x100) & 0x77);
+        player->hp += 99 + (zu4_random(0x100) & 0x77);
         break;
 
     case HT_INNHEAL:
         if (getStatus() == STAT_DEAD ||
             player->hp == player->hpMax)
             return false;        
-        player->hp += 100 + (xu4_random(50) * 2);
+        player->hp += 100 + (zu4_random(50) * 2);
         break;
 
     default:
@@ -377,7 +377,7 @@ EquipError PartyMember::setArmor(const ArmorType a) {
 
     if (a != ARMR_NONE && party->saveGame->armor[a] < 1)
         return EQUIP_NONE_LEFT;
-    if (!xu4_armor_wearable(a, getClass()))
+    if (!zu4_armor_wearable(a, getClass()))
         return EQUIP_CLASS_RESTRICTED;
 
     ArmorType oldArmorType = player->armor;
@@ -396,7 +396,7 @@ EquipError PartyMember::setWeapon(const WeaponType w) {
 
     if (w != WEAP_HANDS && party->saveGame->weapons[w] < 1)
         return EQUIP_NONE_LEFT;
-    if (!xu4_weapon_usable(w, getClass()))
+    if (!zu4_weapon_usable(w, getClass()))
         return EQUIP_CLASS_RESTRICTED;
 
     WeaponType old = player->weapon;
@@ -456,7 +456,7 @@ bool PartyMember::applyDamage(int damage, bool) {
 }
 
 int PartyMember::getAttackBonus() const {
-    weapon_t *w = xu4_weapon(player->weapon);
+    weapon_t *w = zu4_weapon(player->weapon);
     if (w->flags & WEAP_ALWAYSHITS || player->dex >= 40)
         return 255;
     return player->dex;
@@ -464,7 +464,7 @@ int PartyMember::getAttackBonus() const {
 
 int PartyMember::getDefense() const {
     //return Armor::get(player->armor)->getDefense();
-    return xu4_armor_defense(player->armor);
+    return zu4_armor_defense(player->armor);
 }
 
 bool PartyMember::dealDamage(Creature *m, int damage) {
@@ -484,12 +484,12 @@ bool PartyMember::dealDamage(Creature *m, int damage) {
  * Calculate damage for an attack.
  */
 int PartyMember::getDamage() {
-    weapon_t *w = xu4_weapon(player->weapon);
+    weapon_t *w = zu4_weapon(player->weapon);
     int maxDamage = w->damage + player->str;
     if (maxDamage > 255)
         maxDamage = 255;
 
-    return xu4_random(maxDamage);
+    return zu4_random(maxDamage);
 }
 
 /**
@@ -546,7 +546,7 @@ int PartyMember::loseWeapon() {
  */
 void PartyMember::putToSleep() {    
     if (getStatus() != STAT_DEAD) {
-        xu4_snd_play(SOUND_SLEEP, false, -1);
+        zu4_snd_play(SOUND_SLEEP, false, -1);
         addStatus(STAT_SLEEPING);
         setTile(Tileset::findTileByName("corpse")->getId());
     }
@@ -589,11 +589,11 @@ MapTile PartyMember::tileForClass(int klass) {
         name = "shepherd";
         break;
     default:
-        xu4_assert(0, "invalid class %d in tileForClass", klass);
+        zu4_assert(0, "invalid class %d in tileForClass", klass);
     }
 
     const Tile *tile = Tileset::get("base")->getByName(name);
-    xu4_assert(tile != nullptr, "no tile found for class %d", klass);
+    zu4_assert(tile != nullptr, "no tile found for class %d", klass);
     return tile->getId();
 }
 
@@ -642,27 +642,27 @@ string Party::translate(std::vector<string>& parts) {
                 return "balloon";
         }
         else if (parts[0] == "gold")
-            return xu4_to_string(saveGame->gold);
+            return zu4_to_string(saveGame->gold);
         else if (parts[0] == "food")
-            return xu4_to_string(saveGame->food);
+            return zu4_to_string(saveGame->food);
         else if (parts[0] == "members")
-            return xu4_to_string(size());
+            return zu4_to_string(size());
         else if (parts[0] == "keys")        
-            return xu4_to_string(saveGame->keys);
+            return zu4_to_string(saveGame->keys);
         else if (parts[0] == "torches")
-            return xu4_to_string(saveGame->torches);
+            return zu4_to_string(saveGame->torches);
         else if (parts[0] == "gems")
-            return xu4_to_string(saveGame->gems);
+            return zu4_to_string(saveGame->gems);
         else if (parts[0] == "sextants")
-            return xu4_to_string(saveGame->sextants);
+            return zu4_to_string(saveGame->sextants);
         else if (parts[0] == "food")
-            return xu4_to_string((saveGame->food / 100));
+            return zu4_to_string((saveGame->food / 100));
         else if (parts[0] == "gold")
-            return xu4_to_string(saveGame->gold);
+            return zu4_to_string(saveGame->gold);
         else if (parts[0] == "party_members")
-            return xu4_to_string(saveGame->members);
+            return zu4_to_string(saveGame->members);
         else if (parts[0] == "moves")
-            return xu4_to_string(saveGame->moves);
+            return zu4_to_string(saveGame->moves);
     }
     else if (parts.size() >= 2) {
         if (parts[0].find_first_of("member") == 0) {
@@ -687,16 +687,16 @@ string Party::translate(std::vector<string>& parts) {
             if (parts[0] == "weapon") {
                 /*const Weapon *w = Weapon::get(parts[1]);
                 if (w)
-                    return xu4_to_string(saveGame->weapons[w->getType()]);*/
-                WeaponType wtype = xu4_weapon_type(parts[1].c_str());
-                return xu4_to_string(saveGame->weapons[wtype]);
+                    return zu4_to_string(saveGame->weapons[w->getType()]);*/
+                WeaponType wtype = zu4_weapon_type(parts[1].c_str());
+                return zu4_to_string(saveGame->weapons[wtype]);
             }
             else if (parts[0] == "armor") {
                 /*const Armor *a = Armor::get(parts[1]);
                 if (a)
-                    return xu4_to_string(saveGame->armor[a->getType()]);*/
-                ArmorType atype = xu4_armor_type(parts[1].c_str());
-                return xu4_to_string(saveGame->armor[atype]);
+                    return zu4_to_string(saveGame->armor[a->getType()]);*/
+                ArmorType atype = zu4_armor_type(parts[1].c_str());
+                return zu4_to_string(saveGame->armor[atype]);
             }
         }
     }    
@@ -781,7 +781,7 @@ void Party::adjustKarma(KarmaAction action) {
         AdjustValueMin(newKarma[VIRT_SACRIFICE], -2, 1);
         break;
     case KA_KILLED_EVIL:
-        AdjustValueMax(newKarma[VIRT_VALOR], xu4_random(2), maxVal[VIRT_VALOR]); /* gain one valor half the time, zero the rest */
+        AdjustValueMax(newKarma[VIRT_VALOR], zu4_random(2), maxVal[VIRT_VALOR]); /* gain one valor half the time, zero the rest */
         break;
     case KA_FLED_GOOD:
         AdjustValueMax(newKarma[VIRT_COMPASSION], 2, maxVal[VIRT_COMPASSION]);
@@ -865,11 +865,11 @@ void Party::applyEffect(TileEffect effect) {
         case EFFECT_LAVA:
         case EFFECT_FIRE:        
         case EFFECT_SLEEP:
-            if (xu4_random(2) == 0)
+            if (zu4_random(2) == 0)
                 members[i]->applyEffect(effect);
         case EFFECT_POISONFIELD:
         case EFFECT_POISON:
-            if (xu4_random(5) == 0)
+            if (zu4_random(5) == 0)
                 members[i]->applyEffect(effect);
         }        
     }
@@ -975,7 +975,7 @@ void Party::endTurn() {
 
             switch (members[i]->getStatus()) {
             case STAT_SLEEPING:
-                if (xu4_random(5) == 0)
+                if (zu4_random(5) == 0)
                     members[i]->wakeUp();                    
                 break;
 
@@ -986,7 +986,7 @@ void Party::endTurn() {
                  * begins, the sound is played  after the combat
                  * screen appears
                  */
-                xu4_snd_play(SOUND_POISON_DAMAGE, false, -1);
+                zu4_snd_play(SOUND_POISON_DAMAGE, false, -1);
                 members[i]->applyDamage(2);
                 break;
 
@@ -1008,7 +1008,7 @@ void Party::endTurn() {
     }
     
     /* heal ship (25% chance it is healed each turn) */
-    if ((c->location->context == CTX_WORLDMAP) && (saveGame->shiphull < 50) && xu4_random(4) == 0)
+    if ((c->location->context == CTX_WORLDMAP) && (saveGame->shiphull < 50) && zu4_random(4) == 0)
         healShip(1);
 }
 
@@ -1016,7 +1016,7 @@ void Party::endTurn() {
  * Adds a chest worth of gold to the party's inventory
  */
 int Party::getChest() {
-    int gold = xu4_random(50) + xu4_random(8) + 10;
+    int gold = zu4_random(50) + zu4_random(8) + 10;
     adjustGold(gold);    
 
     return gold;
@@ -1188,7 +1188,7 @@ MapTile Party::getTransport() const {
 void Party::setTransport(MapTile tile) {
     // transport value stored in savegame hardcoded to index into base tilemap
     saveGame->transport = TileMap::get("base")->untranslate(tile);
-    xu4_assert(saveGame->transport != 0, "could not generate valid savegame transport for tile with id %d\n", tile.id);
+    zu4_assert(saveGame->transport != 0, "could not generate valid savegame transport for tile with id %d\n", tile.id);
 
     transport = tile;
     
@@ -1250,8 +1250,8 @@ int Party::getActivePlayer() const {
 }
 
 void Party::swapPlayers(int p1, int p2) {
-    xu4_assert(p1 < saveGame->members, "p1 out of range: %d", p1);
-    xu4_assert(p2 < saveGame->members, "p2 out of range: %d", p2);
+    zu4_assert(p1 < saveGame->members, "p1 out of range: %d", p1);
+    zu4_assert(p2 < saveGame->members, "p2 out of range: %d", p2);
 
     SaveGamePlayerRecord tmp = saveGame->players[p1];
     saveGame->players[p1] = c->saveGame->players[p2];

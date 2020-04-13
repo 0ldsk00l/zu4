@@ -122,7 +122,7 @@ KeyHandlerController::~KeyHandlerController() {
 }
 
 bool KeyHandlerController::keyPressed(int key) {
-    xu4_assert(handler != NULL, "key handler must be initialized");
+    zu4_assert(handler != NULL, "key handler must be initialized");
     return handler->handle(key);
 }
 
@@ -140,7 +140,7 @@ TimedEventMgr::TimedEventMgr(int i) : baseInterval(i) {
     /* start the SDL timer */    
     if (instances == 0) {
         if (u4_SDL_InitSubSystem(SDL_INIT_TIMER) < 0)
-            xu4_error(XU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());
+            zu4_error(ZU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());
     }
 
     id = SDL_AddTimer(i, &TimedEventMgr::callback, this);
@@ -285,7 +285,7 @@ void EventHandler::sleep(unsigned int usec) {
 				break;
 			}
 		}
-		xu4_ogl_swap();
+		zu4_ogl_swap();
     }
 }
 
@@ -313,7 +313,7 @@ void EventHandler::run() {
 				break;
 			}
 		}
-		xu4_ogl_swap();
+		zu4_ogl_swap();
     }
 }
 
@@ -364,7 +364,7 @@ KeyHandler *EventHandler::getKeyHandler() const {
         return NULL;
 
     KeyHandlerController *khc = dynamic_cast<KeyHandlerController *>(controllers.back());
-    xu4_assert(khc != NULL, "EventHandler::getKeyHandler called when controller wasn't a keyhandler");
+    zu4_assert(khc != NULL, "EventHandler::getKeyHandler called when controller wasn't a keyhandler");
     if (khc == NULL)
         return NULL;
 

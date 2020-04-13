@@ -24,16 +24,16 @@ enum MusicTrack {
 	TRACK_MAX
 };
 
-void xu4_music_play(int);
-void xu4_music_stop();
-void xu4_music_fadeout(int);
-void xu4_music_fadein(int, bool);
-void xu4_music_vol(double);
-int xu4_music_vol_dec();
-int xu4_music_vol_inc();
-bool xu4_music_toggle();
-void xu4_music_init();
-void xu4_music_deinit();
+void zu4_music_play(int);
+void zu4_music_stop();
+void zu4_music_fadeout(int);
+void zu4_music_fadein(int, bool);
+void zu4_music_vol(double);
+int zu4_music_vol_dec();
+int zu4_music_vol_inc();
+bool zu4_music_toggle();
+void zu4_music_init();
+void zu4_music_deinit();
 
 #ifdef __cplusplus
 }

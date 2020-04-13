@@ -56,7 +56,7 @@ void deathStart(int delay) {
         return;
     
     // stop playing music
-    xu4_music_fadeout(1000);
+    zu4_music_fadeout(1000);
 
     deathSequenceRunning = 1;
     timerCount = 0;
@@ -115,7 +115,7 @@ void deathRevive() {
     c->aura->set();
     c->horseSpeed = 0;
     c->lastCommandTime = time(NULL);    
-    xu4_music_play(c->location->map->music);
+    zu4_music_play(c->location->map->music);
 
     c->party->reviveParty();
 

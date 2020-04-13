@@ -23,7 +23,7 @@ TileView::TileView(int x, int y, int columns, int rows) : View(x, y, columns * T
     this->tileWidth = TILE_WIDTH;
     this->tileHeight = TILE_HEIGHT;
     this->tileset = Tileset::get("base");
-    animated = xu4_img_create(tileWidth, tileHeight);
+    animated = zu4_img_create(tileWidth, tileHeight);
 }
 
 TileView::TileView(int x, int y, int columns, int rows, const string &tileset) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
@@ -32,7 +32,7 @@ TileView::TileView(int x, int y, int columns, int rows, const string &tileset) :
     this->tileWidth = TILE_WIDTH;
     this->tileHeight = TILE_HEIGHT;
     this->tileset = Tileset::get(tileset);
-    animated = xu4_img_create(tileWidth, tileHeight);
+    animated = zu4_img_create(tileWidth, tileHeight);
 }
 
 TileView::~TileView() {
@@ -49,7 +49,7 @@ void TileView::reinit() {
     	delete animated;
     	animated = NULL;
     }
-    animated = xu4_img_create(tileWidth, tileHeight);
+    animated = zu4_img_create(tileWidth, tileHeight);
 }
 
 void TileView::loadTile(MapTile &mapTile)
@@ -67,13 +67,13 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
     Tile *tile = tileset->get(mapTile.id);
     Image *image = tile->getImage();
 
-    xu4_assert(x < columns, "x value of %d out of range", x);
-    xu4_assert(y < rows, "y value of %d out of range", y);
+    zu4_assert(x < columns, "x value of %d out of range", x);
+    zu4_assert(y < rows, "y value of %d out of range", y);
 
     //Blank scratch pad
-	xu4_img_fill(animated, 0,0,tileWidth,tileHeight,0,0,0,255);
+	zu4_img_fill(animated, 0,0,tileWidth,tileHeight,0,0,0,255);
 	//Draw blackness on the tile.
-	xu4_img_draw_subrect(animated, x * tileWidth + this->x,
+	zu4_img_draw_subrect(animated, x * tileWidth + this->x,
 						  y * tileHeight + this->y,
 						  0,
 						  0,
@@ -86,7 +86,7 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
         tile->getAnim()->draw(animated, tile, mapTile, DIR_NONE);
 
         // Then draw it to the screen
-        xu4_img_draw_subrect(animated, x * tileWidth + this->x,
+        zu4_img_draw_subrect(animated, x * tileWidth + this->x,
                               y * tileHeight + this->y,
                               0, 
                               0, 
@@ -94,7 +94,7 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
                               tileHeight);
     }
     else {
-        xu4_img_draw_subrect(image, x * tileWidth + this->x, 
+        zu4_img_draw_subrect(image, x * tileWidth + this->x, 
                            y * tileHeight + this->y,
                            0,
                            tileHeight * mapTile.frame,
@@ -108,11 +108,11 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
 }
 
 void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
-	xu4_assert(x < columns, "x value of %d out of range", x);
-	xu4_assert(y < rows, "y value of %d out of range", y);
+	zu4_assert(x < columns, "x value of %d out of range", x);
+	zu4_assert(y < rows, "y value of %d out of range", y);
 
-	xu4_img_fill(animated, 0,0,tileWidth,tileHeight,0,0,0,255);
-	xu4_img_draw_subrect(animated, x * tileWidth + this->x,
+	zu4_img_fill(animated, 0,0,tileWidth,tileHeight,0,0,0,255);
+	zu4_img_draw_subrect(animated, x * tileWidth + this->x,
 						  y * tileHeight + this->y,
 						  0,
 						  0,
@@ -145,14 +145,14 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 		else {
             if (!image)
                 return; //This is a problem //FIXME, error message it. 
-			xu4_img_draw_subrect_on(animated, image,
+			zu4_img_draw_subrect_on(animated, image,
 								0, 0,
 								0, tileHeight * frontTile.frame,
 								tileWidth,  tileHeight);
 		}
 
 		// Then draw it to the screen
-		xu4_img_draw_subrect(animated, x * tileWidth + this->x,
+		zu4_img_draw_subrect(animated, x * tileWidth + this->x,
 							  y * tileHeight + this->y,
 							  0,
 							  0,
@@ -170,36 +170,36 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
  * Draw a focus rectangle around the tile
  */
 void TileView::drawFocus(int x, int y) {
-    xu4_assert(x < columns, "x value of %d out of range", x);
-    xu4_assert(y < rows, "y value of %d out of range", y);
+    zu4_assert(x < columns, "x value of %d out of range", x);
+    zu4_assert(y < rows, "y value of %d out of range", y);
 
     /*
      * draw the focus rectangle around the tile
      */
     if ((screenCurrentCycle * 4 / SCR_CYCLE_PER_SECOND) % 2) {
         /* left edge */
-        xu4_img_fill(screen, x * tileWidth + this->x,
+        zu4_img_fill(screen, x * tileWidth + this->x,
                          y * tileHeight + this->y,
                          2,
                          tileHeight,
                          0xff, 0xff, 0xff, 0xff);
 
         /* top edge */
-        xu4_img_fill(screen, x * tileWidth + this->x,
+        zu4_img_fill(screen, x * tileWidth + this->x,
                          y * tileHeight + this->y,
                          tileWidth,
                          2,
                          0xff, 0xff, 0xff, 0xff);
 
         /* right edge */
-        xu4_img_fill(screen, (x + 1) * tileWidth + this->x - 2,
+        zu4_img_fill(screen, (x + 1) * tileWidth + this->x - 2,
                          y * tileHeight + this->y,
                          2,
                          tileHeight,
                          0xff, 0xff, 0xff, 0xff);
 
         /* bottom edge */
-        xu4_img_fill(screen, x * tileWidth + this->x,
+        zu4_img_fill(screen, x * tileWidth + this->x,
                          (y + 1) * tileHeight + this->y - 2,
                          tileWidth,
                          2,

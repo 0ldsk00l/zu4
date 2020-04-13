@@ -163,14 +163,14 @@ GameController::GameController() : mapArea(BORDER_WIDTH, BORDER_HEIGHT, VIEWPORT
 
 void GameController::initScreen()
 {
-    Image *screen = xu4_img_get_screen();
-    xu4_img_fill(screen, 0, 0, screen->w, screen->h, 0, 0, 0, 255);
+    Image *screen = zu4_img_get_screen();
+    zu4_img_fill(screen, 0, 0, screen->w, screen->h, 0, 0, 0, 255);
 }
 
 void GameController::initScreenWithoutReloadingState()
 {
-    xu4_music_play(c->location->map->music);
-    xu4_img_draw(imageMgr->get(BKGD_BORDERS)->image, 0, 0);
+    zu4_music_play(c->location->map->music);
+    zu4_img_draw(imageMgr->get(BKGD_BORDERS)->image, 0, 0);
     c->stats->update(); /* draw the party stats */
 
     screenMessage("Press Alt-h for help\n");
@@ -185,14 +185,14 @@ void GameController::deinit() {
 	delete c->aura;
 	delete c->stats;
 	free(c->saveGame);
-	xu4_ctx_deinit();
+	zu4_ctx_deinit();
 }
 
 void GameController::init() {
     FILE *saveGameFile, *monstersFile;
     char saveGameFileName[80];
 
-    xu4_error(XU4_LOG_DBG, "gameInit() running.");
+    zu4_error(ZU4_LOG_DBG, "gameInit() running.");
 
     initScreen();
 
@@ -205,10 +205,10 @@ void GameController::init() {
 
     /* initialize the global game context */
     //c = new Context;
-    c = xu4_ctx_init();
+    c = zu4_ctx_init();
     c->saveGame = (SaveGame*)calloc(1, sizeof(SaveGame));
 
-    xu4_error(XU4_LOG_DBG, "Global context initialized.");
+    zu4_error(ZU4_LOG_DBG, "Global context initialized.");
 
     /* initialize conversation and game state variables */    
     c->line = TEXT_AREA_H - 1;
@@ -225,7 +225,7 @@ void GameController::init() {
     c->lastShip = NULL;
 
     /* load in the save game */
-    u4settings_t *u4settings = xu4_settings_ptr();
+    u4settings_t *u4settings = zu4_settings_ptr();
     snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, PARTY_SAV_BASE_FILENAME);
     saveGameFile = fopen(saveGameFileName, "rb");
     if (saveGameFile) {
@@ -233,9 +233,9 @@ void GameController::init() {
         saveGameRead(c->saveGame, saveGameFile);
         fclose(saveGameFile);
     } else
-        xu4_error(XU4_LOG_ERR, "no savegame found!");
+        zu4_error(ZU4_LOG_ERR, "no savegame found!");
 
-    xu4_error(XU4_LOG_DBG, "Save game loaded."); ++pb;
+    zu4_error(ZU4_LOG_DBG, "Save game loaded."); ++pb;
 
     /* initialize our party */
     c->party = new Party(c->saveGame);
@@ -245,11 +245,11 @@ void GameController::init() {
     setMap(mapMgr->get(MAP_WORLD), 0, NULL);  
     c->location->map->clearObjects();
 
-    xu4_error(XU4_LOG_DBG, "World map set."); ++pb;
+    zu4_error(ZU4_LOG_DBG, "World map set."); ++pb;
 
     /* initialize our start location */
     Map *map = mapMgr->get(MapId(c->saveGame->location));
-    xu4_error(XU4_LOG_DBG, "Initializing start location.");
+    zu4_error(ZU4_LOG_DBG, "Initializing start location.");
 
     /* if our map is not the world map, then load our map */
     if (map->type != Map::WORLD)
@@ -283,7 +283,7 @@ void GameController::init() {
         c->location->coords.z = newcoords.z;
 	}
 
-    xu4_error(XU4_LOG_DBG, "Loading monsters."); ++pb;
+    zu4_error(ZU4_LOG_DBG, "Loading monsters."); ++pb;
 
     /* load in creatures.sav */
     snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, MONSTERS_SAV_BASE_FILENAME);
@@ -311,7 +311,7 @@ void GameController::init() {
 
     ++pb;
 
-    xu4_error(XU4_LOG_DBG, "Settings up reagent menu."); 
+    zu4_error(ZU4_LOG_DBG, "Settings up reagent menu."); 
     c->stats->resetReagentsMenu();
 
     /* add some observers */
@@ -319,7 +319,7 @@ void GameController::init() {
     c->party->addObserver(c->stats);
 
     initScreenWithoutReloadingState();
-    xu4_error(XU4_LOG_DBG, "gameInit() completed successfully."); 
+    zu4_error(ZU4_LOG_DBG, "gameInit() completed successfully."); 
 }
 
 /**
@@ -352,7 +352,7 @@ int gameSave() {
     /* Done making sure the savegame struct is accurate */
     /****************************************************/
 
-    u4settings_t *u4settings = xu4_settings_ptr();
+    u4settings_t *u4settings = zu4_settings_ptr();
     char saveGameFileName[80];
     snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, PARTY_SAV_BASE_FILENAME);
     saveGameFile = fopen(saveGameFileName, "wb");
@@ -503,7 +503,7 @@ void gameUpdateScreen() {
     case VIEW_MIXTURES: /* still testing */
         break;
     default:
-        xu4_assert(0, "invalid view mode: %d", c->location->viewMode);
+        zu4_assert(0, "invalid view mode: %d", c->location->viewMode);
     }
 }
 
@@ -704,7 +704,7 @@ void GameController::flashTile(const Coords &coords, MapTile tile, int frames) {
 
 void GameController::flashTile(const Coords &coords, const string &tilename, int timeFactor) {
     Tile *tile = c->location->map->tileset->getByName(tilename);
-    xu4_assert(tile, "no tile named '%s' found in tileset", tilename.c_str());
+    zu4_assert(tile, "no tile named '%s' found in tileset", tilename.c_str());
     flashTile(coords, tile->getId(), timeFactor);
 }
 
@@ -764,7 +764,7 @@ void gameSpellEffect(int spell, int player, int sound) {
         c->stats->highlightPlayer(player);
 
     time = settings.spellEffectSpeed * 800 / settings.gameCyclesPerSecond;
-    xu4_snd_play(sound, false, time);
+    zu4_snd_play(sound, false, time);
 
     ///The following effect multipliers are not accurate
     switch(spell)
@@ -793,7 +793,7 @@ void gameSpellEffect(int spell, int player, int sound) {
 
         if (effect == Spell::SFX_TREMOR) {
             gameUpdateScreen();
-            xu4_snd_play(SOUND_RUMBLE, false, -1);
+            zu4_snd_play(SOUND_RUMBLE, false, -1);
             screenShake(8);
 
         }
@@ -1039,26 +1039,26 @@ bool GameController::keyPressed(int key) {
         /* handle music volume adjustments */
         case ',':
             // decrease the volume if possible
-            screenMessage("Music: %d%s\n", xu4_music_vol_dec(), "%");
+            screenMessage("Music: %d%s\n", zu4_music_vol_dec(), "%");
             endTurn = false;
             break;
         case '.':
             // increase the volume if possible
-            screenMessage("Music: %d%s\n", xu4_music_vol_inc(), "%");
+            screenMessage("Music: %d%s\n", zu4_music_vol_inc(), "%");
             endTurn = false;
             break;
 
         /* handle sound volume adjustments */
         case '<':
             // decrease the volume if possible
-            screenMessage("Sound: %d%s\n", xu4_snd_vol_dec(), "%");
-            xu4_snd_play(SOUND_FLEE, true, -1);
+            screenMessage("Sound: %d%s\n", zu4_snd_vol_dec(), "%");
+            zu4_snd_play(SOUND_FLEE, true, -1);
             endTurn = false;
             break;
         case '>':
             // increase the volume if possible
-            screenMessage("Sound: %d%s\n", xu4_snd_vol_inc(), "%");
-            xu4_snd_play(SOUND_FLEE, true, -1);
+            screenMessage("Sound: %d%s\n", zu4_snd_vol_inc(), "%");
+            zu4_snd_play(SOUND_FLEE, true, -1);
             endTurn = false;
             break;
 
@@ -1224,7 +1224,7 @@ bool GameController::keyPressed(int key) {
 		}
 
         case 'v':
-            if (xu4_music_toggle())
+            if (zu4_music_toggle())
                 screenMessage("Volume On!\n");
             else
                 screenMessage("Volume Off!\n");
@@ -1242,7 +1242,7 @@ bool GameController::keyPressed(int key) {
                     c->lastShip = obj;
 
                 Tile *avatar = c->location->map->tileset->getByName("avatar");
-                xu4_assert(avatar, "no avatar tile found in tileset");
+                zu4_assert(avatar, "no avatar tile found in tileset");
                 c->party->setTransport(avatar->getId());
                 c->horseSpeed = 0;
                 screenMessage("X-it\n");
@@ -1373,7 +1373,7 @@ bool GameController::keyPressed(int key) {
 
                 // Fade out the music and hide the cursor
                 //before returning to the menu.
-                xu4_music_fadeout(1000);
+                zu4_music_fadeout(1000);
                 screenHideCursor();
 
                 intro->init();
@@ -1504,7 +1504,7 @@ int gameGetPlayer(bool canBeDisabled, bool canBeActivePlayer) {
         return -1;
     }
 
-    xu4_assert(player < c->party->size(), "player %d, but only %d members\n", player, c->party->size());
+    zu4_assert(player < c->party->size(), "player %d, but only %d members\n", player, c->party->size());
     return player;
 }
 
@@ -1904,7 +1904,7 @@ bool fireAt(const Coords &coords, bool originAvatar) {
         validObject = true;
 
     /* Does the cannon hit the avatar? */
-    if (xu4_coords_equal(coords, c->location->coords)) {
+    if (zu4_coords_equal(coords, c->location->coords)) {
         validObject = true;
         hitsAvatar = true;
     }        
@@ -1929,7 +1929,7 @@ bool fireAt(const Coords &coords, bool originAvatar) {
         /* only the avatar can hurt other creatures with cannon fire */
         else if (originAvatar) {
         	GameController::flashTile(coords, "hit_flash", 4);
-            if (xu4_random(4) == 0) /* reverse-engineered from u4dos */
+            if (zu4_random(4) == 0) /* reverse-engineered from u4dos */
                 c->location->map->removeObject(obj);
         }
             
@@ -2005,18 +2005,18 @@ void getChest(int player)
  **/
 bool getChestTrapHandler(int player) {            
     TileEffect trapType;
-    int randNum = xu4_random(4);    
+    int randNum = zu4_random(4);    
     
     /* Do we use u4dos's way of trap-determination, or the original intended way? */
     int passTest = (settings.enhancements && settings.enhancementsOptions.c64chestTraps) ?
-        (xu4_random(2) == 0) : /* xu4-enhanced */
+        (zu4_random(2) == 0) : /* xu4-enhanced */
         ((randNum & 1) == 0); /* u4dos original way (only allows even numbers through, so only acid and poison show) */
     
     /* Chest is trapped! 50/50 chance */
     if (passTest)
     {   
         /* Figure out which trap the chest has */
-        switch(randNum & xu4_random(4)) {
+        switch(randNum & zu4_random(4)) {
         case 0: trapType = EFFECT_FIRE; break;   /* acid trap (56% chance - 9/16) */
         case 1: trapType = EFFECT_SLEEP; break;  /* sleep trap (19% chance - 3/16) */
         case 2: trapType = EFFECT_POISON; break; /* poison trap (19% chance - 3/16) */
@@ -2040,7 +2040,7 @@ bool getChestTrapHandler(int player) {
         // evaded by testing the PC's dex
         //
         if ((player >= 0) && 
-            (c->saveGame->players[player].dex + 25 < xu4_random(100)))
+            (c->saveGame->players[player].dex + 25 < zu4_random(100)))
         {
             if (trapType == EFFECT_LAVA) /* bomb trap */
                 c->party->applyEffect(trapType);
@@ -2082,9 +2082,9 @@ void GameController::initMoons()
     int trammelphase = c->saveGame->trammelphase,
         feluccaphase = c->saveGame->feluccaphase;        
 
-    xu4_assert(c != NULL, "Game context doesn't exist!");
-    xu4_assert(c->saveGame != NULL, "Savegame doesn't exist!");
-    //xu4_assert(mapIsWorldMap(c->location->map) && c->location->viewMode == VIEW_NORMAL, "Can only call gameInitMoons() from the world map!");
+    zu4_assert(c != NULL, "Game context doesn't exist!");
+    zu4_assert(c->saveGame != NULL, "Savegame doesn't exist!");
+    //zu4_assert(mapIsWorldMap(c->location->map) && c->location->viewMode == VIEW_NORMAL, "Can only call gameInitMoons() from the world map!");
 
     c->saveGame->trammelphase = c->saveGame->feluccaphase = 0;
     c->moonPhase = 0;
@@ -2209,7 +2209,7 @@ void GameController::avatarMoved(MoveEvent &event) {
                     screenMessage("%cDrift Only!%c\n", FG_GREY, FG_WHITE);
                     break;
                 default:
-                    xu4_assert(0, "bad transportContext %d in avatarMoved()", c->transportContext);
+                    zu4_assert(0, "bad transportContext %d in avatarMoved()", c->transportContext);
             }
         }
 
@@ -2238,30 +2238,30 @@ void GameController::avatarMoved(MoveEvent &event) {
 
             /* if we're still blocked */
             if ((event.result & MOVE_BLOCKED) && !settings.filterMoveMessages) {
-                xu4_snd_play(SOUND_BLOCKED, false, -1);
+                zu4_snd_play(SOUND_BLOCKED, false, -1);
                 screenMessage("%cBlocked!%c\n", FG_GREY, FG_WHITE);
             }
         }
         else if (c->transportContext == TRANSPORT_FOOT || c->transportContext == TRANSPORT_HORSE) {
             /* movement was slowed */
             if (event.result & MOVE_SLOWED) {
-                xu4_snd_play(SOUND_WALK_SLOWED, true, -1);
+                zu4_snd_play(SOUND_WALK_SLOWED, true, -1);
                 screenMessage("%cSlow progress!%c\n", FG_GREY, FG_WHITE);
             }
             else if (c->horseSpeed == 1) {
-                switch(xu4_random(4)) {
-                    case 1: xu4_snd_play(SOUND_HORSE_NORMAL_1, true, -1); break;
-                    case 2: xu4_snd_play(SOUND_HORSE_NORMAL_2, true, -1); break;
-                    case 3: xu4_snd_play(SOUND_HORSE_NORMAL_3, true, -1); break;
-                    default: xu4_snd_play(SOUND_HORSE_NORMAL_4, true, -1); break;
+                switch(zu4_random(4)) {
+                    case 1: zu4_snd_play(SOUND_HORSE_NORMAL_1, true, -1); break;
+                    case 2: zu4_snd_play(SOUND_HORSE_NORMAL_2, true, -1); break;
+                    case 3: zu4_snd_play(SOUND_HORSE_NORMAL_3, true, -1); break;
+                    default: zu4_snd_play(SOUND_HORSE_NORMAL_4, true, -1); break;
 				}
             }
             else {
-                switch(xu4_random(4)) {
-                    case 1: xu4_snd_play(SOUND_WALK_NORMAL_1, true, -1); break;
-                    case 2: xu4_snd_play(SOUND_WALK_NORMAL_2, true, -1); break;
-                    case 3: xu4_snd_play(SOUND_WALK_NORMAL_3, true, -1); break;
-                    default: xu4_snd_play(SOUND_WALK_NORMAL_4, true, -1); break;
+                switch(zu4_random(4)) {
+                    case 1: zu4_snd_play(SOUND_WALK_NORMAL_1, true, -1); break;
+                    case 2: zu4_snd_play(SOUND_WALK_NORMAL_2, true, -1); break;
+                    case 3: zu4_snd_play(SOUND_WALK_NORMAL_3, true, -1); break;
+                    default: zu4_snd_play(SOUND_WALK_NORMAL_4, true, -1); break;
 				}
             }
         }
@@ -2271,7 +2271,7 @@ void GameController::avatarMoved(MoveEvent &event) {
     if (event.result & MOVE_EXIT_TO_PARENT) {
         screenMessage("%cLeaving...%c\n", FG_GREY, FG_WHITE);
         exitToParentMap();
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
     }
 
     /* things that happen while not on board the balloon */
@@ -2311,7 +2311,7 @@ void GameController::avatarMovedInDungeon(MoveEvent &event) {
     if (event.result & MOVE_EXIT_TO_PARENT) {
         screenMessage("%cLeaving...%c\n", FG_GREY, FG_WHITE);
         exitToParentMap();
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
     }
 
     /* check to see if we're entering a dungeon room */
@@ -2368,7 +2368,7 @@ bool jimmyAt(const Coords &coords) {
         
     if (c->saveGame->keys) {
         Tile *door = c->location->map->tileset->getByName("door");
-        xu4_assert(door, "no door tile found in tileset");
+        zu4_assert(door, "no door tile found in tileset");
         c->saveGame->keys--;
         c->location->map->annotations->add(coords, door->getId());
         screenMessage("\nUnlocked!\n");
@@ -2420,7 +2420,7 @@ bool openAt(const Coords &coords) {
     }
     
     Tile *floor = c->location->map->tileset->getByName("brick_floor");
-    xu4_assert(floor, "no floor tile found in tileset");
+    zu4_assert(floor, "no floor tile found in tileset");
     c->location->map->annotations->add(coords, floor->getId(), false, true)->setTTL(4);
 
     screenMessage("\nOpened!\n");
@@ -2457,7 +2457,7 @@ void readyWeapon(int player) {
     }*/
     switch (p->setWeapon(weapon)) {
     case EQUIP_SUCCEEDED:
-        screenMessage("%s\n", xu4_weapon_name(weapon));
+        screenMessage("%s\n", zu4_weapon_name(weapon));
         break;
     case EQUIP_NONE_LEFT:
         screenMessage("%cNone left!%c\n", FG_GREY, FG_WHITE);
@@ -2465,7 +2465,7 @@ void readyWeapon(int player) {
     case EQUIP_CLASS_RESTRICTED: {
         string indef_article;
 
-        switch(tolower(xu4_weapon_name(weapon)[0])) {
+        switch(tolower(zu4_weapon_name(weapon)[0])) {
         case 'a': case 'e': case 'i':
         case 'o': case 'u': case 'y':
             indef_article = "an"; break;
@@ -2474,7 +2474,7 @@ void readyWeapon(int player) {
         }
 
         screenMessage("\n%cA %s may NOT use %s %s%c\n", FG_GREY, getClassName(p->getClass()),
-                      indef_article.c_str(), xu4_weapon_name(weapon), FG_WHITE);
+                      indef_article.c_str(), zu4_weapon_name(weapon), FG_WHITE);
         break;
     }
     }
@@ -2760,7 +2760,7 @@ bool talkAt(const Coords &coords) {
     }
 
     Conversation conv;
-    xu4_error(XU4_LOG_DBG, "Setting up script information providers.");
+    zu4_error(ZU4_LOG_DBG, "Setting up script information providers.");
     conv.script->addProvider("party", c->party);
 
     conv.state = Conversation::INTRO;
@@ -2891,13 +2891,13 @@ void wearArmor(int player) {
     }*/
     switch (p->setArmor(armor)) {
     case EQUIP_SUCCEEDED:
-        screenMessage("%s\n", xu4_armor_name(armor));
+        screenMessage("%s\n", zu4_armor_name(armor));
         break;
     case EQUIP_NONE_LEFT:
         screenMessage("%cNone left!%c\n", FG_GREY, FG_WHITE);
         break;
     case EQUIP_CLASS_RESTRICTED:
-        screenMessage("\n%cA %s may NOT use %s%c\n", FG_GREY, getClassName(p->getClass()), xu4_armor_name(armor), FG_WHITE);
+        screenMessage("\n%cA %s may NOT use %s%c\n", FG_GREY, getClassName(p->getClass()), zu4_armor_name(armor), FG_WHITE);
         break;
     }
 }
@@ -2941,7 +2941,7 @@ void GameController::timerFired() {
     
     if (!paused && !pausedTimer) {
         if (++c->windCounter >= MOON_SECONDS_PER_PHASE * 4) {
-            if (xu4_random(4) == 1 && !c->windLock)
+            if (zu4_random(4) == 1 && !c->windLock)
                 c->windDirection = dirRandomDir(MASK_DIR_ALL);
             c->windCounter = 0;        
         }
@@ -3074,7 +3074,7 @@ bool GameController::checkMoongates() {
 
         gameSpellEffect(-1, -1, SOUND_MOONGATE); // Default spell effect (screen inversion without 'spell' sound effects)
         
-        if (!xu4_coords_equal(c->location->coords, dest)) {
+        if (!zu4_coords_equal(c->location->coords, dest)) {
             c->location->coords = dest;            
             gameSpellEffect(-1, -1, SOUND_MOONGATE); // Again, after arriving
         }
@@ -3088,7 +3088,7 @@ bool GameController::checkMoongates() {
                 return true;
             
             setMap(shrine_spirituality, 1, NULL);
-            xu4_music_play(c->location->map->music);
+            zu4_music_play(c->location->map->music);
 
             shrine_spirituality->enter();
         }
@@ -3182,7 +3182,7 @@ bool creatureRangeAttack(const Coords &coords, Creature *m) {
     m = dynamic_cast<Creature*>(obj);
         
     // Does the attack hit the avatar?
-    if (xu4_coords_equal(coords, c->location->coords)) {
+    if (zu4_coords_equal(coords, c->location->coords)) {
         /* always displays as a 'hit' */
     	GameController::flashTile(coords, tile, 3);
 
@@ -3277,9 +3277,9 @@ void gameDamageParty(int minDamage, int maxDamage) {
     int lastdmged = -1;
 
     for (i = 0; i < c->party->size(); i++) {
-        if (xu4_random(2) == 0) {
+        if (zu4_random(2) == 0) {
             damage = ((minDamage >= 0) && (minDamage < maxDamage)) ?
-                xu4_random((maxDamage + 1) - minDamage) + minDamage :
+                zu4_random((maxDamage + 1) - minDamage) + minDamage :
                 maxDamage;
             c->party->member(i)->applyDamage(damage);
             c->stats->highlightPlayer(i);
@@ -3304,7 +3304,7 @@ void gameDamageShip(int minDamage, int maxDamage) {
 
     if (c->transportContext == TRANSPORT_SHIP) {
         damage = ((minDamage >= 0) && (minDamage < maxDamage)) ?
-            xu4_random((maxDamage + 1) - minDamage) + minDamage :
+            zu4_random((maxDamage + 1) - minDamage) + minDamage :
             maxDamage;
 
         screenShake(1);
@@ -3363,7 +3363,7 @@ void GameController::checkRandomCreatures() {
        or we're not on the world map, don't worry about it! */
     if (!canSpawnHere ||
         c->location->map->getNumberOfCreatures() >= MAX_CREATURES_ON_MAP ||
-        xu4_random(spawnDivisor) != 0)
+        zu4_random(spawnDivisor) != 0)
         return;
     
     gameSpawnCreature(NULL);
@@ -3380,7 +3380,7 @@ void GameController::checkBridgeTrolls() {
     // TODO: CHEST: Make a user option to not make chests block bridge trolls
     if (!c->location->map->isWorldMap() ||
         c->location->map->tileAt(c->location->coords, WITH_OBJECTS)->id != bridge->getId() ||
-        xu4_random(8) != 0)
+        zu4_random(8) != 0)
         return;
 
     screenMessage("\nBridge Trolls!\n");
@@ -3429,7 +3429,7 @@ bool gameSpawnCreature(const Creature *m) {
         Coords new_coords;
         
         for (i = 0; i < 0x20; i++) {
-            new_coords = (Coords){xu4_random(c->location->map->width), xu4_random(c->location->map->height), coords.z};
+            new_coords = (Coords){zu4_random(c->location->map->width), zu4_random(c->location->map->height), coords.z};
             const Tile *tile = c->location->map->tileTypeAt(new_coords, WITH_OBJECTS);
             if (tile->isCreatureWalkable()) {
                 found = true;
@@ -3451,13 +3451,13 @@ bool gameSpawnCreature(const Creature *m) {
 
         while (!ok && (tries < MAX_TRIES)) {
             dx = 7;
-            dy = xu4_random(7);
+            dy = zu4_random(7);
         
-            if (xu4_random(2))
+            if (zu4_random(2))
                 dx = -dx;
-            if (xu4_random(2))
+            if (zu4_random(2))
                 dy = -dy;
-            if (xu4_random(2)) {
+            if (zu4_random(2)) {
                 t = dx;
                 dx = dy;
                 dy = t;
@@ -3484,7 +3484,7 @@ bool gameSpawnCreature(const Creature *m) {
     }
 
     /* can't spawn creatures on top of the player */
-    if (xu4_coords_equal(coords, c->location->coords))
+    if (zu4_coords_equal(coords, c->location->coords))
         return false;    
     
     /* figure out what creature to spawn */
@@ -3557,7 +3557,7 @@ bool GameController::createBalloon(Map *map) {
     }
     
     const Tile *balloon = map->tileset->getByName("balloon");
-    xu4_assert(balloon, "no balloon tile found in tileset");
+    zu4_assert(balloon, "no balloon tile found in tileset");
     map->addObject(balloon->getId(), balloon->getId(), map->getLabel("balloon"));
     return true;
 }

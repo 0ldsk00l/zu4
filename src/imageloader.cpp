@@ -54,7 +54,7 @@ static RGBA* loadVgaPalette() {
     return vgaPalette;
 }
 
-static void xu4_u4raw_ega_conv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
+static void zu4_u4raw_ega_conv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
 	// http://upload.wikimedia.org/wikipedia/commons/d/df/EGA_Table.PNG
 	uint32_t palette_rgba[16] = {
 		0x000000ff, 0x0000aaff, 0x00aa00ff, 0x00aaaaff,
@@ -78,7 +78,7 @@ static void xu4_u4raw_ega_conv(int w, int h, uint8_t *in, uint32_t *out, bool pa
 	}
 }
 
-static void xu4_u4raw_vga_conv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
+static void zu4_u4raw_vga_conv(int w, int h, uint8_t *in, uint32_t *out, bool paletteswap) {
 	RGBA *pp = loadVgaPalette();
 	if (paletteswap) { // ABGR
 		for (int i = 0; i < (w * h); i++) {
@@ -92,12 +92,12 @@ static void xu4_u4raw_vga_conv(int w, int h, uint8_t *in, uint32_t *out, bool pa
 	}
 }
 
-Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
+Image* zu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	if (width == -1 || height == -1 || bpp == -1) {
-		  xu4_error(XU4_LOG_ERR, "dimensions not set for image");
+		  zu4_error(ZU4_LOG_ERR, "dimensions not set for image");
 	}
 
-	xu4_assert(bpp == 4 || bpp == 8, "invalid bpp: %d", bpp);
+	zu4_assert(bpp == 4 || bpp == 8, "invalid bpp: %d", bpp);
 	
 	uint8_t *raw = NULL;
 	uint8_t *compressed = NULL;
@@ -106,19 +106,19 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	long rawLen;
 	long compressedLen;
 	
-	if (type == XU4_IMG_RAW) {
+	if (type == ZU4_IMG_RAW) {
 		rawLen = u4flength(file);
 		raw = (uint8_t*)malloc(rawLen);
 		u4fread(file, raw, 1, rawLen);
 	}
-	else if (type == XU4_IMG_RLE) {
+	else if (type == ZU4_IMG_RLE) {
 		compressedLen = u4flength(file);
 		compressed = (uint8_t*)malloc(compressedLen);
 		u4fread(file, compressed, 1, compressedLen);
 		rawLen = rleDecompressMemory(compressed, compressedLen, (void **) &raw);
 		free(compressed);
 	}
-	else if (type == XU4_IMG_LZW) {
+	else if (type == ZU4_IMG_LZW) {
 		compressedLen = u4flength(file);
 		compressed = (uint8_t*)malloc(compressedLen);
 		u4fread(file, compressed, 1, compressedLen);
@@ -131,7 +131,7 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 		return NULL;
 	}
 	
-	Image *image = xu4_img_create(width, height);
+	Image *image = zu4_img_create(width, height);
 	if (!image) {
 		if (raw) { free(raw); }
 		if (converted) { free(converted); }
@@ -139,11 +139,11 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	}
 	
 	if (bpp == 8) { // VGA
-		xu4_u4raw_vga_conv(width, height, raw, converted, true);
+		zu4_u4raw_vga_conv(width, height, raw, converted, true);
 		memcpy((uint32_t*)image->pixels, converted, sizeof(uint32_t) * width * height);
 	}
 	else if (bpp == 4) { // EGA
-		xu4_u4raw_ega_conv(width, height, raw, converted, true);
+		zu4_u4raw_ega_conv(width, height, raw, converted, true);
 		memcpy((uint32_t*)image->pixels, converted, sizeof(uint32_t) * width * height);
 	}
 	
@@ -153,9 +153,9 @@ Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	return image;
 }
 
-Image* xu4_png_load(const char *filename, int *x, int *y) {
+Image* zu4_png_load(const char *filename, int *x, int *y) {
 	uint8_t *pixels = stbi_load(filename, x, y, NULL, STBI_rgb_alpha);
-	Image *image = xu4_img_create(*x, *y);
+	Image *image = zu4_img_create(*x, *y);
 	memcpy((uint32_t*)image->pixels, (uint32_t*)pixels, sizeof(uint32_t) * *x * *y);
 	stbi_image_free(pixels);
 	return image;

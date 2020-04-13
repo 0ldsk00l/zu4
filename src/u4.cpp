@@ -34,7 +34,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 	if (!u4fopen("AVATAR.EXE")) {
-		xu4_error(XU4_LOG_ERR, 	"xu4 requires the PC version of Ultima IV to be present.\n");
+		zu4_error(ZU4_LOG_ERR, 	"xu4 requires the PC version of Ultima IV to be present.\n");
 	}
 
 	unsigned int i;
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* initialize the settings */
-    xu4_settings_init(useProfile, profileName.c_str());
+    zu4_settings_init(useProfile, profileName.c_str());
 
     /* update the settings based upon command-line arguments */
     for (i = 1; i < (unsigned int)argc; i++) {
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
                 i++;
             }
             else
-                xu4_error(XU4_LOG_ERR, "%s is invalid alone: Requires a number for input. See --help for more detail.\n", argv[i]);
+                zu4_error(ZU4_LOG_ERR, "%s is invalid alone: Requires a number for input. See --help for more detail.\n", argv[i]);
 
 
         }
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
             if ((unsigned int)argc > i + 1)
                 i++;
             else
-                xu4_error(XU4_LOG_ERR, "%s is invalid alone: Requires a string as input. See --help for more detail.\n", argv[i]);
+                zu4_error(ZU4_LOG_ERR, "%s is invalid alone: Requires a string as input. See --help for more detail.\n", argv[i]);
 
         }
         else if (strcmp(argv[i], "-i") == 0
@@ -146,11 +146,11 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         else
-            xu4_error(XU4_LOG_ERR, "Unrecognized argument: %s\n\nUse --help for a list of supported arguments.", argv[i]);
+            zu4_error(ZU4_LOG_ERR, "Unrecognized argument: %s\n\nUse --help for a list of supported arguments.", argv[i]);
 
     }
 
-    xu4_srandom();
+    zu4_srandom();
 
     screenInit();
     ProgressBar pb((320/2) - (200/2), (200/2), 200, 10, 0, (skipIntro ? 4 : 7));
@@ -161,8 +161,8 @@ int main(int argc, char *argv[]) {
     screenTextAt(15, 11, "Loading...");
     ++pb;
 
-    xu4_music_init();
-    xu4_snd_init();
+    zu4_music_init();
+    zu4_snd_init();
     ++pb;
 
     Tileset::loadAll();
@@ -201,8 +201,8 @@ int main(int argc, char *argv[]) {
 
     Tileset::unloadAll();
 
-    xu4_snd_deinit();
-    xu4_music_deinit();
+    zu4_snd_deinit();
+    zu4_music_deinit();
     screenDelete();
     
     game->deinit();

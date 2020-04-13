@@ -11,14 +11,14 @@ View::View(int x, int y, int width, int height)
 : x(x), y(y), width(width), height(height), highlighted(false), highlightX(0), highlightY(0), highlightW(0), highlightH(0)
 {
     if (screen == NULL)
-        screen = xu4_img_get_screen();
+        screen = zu4_img_get_screen();
 }
 
 /**
  * Hook for reinitializing when graphics reloaded.
  */
 void View::reinit() {
-    screen = xu4_img_get_screen();
+    screen = zu4_img_get_screen();
 }
 
 /**
@@ -26,7 +26,7 @@ void View::reinit() {
  */
 void View::clear() {
     unhighlight();
-    xu4_img_fill(screen, x, y, width, height, 0, 0, 0, 255);
+    zu4_img_fill(screen, x, y, width, height, 0, 0, 0, 255);
 }
 
 /**
@@ -65,14 +65,14 @@ void View::unhighlight() {
 }
 
 void View::drawHighlighted() {
-    Image *screen = xu4_img_get_screen();
+    Image *screen = zu4_img_get_screen();
     
-    Image *tmp = xu4_img_create(highlightW, highlightH);
+    Image *tmp = zu4_img_create(highlightW, highlightH);
     if (!tmp)
         return;
     
-    xu4_img_draw_subrect_on(tmp, screen, 0, 0, this->x + highlightX, this->y + highlightY, highlightW, highlightH);
-    xu4_img_draw_highlighted(tmp);
-    xu4_img_draw(tmp, (this->x + highlightX), (this->y + highlightY));
+    zu4_img_draw_subrect_on(tmp, screen, 0, 0, this->x + highlightX, this->y + highlightY, highlightW, highlightH);
+    zu4_img_draw_highlighted(tmp);
+    zu4_img_draw(tmp, (this->x + highlightX), (this->y + highlightY));
     delete tmp;
 }

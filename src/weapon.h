@@ -32,10 +32,10 @@ typedef struct weapon_t {
 	uint16_t flags;
 } weapon_t;
 
-weapon_t* xu4_weapon(WeaponType type);
-const char* xu4_weapon_name(WeaponType type);
-WeaponType xu4_weapon_type(const char* wname);
-bool xu4_weapon_usable(WeaponType type, ClassType klass);
+weapon_t* zu4_weapon(WeaponType type);
+const char* zu4_weapon_name(WeaponType type);
+WeaponType zu4_weapon_type(const char* wname);
+bool zu4_weapon_usable(WeaponType type, ClassType klass);
 
 #ifdef __cplusplus
 }

@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-void xu4_srandom(void);
-int xu4_random(int upperval);
+void zu4_srandom(void);
+int zu4_random(int upperval);
 
 #ifdef __cplusplus
 }

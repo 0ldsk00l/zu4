@@ -19,19 +19,19 @@ ProgressBar::ProgressBar(int x, int y, int width, int height, int _min, int _max
 ProgressBar& ProgressBar::operator++()  { current++; draw(); return *this; }
 ProgressBar& ProgressBar::operator--()  { current--; draw(); return *this; }
 void ProgressBar::draw() {
-    Image *bar = xu4_img_create(width, height);
+    Image *bar = zu4_img_create(width, height);
     int pos = static_cast<int>((double(current - min) / double(max - min)) * (width - (bwidth * 2)));
 
     // border color
-    xu4_img_fill(bar, 0, 0, width, height, bcolor.r, bcolor.g, bcolor.b, 255); 
+    zu4_img_fill(bar, 0, 0, width, height, bcolor.r, bcolor.g, bcolor.b, 255); 
 
     // color
-    xu4_img_fill(bar, bwidth, bwidth, pos, (height - (bwidth * 2)), color.r, color.g, color.b, 255); 
+    zu4_img_fill(bar, bwidth, bwidth, pos, (height - (bwidth * 2)), color.r, color.g, color.b, 255); 
 
-    xu4_img_draw_on(screen, bar, x, y);
+    zu4_img_draw_on(screen, bar, x, y);
     update();
 
-    xu4_img_free(bar);
+    zu4_img_free(bar);
 }
 
 void ProgressBar::setBorderColor(int r, int g, int b, int a) {

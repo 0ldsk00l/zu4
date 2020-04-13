@@ -11,7 +11,7 @@
 std::map<std::string, DialogueLoader *> *DialogueLoader::loaderMap = NULL;
 
 DialogueLoader *DialogueLoader::getLoader(const std::string &mimeType) {
-    xu4_assert(loaderMap != NULL, "DialogueLoader::getLoader loaderMap not initialized");
+    zu4_assert(loaderMap != NULL, "DialogueLoader::getLoader loaderMap not initialized");
     if (loaderMap->find(mimeType) == loaderMap->end())
         return NULL;
     return (*loaderMap)[mimeType];

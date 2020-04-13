@@ -128,7 +128,7 @@ Ingredients::Ingredients() {
 }
 
 bool Ingredients::addReagent(Reagent reagent) {
-    xu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);    
+    zu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);    
     if (c->party->getReagent(reagent) < 1)
         return false;
     c->party->adjustReagent(reagent, -1);    
@@ -137,7 +137,7 @@ bool Ingredients::addReagent(Reagent reagent) {
 }
 
 bool Ingredients::removeReagent(Reagent reagent) {
-    xu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);
+    zu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);
     if (reagents[reagent] == 0)
         return false;
     c->party->adjustReagent(reagent, 1);    
@@ -146,7 +146,7 @@ bool Ingredients::removeReagent(Reagent reagent) {
 }
 
 int Ingredients::getReagent(Reagent reagent) const {
-    xu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);
+    zu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);
     return reagents[reagent];
 }
 
@@ -170,7 +170,7 @@ bool Ingredients::checkMultiple(int batches) const {
 }
 
 void Ingredients::multiply(int batches) {
-    xu4_assert(checkMultiple(batches), "not enough reagents to multiply ingredients by %d\n", batches);
+    zu4_assert(checkMultiple(batches), "not enough reagents to multiply ingredients by %d\n", batches);
     for (int i = 0; i < REAG_MAX; i++) {
         if (reagents[i] > 0) {
             c->saveGame->reagents[i] -= batches - 1;
@@ -180,25 +180,25 @@ void Ingredients::multiply(int batches) {
 }
 
 const char *spellGetName(unsigned int spell) {
-    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     return spells[spell].name;
 }
 
 int spellGetRequiredMP(unsigned int spell) {
-    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
     
     return spells[spell].mp;
 }
 
 LocationContext spellGetContext(unsigned int spell) {
-    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     return spells[spell].context;
 }
 
 TransportContext spellGetTransportContext(unsigned int spell) {
-    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     return spells[spell].transportContext;
 }
@@ -233,7 +233,7 @@ string spellGetErrorMessage(unsigned int spell, SpellCastError error) {
 int spellMix(unsigned int spell, const Ingredients *ingredients) {
     int regmask, reg;
 
-    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     regmask = 0;
     for (reg = 0; reg < REAG_MAX; reg++) {
@@ -250,7 +250,7 @@ int spellMix(unsigned int spell, const Ingredients *ingredients) {
 }
 
 Spell::Param spellGetParamType(unsigned int spell) {
-    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
 
     return spells[spell].paramType;
 }
@@ -261,8 +261,8 @@ Spell::Param spellGetParamType(unsigned int spell) {
  * character doesn't have enough magic points.
  */
 SpellCastError spellCheckPrerequisites(unsigned int spell, int character) {
-    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
-    xu4_assert(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
+    zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    zu4_assert(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
 
     if (c->saveGame->mixtures[spell] == 0)
         return CASTERR_NOMIX;
@@ -287,8 +287,8 @@ bool spellCast(unsigned int spell, int character, int param, SpellCastError *err
     int subject = (spells[spell].paramType == Spell::PARAM_PLAYER) ? param : -1;
     PartyMember *p = c->party->member(character);
     
-    xu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
-    xu4_assert(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
+    zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
+    zu4_assert(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
 
     *error = spellCheckPrerequisites(spell, character);
 
@@ -313,7 +313,7 @@ bool spellCast(unsigned int spell, int character, int param, SpellCastError *err
 		float MP_OF_LARGEST_SPELL = 45;
 		int spellMp = spells[spell].mp;
 		time = int(10000.0 / settings.spellEffectSpeed  *  spellMp / MP_OF_LARGEST_SPELL);
-		xu4_snd_play(SOUND_PREMAGIC_MANA_JUMBLE, false, time);
+		zu4_snd_play(SOUND_PREMAGIC_MANA_JUMBLE, false, time);
 		EventHandler::wait_msecs(time);
 
         (*spellEffectCallback)(spell + 'a', subject, SOUND_MAGIC);
@@ -342,7 +342,7 @@ void spellMagicAttack(const string &tilename, Direction dir, int minDamage, int 
     MapTile tile = c->location->map->tileset->getByName(tilename)->getId();
 
     int attackDamage = ((minDamage >= 0) && (minDamage < maxDamage)) ?
-        xu4_random((maxDamage + 1) - minDamage) + minDamage :
+        zu4_random((maxDamage + 1) - minDamage) + minDamage :
         maxDamage;
 
     vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, (*party)[controller->getFocus()]->getCoords(), 
@@ -367,7 +367,7 @@ bool spellMagicAttackAt(const Coords &coords, MapTile attackTile, int attackDama
         objectHit = true;
 
         /* show the 'hit' tile */
-        xu4_snd_play(SOUND_NPC_STRUCK, true, -1);
+        zu4_snd_play(SOUND_NPC_STRUCK, true, -1);
         GameController::flashTile(coords, attackTile, 3);
 
 
@@ -381,7 +381,7 @@ bool spellMagicAttackAt(const Coords &coords, MapTile attackTile, int attackDama
 }
 
 static int spellAwaken(int player) {
-    xu4_assert(player < 8, "player out of range: %d", player);
+    zu4_assert(player < 8, "player out of range: %d", player);
     PartyMember *p = c->party->member(player);
 
     if ((player < c->party->size()) && (p->getStatus() == STAT_SLEEPING)) {
@@ -418,7 +418,7 @@ static int spellBlink(int dir) {
     
     /* see if we move another 16 spaces over */
     diff = 0x10 - distance;
-    if ((diff > 0) && (xu4_random(diff * diff) > distance))
+    if ((diff > 0) && (zu4_random(diff * diff) > distance))
         distance += 0x10;
 
     /* test our distance, and see if it works */
@@ -432,7 +432,7 @@ static int spellBlink(int dir) {
     
     if (c->location->map->tileTypeAt(coords, WITH_OBJECTS)->isWalkable()) {
         /* we didn't move! */
-        if (xu4_coords_equal(c->location->coords, coords))
+        if (zu4_coords_equal(c->location->coords, coords))
             failed = 1;
 
         //c->location->coords = coords;
@@ -446,7 +446,7 @@ static int spellBlink(int dir) {
 }
 
 static int spellCure(int player) {
-    xu4_assert(player < 8, "player out of range: %d", player);
+    zu4_assert(player < 8, "player out of range: %d", player);
 
     GameController::flashTile(c->party->member(player)->getCoords(), "wisp", 1);
     return c->party->member(player)->heal(HT_CURE);
@@ -582,7 +582,7 @@ static int spellGate(int phase) {
 }
 
 static int spellHeal(int player) {
-    xu4_assert(player < 8, "player out of range: %d", player);
+    zu4_assert(player < 8, "player out of range: %d", player);
 
     GameController::flashTile(c->party->member(player)->getCoords(), "wisp", 1);
     c->party->member(player)->heal(HT_HEAL);
@@ -630,7 +630,7 @@ static int spellProtect(int unused) {
 }
 
 static int spellRez(int player) {
-    xu4_assert(player < 8, "player out of range: %d", player);
+    zu4_assert(player < 8, "player out of range: %d", player);
 
     return c->party->member(player)->heal(HT_RESURRECT);
 }
@@ -652,14 +652,14 @@ static int spellSleep(int unused) {
         Coords coords = m->getCoords();
         GameController::flashTile(coords, "wisp", 1);
         if ((m->getResists() != EFFECT_SLEEP) &&
-            xu4_random(0xFF) >= m->getHp())
+            zu4_random(0xFF) >= m->getHp())
         {
-        	xu4_snd_play(SOUND_POISON_EFFECT, true, -1);
+        	zu4_snd_play(SOUND_POISON_EFFECT, true, -1);
             m->putToSleep();
             GameController::flashTile(coords, "sleep_field", 3);
         }
         else
-        	xu4_snd_play(SOUND_EVADE, true, -1);
+        	zu4_snd_play(SOUND_EVADE, true, -1);
     }
 
     return 1;
@@ -679,26 +679,26 @@ static int spellTremor(int unused) {
 
         /* creatures with over 192 hp are unaffected */
         if (m->getHp() > 192) {
-            xu4_snd_play(SOUND_EVADE, true, -1);
+            zu4_snd_play(SOUND_EVADE, true, -1);
             continue;
         }
         else {
             /* Deal maximum damage to creature */
-            if (xu4_random(2) == 0) {
-                xu4_snd_play(SOUND_NPC_STRUCK, true, -1);
+            if (zu4_random(2) == 0) {
+                zu4_snd_play(SOUND_NPC_STRUCK, true, -1);
                 GameController::flashTile(coords, "hit_flash", 3);
                 ct->getCurrentPlayer()->dealDamage(m, 0xFF);
             }
             /* Deal enough damage to creature to make it flee */
-            else if (xu4_random(2) == 0) {
-                xu4_snd_play(SOUND_NPC_STRUCK, true, -1);
+            else if (zu4_random(2) == 0) {
+                zu4_snd_play(SOUND_NPC_STRUCK, true, -1);
                 GameController::flashTile(coords, "hit_flash", 2);
                 if (m->getHp() > 23)
                     ct->getCurrentPlayer()->dealDamage(m, m->getHp()-23);
             }
             else
             {
-                xu4_snd_play(SOUND_EVADE, true, -1);
+                zu4_snd_play(SOUND_EVADE, true, -1);
             }
         }
     }
@@ -713,7 +713,7 @@ static int spellUndead(int unused) {
 
     for (i = creatures.begin(); i != creatures.end(); i++) {         
         Creature *m = *i;
-        if (m && m->isUndead() && xu4_random(2) == 0)
+        if (m && m->isUndead() && zu4_random(2) == 0)
             m->setHp(23);
     }
     
@@ -734,7 +734,7 @@ static int spellXit(int unused) {
     if (!c->location->map->isWorldMap()) {
         screenMessage("Leaving...\n");
         game->exitToParentMap();
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
         return 1;
     }
     return 0;
@@ -750,7 +750,7 @@ static int spellYup(int unused) {
     /* staying in the dungeon */
     else if (coords.z > 0) {
         for (int i = 0; i < 0x20; i++) {
-            coords = (Coords){xu4_random(8), xu4_random(8), c->location->coords.z - 1};
+            coords = (Coords){zu4_random(8), zu4_random(8), c->location->coords.z - 1};
             if (dungeon->validTeleportLocation(coords)) {
                 c->location->coords = coords;
                 return 1;
@@ -760,7 +760,7 @@ static int spellYup(int unused) {
     } else {
         screenMessage("Leaving...\n");
         game->exitToParentMap();
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
         return 1;
     }
     
@@ -780,7 +780,7 @@ static int spellZdown(int unused) {
         return 0;
     else {
         for (int i = 0; i < 0x20; i++) {
-            coords = (Coords){xu4_random(8), xu4_random(8), c->location->coords.z + 1};
+            coords = (Coords){zu4_random(8), zu4_random(8), c->location->coords.z + 1};
             if (dungeon->validTeleportLocation(coords)) {
                 c->location->coords = coords;
                 return 1;

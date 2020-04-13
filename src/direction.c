@@ -38,7 +38,7 @@ Direction dirReverse(Direction dir) {
 		default: break;
 	}
 
-	xu4_error(XU4_LOG_ERR, "invalid direction: %d", dir);
+	zu4_error(ZU4_LOG_ERR, "invalid direction: %d", dir);
 	return DIR_NONE;
 }
 
@@ -85,7 +85,7 @@ Direction dirRandomDir(int valid_directions_mask) {
 		}
 	}
 	
-	return !n ? DIR_NONE : d[xu4_random(n)];
+	return !n ? DIR_NONE : d[zu4_random(n)];
 }
 
 Direction dirNormalize(Direction orientation, Direction dir) {

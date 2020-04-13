@@ -124,7 +124,7 @@ int usePortalAt(Location *location, Coords coords, PortalTriggerAction action) {
     /* portal just exits to parent map */
     if (portal->exitPortal) {        
         game->exitToParentMap();
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
         return 1;
     }
     else if (portal->destid == location->map->id)
@@ -132,7 +132,7 @@ int usePortalAt(Location *location, Coords coords, PortalTriggerAction action) {
     
     else {
         game->setMap(destination, portal->saveLocation, portal);
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
     }
 
     /* if the portal changes the map retroactively, do it here */

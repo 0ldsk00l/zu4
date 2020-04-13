@@ -130,23 +130,23 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     const int *dscale = tiledWall ? lscale : nscale;
 
     //Clear scratchpad and set a background color
-    xu4_img_fill(animated, 0, 0, animated->w, animated->h, 14, 15, 16, 255);
+    zu4_img_fill(animated, 0, 0, animated->w, animated->h, 14, 15, 16, 255);
     //Put tile on animated scratchpad
     if (tile->getAnim()) {
         MapTile mt = tile->getId();
         tile->getAnim()->draw(animated, tile, mt, orientation);
     }
     else {
-        xu4_img_draw_on(animated, tile->getImage(), 0, 0);
+        zu4_img_draw_on(animated, tile->getImage(), 0, 0);
     }
 
     /* scale is based on distance; 1 means half size, 2 regular, 4 means scale by 2x, etc. */
     if (dscale[distance] == 0)
 		return;
     else if (dscale[distance] == 1)
-        scaled = xu4_img_scaledown(animated, 2);
+        scaled = zu4_img_scaledown(animated, 2);
     else
-        scaled = xu4_img_scaleup(animated, dscale[distance] / 2);
+        scaled = zu4_img_scaleup(animated, dscale[distance] / 2);
 
     if (tiledWall) {
     	int i_x = ((VIEWPORT_W * tileWidth  / 2) + this->x) - (scaled->w / 2);
@@ -158,7 +158,7 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
 
     	for (int x = i_x; x < f_x; x+=d_x)
     		for (int y = i_y; y < f_y; y+=d_y)
-    			xu4_img_draw_subrect_on(this->screen, animated,
+    			zu4_img_draw_subrect_on(this->screen, animated,
     					x, y, 0, 0, f_x - x, f_y - y);
     }
     else {
@@ -166,11 +166,11 @@ void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Directio
     	int x = ((VIEWPORT_W * tileWidth / 2) + this->x) - (scaled->w / 2);
     	int y = ((VIEWPORT_H * tileHeight / 2) + this->y + y_offset) - (scaled->h / 8);
 
-		xu4_img_draw_subrect_on(this->screen, scaled,
+		zu4_img_draw_subrect_on(this->screen, scaled,
 								x, y, 0, 0, scaled->w, scaled->h);
     }
 
-    xu4_img_free(scaled);
+    zu4_img_free(scaled);
 }
 
 int DungeonView::graphicIndex(int xoffset, int distance, Direction orientation, DungeonGraphicType type) {
@@ -242,7 +242,7 @@ std::vector<MapTile> DungeonView::getTiles(int fwd, int side) {
     case DIR_ADVANCE:
     case DIR_RETREAT:
     default:
-        xu4_assert(0, "Invalid dungeon orientation");
+        zu4_assert(0, "Invalid dungeon orientation");
     }
 
     // Wrap the coordinates if necessary

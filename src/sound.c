@@ -31,9 +31,9 @@
 
 static cm_Source *effect[SOUND_MAX];
 
-void xu4_snd_play(int sound, bool onlyOnce, int specificDurationInTicks) {
+void zu4_snd_play(int sound, bool onlyOnce, int specificDurationInTicks) {
 	if (sound >= SOUND_MAX) {
-		xu4_error(XU4_LOG_WRN, "Tried to play an invalid sound!");
+		zu4_error(ZU4_LOG_WRN, "Tried to play an invalid sound!");
 		return;
 	}
 	else if (!settings.soundVol) { return; }
@@ -42,56 +42,56 @@ void xu4_snd_play(int sound, bool onlyOnce, int specificDurationInTicks) {
 	cm_play(effect[sound]);
 }
 
-void xu4_snd_stop() {
+void zu4_snd_stop() {
 	for (int i = 0; i < SOUND_MAX; i++) {
 		cm_stop(effect[i]);
 	}
 }
 
-void xu4_snd_vol(double volume) {
+void zu4_snd_vol(double volume) {
 	// Every source has to be done independently
     for (int i = 0; i < SOUND_MAX; i++) {
 		cm_set_gain(effect[i], volume);
 	}
 }
 
-int xu4_snd_vol_inc() {
+int zu4_snd_vol_inc() {
 	if (++settings.soundVol > MAX_VOLUME) { settings.soundVol = MAX_VOLUME; }
-	else { xu4_snd_vol((double)settings.soundVol / MAX_VOLUME); }
+	else { zu4_snd_vol((double)settings.soundVol / MAX_VOLUME); }
 	return (settings.soundVol * MAX_VOLUME);
 }
 
-int xu4_snd_vol_dec() {
+int zu4_snd_vol_dec() {
 	if (--settings.soundVol < 0) { settings.soundVol = 0; }
-	else { xu4_snd_vol((double)settings.soundVol / MAX_VOLUME); }
+	else { zu4_snd_vol((double)settings.soundVol / MAX_VOLUME); }
 	return (settings.soundVol * MAX_VOLUME);
 }
 
-static void xu4_snd_free_files() {
+static void zu4_snd_free_files() {
 	for (int i = 0; i < SOUND_MAX; i++) {
 		if (effect[i]) { free(effect[i]); }
 	}
 }
 
-static void xu4_snd_load_files() {
-	xu4_xmlparse_init("conf/sound.xml");
+static void zu4_snd_load_files() {
+	zu4_xmlparse_init("conf/sound.xml");
 	
 	char soundfile[64]; // Buffer for sound effect filenames that are found
 	char soundpath[128]; // Buffer for full path to sound effect
 	int index = 0;
-	while (xu4_xmlparse_find(soundfile, "track", "file")) {
+	while (zu4_xmlparse_find(soundfile, "track", "file")) {
 		snprintf(soundpath, sizeof(soundpath), "%s%s", "sound/", soundfile);
 		effect[index++] = cm_new_source_from_file(soundpath);
 	}
 	
-	xu4_xmlparse_deinit();
+	zu4_xmlparse_deinit();
 }
 
-void xu4_snd_init() {
-	xu4_snd_load_files();
-	xu4_snd_vol((double)settings.soundVol / MAX_VOLUME);
+void zu4_snd_init() {
+	zu4_snd_load_files();
+	zu4_snd_vol((double)settings.soundVol / MAX_VOLUME);
 }
 
-void xu4_snd_deinit() {
-	xu4_snd_free_files();
+void zu4_snd_deinit() {
+	zu4_snd_free_files();
 }

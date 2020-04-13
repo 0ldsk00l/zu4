@@ -82,27 +82,27 @@ void u4find_path(char *path, size_t psize, const char *fname, const char *subpat
 void u4find_conf(char *path, size_t psize, const char *fname);
 void u4find_graphics(char *path, size_t psize, const char *fname);
 
-void xu4_file_stdio_close(U4FILE *u4f);
-void xu4_file_zip_close(U4FILE *u4f);
+void zu4_file_stdio_close(U4FILE *u4f);
+void zu4_file_zip_close(U4FILE *u4f);
 
-int xu4_file_stdio_seek(U4FILE *u4f, long offset, int whence);
-int xu4_file_zip_seek(U4FILE *u4f, long offset, int whence);
+int zu4_file_stdio_seek(U4FILE *u4f, long offset, int whence);
+int zu4_file_zip_seek(U4FILE *u4f, long offset, int whence);
 
-long xu4_file_stdio_tell(U4FILE *u4f);
-long xu4_file_zip_tell(U4FILE *u4f);
+long zu4_file_stdio_tell(U4FILE *u4f);
+long zu4_file_zip_tell(U4FILE *u4f);
 
-size_t xu4_file_stdio_read(U4FILE*, void*, size_t, size_t);
-size_t xu4_file_zip_read(U4FILE*, void*, size_t, size_t);
+size_t zu4_file_stdio_read(U4FILE*, void*, size_t, size_t);
+size_t zu4_file_zip_read(U4FILE*, void*, size_t, size_t);
 
-long xu4_file_stdio_length(U4FILE *u4f);
-long xu4_file_zip_length(U4FILE *u4f);
+long zu4_file_stdio_length(U4FILE *u4f);
+long zu4_file_zip_length(U4FILE *u4f);
 
-int xu4_file_stdio_getc(U4FILE *u4f);
-int xu4_file_zip_getc(U4FILE *u4f);
+int zu4_file_stdio_getc(U4FILE *u4f);
+int zu4_file_zip_getc(U4FILE *u4f);
 
-int xu4_file_stdio_putc(U4FILE *u4f, int c);
-int xu4_file_zip_putc(U4FILE *u4f, int c);
+int zu4_file_stdio_putc(U4FILE *u4f, int c);
+int zu4_file_zip_putc(U4FILE *u4f, int c);
 
-int xu4_file_getshort(U4FILE *u4f);
+int zu4_file_getshort(U4FILE *u4f);
 
 #endif

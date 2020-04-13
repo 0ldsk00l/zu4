@@ -100,11 +100,11 @@ typedef struct u4settings_t {
 	char filename[80];
 } u4settings_t;
 
-u4settings_t* xu4_settings_ptr();
-void xu4_settings_init(bool useProfile, const char *profileName);
-void xu4_settings_setdata(const SettingsData data);
-bool xu4_settings_read();
-bool xu4_settings_write();
+u4settings_t* zu4_settings_ptr();
+void zu4_settings_init(bool useProfile, const char *profileName);
+void zu4_settings_setdata(const SettingsData data);
+bool zu4_settings_read();
+bool zu4_settings_write();
 
 #ifdef __cplusplus
 }

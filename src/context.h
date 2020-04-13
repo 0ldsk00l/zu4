@@ -49,7 +49,7 @@ typedef struct Context {
 
 extern Context *c;
 
-Context *xu4_ctx_init();
-void xu4_ctx_deinit();
+Context *zu4_ctx_init();
+void zu4_ctx_deinit();
 
 #endif

@@ -161,7 +161,7 @@ void StatsArea::update(Aura *aura) {
 }
 
 void StatsArea::highlightPlayer(int player) {
-    xu4_assert(player < c->party->size(), "player number out of range: %d", player);
+    zu4_assert(player < c->party->size(), "player number out of range: %d", player);
     mainArea.highlight(0, player * CHAR_HEIGHT, STATS_AREA_WIDTH * CHAR_WIDTH, CHAR_HEIGHT);
 }
 
@@ -199,7 +199,7 @@ void StatsArea::showPartyView(bool avatarOnly) {
     PartyMember *p = NULL;
     int activePlayer = c->party->getActivePlayer();
 
-    xu4_assert(c->party->size() <= 8, "party members out of range: %d", c->party->size());
+    zu4_assert(c->party->size() <= 8, "party members out of range: %d", c->party->size());
 
     if (!avatarOnly) {
         for (int i = 0; i < c->party->size(); i++) {
@@ -219,7 +219,7 @@ void StatsArea::showPartyView(bool avatarOnly) {
 void StatsArea::showPlayerDetails() {
     int player = view - STATS_CHAR1;
 
-    xu4_assert(player < 8, "character number out of range: %d", player);
+    zu4_assert(player < 8, "character number out of range: %d", player);
 
     PartyMember *p = c->party->member(player);
     setTitle(p->getName());
@@ -252,7 +252,7 @@ void StatsArea::showWeapons() {
             n = 99;
         if (n >= 1) {
             const char *format = (n >= 10) ? "%c%d-%s" : "%c-%d-%s";
-            weapon_t *weapon = xu4_weapon((WeaponType)w);
+            weapon_t *weapon = zu4_weapon((WeaponType)w);
             mainArea.textAt(col, line++, format, w - WEAP_HANDS + 'A', n, weapon->abbr);
             if (line >= (STATS_AREA_HEIGHT)) {
                 line = 0;
@@ -274,7 +274,7 @@ void StatsArea::showArmor() {
         if (c->saveGame->armor[a] > 0) {
             const char *format = (c->saveGame->armor[a] >= 10) ? "%c%d-%s" : "%c-%d-%s";
             
-            mainArea.textAt(0, line++, format, a - ARMR_NONE + 'A', c->saveGame->armor[a], xu4_armor_name((ArmorType)a));
+            mainArea.textAt(0, line++, format, a - ARMR_NONE + 'A', c->saveGame->armor[a], zu4_armor_name((ArmorType)a));
         }
     }
 }

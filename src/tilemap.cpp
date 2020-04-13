@@ -27,11 +27,11 @@ void TileMap::loadAll() {
 
     /* FIXME: make sure tilesets are loaded by now */    
 
-    xu4_error(XU4_LOG_DBG, "Unloading all tilemaps");
+    zu4_error(ZU4_LOG_DBG, "Unloading all tilemaps");
     unloadAll();
 
     /* open the filename for the tileset and parse it! */
-    xu4_error(XU4_LOG_DBG, "Loading tilemaps from config");
+    zu4_error(ZU4_LOG_DBG, "Loading tilemaps from config");
     conf = config->getElement("tilesets").getChildren();    
     
     /* load all of the tilemaps */
@@ -69,7 +69,7 @@ void TileMap::load(const ConfigElement &tilemapConf) {
     TileMap *tm = new TileMap;
     
     string name = tilemapConf.getString("name");
-    xu4_error(XU4_LOG_DBG, "Tilemap name is: %s",  name.c_str());
+    zu4_error(ZU4_LOG_DBG, "Tilemap name is: %s",  name.c_str());
     
     string tileset = tilemapConf.getString("tileset");
 
@@ -85,12 +85,12 @@ void TileMap::load(const ConfigElement &tilemapConf) {
         int frames = 1;
         string tile = i->getString("tile");
 
-        xu4_error(XU4_LOG_DBG, "\tLoading %s", tile.c_str());
+        zu4_error(ZU4_LOG_DBG, "\tLoading %s", tile.c_str());
         
         /* find the tile this references */
         Tile *t = Tileset::get(tileset)->getByName(tile);
         if (!t)
-            xu4_error(XU4_LOG_ERR, "Error: tile '%s' from '%s' was not found in tileset %s", tile.c_str(), name.c_str(), tileset.c_str());
+            zu4_error(ZU4_LOG_ERR, "Error: tile '%s' from '%s' was not found in tileset %s", tile.c_str(), name.c_str(), tileset.c_str());
         
         if (i->exists("index"))
             index = i->getInt("index");        

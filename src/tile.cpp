@@ -85,7 +85,7 @@ void Tile::loadProperties(const ConfigElement &conf) {
     if (conf.exists("directions")) {
         string dirs = conf.getString("directions");
         if (dirs.length() != (unsigned) frames)
-            xu4_error(XU4_LOG_ERR, "Error: %ld directions for tile but only %d frames", (long) dirs.length(), frames);
+            zu4_error(ZU4_LOG_ERR, "Error: %ld directions for tile but only %d frames", (long) dirs.length(), frames);
         for (unsigned i = 0; i < dirs.length(); i++) {
             if (dirs[i] == 'w')
                 directions.push_back(DIR_WEST);
@@ -96,7 +96,7 @@ void Tile::loadProperties(const ConfigElement &conf) {
             else if (dirs[i] == 's')
                 directions.push_back(DIR_SOUTH);
             else
-                xu4_error(XU4_LOG_ERR, "Error: unknown direction specified by %c", dirs[i]);
+                zu4_error(ZU4_LOG_ERR, "Error: unknown direction specified by %c", dirs[i]);
         }
     }
 }
@@ -122,7 +122,7 @@ void Tile::loadImage() {
         }
         if (!info) //IF still no info loaded
         {
-            xu4_error(XU4_LOG_WRN, "Error: couldn't load image for tile '%s'", name.c_str());
+            zu4_error(ZU4_LOG_WRN, "Error: couldn't load image for tile '%s'", name.c_str());
             return;
         }
 
@@ -140,7 +140,7 @@ void Tile::loadImage() {
         if (info) {
             w = (subimage ? subimage->width : info->width);
             h = (subimage ? (subimage->height) / frames : info->height / frames);
-            image = xu4_img_create(w, h * frames);
+            image = zu4_img_create(w, h * frames);
 
 
             //info->image->alphaOff();
@@ -148,9 +148,9 @@ void Tile::loadImage() {
             /* draw the tile from the image we found to our tile image */
             if (subimage) {
                 Image *tiles = info->image;
-                xu4_img_draw_subrect_on(image, tiles, 0, 0, subimage->x, subimage->y, subimage->width, subimage->height);
+                zu4_img_draw_subrect_on(image, tiles, 0, 0, subimage->x, subimage->y, subimage->width, subimage->height);
             }
-            else xu4_img_draw_on(image, info->image, 0, 0);
+            else zu4_img_draw_on(image, info->image, 0, 0);
         }
 
         if (animationRule.size() > 0) {
@@ -160,7 +160,7 @@ void Tile::loadImage() {
             if (tileanims)
                 anim = tileanims->getByName(animationRule);
             if (anim == NULL)
-                xu4_error(XU4_LOG_WRN, "Warning: animation style '%s' not found", animationRule.c_str());
+                zu4_error(ZU4_LOG_WRN, "Warning: animation style '%s' not found", animationRule.c_str());
         }
 
         /* if we have animations, we always used 'animated' to draw from */

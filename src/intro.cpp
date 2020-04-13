@@ -175,7 +175,7 @@ IntroController::IntroController() :
     bSkipTitles(false)
 {
     // initialize menus
-    confMenu.setTitle("XU4 Configuration:", 0, 0);
+    confMenu.setTitle("zu4 Configuration:", 0, 0);
     confMenu.add(MI_CONF_VIDEO,               "\010 Video Options",              2,  2,/*'v'*/  2);
     confMenu.add(MI_CONF_SOUND,               "\010 Sound Options",              2,  3,/*'s'*/  2);
     confMenu.add(MI_CONF_INPUT,               "\010 Input Options",              2,  4,/*'i'*/  2);
@@ -294,7 +294,7 @@ bool IntroController::init() {
         mode = INTRO_MENU;
         beastiesVisible = true;
         beastieOffset = 0;
-        xu4_music_play(TRACK_TOWNS);
+        zu4_music_play(TRACK_TOWNS);
     }
     else
     {
@@ -344,7 +344,7 @@ void IntroController::deleteIntro() {
 }
 
 unsigned char *IntroController::getSigData() {
-    xu4_assert(binData->sigData != NULL, "intro sig data not loaded");
+    zu4_assert(binData->sigData != NULL, "intro sig data not loaded");
     return binData->sigData;
 }
 
@@ -407,7 +407,7 @@ bool IntroController::keyPressed(int key) {
         case '7':
         case '8':
         case '9':
-            xu4_music_play(key - '0');
+            zu4_music_play(key - '0');
             break;
         default:
             valid = false;
@@ -416,7 +416,7 @@ bool IntroController::keyPressed(int key) {
         break;
 
     default:
-        xu4_assert(0, "key handler called in wrong mode");
+        zu4_assert(0, "key handler called in wrong mode");
         return true;
     }
 
@@ -556,7 +556,7 @@ void IntroController::drawBeastie(int beast, int vertoffset, int frame) {
     char buffer[128];
     int destx;
 
-    xu4_assert(beast == 0 || beast == 1, "invalid beast: %d", beast);
+    zu4_assert(beast == 0 || beast == 1, "invalid beast: %d", beast);
 
     sprintf(buffer, "beast%dframe%02d", beast, frame);
 
@@ -585,8 +585,8 @@ void IntroController::drawCard(int pos, int card) {
         "sacrificecard", "honorcard", "spiritualitycard", "humilitycard" 
     };
 
-    xu4_assert(pos == 0 || pos == 1, "invalid pos: %d", pos);
-    xu4_assert(card < 8, "invalid card: %d", card);
+    zu4_assert(pos == 0 || pos == 1, "invalid pos: %d", pos);
+    zu4_assert(card < 8, "invalid card: %d", card);
 
     backgroundArea.draw(cardNames[card], pos ? 218 : 12, 12);
 }
@@ -595,9 +595,9 @@ void IntroController::drawCard(int pos, int card) {
  * Draws the beads in the abacus during the character creation sequence
  */
 void IntroController::drawAbacusBeads(int row, int selectedVirtue, int rejectedVirtue) {
-    xu4_assert(row >= 0 && row < 7, "invalid row: %d", row);
-    xu4_assert(selectedVirtue < 8 && selectedVirtue >= 0, "invalid virtue: %d", selectedVirtue);
-    xu4_assert(rejectedVirtue < 8 && rejectedVirtue >= 0, "invalid virtue: %d", rejectedVirtue);
+    zu4_assert(row >= 0 && row < 7, "invalid row: %d", row);
+    zu4_assert(selectedVirtue < 8 && selectedVirtue >= 0, "invalid virtue: %d", selectedVirtue);
+    zu4_assert(rejectedVirtue < 8 && rejectedVirtue >= 0, "invalid virtue: %d", rejectedVirtue);
     
     backgroundArea.draw("whitebead", 128 + (selectedVirtue * 9), 24 + (row * 15));
     backgroundArea.draw("blackbead", 128 + (rejectedVirtue * 9), 24 + (row * 15));
@@ -652,7 +652,7 @@ void IntroController::updateScreen() {
         break;
 
     default:
-        xu4_assert(0, "bad mode in updateScreen");
+        zu4_assert(0, "bad mode in updateScreen");
     }
 
     screenUpdateCursor();
@@ -728,7 +728,7 @@ void IntroController::finishInitiateGame(const string &nameBuffer, SexType sex)
     SaveGame saveGame;
     SaveGamePlayerRecord avatar;
 
-    u4settings_t *u4settings = xu4_settings_ptr();
+    u4settings_t *u4settings = zu4_settings_ptr();
     char saveGameFileName[80];
     
     snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, PARTY_SAV_BASE_FILENAME);
@@ -875,7 +875,7 @@ string IntroController::getQuestion(int v1, int v2) {
     int i = 0;
     int d = 7;
 
-    xu4_assert(v1 < v2, "first virtue must be smaller (v1 = %d, v2 = %d)", v1, v2);
+    zu4_assert(v1 < v2, "first virtue must be smaller (v1 = %d, v2 = %d)", v1, v2);
 
     while (v1 > 0) {
         i += d;
@@ -884,7 +884,7 @@ string IntroController::getQuestion(int v1, int v2) {
         v2--;
     }
 
-    xu4_assert((i + v2 - 1) < 28, "calculation failed");
+    zu4_assert((i + v2 - 1) < 28, "calculation failed");
 
     return binData->introQuestions[i + v2 - 1];
 }
@@ -900,7 +900,7 @@ void IntroController::journeyOnward() {
      * ensure a party.sav file exists, otherwise require user to
      * initiate game
      */
-    u4settings_t *u4settings = xu4_settings_ptr();
+    u4settings_t *u4settings = zu4_settings_ptr();
     char saveGameFileName[80];
     snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, PARTY_SAV_BASE_FILENAME);
     saveGameFile = fopen(saveGameFileName, "rb");
@@ -937,8 +937,8 @@ void IntroController::about() {
     backgroundArea.draw(BKGD_OPTIONS_BTM, 0, 120);
 
     screenHideCursor();
-    menuArea.textAt(14, 1, "XU4 %s", VERSION);
-    menuArea.textAt(1, 3, "xu4 is free software under the terms");
+    menuArea.textAt(14, 1, "zu4 %s", VERSION);
+    menuArea.textAt(1, 3, "zu4 is free software under the terms");
     menuArea.textAt(1, 4, "of the GNU GPLv2 as published by the");
     menuArea.textAt(1, 5, "FSF. See COPYING for details.");
     menuArea.textAt(2, 7, "Copyright \011 1987, Lord British");
@@ -1008,12 +1008,12 @@ void IntroController::timerFired() {
         switch (title->method) {
 			case SIGNATURE:
 				if (notblanked) {
-					xu4_img_fill(title->destImage, 0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
+					zu4_img_fill(title->destImage, 0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
 					notblanked = false;
 				}
 				break;
 			case BAR: case ORIGIN: case PRESENT: case MAP: case SUBTITLE:
-				xu4_img_fill(title->destImage, 0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
+				zu4_img_fill(title->destImage, 0, 0, title->destImage->w, title->destImage->h, 0, 0, 0, 255);
 				break;
 			default: break;
 		}
@@ -1024,7 +1024,7 @@ void IntroController::timerFired() {
             mode = INTRO_MAP;
             notblanked = false;
             beastiesVisible = true;
-            xu4_music_play(TRACK_TOWNS);
+            zu4_music_play(TRACK_TOWNS);
             updateScreen();
         }
 	}
@@ -1035,9 +1035,9 @@ void IntroController::timerFired() {
     if (beastiesVisible)
         drawBeasties();
 
-    if (xu4_random(2) && ++beastie1Cycle >= IntroBinData::BEASTIE1_FRAMES)
+    if (zu4_random(2) && ++beastie1Cycle >= IntroBinData::BEASTIE1_FRAMES)
         beastie1Cycle = 0;
-    if (xu4_random(2) && ++beastie2Cycle >= IntroBinData::BEASTIE2_FRAMES)
+    if (zu4_random(2) && ++beastie2Cycle >= IntroBinData::BEASTIE2_FRAMES)
         beastie2Cycle = 0;
 }
 
@@ -1078,8 +1078,8 @@ void IntroController::updateConfMenu(MenuEvent &event) {
         confMenu.getItemById(MI_CONF_INTERFACE)->setVisible(settingsChanged.enhancements);
 
         // save settings
-        xu4_settings_setdata(settingsChanged);
-        xu4_settings_write();
+        zu4_settings_setdata(settingsChanged);
+        zu4_settings_write();
 
         switch(event.getMenuItem()->getId()) {
         case MI_CONF_VIDEO:
@@ -1124,8 +1124,8 @@ void IntroController::updateVideoMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
             /* save settings (if necessary - FIXME) */
-            xu4_settings_setdata(settingsChanged);
-            xu4_settings_write();
+            zu4_settings_setdata(settingsChanged);
+            zu4_settings_write();
 
             /* FIXME: resize images, etc. */
             screenReInit();
@@ -1176,21 +1176,21 @@ void IntroController::updateSoundMenu(MenuEvent &event) {
 
         switch(event.getMenuItem()->getId()) {
             case MI_SOUND_01:
-                xu4_music_vol((double)settingsChanged.musicVol / MAX_VOLUME);
+                zu4_music_vol((double)settingsChanged.musicVol / MAX_VOLUME);
                 break;
             case MI_SOUND_02:
-                xu4_snd_vol((double)settingsChanged.soundVol / MAX_VOLUME);
-                xu4_snd_play(SOUND_FLEE, true, -1);
+                zu4_snd_vol((double)settingsChanged.soundVol / MAX_VOLUME);
+                zu4_snd_play(SOUND_FLEE, true, -1);
                 break;
             case USE_SETTINGS:
                 // save settings
-                xu4_settings_setdata(settingsChanged);
-                xu4_settings_write();
-                xu4_music_play(TRACK_TOWNS);
+                zu4_settings_setdata(settingsChanged);
+                zu4_settings_write();
+                zu4_music_play(TRACK_TOWNS);
                 break;
             case CANCEL:
-                xu4_music_vol((double)settings.musicVol / MAX_VOLUME);
-                xu4_snd_vol((double)settings.soundVol / MAX_VOLUME);
+                zu4_music_vol((double)settings.musicVol / MAX_VOLUME);
+                zu4_snd_vol((double)settings.soundVol / MAX_VOLUME);
                 // discard settings
                 settingsChanged = settings;
                 break;
@@ -1211,8 +1211,8 @@ void IntroController::updateInputMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
             // save settings
-            xu4_settings_setdata(settingsChanged);
-            xu4_settings_write();
+            zu4_settings_setdata(settingsChanged);
+            zu4_settings_write();
 
             // re-initialize keyboard
             KeyHandler::setKeyRepeat(settingsChanged.keydelay, settingsChanged.keyinterval);
@@ -1238,8 +1238,8 @@ void IntroController::updateSpeedMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
             // save settings
-            xu4_settings_setdata(settingsChanged);
-            xu4_settings_write();
+            zu4_settings_setdata(settingsChanged);
+            zu4_settings_write();
     
             // re-initialize events
             eventTimerGranularity = (1000 / settings.gameCyclesPerSecond);
@@ -1267,8 +1267,8 @@ void IntroController::updateGameplayMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
         case USE_SETTINGS:
             // save settings
-            xu4_settings_setdata(settingsChanged);
-            xu4_settings_write();
+            zu4_settings_setdata(settingsChanged);
+            zu4_settings_write();
             break;
         case CANCEL:
             // discard settings
@@ -1291,8 +1291,8 @@ void IntroController::updateInterfaceMenu(MenuEvent &event) {
         switch(event.getMenuItem()->getId()) {
             case USE_SETTINGS:
                 // save settings
-                xu4_settings_setdata(settingsChanged);
-                xu4_settings_write();
+                zu4_settings_setdata(settingsChanged);
+                zu4_settings_write();
                 break;
             case CANCEL:
                 // discard settings
@@ -1321,7 +1321,7 @@ void IntroController::initQuestionTree() {
         questionTree[i] = i;
 
     for (i = 0; i < 8; i++) {
-        r = xu4_random(8);
+        r = zu4_random(8);
         tmp = questionTree[r];
         questionTree[r] = questionTree[i];
         questionTree[i] = tmp;
@@ -1402,7 +1402,7 @@ void IntroController::initPlayers(SaveGame *saveGame) {
 
     saveGame->players[0].klass = static_cast<ClassType>(questionTree[14]);
 
-    //xu4_assert(saveGame->players[0].klass < 8, "bad class: %d", saveGame->players[0].klass);
+    //zu4_assert(saveGame->players[0].klass < 8, "bad class: %d", saveGame->players[0].klass);
 
     saveGame->players[0].weapon = initValuesForClass[saveGame->players[0].klass].weapon;
     saveGame->players[0].armor = initValuesForClass[saveGame->players[0].klass].armor;
@@ -1564,13 +1564,13 @@ void IntroController::getTitleSourceData()
     // will be scaled appropriately.
     ImageInfo *info = imageMgr->get(BKGD_INTRO, true);
     if (!info) {
-        xu4_error(XU4_LOG_ERR, "ERROR 1007: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
+        zu4_error(ZU4_LOG_ERR, "ERROR 1007: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
     }
 
     if (info->width != 320 || info->height != 200)
     {
         // the image appears to have been scaled already
-    	xu4_error(XU4_LOG_WRN, "ERROR 1008: The title image (\"%s\") has been scaled too early!\t\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
+    	zu4_error(ZU4_LOG_WRN, "ERROR 1008: The title image (\"%s\") has been scaled too early!\t\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", BKGD_INTRO);
     }
 
     // get the transparent color
@@ -1583,12 +1583,12 @@ void IntroController::getTitleSourceData()
             && (titles[i].method != BAR))
         {
             // create a place to store the source image
-            titles[i].srcImage = xu4_img_create(
+            titles[i].srcImage = zu4_img_create(
                 titles[i].rw,
                 titles[i].rh);
 
             // get the source image
-            xu4_img_draw_subrect_on(
+            zu4_img_draw_subrect_on(
                 titles[i].srcImage, info->image,
                 0,
                 0,
@@ -1648,7 +1648,7 @@ void IntroController::getTitleSourceData()
                 {
                     for (int x=0; x < titles[i].rw ; x++)
                     {
-                        uint32_t pixIndex = xu4_img_get_pixel(titles[i].srcImage, x, y);
+                        uint32_t pixIndex = zu4_img_get_pixel(titles[i].srcImage, x, y);
                         r = pixIndex & 0xff;
 						g = (pixIndex & 0xff00) >> 8;
 						b = (pixIndex & 0xff0000) >> 16;
@@ -1667,7 +1667,7 @@ void IntroController::getTitleSourceData()
             case MAP:
             {
                 // fill the map area with the transparent color
-                xu4_img_fill(titles[i].srcImage,
+                zu4_img_fill(titles[i].srcImage,
                     8, 8, 304, 80,
                     transparentColor.r,
                     transparentColor.g,
@@ -1685,7 +1685,7 @@ void IntroController::getTitleSourceData()
         }
 
         // create the initial animation frame
-        titles[i].destImage = xu4_img_create(
+        titles[i].destImage = zu4_img_create(
             2 + titles[i].rw,
             2 + titles[i].rh);
     }
@@ -1717,13 +1717,13 @@ bool IntroController::updateTitle()
         if (title == titles.begin())
         {
             // clear the screen
-            Image *screen = xu4_img_get_screen();
-            xu4_img_fill(screen, 0, 0, screen->w, screen->h, 0, 0, 0, 255);
+            Image *screen = zu4_img_get_screen();
+            zu4_img_fill(screen, 0, 0, screen->w, screen->h, 0, 0, 0, 255);
         }
         if (title->method == TITLE)
         {
             // assume this is the first frame of "Ultima IV" and begin sound
-            xu4_snd_play(SOUND_TITLE_FADE, true, -1);
+            zu4_snd_play(SOUND_TITLE_FADE, true, -1);
         }
     }
 
@@ -1753,7 +1753,7 @@ bool IntroController::updateTitle()
             while (animStepTarget > title->animStep)
             {
                 // blit the pixel-pair to the src surface
-                xu4_img_fill(title->destImage,
+                zu4_img_fill(title->destImage,
                     title->plotData[title->animStep].x,
                     title->plotData[title->animStep].y,
                     2,
@@ -1775,7 +1775,7 @@ bool IntroController::updateTitle()
                 color = RGBA{128, 0, 0, 255}; // dark red for the underline
 
                 // blit bar to the canvas
-                xu4_img_fill(title->destImage,
+                zu4_img_fill(title->destImage,
                     1,
                     1,
                     title->animStep,
@@ -1790,7 +1790,7 @@ bool IntroController::updateTitle()
         case AND:
         {
             // blit the entire src to the canvas
-            xu4_img_draw_on(title->destImage, title->srcImage, 1, 1);
+            zu4_img_draw_on(title->destImage, title->srcImage, 1, 1);
             title->animStep = title->animStepMax;
             break;
         }
@@ -1806,7 +1806,7 @@ bool IntroController::updateTitle()
             }
 
             // blit src to the canvas one row at a time, bottom up
-            xu4_img_draw_subrect_on(
+            zu4_img_draw_subrect_on(
                 title->destImage, title->srcImage,
                 1,
                 title->destImage->h - 1 - title->animStep,
@@ -1828,7 +1828,7 @@ bool IntroController::updateTitle()
             }
 
             // blit src to the canvas one row at a time, top down
-            xu4_img_draw_subrect_on(
+            zu4_img_draw_subrect_on(
                 title->destImage, title->srcImage,
                 1,
                 1,
@@ -1845,7 +1845,7 @@ bool IntroController::updateTitle()
             title->animStep = animStepTarget;
 
             random_shuffle(title->plotData.begin(), title->plotData.end());
-            xu4_img_fill(title->destImage, 1, 1, title->rw, title->rh, 0, 0, 0, 255);
+            zu4_img_fill(title->destImage, 1, 1, title->rw, title->rh, 0, 0, 0, 255);
 
             // @TODO: animStepTarget (for this loop) should not exceed
             // half of animStepMax.  If so, instead draw the entire
@@ -1853,7 +1853,7 @@ bool IntroController::updateTitle()
             // this should speed the loop up at the end
             for (int i=0; i < animStepTarget; ++i)
             {
-                xu4_img_set_pixel(title->destImage,
+                zu4_img_set_pixel(title->destImage,
                     title->plotData[i].x,
                     title->plotData[i].y,
                     title->plotData[i].r |
@@ -1863,7 +1863,7 @@ bool IntroController::updateTitle()
             }
 
             // cover the "present" area with the transparent color
-            xu4_img_fill(title->destImage,
+            zu4_img_fill(title->destImage,
                 75, 1, 54, 5,
                 transparentColor.r,
                 transparentColor.g,
@@ -1883,7 +1883,7 @@ bool IntroController::updateTitle()
 
             // blit src to the canvas one row at a time, center out
             int y = int(title->rh / 2) - title->animStep + 1;
-            xu4_img_draw_subrect_on(
+            zu4_img_draw_subrect_on(
                 title->destImage, title->srcImage,
                 1,
                 y+1,
@@ -1907,7 +1907,7 @@ bool IntroController::updateTitle()
             int step = (title->animStep == title->animStepMax ? title->animStepMax - 1 : title->animStep);
 
             // blit src to the canvas one row at a time, center out
-            xu4_img_draw_subrect_on(
+            zu4_img_draw_subrect_on(
                 title->destImage, title->srcImage,
                 153-(step*8),
                 1,
@@ -1915,7 +1915,7 @@ bool IntroController::updateTitle()
                 0,
                 (step+1) * 8,
                 title->srcImage->h);
-            xu4_img_draw_subrect_on(
+            zu4_img_draw_subrect_on(
                 title->destImage, title->srcImage,
                 161,
                 1,
@@ -1930,12 +1930,12 @@ bool IntroController::updateTitle()
             if (newtime > title->timeDuration + 250/4)
             {
                 // grab the map from the screen
-                Image *screen = xu4_img_get_screen();
+                Image *screen = zu4_img_get_screen();
 
                 // draw the updated map display
                 intro->drawMapStatic();
 
-                xu4_img_draw_subrect_on(
+                zu4_img_draw_subrect_on(
                     title->srcImage, screen,
                     8,
                     8,
@@ -1947,7 +1947,7 @@ bool IntroController::updateTitle()
                 title->timeDuration = newtime + 250/4;
             }
 
-            xu4_img_draw_subrect_on(
+            zu4_img_draw_subrect_on(
                 title->destImage, title->srcImage,
                 161 - (step * 8),
                 9,
@@ -2010,7 +2010,7 @@ void IntroController::compactTitle()
 {
     if (title->srcImage)
     {
-        xu4_img_free(title->srcImage);
+        zu4_img_free(title->srcImage);
         title->srcImage = NULL;
     }
     title->plotData.clear();
@@ -2022,9 +2022,9 @@ void IntroController::compactTitle()
 //
 void IntroController::drawTitle()
 {
-    Image *t = xu4_img_dup(title->destImage);
+    Image *t = zu4_img_dup(title->destImage);
 
-    xu4_img_draw_subrect(t,
+    zu4_img_draw_subrect(t,
         title->rx,    // dest x, y
         title->ry,
         1,              // src x, y, w, h
@@ -2032,7 +2032,7 @@ void IntroController::drawTitle()
         title->rw,
         title->rh);
 
-    xu4_img_free(t);
+    zu4_img_free(t);
     t = NULL;
 }
 
@@ -2043,5 +2043,5 @@ void IntroController::drawTitle()
 void IntroController::skipTitles()
 {
     bSkipTitles = true;
-    xu4_snd_stop();
+    zu4_snd_stop();
 }

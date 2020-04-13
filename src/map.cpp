@@ -21,7 +21,7 @@
 #include "utils.h"
 #include "settings.h"
 
-static Coords nowhere = xu4_coords_nowhere();
+static Coords nowhere = zu4_coords_nowhere();
 
 void wrap(Coords *oc, const Map *map) {
     if (map && map->border_behavior == Map::BORDER_WRAP) {
@@ -248,7 +248,7 @@ Object *Map::objectAt(const Coords &coords) {
     for(i = objects.begin(); i != objects.end(); i++) {
         Object *obj = *i;
         
-        if (xu4_coords_equal(obj->getCoords(), coords)) {
+        if (zu4_coords_equal(obj->getCoords(), coords)) {
             /* get the most visible object */
             if (objAt && (objAt->getType() == Object::UNKNOWN) && (obj->getType() != Object::UNKNOWN))
                 objAt = obj;
@@ -271,7 +271,7 @@ const Portal *Map::portalAt(const Coords &coords, int actionFlags) {
     PortalList::const_iterator i;    
 
     for(i = portals.begin(); i != portals.end(); i++) {
-        if (xu4_coords_equal((*i)->coords, coords) &&
+        if (zu4_coords_equal((*i)->coords, coords) &&
             ((*i)->trigger_action & actionFlags))
             return *i;
     }
@@ -570,7 +570,7 @@ int Map::getValidMoves(Coords from, MapTile transport) {
     // get the creature object, if it exists (the one that's moving)
     m = creatureMgr->getByTile(transport);
 
-    bool isAvatar = xu4_coords_equal(c->location->coords, coords);
+    bool isAvatar = zu4_coords_equal(c->location->coords, coords);
     if (m && m->canMoveOntoPlayer())
     	isAvatar = false;
 
@@ -592,7 +592,7 @@ int Map::getValidMoves(Coords from, MapTile transport) {
         obj = objectAt(coords);
 
         // see if it's trying to move onto the avatar
-        if ((flags & SHOW_AVATAR) && xu4_coords_equal(coords, c->location->coords))
+        if ((flags & SHOW_AVATAR) && zu4_coords_equal(coords, c->location->coords))
             ontoAvatar = 1;
         
         // see if it's trying to move onto a person or creature
@@ -709,7 +709,7 @@ int Map::getValidMoves(Coords from, MapTile transport) {
 bool Map::move(Object *obj, Direction d) {
     Coords new_coords = obj->getCoords();
     movedir(&new_coords, d);
-    if (!xu4_coords_equal(new_coords, obj->getCoords())) {
+    if (!zu4_coords_equal(new_coords, obj->getCoords())) {
         obj->setCoords(new_coords);
         return true;
     }
@@ -817,7 +817,7 @@ bool Map::fillMonsterTable() {
 }
 
 MapTile Map::translateFromRawTileIndex(int raw) const {
-    xu4_assert(tilemap != NULL, "tilemap hasn't been set");
+    zu4_assert(tilemap != NULL, "tilemap hasn't been set");
 
     return tilemap->translate(raw);
 }

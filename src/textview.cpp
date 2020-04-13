@@ -40,10 +40,10 @@ void TextView::reinit() {
  * Draw a character from the charset onto the view.
  */
 void TextView::drawChar(int chr, int x, int y) {
-    xu4_assert(x < columns, "x value of %d out of range", x);
-    xu4_assert(y < rows, "y value of %d out of range", y);
+    zu4_assert(x < columns, "x value of %d out of range", x);
+    zu4_assert(y < rows, "y value of %d out of range", y);
 
-    xu4_img_draw_subrect(charset, this->x + (x * CHAR_WIDTH),
+    zu4_img_draw_subrect(charset, this->x + (x * CHAR_WIDTH),
                          this->y + (y * CHAR_HEIGHT),
                          0, chr * CHAR_HEIGHT,
                          CHAR_WIDTH,
@@ -60,7 +60,7 @@ void TextView::drawCharMasked(int chr, int x, int y, unsigned char mask) {
     drawChar(chr, x, y);
     for (int i = 0; i < 8; i++) {
         if (mask & (1 << i)) {
-            xu4_img_fill(screen, this->x + (x * CHAR_WIDTH),
+            zu4_img_fill(screen, this->x + (x * CHAR_WIDTH),
                              this->y + (y * CHAR_HEIGHT) + i,
                              CHAR_WIDTH,
                              1,
@@ -189,7 +189,7 @@ void TextView::textAt(int x, int y, const char *fmt, ...) {
 }
 
 void TextView::scroll() {
-    xu4_img_draw_subrect_on(screen, screen,
+    zu4_img_draw_subrect_on(screen, screen,
                           x,
                           y,
                           x,
@@ -197,7 +197,7 @@ void TextView::scroll() {
                           width,
                           height - CHAR_HEIGHT);
 
-    xu4_img_fill(screen, x,
+    zu4_img_fill(screen, x,
                      y + (CHAR_HEIGHT * (rows - 1)),
                      width,
                      CHAR_HEIGHT,
@@ -211,7 +211,7 @@ void TextView::setCursorPos(int x, int y, bool clearOld) {
         x -= columns;
         y++;
     }
-    xu4_assert(y < rows, "y value of %d out of range", y);
+    zu4_assert(y < rows, "y value of %d out of range", y);
 
     if (clearOld && cursorEnabled) {
         drawChar(' ', cursorX, cursorY);
@@ -236,7 +236,7 @@ void TextView::disableCursor() {
 }
 
 void TextView::drawCursor() {
-    xu4_assert(cursorPhase >= 0 && cursorPhase < 4, "invalid cursor phase: %d", cursorPhase);
+    zu4_assert(cursorPhase >= 0 && cursorPhase < 4, "invalid cursor phase: %d", cursorPhase);
 
     if (!cursorEnabled)
         return;

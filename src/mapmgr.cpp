@@ -46,7 +46,7 @@ void MapMgr::destroy() {
 }
 
 MapMgr::MapMgr() {
-    xu4_error(XU4_LOG_DBG, "Creating MapMgr");
+    zu4_error(ZU4_LOG_DBG, "Creating MapMgr");
 
     const Config *config = Config::getInstance();
     Map *map;
@@ -105,7 +105,7 @@ Map *MapMgr::initMap(Map::Type type) {
         break;
         
     default:
-        xu4_error(XU4_LOG_ERR, "Error: invalid map type used");
+        zu4_error(ZU4_LOG_ERR, "Error: invalid map type used");
         break;
     }
     
@@ -117,9 +117,9 @@ Map *MapMgr::get(MapId id) {
     if (!mapList[id]->data.size()) {
         MapLoader *loader = MapLoader::getLoader(mapList[id]->type);
         if (loader == NULL)
-            xu4_error(XU4_LOG_ERR, "Can't load map of type: %d", mapList[id]->type);
+            zu4_error(ZU4_LOG_ERR, "Can't load map of type: %d", mapList[id]->type);
 
-        xu4_error(XU4_LOG_DBG, "Loading map data for map: %s", mapList[id]->fname.c_str());
+        zu4_error(ZU4_LOG_DBG, "Loading map data for map: %s", mapList[id]->fname.c_str());
 
         loader->load(mapList[id]);
     }
@@ -131,7 +131,7 @@ void MapMgr::registerMap(Map *map) {
         mapList.resize(map->id + 1, NULL);
 
     if (mapList[map->id] != NULL)
-        xu4_error(XU4_LOG_ERR, "Error: A map with id '%d' already exists", map->id);
+        zu4_error(ZU4_LOG_ERR, "Error: A map with id '%d' already exists", map->id);
 
     mapList[map->id] = map;
 }
@@ -161,7 +161,7 @@ Map *MapMgr::initMapFromConf(const ConfigElement &mapConf) {
         cm->setContextual(mapConf.getBool("contextual"));
     }
 
-    xu4_error(XU4_LOG_DBG, "Loading configuration for map: %s", map->fname.c_str());
+    zu4_error(ZU4_LOG_DBG, "Loading configuration for map: %s", map->fname.c_str());
 
     if (mapConf.getBool("showavatar"))
         map->flags |= SHOW_AVATAR;
@@ -266,7 +266,7 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
     else if (prop == "exit_west")
         portal->trigger_action = ACTION_EXIT_WEST;
     else
-        xu4_error(XU4_LOG_ERR, "unknown trigger_action: %s", prop.c_str());
+        zu4_error(ZU4_LOG_ERR, "unknown trigger_action: %s", prop.c_str());
     
     prop = portalConf.getString("condition");
     if (!prop.empty()) {
@@ -275,7 +275,7 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
         else if (prop == "abyss")
             portal->portalConditionsMet = &isAbyssOpened;
         else
-            xu4_error(XU4_LOG_ERR, "unknown portalConditionsMet: %s", prop.c_str());
+            zu4_error(ZU4_LOG_ERR, "unknown portalConditionsMet: %s", prop.c_str());
     }
 
     portal->saveLocation = portalConf.getBool("savelocation");
@@ -288,7 +288,7 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
     else if (prop == "footorhorse")
         portal->portalTransportRequisites = TRANSPORT_FOOT_OR_HORSE;
     else
-        xu4_error(XU4_LOG_ERR, "unknown transport: %s", prop.c_str());
+        zu4_error(ZU4_LOG_ERR, "unknown transport: %s", prop.c_str());
 
     portal->exitPortal = portalConf.getBool("exits");
 

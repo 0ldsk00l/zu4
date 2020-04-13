@@ -4,10 +4,10 @@
 #include "u4file.h"
 
 enum ImageType {
-	XU4_IMG_RAW,
-	XU4_IMG_RLE,
-	XU4_IMG_LZW,
-	XU4_IMG_PNG,
+	ZU4_IMG_RAW,
+	ZU4_IMG_RLE,
+	ZU4_IMG_LZW,
+	ZU4_IMG_PNG,
 };
 
 /**
@@ -16,8 +16,8 @@ enum ImageType {
  * charset.ega).  This loader handles the original 4-bit images, as
  * well as the 8-bit VGA upgrade images. This handles RLE and LZW as well.
  */
-Image* xu4_img_load(U4FILE *file, int width, int height, int bpp, int type);
+Image* zu4_img_load(U4FILE *file, int width, int height, int bpp, int type);
 
-Image* xu4_png_load(const char *filename, int *x, int *y);
+Image* zu4_png_load(const char *filename, int *x, int *y);
 
 #endif

@@ -38,7 +38,7 @@ MapLoader *WorldMapLoader::instance = MapLoader::registerLoader(new WorldMapLoad
  * Gets a map loader for the given map type.
  */
 MapLoader *MapLoader::getLoader(Map::Type type) {
-    xu4_assert(loaderMap != NULL, "ImageLoader::getLoader loaderMap not initialized");
+    zu4_assert(loaderMap != NULL, "ImageLoader::getLoader loaderMap not initialized");
     if (loaderMap->find(type) == loaderMap->end())
         return NULL;
     return (*loaderMap)[type];
@@ -52,7 +52,7 @@ MapLoader *MapLoader::registerLoader(MapLoader *loader, Map::Type type) {
         loaderMap = new std::map<Map::Type, MapLoader *>;
 
     if (loaderMap->find(type) != loaderMap->end())
-        xu4_error(XU4_LOG_ERR, "map loader already registered for type %d", type);
+        zu4_error(ZU4_LOG_ERR, "map loader already registered for type %d", type);
 
     (*loaderMap)[type] = loader;
     return loader;
@@ -125,11 +125,11 @@ bool CityMapLoader::load(Map *map) {
     U4FILE *ult = u4fopen(city->fname.c_str());
     U4FILE *tlk = u4fopen(city->tlk_fname.c_str());
     if (!ult || !tlk)
-        xu4_error(XU4_LOG_ERR, "unable to load map data");
+        zu4_error(ZU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 32x32 to be read from an .ULT file */
-    xu4_assert(city->width == CITY_WIDTH, "map width is %d, should be %d", city->width, CITY_WIDTH);
-    xu4_assert(city->height == CITY_HEIGHT, "map height is %d, should be %d", city->height, CITY_HEIGHT);
+    zu4_assert(city->width == CITY_WIDTH, "map width is %d, should be %d", city->width, CITY_WIDTH);
+    zu4_assert(city->height == CITY_HEIGHT, "map height is %d, should be %d", city->height, CITY_HEIGHT);
 
     if (!loadData(city, ult))
         return false;
@@ -240,11 +240,11 @@ bool ConMapLoader::load(Map *map) {
 
     U4FILE *con = u4fopen(map->fname.c_str());
     if (!con)
-        xu4_error(XU4_LOG_ERR, "unable to load map data");
+        zu4_error(ZU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 11x11 to be read from an .CON file */
-    xu4_assert(map->width == CON_WIDTH, "map width is %d, should be %d", map->width, CON_WIDTH);
-    xu4_assert(map->height == CON_HEIGHT, "map height is %d, should be %d", map->height, CON_HEIGHT);
+    zu4_assert(map->width == CON_WIDTH, "map width is %d, should be %d", map->width, CON_WIDTH);
+    zu4_assert(map->height == CON_HEIGHT, "map height is %d, should be %d", map->height, CON_HEIGHT);
 
     if (map->type != Map::SHRINE) {
         CombatMap *cm = getCombatMap(map);
@@ -280,11 +280,11 @@ bool DngMapLoader::load(Map *map) {
 
     U4FILE *dng = u4fopen(dungeon->fname.c_str());
     if (!dng)
-        xu4_error(XU4_LOG_ERR, "unable to load map data");
+        zu4_error(ZU4_LOG_ERR, "unable to load map data");
 
     /* the map must be 11x11 to be read from an .CON file */
-    xu4_assert(dungeon->width == DNG_WIDTH, "map width is %d, should be %d", dungeon->width, DNG_WIDTH);
-    xu4_assert(dungeon->height == DNG_HEIGHT, "map height is %d, should be %d", dungeon->height, DNG_HEIGHT);
+    zu4_assert(dungeon->width == DNG_WIDTH, "map width is %d, should be %d", dungeon->width, DNG_WIDTH);
+    zu4_assert(dungeon->height == DNG_HEIGHT, "map height is %d, should be %d", dungeon->height, DNG_HEIGHT);
 
     /* load the dungeon map */
     unsigned int i, j;
@@ -442,7 +442,7 @@ void DngMapLoader::initDungeonRoom(Dungeon *dng, int room) {
 bool WorldMapLoader::load(Map *map) {
     U4FILE *world = u4fopen(map->fname.c_str());
     if (!world)
-        xu4_error(XU4_LOG_ERR, "unable to load map data");
+        zu4_error(ZU4_LOG_ERR, "unable to load map data");
 
     if (!loadData(map, world))
         return false;

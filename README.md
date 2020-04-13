@@ -34,4 +34,3 @@ http://www.moongates.com/u4/upgrade/files/u4upgrad.zip
 * Make the engine simple to plug into any framework
 * Convert from ugly C++ to beautiful C
 * Make it "Just Work"
-* Come up with a new name to avoid confusion

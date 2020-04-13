@@ -35,9 +35,9 @@
 static u4settings_t u4settings;
 SettingsData settings;
 
-u4settings_t* xu4_settings_ptr() { return &u4settings; }
+u4settings_t* zu4_settings_ptr() { return &u4settings; }
 
-void xu4_settings_init(bool useProfile, const char *profileName) {
+void zu4_settings_init(bool useProfile, const char *profileName) {
 	if (useProfile) {
 		snprintf(u4settings.path, sizeof(u4settings.path), "./profiles/%s/", profileName);
 		mkdir("./profiles", S_IRWXU|S_IRWXG|S_IRWXO);
@@ -51,14 +51,14 @@ void xu4_settings_init(bool useProfile, const char *profileName) {
 	}
 	mkdir(u4settings.path, S_IRWXU|S_IRWXG|S_IRWXO);
 	snprintf(u4settings.filename, sizeof(u4settings.filename), "%s%s", u4settings.path, SETTINGS_BASE_FILENAME);
-	xu4_settings_read();
+	zu4_settings_read();
 }
 
-void xu4_settings_setdata(const SettingsData data) {
+void zu4_settings_setdata(const SettingsData data) {
 	settings = data;
 }
 
-bool xu4_settings_read() {
+bool zu4_settings_read() {
     char buffer[256];    
     FILE *settingsFile;
     extern int eventTimerGranularity;   
@@ -200,7 +200,7 @@ bool xu4_settings_read() {
             settings.campingAlwaysCombat = (int) strtoul(buffer + strlen("campingAlwaysCombat="), NULL, 0);    
 
         else
-            xu4_error(XU4_LOG_WRN, "invalid line in settings file %s", buffer);
+            zu4_error(ZU4_LOG_WRN, "invalid line in settings file %s", buffer);
     }
 
     fclose(settingsFile);
@@ -209,12 +209,12 @@ bool xu4_settings_read() {
     return true;
 }
 
-bool xu4_settings_write() {    
+bool zu4_settings_write() {    
     FILE *settingsFile;
         
     settingsFile = fopen(u4settings.filename, "wt");
     if (!settingsFile) {
-        xu4_error(XU4_LOG_WRN, "can't write settings file");
+        zu4_error(ZU4_LOG_WRN, "can't write settings file");
         return false;
     }    
 

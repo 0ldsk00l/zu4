@@ -47,18 +47,18 @@ static void lock_handler(cm_Event *e) {
 	}
 }
 
-void xu4_music_play(int music) {
+void zu4_music_play(int music) {
 	if (music_enabled) {
 		if (curtrack == music) { return; }
 		else {
-			xu4_music_stop();
+			zu4_music_stop();
 			curtrack = music;
 			cm_play(track[curtrack]);
 		}
 	}
 }
 
-void xu4_music_stop() {
+void zu4_music_stop() {
 	if (curtrack && (cm_get_state(track[curtrack]) != CM_STATE_STOPPED)) {
 		cm_stop(track[curtrack]);
 	}
@@ -66,65 +66,65 @@ void xu4_music_stop() {
 	curtrack = TRACK_NONE;
 }
 
-void xu4_music_fadeout(int msecs) { // Implement later
-	xu4_music_stop();
+void zu4_music_fadeout(int msecs) { // Implement later
+	zu4_music_stop();
 }
 
-void xu4_music_fadein(int msecs, bool loadFromMap) { // Implement later
-	xu4_music_play(prevtrack);
+void zu4_music_fadein(int msecs, bool loadFromMap) { // Implement later
+	zu4_music_play(prevtrack);
 }
 
-void xu4_music_vol(double volume) {
+void zu4_music_vol(double volume) {
 	// Every source has to be done independently
 	for (int i = 1; i < TRACK_MAX; i++) {
 		cm_set_gain(track[i], volume);
 	}
 }
 
-int xu4_music_vol_inc() {
+int zu4_music_vol_inc() {
 	if (++settings.musicVol > MAX_VOLUME) { settings.musicVol = MAX_VOLUME; }
-	else { xu4_music_vol((double)settings.musicVol / MAX_VOLUME); }
+	else { zu4_music_vol((double)settings.musicVol / MAX_VOLUME); }
 	return (settings.musicVol * MAX_VOLUME);
 }
 
-int xu4_music_vol_dec() {
+int zu4_music_vol_dec() {
 	if (--settings.musicVol < 0) { settings.musicVol = 0; }
-	else { xu4_music_vol((double)settings.musicVol / MAX_VOLUME); }
+	else { zu4_music_vol((double)settings.musicVol / MAX_VOLUME); }
 	return (settings.musicVol * MAX_VOLUME);
 }
 
-bool xu4_music_toggle() {
+bool zu4_music_toggle() {
 	music_enabled = !music_enabled;
-	music_enabled ? xu4_music_fadein(1000, true) : xu4_music_fadeout(1000);
+	music_enabled ? zu4_music_fadein(1000, true) : zu4_music_fadeout(1000);
 	return music_enabled;
 }
 
-static void xu4_audio_cb(void *userdata, Uint8 *stream, int len) {
+static void zu4_audio_cb(void *userdata, Uint8 *stream, int len) {
 	cm_process((cm_Int16*)stream, len / 2);
 }
 
-static void xu4_music_free_files() {
+static void zu4_music_free_files() {
 	for (int i = 0; i < TRACK_MAX; i++) {
 		if (track[i]) { free(track[i]); }
 	}
 }
 
-static void xu4_music_load_files() {
-	xu4_xmlparse_init("conf/music.xml");
+static void zu4_music_load_files() {
+	zu4_xmlparse_init("conf/music.xml");
 	
 	char trackfile[64]; // Buffer for track filenames that are found
 	char trackpath[128]; // Buffer for full path to track
 	int index = 1; // Start at 1 because track 0 is silence, and has no file
-	while (xu4_xmlparse_find(trackfile, "track", "file")) {
+	while (zu4_xmlparse_find(trackfile, "track", "file")) {
 		snprintf(trackpath, sizeof(trackpath), "%s%s", "music/", trackfile);
 		track[index] = cm_new_source_from_file(trackpath);
 		cm_set_loop(track[index++], 1);
 	}
 	
-	xu4_xmlparse_deinit();
+	zu4_xmlparse_deinit();
 }
 
-void xu4_music_init() {
+void zu4_music_init() {
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
 	audio_mutex = SDL_CreateMutex();
 	spec = (SDL_AudioSpec*)malloc(sizeof(SDL_AudioSpec));
@@ -136,26 +136,26 @@ void xu4_music_init() {
 	spec->silence = 0;
 	spec->samples = 512;
 	spec->userdata = 0;
-	spec->callback = xu4_audio_cb;
+	spec->callback = zu4_audio_cb;
 	
 	if (SDL_OpenAudio(spec, obtained) < 0) {
-		xu4_error(XU4_LOG_WRN, "Couldn't open audio: %s\n", SDL_GetError());
+		zu4_error(ZU4_LOG_WRN, "Couldn't open audio: %s\n", SDL_GetError());
 	}
 	free(spec);
 	
 	cm_init(obtained->freq);
 	cm_set_lock(lock_handler);
 	
-	xu4_music_load_files();
+	zu4_music_load_files();
 	music_enabled = settings.musicVol;
 	
-	xu4_music_vol((double)settings.musicVol / MAX_VOLUME);
+	zu4_music_vol((double)settings.musicVol / MAX_VOLUME);
 	
 	SDL_PauseAudio(0);
 }
 
-void xu4_music_deinit() {
-	xu4_music_free_files();
+void zu4_music_deinit() {
+	zu4_music_free_files();
 	free(obtained);
 	SDL_CloseAudio();
 }

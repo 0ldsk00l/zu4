@@ -32,7 +32,7 @@ static SDL_GLContext glcontext;
 
 static GLuint texID = 0;
 
-static void xu4_ogl_init() {
+static void zu4_ogl_init() {
 	glEnable(GL_TEXTURE_2D);
 
 	glGenTextures(1, &texID);
@@ -53,8 +53,8 @@ static void xu4_ogl_init() {
 	glLoadIdentity();
 }
 
-void xu4_ogl_swap() {
-	Image *screen = xu4_img_get_screen();
+void zu4_ogl_swap() {
+	Image *screen = zu4_img_get_screen();
 	glTexImage2D(GL_TEXTURE_2D,
 				0,
 				GL_RGB,
@@ -80,9 +80,9 @@ void xu4_ogl_swap() {
 	SDL_GL_SwapWindow(window);
 }
 
-void xu4_video_init() {
+void zu4_video_init() {
     if (u4_SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
-        xu4_error(XU4_LOG_ERR, "Unable to init SDL: %s", SDL_GetError());
+        zu4_error(ZU4_LOG_ERR, "Unable to init SDL: %s", SDL_GetError());
 	}
 	
     atexit(SDL_Quit);
@@ -97,10 +97,10 @@ void xu4_video_init() {
 	glcontext = SDL_GL_CreateContext(window);
 	SDL_GL_MakeCurrent(window, glcontext);
 	SDL_GL_SetSwapInterval(1);
-	xu4_ogl_init();
+	zu4_ogl_init();
 }
 
-void xu4_video_deinit() {
+void zu4_video_deinit() {
     SDL_DestroyWindow(window);
     u4_SDL_QuitSubSystem(SDL_INIT_VIDEO);
     if (texID) { glDeleteTextures(1, &texID); }

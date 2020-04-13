@@ -1,7 +1,7 @@
 /*
  * u4file.cpp
- * Copyright (C) 2014 Darren Janeczek
- * Copyright (C) 2019 R. Danbrook
+ * Copyright (C) 2014 xu4 Team
+ * Copyright (C) 2020 R. Danbrook
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,13 +28,13 @@
 #include "error.h"
 #include "u4file.h"
 
-void (*xu4_file_close)(U4FILE*);
-int (*xu4_file_seek)(U4FILE*, long offset, int whence);
-long (*xu4_file_tell)(U4FILE*);
-size_t (*xu4_file_read)(U4FILE*, void *ptr, size_t size, size_t nmemb);
-long (*xu4_file_length)(U4FILE*);
-int (*xu4_file_getc)(U4FILE*);
-int (*xu4_file_putc)(U4FILE*, int);
+void (*zu4_file_close)(U4FILE*);
+int (*zu4_file_seek)(U4FILE*, long offset, int whence);
+long (*zu4_file_tell)(U4FILE*);
+size_t (*zu4_file_read)(U4FILE*, void *ptr, size_t size, size_t nmemb);
+long (*zu4_file_length)(U4FILE*);
+int (*zu4_file_getc)(U4FILE*);
+int (*zu4_file_putc)(U4FILE*, int);
 
 using std::map;
 using std::string;
@@ -72,7 +72,7 @@ bool u4isUpgradeInstalled() {
 		if (filelength > (5 * 1024)) { result = true; }
 	}
 	
-	xu4_error(XU4_LOG_DBG, "u4isUpgradeInstalled %d\n", (int)result);
+	zu4_error(ZU4_LOG_DBG, "u4isUpgradeInstalled %d\n", (int)result);
 	
 	return result;
 }
@@ -165,7 +165,7 @@ U4ZipPackageMgr::U4ZipPackageMgr() {
 		
 		// Check zip file validity
 		if (!mz_zip_reader_init_file(&zip_archive, path, 0)) {
-			xu4_error(XU4_LOG_ERR, "Archive corrupt, exiting...\n");
+			zu4_error(ZU4_LOG_ERR, "Archive corrupt, exiting...\n");
 		}
 		
 		// Locate file to detect directory structure inside archive
@@ -200,7 +200,7 @@ U4FILE *u4fopen(const char *fname) {
 	U4FILE *u4f = NULL;
 	unsigned int i;
 	
-	xu4_error(XU4_LOG_DBG, "looking for %s\n", fname);
+	zu4_error(ZU4_LOG_DBG, "looking for %s\n", fname);
 	
 	/**
 	 * search for file within zipfiles (ultima4.zip, u4upgrad.zip, etc.)
@@ -209,13 +209,13 @@ U4FILE *u4fopen(const char *fname) {
 	for (std::vector<U4ZipPackage *>::const_reverse_iterator j = packages.rbegin(); j != packages.rend(); j++) {
 		u4f = u4fopen_zip(fname, *j);
 		if (u4f) {
-			xu4_file_close = &xu4_file_zip_close;
-			xu4_file_seek = &xu4_file_zip_seek;
-			xu4_file_tell = &xu4_file_zip_tell;
-			xu4_file_read = &xu4_file_zip_read;
-			xu4_file_length = &xu4_file_zip_length;
-			xu4_file_getc = &xu4_file_zip_getc;
-			xu4_file_putc = &xu4_file_zip_putc;
+			zu4_file_close = &zu4_file_zip_close;
+			zu4_file_seek = &zu4_file_zip_seek;
+			zu4_file_tell = &zu4_file_zip_tell;
+			zu4_file_read = &zu4_file_zip_read;
+			zu4_file_length = &zu4_file_zip_length;
+			zu4_file_getc = &zu4_file_zip_getc;
+			zu4_file_putc = &zu4_file_zip_putc;
 			return u4f; /* file was found, return it! */
 		}
 	}
@@ -249,17 +249,17 @@ U4FILE *u4fopen(const char *fname) {
 	if (!pathname.empty()) {
 		u4f = u4fopen_stdio(pathname.c_str());
 		if (u4f != NULL) {
-			xu4_error(XU4_LOG_DBG, "%s successfully opened\n", pathname.c_str());
+			zu4_error(ZU4_LOG_DBG, "%s successfully opened\n", pathname.c_str());
 		}
 	}
 	
-	xu4_file_close = &xu4_file_stdio_close;
-	xu4_file_seek = &xu4_file_stdio_seek;
-	xu4_file_tell = &xu4_file_stdio_tell;
-	xu4_file_read = &xu4_file_stdio_read;
-	xu4_file_length = &xu4_file_stdio_length;
-	xu4_file_getc = &xu4_file_stdio_getc;
-	xu4_file_putc = &xu4_file_stdio_putc;
+	zu4_file_close = &zu4_file_stdio_close;
+	zu4_file_seek = &zu4_file_stdio_seek;
+	zu4_file_tell = &zu4_file_stdio_tell;
+	zu4_file_read = &zu4_file_stdio_read;
+	zu4_file_length = &zu4_file_stdio_length;
+	zu4_file_getc = &zu4_file_stdio_getc;
+	zu4_file_putc = &zu4_file_stdio_putc;
 	return u4f;
 }
 
@@ -316,36 +316,36 @@ U4FILE *u4fopen_zip(const string &fname, U4ZipPackage *package) {
 }
 
 void u4fclose(U4FILE *f) {
-	xu4_file_close(f);
+	zu4_file_close(f);
 	delete f;
 }
 
 int u4fseek(U4FILE *f, long offset, int whence) {
-	return xu4_file_seek(f, offset, whence);
+	return zu4_file_seek(f, offset, whence);
 }
 
 long u4ftell(U4FILE *f) {
-	return xu4_file_tell(f);
+	return zu4_file_tell(f);
 }
 
 size_t u4fread(U4FILE *f, void *ptr, size_t size, size_t nmemb) {
-	return xu4_file_read(f, ptr, size, nmemb);
+	return zu4_file_read(f, ptr, size, nmemb);
 }
 
 int u4fgetc(U4FILE *f) {
-	return xu4_file_getc(f);
+	return zu4_file_getc(f);
 }
 
 int u4fgetshort(U4FILE *f) {
-	return xu4_file_getshort(f);
+	return zu4_file_getshort(f);
 }
 
 int u4fputc(int c, U4FILE *f) {
-	return xu4_file_putc(f, c);
+	return zu4_file_putc(f, c);
 }
 
 long u4flength(U4FILE *f) {
-	return xu4_file_length(f);
+	return zu4_file_length(f);
 }
 
 /**
@@ -358,7 +358,7 @@ vector<string> u4read_stringtable(U4FILE *f, long offset, int nstrings) {
 	int i;
 	vector<string> strs;
 
-	xu4_assert(offset < u4flength(f), "offset begins beyond end of file");
+	zu4_assert(offset < u4flength(f), "offset begins beyond end of file");
 	
 	if (offset != -1) { u4fseek(f, offset, SEEK_SET); }
 	
@@ -366,7 +366,7 @@ vector<string> u4read_stringtable(U4FILE *f, long offset, int nstrings) {
 		char c;
 		buffer.erase();
 
-		while ((c = xu4_file_getc(f)) != '\0')
+		while ((c = zu4_file_getc(f)) != '\0')
 			buffer += c;
 		
 		strs.push_back(buffer);
@@ -385,18 +385,18 @@ void u4find_path(char *path, size_t psize, const char *fname, const char *subpat
 	if (f == NULL) {
 		snprintf(path, psize, "%s/%s/%s", u4paths.rootpath, subpath, fname);
 		
-		xu4_error(XU4_LOG_DBG, "trying to open %s\n", path);
+		zu4_error(ZU4_LOG_DBG, "trying to open %s\n", path);
 		
 		if ((f = fopen(path, "rb")) != NULL) {
-			xu4_error(XU4_LOG_DBG, "u4file opened %s\n", path);
+			zu4_error(ZU4_LOG_DBG, "u4file opened %s\n", path);
 		}
 		else {
 			memset(path, '\0', psize);
 		}
 	}
 	
-	f != NULL ? xu4_error(XU4_LOG_DBG, "%s successfully found\n", path) :
-	xu4_error(XU4_LOG_DBG, "%s not found\n", fname);
+	f != NULL ? zu4_error(ZU4_LOG_DBG, "%s successfully found\n", path) :
+	zu4_error(ZU4_LOG_DBG, "%s not found\n", fname);
 	
 	if (f) { fclose(f); }
 }
@@ -409,14 +409,14 @@ void u4find_graphics(char *path, size_t psize, const char *fname) {
 	u4find_path(path, psize, fname, u4paths.graphicspath);
 }
 
-int xu4_file_stdio_seek(U4FILE *u4f, long offset, int whence) {
+int zu4_file_stdio_seek(U4FILE *u4f, long offset, int whence) {
 	return fseek(u4f->file, offset, whence);
 }
 
-int xu4_file_zip_seek(U4FILE *u4f, long offset, int whence) {
+int zu4_file_zip_seek(U4FILE *u4f, long offset, int whence) {
 	long pos;
 	
-	xu4_assert(whence != SEEK_END, "seeking with whence == SEEK_END not allowed with zipfiles");
+	zu4_assert(whence != SEEK_END, "seeking with whence == SEEK_END not allowed with zipfiles");
 	pos = u4f->cur;
 	
 	if (whence == SEEK_CUR) {
@@ -432,33 +432,33 @@ int xu4_file_zip_seek(U4FILE *u4f, long offset, int whence) {
 		u4f->cur = 0;
 	}
 	
-	xu4_assert(offset - pos > 0, "error in U4FILE_zip::seek");
+	zu4_assert(offset - pos > 0, "error in U4FILE_zip::seek");
 	u4f->cur += offset - pos;
 	return 0;
 }
 
-void xu4_file_stdio_close(U4FILE *u4f) {
+void zu4_file_stdio_close(U4FILE *u4f) {
 	fclose(u4f->file);
 }
 
-void xu4_file_zip_close(U4FILE *u4f) {
+void zu4_file_zip_close(U4FILE *u4f) {
 	mz_zip_reader_end(&(u4f->zip_archive));
 	free(u4f->fptr);
 }
 
-long xu4_file_stdio_tell(U4FILE *u4f) {
+long zu4_file_stdio_tell(U4FILE *u4f) {
 	return ftell(u4f->file);
 }
 
-long xu4_file_zip_tell(U4FILE *u4f) {
+long zu4_file_zip_tell(U4FILE *u4f) {
 	return u4f->cur;
 }
 
-size_t xu4_file_stdio_read(U4FILE *u4f, void *ptr, size_t size, size_t nmemb) {
+size_t zu4_file_stdio_read(U4FILE *u4f, void *ptr, size_t size, size_t nmemb) {
 	return fread(ptr, size, nmemb, u4f->file);
 }
 
-size_t xu4_file_zip_read(U4FILE *u4f, void *ptr, size_t size, size_t nmemb) {
+size_t zu4_file_zip_read(U4FILE *u4f, void *ptr, size_t size, size_t nmemb) {
 	size_t retval = nmemb * size;
 	if (retval) {
 		memcpy(ptr, u4f->fptr + u4f->cur, retval);
@@ -467,7 +467,7 @@ size_t xu4_file_zip_read(U4FILE *u4f, void *ptr, size_t size, size_t nmemb) {
 	return retval;
 }
 
-long xu4_file_stdio_length(U4FILE *u4f) {
+long zu4_file_stdio_length(U4FILE *u4f) {
 	long curr, len;
 	
 	curr = ftell(u4f->file);
@@ -478,29 +478,29 @@ long xu4_file_stdio_length(U4FILE *u4f) {
 	return len;
 }
 
-long xu4_file_zip_length(U4FILE *u4f) {
+long zu4_file_zip_length(U4FILE *u4f) {
 	return u4f->za_stat.m_uncomp_size;
 }
 
-int xu4_file_stdio_getc(U4FILE *u4f) {
+int zu4_file_stdio_getc(U4FILE *u4f) {
 	return fgetc(u4f->file);
 }
 
-int xu4_file_zip_getc(U4FILE *u4f) {
+int zu4_file_zip_getc(U4FILE *u4f) {
 	uint8_t *retptr = u4f->fptr;
 	return (int)retptr[u4f->cur++];
 }
 
-int xu4_file_stdio_putc(U4FILE *u4f, int c) {
+int zu4_file_stdio_putc(U4FILE *u4f, int c) {
 	return fputc(c, u4f->file);
 }
 
-int xu4_file_zip_putc(U4FILE *u4f, int c) {
-	xu4_assert(0, "zipfiles must be read-only!");
+int zu4_file_zip_putc(U4FILE *u4f, int c) {
+	zu4_assert(0, "zipfiles must be read-only!");
 	return c;
 }
 
-int xu4_file_getshort(U4FILE *u4f) {
-	int byteLow = xu4_file_getc(u4f);
-	return byteLow | (xu4_file_getc(u4f) << 8);
+int zu4_file_getshort(U4FILE *u4f) {
+	int byteLow = zu4_file_getc(u4f);
+	return byteLow | (zu4_file_getc(u4f) << 8);
 }

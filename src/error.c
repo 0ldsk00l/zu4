@@ -25,7 +25,7 @@
 
 #include "error.h"
 
-void xu4_assert(bool exp, const char *fmt, ...) {
+void zu4_assert(bool exp, const char *fmt, ...) {
 	// Handle assertions
 	va_list va;
 	char buffer[256] = {0};
@@ -40,7 +40,7 @@ void xu4_assert(bool exp, const char *fmt, ...) {
 	}
 }
 
-void xu4_error(int level, const char *fmt, ...) {
+void zu4_error(int level, const char *fmt, ...) {
 	// Handle and log errors
 	va_list va;
 	char buffer[4096] = {0};
@@ -50,10 +50,10 @@ void xu4_error(int level, const char *fmt, ...) {
 	vsnprintf(buffer, sizeof(buffer), fmt, va);
 	va_end(va);
 	
-	if (level > XU4_LOG_DBG) {
+	if (level > ZU4_LOG_DBG) {
 		fprintf(stderr, "%c: %s\n", levelchr[level], buffer);
 		fflush(stderr);
 	}
 	
-	if (level >= XU4_LOG_ERR) { exit(1); }
+	if (level >= ZU4_LOG_ERR) { exit(1); }
 }

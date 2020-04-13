@@ -45,12 +45,12 @@ ConfigElement Config::getElement(const string &name) const {
     context = xmlXPathNewContext(doc);
     result = xmlXPathEvalExpression(reinterpret_cast<const xmlChar *>(path.c_str()), context);
     if(xmlXPathNodeSetIsEmpty(result->nodesetval))
-        xu4_error(XU4_LOG_ERR, "no match for xpath %s\n", path.c_str());
+        zu4_error(ZU4_LOG_ERR, "no match for xpath %s\n", path.c_str());
 
     xmlXPathFreeContext(context);
 
     if (result->nodesetval->nodeNr > 1)
-        xu4_error(XU4_LOG_WRN, "more than one match for xpath %s\n", path.c_str());
+        zu4_error(ZU4_LOG_WRN, "more than one match for xpath %s\n", path.c_str());
 
     xmlNodePtr node = result->nodesetval->nodeTab[0];
     xmlXPathFreeObject(result);
@@ -65,7 +65,7 @@ Config::Config() {
     doc = xmlParseFile(Config::CONFIG_XML_LOCATION_POINTER);
     if (!doc) {
     	printf("Failed to read core config.xml. Assuming it is located at '%s'", Config::CONFIG_XML_LOCATION_POINTER);
-        xu4_error(XU4_LOG_ERR, "error parsing config.xml");
+        zu4_error(ZU4_LOG_ERR, "error parsing config.xml");
     }
 
     xmlXIncludeProcess(doc);
@@ -82,7 +82,7 @@ Config::Config() {
 
         // Error changed to not fatal due to regression in libxml2
         if (!xmlValidateDocument(&cvp, doc))
-            xu4_error(XU4_LOG_WRN, "xml validation error:\n%s", errorMessage.c_str());
+            zu4_error(ZU4_LOG_WRN, "xml validation error:\n%s", errorMessage.c_str());
     }
 }
 
@@ -208,7 +208,7 @@ int ConfigElement::getEnum(const string &name, const char *enumValues[]) const {
     }
 
     if (result == -1)
-        xu4_error(XU4_LOG_ERR, "invalid enum value for %s: %s", name.c_str(), prop);
+        zu4_error(ZU4_LOG_ERR, "invalid enum value for %s: %s", name.c_str(), prop);
 
     xmlFree(prop);
 

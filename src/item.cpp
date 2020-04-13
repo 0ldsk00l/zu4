@@ -178,7 +178,7 @@ void putItemInInventory(int item) {
 void useBBC(int item) {
     Coords abyssEntrance = { 0xe9, 0xe9, 0 };
     /* on top of the Abyss entrance */
-    if (xu4_coords_equal(c->location->coords, abyssEntrance)) {
+    if (zu4_coords_equal(c->location->coords, abyssEntrance)) {
         /* must use bell first */
         if (item == ITEM_BELL) {
             screenMessage("\nThe Bell rings on and on!\n");
@@ -299,7 +299,7 @@ void useStone(int item) {
                         return;
                     }
                 }
-                else xu4_assert(0, "Not in an altar room!");
+                else zu4_assert(0, "Not in an altar room!");
 
                 /* see if we have all the stones, if not, get more names! */
                 if (attr && needStoneNames) {
@@ -411,7 +411,7 @@ bool isMysticInInventory(int mystic) {
     else if (mystic == ARMR_MYSTICROBES)
         return c->saveGame->armor[ARMR_MYSTICROBES] > 0;
     else
-        xu4_assert(0, "Invalid mystic item was tested in isMysticInInventory()");    
+        zu4_assert(0, "Invalid mystic item was tested in isMysticInInventory()");    
     return false;
 }
 
@@ -423,7 +423,7 @@ void putMysticInInventory(int mystic) {
     else if (mystic == ARMR_MYSTICROBES)
         c->saveGame->armor[ARMR_MYSTICROBES] += 8;
     else
-        xu4_assert(0, "Invalid mystic item was added in putMysticInInventory()");        
+        zu4_assert(0, "Invalid mystic item was added in putMysticInInventory()");        
     c->saveGame->lastreagent = c->saveGame->moves & 0xF0;
 }
 
@@ -460,7 +460,7 @@ bool isReagentInInventory(int reag) {
 
 void putReagentInInventory(int reag) {
     c->party->adjustKarma(KA_FOUND_ITEM);
-    c->saveGame->reagents[reag] += xu4_random(8) + 2;
+    c->saveGame->reagents[reag] += zu4_random(8) + 2;
     c->saveGame->lastreagent = c->saveGame->moves & 0xF0;
 
     if (c->saveGame->reagents[reag] > 99) {
@@ -502,7 +502,7 @@ const ItemLocation *itemAtLocation(const Map *map, const Coords &coords) {
     for (i = 0; i < N_ITEMS; i++) {
         if (!items[i].locationLabel)
             continue;
-        if (xu4_coords_equal(map->getLabel(items[i].locationLabel), coords) &&
+        if (zu4_coords_equal(map->getLabel(items[i].locationLabel), coords) &&
             itemConditionsMet(items[i].conditions))
             return &(items[i]);
     }

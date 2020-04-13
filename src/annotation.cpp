@@ -40,7 +40,7 @@ void Annotation::debug_output() const {
  * Operators
  */ 
 bool Annotation::operator==(const Annotation &a) const {
-    return (xu4_coords_equal(coords, a.getCoords()) && (tile == a.tile)) ? true : false;        
+    return (zu4_coords_equal(coords, a.getCoords()) && (tile == a.tile)) ? true : false;        
 }
 
 /**
@@ -71,7 +71,7 @@ Annotation::List AnnotationMgr::allAt(Coords coords) {
     Annotation::List list;
 
     for (i = annotations.begin(); i != annotations.end(); i++) {
-        if (xu4_coords_equal(i->getCoords(), coords))
+        if (zu4_coords_equal(i->getCoords(), coords))
             list.push_back(*i);
     }
     
@@ -85,7 +85,7 @@ std::list<Annotation *> AnnotationMgr::ptrsToAllAt(Coords coords) {
     std::list<Annotation *> list;
 
     for (i = annotations.begin(); i != annotations.end(); i++) {
-        if (xu4_coords_equal(i->getCoords(), coords))
+        if (zu4_coords_equal(i->getCoords(), coords))
             list.push_back(&(*i));
     }
     

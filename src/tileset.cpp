@@ -44,7 +44,7 @@ void TileRule::load() {
     }    
     
     if (TileRule::findByName("default") == NULL)
-        xu4_error(XU4_LOG_ERR, "no 'default' rule found in tile rules");
+        zu4_error(ZU4_LOG_ERR, "no 'default' rule found in tile rules");
 }
 
 /**
@@ -158,15 +158,15 @@ void Tileset::loadAll() {
     const Config *config = Config::getInstance();    
     vector<ConfigElement> conf;
 
-    xu4_error(XU4_LOG_DBG, "Unloading all tilesets");
+    zu4_error(ZU4_LOG_DBG, "Unloading all tilesets");
     unloadAll();
 
     // get the config element for all tilesets
-    xu4_error(XU4_LOG_DBG, "Loading tilesets info from config");
+    zu4_error(ZU4_LOG_DBG, "Loading tilesets info from config");
     conf = config->getElement("tilesets").getChildren();
     
     // load tile rules
-    xu4_error(XU4_LOG_DBG, "Loading tile rules");
+    zu4_error(ZU4_LOG_DBG, "Loading tile rules");
     if (!TileRule::rules.size())
         TileRule::load();
 
@@ -182,10 +182,10 @@ void Tileset::loadAll() {
     }
 
     // load tile maps, including translations from index to id
-    xu4_error(XU4_LOG_DBG, "Loading tilemaps");
+    zu4_error(ZU4_LOG_DBG, "Loading tilemaps");
     TileMap::loadAll();
 
-    xu4_error(XU4_LOG_DBG, "Successfully Loaded Tilesets");
+    zu4_error(ZU4_LOG_DBG, "Successfully Loaded Tilesets");
 }
 
 /**
@@ -265,7 +265,7 @@ void Tileset::load(const ConfigElement &tilesetConf) {
         extends = Tileset::get(tilesetConf.getString("extends"));
     else extends = NULL;
 
-    xu4_error(XU4_LOG_DBG, "\tLoading Tiles...");
+    zu4_error(ZU4_LOG_DBG, "\tLoading Tiles...");
 
     int index = 0;
     vector<ConfigElement> children = tilesetConf.getChildren();
@@ -276,7 +276,7 @@ void Tileset::load(const ConfigElement &tilesetConf) {
         Tile *tile = new Tile(this);
         tile->loadProperties(*i);
 
-        xu4_error(XU4_LOG_DBG, "\t\tLoaded %s", tile->getName().c_str());
+        zu4_error(ZU4_LOG_DBG, "\t\tLoaded %s", tile->getName().c_str());
 
         /* add the tile to our tileset */
         tiles[tile->getId()] = tile;

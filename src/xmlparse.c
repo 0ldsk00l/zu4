@@ -37,7 +37,7 @@ static yxml_t *x;	// Uninitialized state
 static char *doc;	// Null-terminated XML document
 static char *ptr;
 
-void xu4_xmlparse_init(const char *filename) {
+void zu4_xmlparse_init(const char *filename) {
 	buf = malloc(BUFSIZE);
 	x = malloc(sizeof(yxml_t));
 	yxml_init(x, buf, BUFSIZE);
@@ -58,13 +58,13 @@ void xu4_xmlparse_init(const char *filename) {
 	fclose(file);
 }
 
-void xu4_xmlparse_deinit() {
+void zu4_xmlparse_deinit() {
 	free(buf);
 	free(x);
 	free(doc);
 }
 
-int xu4_xmlparse_find(char *value, const char *elemname, const char *attrname) {
+int zu4_xmlparse_find(char *value, const char *elemname, const char *attrname) {
 	int index = 0;
 	while(*ptr) {
 		yxml_ret_t r = yxml_parse(x, *ptr);

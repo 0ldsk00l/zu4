@@ -48,7 +48,7 @@ void ImageMgr::destroy() {
 }
 
 ImageMgr::ImageMgr() {
-    xu4_error(XU4_LOG_DBG, "Creating ImageMgr");
+    zu4_error(ZU4_LOG_DBG, "Creating ImageMgr");
     //settings.addObserver(this);
 }
 
@@ -59,11 +59,11 @@ ImageMgr::~ImageMgr() {
 }
 
 void ImageMgr::init() {
-    xu4_error(XU4_LOG_DBG, "Initializing ImageMgr");
+    zu4_error(ZU4_LOG_DBG, "Initializing ImageMgr");
     /*
      * register the "screen" image representing the entire screen
      */
-    Image *screen = xu4_img_create_screen();
+    Image *screen = zu4_img_create_screen();
     ImageInfo *screenInfo = new ImageInfo;
 
     screenInfo->name = "screen";
@@ -108,7 +108,7 @@ ImageSet *ImageMgr::loadImageSetFromConf(const ConfigElement &conf) {
     set->location = conf.getString("location");
     set->extends = conf.getString("extends");
 
-    xu4_error(XU4_LOG_DBG, "Loading image set: %s", set->name.c_str());
+    zu4_error(ZU4_LOG_DBG, "Loading image set: %s", set->name.c_str());
 
     vector<ConfigElement> children = conf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
@@ -198,53 +198,53 @@ void ImageMgr::fixupIntro(Image *im) {
 	sigData = intro->getSigData();
 	
 	// update the position of "and"
-	xu4_img_draw_subrect_on(im, im, 148, 17, 153, 17, 11, 4);
-	xu4_img_draw_subrect_on(im, im, 159, 17, 165, 18, 1, 4);
-	xu4_img_draw_subrect_on(im, im, 160, 17, 164, 17, 16, 4);
+	zu4_img_draw_subrect_on(im, im, 148, 17, 153, 17, 11, 4);
+	zu4_img_draw_subrect_on(im, im, 159, 17, 165, 18, 1, 4);
+	zu4_img_draw_subrect_on(im, im, 160, 17, 164, 17, 16, 4);
 	
 	// update the position of "Origin Systems, Inc."
-	//xu4_img_draw_subrect_on(im, im, 86, 21, 88, 21, 114, 9);
-	//xu4_img_draw_subrect_on(im, im, 199, 21, 202, 21, 6, 9);
-	xu4_img_draw_subrect_on(im, im, 207, 21, 208, 21, 28, 9);
+	//zu4_img_draw_subrect_on(im, im, 86, 21, 88, 21, 114, 9);
+	//zu4_img_draw_subrect_on(im, im, 199, 21, 202, 21, 6, 9);
+	zu4_img_draw_subrect_on(im, im, 207, 21, 208, 21, 28, 9);
 	
 	// update the position of "Ultima IV" -  move this prior to moving "present"
-	xu4_img_draw_subrect_on(im, im, 59, 33, 61, 33, 204, 46);
+	zu4_img_draw_subrect_on(im, im, 59, 33, 61, 33, 204, 46);
 	
 	// update the position of "Quest of the Avatar"
-	//xu4_img_draw_subrect_on(im, im, 69, 80, 70, 80, 11, 13); // quEst
-	//xu4_img_draw_subrect_on(im, im, 82, 80, 84, 80, 27, 13); // queST
-	//xu4_img_draw_subrect_on(im, im, 131, 80, 132, 80, 11, 13); // oF
-	//xu4_img_draw_subrect_on(im, im, 150, 80, 149, 80, 40, 13); // THE
-	//xu4_img_draw_subrect_on(im, im, 166, 80, 165, 80, 11, 13); // tHe
-	xu4_img_draw_subrect_on(im, im, 200, 80, 201, 80, 81, 13); // AVATAR
-	//xu4_img_draw_subrect_on(im, im, 227, 80, 228, 80, 11, 13); // avAtar
+	//zu4_img_draw_subrect_on(im, im, 69, 80, 70, 80, 11, 13); // quEst
+	//zu4_img_draw_subrect_on(im, im, 82, 80, 84, 80, 27, 13); // queST
+	//zu4_img_draw_subrect_on(im, im, 131, 80, 132, 80, 11, 13); // oF
+	//zu4_img_draw_subrect_on(im, im, 150, 80, 149, 80, 40, 13); // THE
+	//zu4_img_draw_subrect_on(im, im, 166, 80, 165, 80, 11, 13); // tHe
+	zu4_img_draw_subrect_on(im, im, 200, 80, 201, 80, 81, 13); // AVATAR
+	//zu4_img_draw_subrect_on(im, im, 227, 80, 228, 80, 11, 13); // avAtar
 	
 	// copy "present" to new location between "Origin Systems, Inc." and
 	// "Ultima IV" - do this after moving "Ultima IV"
-	xu4_img_draw_subrect_on(im, im, 132, 33, 135, 0, 56,5);
+	zu4_img_draw_subrect_on(im, im, 132, 33, 135, 0, 56,5);
 	
 	// erase the original "present"
-	xu4_img_fill(im, 135, 0, 56, 5, 0, 0, 0, 255);
+	zu4_img_fill(im, 135, 0, 56, 5, 0, 0, 0, 255);
 	
 	// update the colors for VGA
 	if (settings.videoType == 1) { // VGA
 		ImageInfo *borderInfo = imageMgr->get(BKGD_BORDERS, true);
 		if (!borderInfo)
-			xu4_error(XU4_LOG_ERR, "Unable to load the \"%s\" data file.\n", BKGD_BORDERS);
+			zu4_error(ZU4_LOG_ERR, "Unable to load the \"%s\" data file.\n", BKGD_BORDERS);
 
-		xu4_img_free(borderInfo->image);
+		zu4_img_free(borderInfo->image);
 		borderInfo->image = NULL;
 		borderInfo = imageMgr->get(BKGD_BORDERS, true);
 
 		// update the border appearance
-		xu4_img_draw_subrect_on(im, borderInfo->image, 0, 96, 0, 0, 16, 56);
+		zu4_img_draw_subrect_on(im, borderInfo->image, 0, 96, 0, 0, 16, 56);
 		for (int i=0; i < 9; i++) {
-			xu4_img_draw_subrect_on(im, borderInfo->image, 16+(i*32), 96, 144, 0, 48, 48);
+			zu4_img_draw_subrect_on(im, borderInfo->image, 16+(i*32), 96, 144, 0, 48, 48);
 		}
-		xu4_img_draw_subrect_inv(im, im, 0, 144, 0, 104, 320, 40);
-		xu4_img_draw_subrect_on(im, im, 0, 184, 0, 96, 320, 8);
+		zu4_img_draw_subrect_inv(im, im, 0, 144, 0, 104, 320, 40);
+		zu4_img_draw_subrect_on(im, im, 0, 184, 0, 96, 320, 8);
 
-		xu4_img_free(borderInfo->image);
+		zu4_img_free(borderInfo->image);
 		borderInfo->image = NULL;
 	}
 
@@ -265,7 +265,7 @@ void ImageMgr::fixupIntro(Image *im) {
 			color = RGBA{255, (uint8_t)(y == 1 ? 250 : 255), blue[y], 255};
 		}
 		
-		xu4_img_fill(im, x, y, 2, 1, color.r, color.g, color.b, 255);
+		zu4_img_fill(im, x, y, 2, 1, color.r, color.g, color.b, 255);
 		i += 2;
 	}
 	
@@ -278,7 +278,7 @@ void ImageMgr::fixupIntro(Image *im) {
 	}
 	
 	for (i = 84; i < 236; i++) { // 152 px wide
-		xu4_img_fill(im, i, 31, 1, 1, color.r, color.g, color.b, 255);
+		zu4_img_fill(im, i, 31, 1, 1, color.r, color.g, color.b, 255);
 	}
 }
 
@@ -292,9 +292,9 @@ void ImageMgr::fixupAbyssVision(Image *im) {
     if (data != NULL) {
         for (int y = 0; y < im->h; y++) {
             for (int x = 0; x < im->w; x++) {
-                uint32_t index = xu4_img_get_pixel(im, x, y);
+                uint32_t index = zu4_img_get_pixel(im, x, y);
                 index ^= data[y * im->w + x];
-                xu4_img_set_pixel(im, x, y, index);
+                zu4_img_set_pixel(im, x, y, index);
             }
         }
     } else {
@@ -303,7 +303,7 @@ void ImageMgr::fixupAbyssVision(Image *im) {
 
     for (int y = 0; y < im->h; y++) {
         for (int x = 0; x < im->w; x++) {
-            uint32_t index = xu4_img_get_pixel(im, x, y);
+            uint32_t index = zu4_img_get_pixel(im, x, y);
             data[y * im->w + x] = index;
         }
     }
@@ -316,11 +316,11 @@ void ImageMgr::fixupAbyssVision(Image *im) {
 void ImageMgr::fixupDungNS(Image *im) {
     for (int y = 0; y < im->h; y++) {
         for (int x = 0; x < im->w; x++) {
-            uint32_t index = xu4_img_get_pixel(im, x, y);
+            uint32_t index = zu4_img_get_pixel(im, x, y);
             if (index == 1)
-                xu4_img_set_pixel(im, x, y, 2);
+                zu4_img_set_pixel(im, x, y, 2);
             else if (index == 2)
-                xu4_img_set_pixel(im, x, y, 1);
+                zu4_img_set_pixel(im, x, y, 1);
         }
     }
 }
@@ -362,7 +362,7 @@ ImageInfo *ImageMgr::getInfoFromSet(const string &name, ImageSet *imageset) {
         return getInfoFromSet(name, imageset);
     }
 
-    //xu4_error(XU4_LOG_WRN, "Searched recursively from imageset %s through to %s and couldn't find %s", baseSet->name.c_str(), imageset->name.c_str(), name.c_str());
+    //zu4_error(ZU4_LOG_WRN, "Searched recursively from imageset %s through to %s and couldn't find %s", baseSet->name.c_str(), imageset->name.c_str(), name.c_str());
     return NULL;
 }
 
@@ -382,7 +382,7 @@ bool ImageMgr::imageExists(ImageInfo * info)
 	U4FILE * file = getImageFile(info);
 	if (file)
 	{
-		if (info->xu4Graphic) xu4_file_stdio_close(file);
+		if (info->xu4Graphic) zu4_file_stdio_close(file);
 		else u4fclose(file);
 		return true;
 	}
@@ -441,7 +441,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
     U4FILE *file = getImageFile(info);
     Image *unscaled = NULL;
     if (file) {
-        //xu4_error(XU4_LOG_DBG, "Loading image from file: %s", info->filename.c_str());
+        //zu4_error(ZU4_LOG_DBG, "Loading image from file: %s", info->filename.c_str());
 
         if (info->filetype.empty()) {
             info->filetype = guessFileType(info->filename);
@@ -450,36 +450,36 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         string filetype = info->filetype;
         int imgtype = 0;
         
-        if (filetype == "image/png") { imgtype = XU4_IMG_PNG; }
-        else if (filetype == "image/x-u4raw") { imgtype = XU4_IMG_RAW; }
-        else if (filetype == "image/x-u4rle") { imgtype = XU4_IMG_RLE; }
-        else if (filetype == "image/x-u4lzw") { imgtype = XU4_IMG_LZW; }
+        if (filetype == "image/png") { imgtype = ZU4_IMG_PNG; }
+        else if (filetype == "image/x-u4raw") { imgtype = ZU4_IMG_RAW; }
+        else if (filetype == "image/x-u4rle") { imgtype = ZU4_IMG_RLE; }
+        else if (filetype == "image/x-u4lzw") { imgtype = ZU4_IMG_LZW; }
         else {
-			xu4_error(XU4_LOG_WRN, "can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
+			zu4_error(ZU4_LOG_WRN, "can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
 		}
 		
 		switch(imgtype) {
-			case XU4_IMG_RAW: case XU4_IMG_RLE: case XU4_IMG_LZW:
-				unscaled = xu4_img_load(file, info->width, info->height, info->depth, imgtype);
+			case ZU4_IMG_RAW: case ZU4_IMG_RLE: case ZU4_IMG_LZW:
+				unscaled = zu4_img_load(file, info->width, info->height, info->depth, imgtype);
 				if (info->width == -1) {
 					info->width = unscaled->w;
 					info->height = unscaled->h;
 				}
 				break;
 			
-			case XU4_IMG_PNG:
+			case ZU4_IMG_PNG:
 				char imgpath[64];
 				u4find_graphics(imgpath, sizeof(imgpath), info->filename.c_str());
-				unscaled = xu4_png_load(imgpath, &info->width, &info->height);
+				unscaled = zu4_png_load(imgpath, &info->width, &info->height);
 				break;
 			default: break;
 		}
-        if (info->xu4Graphic) xu4_file_stdio_close(file);
+        if (info->xu4Graphic) zu4_file_stdio_close(file);
 		else u4fclose(file);
     }
     else
     {
-        xu4_error(XU4_LOG_WRN, "Failed to open file %s for reading.", info->filename.c_str());
+        zu4_error(ZU4_LOG_WRN, "Failed to open file %s for reading.", info->filename.c_str());
         return NULL;
     }
 
@@ -538,7 +538,7 @@ void ImageMgr::freeIntroBackgrounds() {
         for (std::map<string, ImageInfo *>::iterator j = set->info.begin(); j != set->info.end(); j++) {
             ImageInfo *info = j->second;
             if (info->image != NULL && info->introOnly) {
-                xu4_img_free(info->image);
+                zu4_img_free(info->image);
                 info->image = NULL;
             }
         }
@@ -554,7 +554,7 @@ const vector<string> &ImageMgr::getSetNames() {
  */
 void ImageMgr::update(SettingsData *newSettings) {
     string setname = newSettings->videoType ? "VGA" : "EGA";//newSettings->videoType;
-    xu4_error(XU4_LOG_DBG, "Base image set is: %s", setname.c_str());
+    zu4_error(ZU4_LOG_DBG, "Base image set is: %s", setname.c_str());
     baseSet = getSet(setname);
 }
 
@@ -570,5 +570,5 @@ ImageInfo::~ImageInfo() {
     for (std::map<string, SubImage *>::iterator i = subImages.begin(); i != subImages.end(); i++)
         delete i->second;
     if (image != NULL)
-        xu4_img_free(image);
+        zu4_img_free(image);
 }

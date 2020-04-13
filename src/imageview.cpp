@@ -22,7 +22,7 @@ ImageView::~ImageView() {
 void ImageView::draw(const string &imageName, int x, int y) {
     ImageInfo *info = imageMgr->get(imageName);
     if (info) {
-        xu4_img_draw(info->image, this->x + x, this->y + y);
+        zu4_img_draw(info->image, this->x + x, this->y + y);
         return;
     }
 
@@ -31,7 +31,7 @@ void ImageView::draw(const string &imageName, int x, int y) {
         info = imageMgr->get(subimage->srcImageName);
 
         if (info) {
-            xu4_img_draw_subrect(info->image, this->x + x, this->y + y,
+            zu4_img_draw_subrect(info->image, this->x + x, this->y + y,
                                      subimage->x,
                                      subimage->y,
                                      subimage->width,
@@ -39,5 +39,5 @@ void ImageView::draw(const string &imageName, int x, int y) {
             return;
         }
     }
-    xu4_error(XU4_LOG_ERR, "ERROR 1005: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", imageName.c_str());
+    zu4_error(ZU4_LOG_ERR, "ERROR 1005: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", imageName.c_str());
 }

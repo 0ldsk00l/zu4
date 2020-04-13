@@ -60,7 +60,7 @@ void CampController::begin() {
 
     CombatController::begin();
 
-    xu4_music_fadeout(CAMP_FADE_OUT_TIME);
+    zu4_music_fadeout(CAMP_FADE_OUT_TIME);
 
     screenMessage("Resting...\n");
     screenDisableCursor();
@@ -70,10 +70,10 @@ void CampController::begin() {
     screenEnableCursor();
 
     /* Is the party ambushed during their rest? */
-    if (settings.campingAlwaysCombat || (xu4_random(8) == 0)) {        
+    if (settings.campingAlwaysCombat || (zu4_random(8) == 0)) {        
         const Creature *m = creatureMgr->randomAmbushing();
                 
-        xu4_music_play(c->location->map->music);
+        zu4_music_play(c->location->map->music);
         screenMessage("Ambushed!\n");
         
         /* create an ambushing creature (so it leaves a chest) */
@@ -101,7 +101,7 @@ void CampController::begin() {
     
         eventHandler->popController();
         game->exitToParentMap();
-        xu4_music_fadein(CAMP_FADE_IN_TIME, true);
+        zu4_music_fadein(CAMP_FADE_IN_TIME, true);
         delete this;
     }
 }
@@ -141,7 +141,7 @@ void InnController::begin() {
 
     /* in the original, the vendor music plays straight through sleeping */
     if (settings.enhancements)
-        xu4_music_fadeout(INN_FADE_OUT_TIME); /* Fade volume out to ease into rest */
+        zu4_music_fadeout(INN_FADE_OUT_TIME); /* Fade volume out to ease into rest */
     
     EventHandler::wait_msecs(INN_FADE_OUT_TIME);
 
@@ -168,7 +168,7 @@ void InnController::begin() {
     	maybeMeetIsaac();
     }
     else {
-        if (xu4_random(8) != 0) {
+        if (zu4_random(8) != 0) {
         	maybeMeetIsaac();
         }
         else {
@@ -179,7 +179,7 @@ void InnController::begin() {
     screenMessage("\nMorning!\n");
     screenPrompt();
 
-    xu4_music_fadein(INN_FADE_IN_TIME, true);
+    zu4_music_fadein(INN_FADE_IN_TIME, true);
 }
 
 bool InnController::heal() {
@@ -202,13 +202,13 @@ void InnController::maybeMeetIsaac()
 	//	if ((location == skara_brae) && (random(4) = 0) {
 	//			// create Isaac the Ghost
 	//	}
-    if ((c->location->map->id == 11) && (xu4_random(4) == 0)) {
+    if ((c->location->map->id == 11) && (zu4_random(4) == 0)) {
         City *city = dynamic_cast<City*>(c->location->map);
 
         if (city->extraDialogues.size() == 1 &&
             city->extraDialogues[0]->getName() == "Isaac") {
 
-            Coords coords = { 27, xu4_random(3) + 10, c->location->coords.z };
+            Coords coords = { 27, zu4_random(3) + 10, c->location->coords.z };
 
             // If Isaac is already around, just bring him back to the inn
             for (ObjectDeque::iterator i = c->location->map->objects.begin();
@@ -239,13 +239,13 @@ void InnController::maybeMeetIsaac()
 
 void InnController::maybeAmbush()
 {
-    if (settings.innAlwaysCombat || (xu4_random(8) == 0)) {
+    if (settings.innAlwaysCombat || (zu4_random(8) == 0)) {
         MapId mapid;
         Creature *creature;
         bool showMessage = true;
             
         /* Rats seem much more rare than meeting rogues in the streets */
-        if (xu4_random(4) == 0) {
+        if (zu4_random(4) == 0) {
             /* Rats! */
             mapid = MAP_BRICK_CON;
             creature = c->location->map->addCreature(creatureMgr->getById(RAT_ID), c->location->coords);

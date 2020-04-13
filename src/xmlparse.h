@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
-void xu4_xmlparse_init(const char *filename);
-void xu4_xmlparse_deinit();
-int xu4_xmlparse_find(char *value, const char *elemname, const char *attrname);
+void zu4_xmlparse_init(const char *filename);
+void zu4_xmlparse_deinit();
+int zu4_xmlparse_find(char *value, const char *elemname, const char *attrname);
 
 #ifdef __cplusplus
 }

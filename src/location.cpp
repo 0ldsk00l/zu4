@@ -51,7 +51,7 @@ std::vector<MapTile> Location::tilesAt(Coords coords, bool &focus) {
     Creature *m = dynamic_cast<Creature *>(obj);
     focus = false;
 
-    bool avatar = xu4_coords_equal(this->coords, coords);
+    bool avatar = zu4_coords_equal(this->coords, coords);
 
     /* Do not return objects for VIEW_GEM mode, show only the avatar and tiles */
     if (viewMode == VIEW_GEM && (!settings.enhancements || !settings.enhancementsOptions.peerShowsObjects)) {        

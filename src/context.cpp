@@ -21,10 +21,10 @@
 
 #include "context.h"
 
-Context *xu4_ctx_init() {
+Context *zu4_ctx_init() {
 	return (Context*)calloc(1, sizeof(Context));
 }
 
-void xu4_ctx_deinit() {
+void zu4_ctx_deinit() {
 	free(c);
 }
