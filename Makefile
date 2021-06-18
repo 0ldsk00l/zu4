@@ -8,7 +8,7 @@ datadir = $(prefix)/share
 UILIBS = $(shell sdl2-config --libs) -lGL -lGLU
 UIFLAGS = $(shell sdl2-config --cflags)
 
-CXXFLAGS = -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags)
+CXXFLAGS = -g -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags)
 #CXXFLAGS += -ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
 CFLAGS = $(CXXFLAGS)
 LIBS = $(UILIBS) $(shell xml2-config --libs)
@@ -108,6 +108,3 @@ $(MAIN): $(OBJS)
 
 clean::
 	rm -rf *~ */*~ $(OBJS) $(MAIN)
-
-TAGS: $(CSRCS) $(CXXSRCS)
-	etags *.h $(CSRCS) $(CXXSRCS)

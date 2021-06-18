@@ -11,41 +11,11 @@
 /**
  * Represents zip files that game resources can be loaded from.
  */
-class U4ZipPackage {
-public:
-	typedef std::string string;
-	
-	U4ZipPackage(const string &name, const string &path, bool extension);
-	void addTranslation(const string &value, const string &translation);
-	
-	const string &getFilename() const { return name; }
-	const string &getInternalPath() const { return path; }
-	bool isExtension() const { return extension; }
-	const string &translate(const string &name) const;
-	
-private:    
-	string name;                /**< filename */
-	string path;                /**< the path within the zipfile where resources are located */
-	bool extension;             /**< whether this zipfile is an extension with config information */
-	std::map<string, string> translations; /**< mapping from standard resource names to internal names */
-};
-
-/**
- * Keeps track of available zip packages.
- */
-class U4ZipPackageMgr {
-public:
-	static U4ZipPackageMgr *getInstance();
-	static void destroy();
-	void add(U4ZipPackage *package);
-	const std::vector<U4ZipPackage *> &getPackages() const { return packages; }
-	
-private:
-	U4ZipPackageMgr();
-	~U4ZipPackageMgr();
-	static U4ZipPackageMgr *instance;
-	std::vector<U4ZipPackage *> packages;
-};
+typedef struct U4ZipPackage {
+	int loaded;
+	char name[256];
+	char path[256];
+} U4ZipPackage;
 
 /**
  * An abstract interface for file access.
@@ -59,7 +29,7 @@ typedef struct U4FILE {
 	long cur;
 } U4FILE;
 
-U4FILE *u4fopen_zip(const std::string &fname, U4ZipPackage *package);
+U4FILE *u4fopen_zip(const char *fname, U4ZipPackage *package);
 
 std::vector<std::string> u4read_stringtable(U4FILE *f, long offset, int nstrings);
 
