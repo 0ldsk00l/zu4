@@ -36,13 +36,11 @@ long (*zu4_file_length)(U4FILE*);
 int (*zu4_file_getc)(U4FILE*);
 int (*zu4_file_putc)(U4FILE*, int);
 
-static struct _u4paths {
-	const char *rootpath = "./";
-	const char *dospath = "ultima4";
-	const char *zippath = "./";
-	const char *confpath = "conf";
-	const char *graphicspath = "graphics";
-} u4paths;
+const char *rootpath = "./";
+const char *dospath = "ultima4";
+const char *zippath = "./";
+const char *confpath = "conf";
+const char *graphicspath = "graphics";
 
 static U4ZipPackage u4base;
 static U4ZipPackage u4upgrade;
@@ -97,7 +95,7 @@ U4FILE *u4fopen(const char *fname) {
 	if (!u4base.loaded) {
 		// Check for the default zip packages
 		char path[64];
-		u4find_path(path, sizeof(path), "ultima4.zip", u4paths.zippath);
+		u4find_path(path, sizeof(path), "ultima4.zip", zippath);
 
 		if (path[0] != '\0') {
 			// Open the zip
@@ -123,7 +121,7 @@ U4FILE *u4fopen(const char *fname) {
 
 	if (!u4upgrade.loaded) {
 		char path[64];
-		u4find_path(path, sizeof(path), "u4upgrad.zip", u4paths.zippath);
+		u4find_path(path, sizeof(path), "u4upgrad.zip", zippath);
 
 		if (path[0] != '\0') {
 			mz_zip_archive zip_archive;
@@ -172,12 +170,12 @@ U4FILE *u4fopen(const char *fname) {
 	snprintf(fname_copy, sizeof(fname_copy), "%s", fname);
 
 	char path[64];
-	u4find_path(path, sizeof(path), fname_copy, u4paths.dospath);
+	u4find_path(path, sizeof(path), fname_copy, dospath);
 
 	if (path[0] == '\0') {
 		if (islower(fname_copy[0])) {
 			fname_copy[0] = toupper(fname_copy[0]);
-			u4find_path(path, sizeof(path), fname_copy, u4paths.dospath);
+			u4find_path(path, sizeof(path), fname_copy, dospath);
 		}
 
 		if (path[0] == '\0') {
@@ -185,7 +183,7 @@ U4FILE *u4fopen(const char *fname) {
 				if (islower(fname_copy[i]))
 					fname_copy[i] = toupper(fname_copy[i]);
 			}
-			u4find_path(path, sizeof(path), fname_copy, u4paths.dospath);
+			u4find_path(path, sizeof(path), fname_copy, dospath);
 		}
 	}
 
@@ -217,7 +215,7 @@ U4FILE *u4fopen_stdio(const char *fname) {
 	f = fopen(fname, "rb");
 	if (!f) { return NULL; }
 
-	u4f = new U4FILE;
+	u4f = (U4FILE*)malloc(sizeof(U4FILE));
 	u4f->file = f;
 
 	return u4f;
@@ -250,7 +248,7 @@ U4FILE *u4fopen_zip(const char *fname, U4ZipPackage *package) {
 	mz_zip_reader_file_stat(&za, index, &stat);
 	void *ptr = mz_zip_reader_extract_to_heap(&za, index, NULL, 0);
 
-	u4f = new U4FILE;
+	u4f = (U4FILE*)malloc(sizeof(U4FILE));
 	u4f->zip_archive = za;
 	u4f->za_index = index;
 	u4f->za_stat = stat;
@@ -262,7 +260,7 @@ U4FILE *u4fopen_zip(const char *fname, U4ZipPackage *package) {
 
 void u4fclose(U4FILE *f) {
 	zu4_file_close(f);
-	delete f;
+	free(f);
 }
 
 int u4fseek(U4FILE *f, long offset, int whence) {
@@ -327,7 +325,7 @@ void u4find_path(char *path, size_t psize, const char *fname, const char *subpat
 
 	// Try paths
 	if (f == NULL) {
-		snprintf(path, psize, "%s/%s/%s", u4paths.rootpath, subpath, fname);
+		snprintf(path, psize, "%s/%s/%s", rootpath, subpath, fname);
 
 		zu4_error(ZU4_LOG_DBG, "trying to open %s\n", path);
 
@@ -346,11 +344,11 @@ void u4find_path(char *path, size_t psize, const char *fname, const char *subpat
 }
 
 void u4find_conf(char *path, size_t psize, const char *fname) {
-	u4find_path(path, psize, fname, u4paths.confpath);
+	u4find_path(path, psize, fname, confpath);
 }
 
 void u4find_graphics(char *path, size_t psize, const char *fname) {
-	u4find_path(path, psize, fname, u4paths.graphicspath);
+	u4find_path(path, psize, fname, graphicspath);
 }
 
 int zu4_file_stdio_seek(U4FILE *u4f, long offset, int whence) {

@@ -39,6 +39,7 @@ CSRCS=\
 		src/u4_sdl.c \
 		src/video.c \
 		src/weapon.c \
+		src/u4file.c \
 		src/yxml.c
 
 CXXSRCS=\
@@ -94,7 +95,6 @@ CXXSRCS=\
 		src/tileset.cpp \
 		src/tileview.cpp \
 		src/u4.cpp \
-		src/u4file.cpp \
 		src/utils.cpp \
 		src/view.cpp \
 		src/xml.cpp

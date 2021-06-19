@@ -1,6 +1,10 @@
 #ifndef U4FILE_H
 #define U4FILE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "miniz.h"
 
 /**
@@ -69,5 +73,9 @@ int zu4_file_stdio_putc(U4FILE *u4f, int c);
 int zu4_file_zip_putc(U4FILE *u4f, int c);
 
 int zu4_file_getshort(U4FILE *u4f);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
