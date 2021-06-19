@@ -28,6 +28,7 @@ CSRCS=\
 		src/imageloader.c \
 		src/io.c \
 		src/miniz.c \
+		src/moongate.c \
 		src/music.c \
 		src/names.c \
 		src/random.c \
@@ -76,7 +77,6 @@ CXXSRCS=\
 		src/mapmgr.cpp \
 		src/menu.cpp \
 		src/menuitem.cpp \
-		src/moongate.cpp \
 		src/movement.cpp \
 		src/object.cpp \
 		src/person.cpp \

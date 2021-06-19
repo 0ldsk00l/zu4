@@ -5,9 +5,17 @@
 #ifndef MOONGATE_H
 #define MOONGATE_H
 
-void moongateAdd(int phase, const Coords &coords);
-const Coords *moongateGetGateCoordsForPhase(int phase);
-bool moongateFindActiveGateAt(int trammel, int felucca, const Coords &src, Coords &dest);
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void moongateAdd(int phase, Coords coords);
+Coords *moongateGetGateCoordsForPhase(int phase);
+bool moongateFindActiveGateAt(int trammel, int felucca, Coords src, Coords *dest);
 bool moongateIsEntryToShrineOfSpirituality(int trammel, int felucca);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
