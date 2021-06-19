@@ -1,9 +1,6 @@
 #ifndef U4FILE_H
 #define U4FILE_H
 
-#include <string>
-#include <vector>
-
 #include "miniz.h"
 
 /**
@@ -29,8 +26,6 @@ typedef struct U4FILE {
 
 U4FILE *u4fopen_zip(const char *fname, U4ZipPackage *package);
 
-std::vector<std::string> u4read_stringtable(U4FILE *f, long offset, int nstrings);
-
 /////////////////////////////////
 bool u4isUpgradeAvailable();
 bool u4isUpgradeInstalled();
@@ -49,6 +44,8 @@ long u4flength(U4FILE *f);
 void u4find_path(char *path, size_t psize, const char *fname, const char *subpath);
 void u4find_conf(char *path, size_t psize, const char *fname);
 void u4find_graphics(char *path, size_t psize, const char *fname);
+
+void zu4_read_strtable(U4FILE *f, long offset, char **array, int nstrings);
 
 void zu4_file_stdio_close(U4FILE *u4f);
 void zu4_file_zip_close(U4FILE *u4f);

@@ -74,6 +74,10 @@ const int IntroBinData::BEASTIE_FRAME_TABLE_OFFSET = 0x7380;
 const int IntroBinData::BEASTIE1_FRAMES_OFFSET = 0;
 const int IntroBinData::BEASTIE2_FRAMES_OFFSET = 0x78;
 
+static char *introQuestions[28];
+static char *introText[24];
+static char *introGypsy[15];
+
 IntroBinData::IntroBinData() : 
     sigData(NULL), 
     scriptTable(NULL), 
@@ -94,9 +98,9 @@ IntroBinData::~IntroBinData() {
     if (beastie2FrameTable)
         delete [] beastie2FrameTable;
 
-    introQuestions.clear();
-    introText.clear();
-    introGypsy.clear();
+    for (int i = 0; i < 28; i++) { free(introQuestions[i]); }
+    for (int i = 0; i < 24; i++) { free(introText[i]); }
+    for (int i = 0; i < 15; i++) { free(introGypsy[i]); }
 }
 
 bool IntroBinData::load() {
@@ -106,13 +110,9 @@ bool IntroBinData::load() {
     if (!title)
         return false;
 
-    introQuestions = u4read_stringtable(title, INTRO_TEXT_OFFSET, 28);
-    introText = u4read_stringtable(title, -1, 24);
-    introGypsy = u4read_stringtable(title, -1, 15);
-
-    /* clean up stray newlines at end of strings */
-    for (i = 0; i < 15; i++)
-        trim(introGypsy[i]);
+    zu4_read_strtable(title, INTRO_TEXT_OFFSET, (char**)introQuestions, 28);
+    zu4_read_strtable(title, -1, (char**)introText, 24);
+    zu4_read_strtable(title, -1, (char**)introGypsy, 15);
 
     if (sigData)
         delete sigData;
@@ -764,13 +764,13 @@ void IntroController::finishInitiateGame(const string &nameBuffer, SexType sex)
     justInitiatedNewGame = true;
 
     // show the text thats segues into the main game
-    showText(binData->introGypsy[GYP_SEGUE1]);
+    showText((string)introGypsy[GYP_SEGUE1]);
 
     ReadChoiceController pauseController("");
     eventHandler->pushController(&pauseController);
     pauseController.waitFor();
 
-    showText(binData->introGypsy[GYP_SEGUE2]);
+    showText((string)introGypsy[GYP_SEGUE2]);
 
     eventHandler->pushController(&pauseController);
     pauseController.waitFor();
@@ -811,7 +811,7 @@ void IntroController::showStory() {
         else if (storyInd == 23)
             backgroundArea.draw(BKGD_ABACUS);
 
-        showText(binData->introText[storyInd]);
+        showText((string)introText[storyInd]);
 
         eventHandler->pushController(&pauseController);
         // enable the cursor here to avoid drawing in undesirable locations
@@ -841,11 +841,11 @@ void IntroController::startQuestions() {
         drawCard(1, questionTree[questionRound * 2 + 1]);
 
         questionArea.clear();
-        questionArea.textAt(0, 0, "%s", binData->introGypsy[questionRound == 0 ? GYP_PLACES_FIRST : (questionRound == 6 ? GYP_PLACES_LAST : GYP_PLACES_TWOMORE)].c_str());
-        questionArea.textAt(0, 1, "%s", binData->introGypsy[GYP_UPON_TABLE].c_str());
+        questionArea.textAt(0, 0, "%s", introGypsy[questionRound == 0 ? GYP_PLACES_FIRST : (questionRound == 6 ? GYP_PLACES_LAST : GYP_PLACES_TWOMORE)]);
+        questionArea.textAt(0, 1, "%s", introGypsy[GYP_UPON_TABLE]);
         questionArea.textAt(0, 2, "%s and %s.  She says", 
-                            binData->introGypsy[questionTree[questionRound * 2] + 4].c_str(), 
-                            binData->introGypsy[questionTree[questionRound * 2 + 1] + 4].c_str());
+                            introGypsy[questionTree[questionRound * 2] + 4],
+                            introGypsy[questionTree[questionRound * 2 + 1] + 4]);
         questionArea.textAt(0, 3, "\"Consider this:\"");
 
         // wait for a key
@@ -886,7 +886,7 @@ string IntroController::getQuestion(int v1, int v2) {
 
     zu4_assert((i + v2 - 1) < 28, "calculation failed");
 
-    return binData->introQuestions[i + v2 - 1];
+    return (string)introQuestions[i + v2 - 1];
 }
 
 /**

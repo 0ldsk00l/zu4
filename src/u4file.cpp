@@ -20,9 +20,9 @@
  *
  */
 
+#include <ctype.h>
+#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
 
 #include "error.h"
@@ -35,9 +35,6 @@ size_t (*zu4_file_read)(U4FILE*, void *ptr, size_t size, size_t nmemb);
 long (*zu4_file_length)(U4FILE*);
 int (*zu4_file_getc)(U4FILE*);
 int (*zu4_file_putc)(U4FILE*, int);
-
-using std::string;
-using std::vector;
 
 static struct _u4paths {
 	const char *rootpath = "./";
@@ -301,26 +298,25 @@ long u4flength(U4FILE *f) {
  * are read from the given offset, or the current file position if
  * offset is -1.
  */
-vector<string> u4read_stringtable(U4FILE *f, long offset, int nstrings) {
-	string buffer;
-	int i;
-	vector<string> strs;
-
+void zu4_read_strtable(U4FILE *f, long offset, char **array, int nstrings) {
 	zu4_assert(offset < u4flength(f), "offset begins beyond end of file");
+
+	char buffer[512];
 
 	if (offset != -1) { u4fseek(f, offset, SEEK_SET); }
 
-	for (i = 0; i < nstrings; i++) {
+	for (int i = 0; i < nstrings; i++) {
+		int j = 0;
 		char c;
-		buffer.erase();
 
-		while ((c = zu4_file_getc(f)) != '\0')
-			buffer += c;
+		while ((c = zu4_file_getc(f)) != '\0') {
+			buffer[j++] = c;
+		}
 
-		strs.push_back(buffer);
+		array[i] = (char*)malloc(sizeof(char) * j);
+		strncpy(array[i], buffer, j);
+		memset(buffer, 0, sizeof(buffer));
 	}
-
-	return strs;
 }
 
 void u4find_path(char *path, size_t psize, const char *fname, const char *subpath) {

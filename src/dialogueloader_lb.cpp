@@ -4,7 +4,6 @@
 
 
 #include <string>
-#include <vector>
 
 #include "context.h"
 #include "conversation.h"
@@ -14,7 +13,6 @@
 #include "u4file.h"
 
 using std::string;
-using std::vector;
 
 Response *lordBritishGetHelp(const DynamicResponse *resp);
 Response *lordBritishGetIntro(const DynamicResponse *resp);
@@ -32,13 +30,18 @@ Dialogue* U4LBDialogueLoader::load(void *source) {
     if (!avatar)
         return NULL;
     
-    vector<string> lbKeywords = u4read_stringtable(avatar, 87581, 24);
+    char *lbKeywords[24];
+    zu4_read_strtable(avatar, 87581, (char**)lbKeywords, 24);
+
     /* There's a \0 in the 19th string so we get a
        spurious 20th entry */
-    vector<string> lbText = u4read_stringtable(avatar, 87754, 25);
+    char *lbText[25];
+    zu4_read_strtable(avatar, 87754, (char**)lbText, 25);
+
+    char *lb20 = lbText[20];
     for (int i = 20; i < 24; i++)
         lbText[i] = lbText[i+1];
-    lbText.pop_back();
+    lbText[24] = lb20; // Make sure it can be freed
 
     Dialogue *dlg = new Dialogue();
     dlg->setTurnAwayProb(0);
@@ -51,7 +54,7 @@ Dialogue* U4LBDialogueLoader::load(void *source) {
     dlg->setLongIntro(intro);
     dlg->setDefaultAnswer(new Response("\nHe says: I\ncannot help thee\nwith that.\n"));
 
-    for (unsigned i = 0; i < lbKeywords.size(); i++) {
+    for (unsigned i = 0; i < 24; i++) {
         dlg->addKeyword(lbKeywords[i], new Response(lbText[i]));
     }
 
@@ -78,6 +81,9 @@ Dialogue* U4LBDialogueLoader::load(void *source) {
     dlg->addKeyword("", bye);
 
     dlg->addKeyword("help", new DynamicResponse(&lordBritishGetHelp));
+
+    for (int i = 0; i < 24; i++) { free(lbKeywords[i]); }
+    for (int i = 0; i < 25; i++) { free(lbText[i]); }
 
     return dlg;
 }

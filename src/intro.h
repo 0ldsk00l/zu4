@@ -48,9 +48,6 @@ public:
     Tile **baseTileTable;
     unsigned char *beastie1FrameTable;
     unsigned char *beastie2FrameTable;
-    std::vector<std::string> introText;
-    std::vector<std::string> introQuestions;
-    std::vector<std::string> introGypsy;
 
 private:
     // disallow assignments, copy contruction

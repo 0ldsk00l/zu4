@@ -34,27 +34,27 @@ void codexImpureThoughts();
 
 /**
  * Key handlers
- */ 
+ */
 bool codexHandleInfinityAnyKey(int key, void *data);
 bool codexHandleEndgameAnyKey(int key, void *data);
 
-vector<string> codexVirtueQuestions;
-vector<string> codexEndgameText1;
-vector<string> codexEndgameText2;
+static char *codexVirtueQuestions[11];
+static char *codexEndgameText1[7];
+static char *codexEndgameText2[5];
 
 /**
  * Initializes the Chamber of the Codex sequence (runs from codexStart())
  */
 int codexInit() {
     U4FILE *avatar;
-    
+
     avatar = u4fopen("avatar.exe");
     if (!avatar)
         return 0;
-        
-    codexVirtueQuestions = u4read_stringtable(avatar, 0x0fc7b, 11);
-    codexEndgameText1 = u4read_stringtable(avatar, 0x0fee4, 7);
-    codexEndgameText2 = u4read_stringtable(avatar, 0x10187, 5);
+
+    zu4_read_strtable(avatar, 0x0fc7b, (char**)codexVirtueQuestions, 11);
+    zu4_read_strtable(avatar, 0x0fee4, (char**)codexEndgameText1, 7);
+    zu4_read_strtable(avatar, 0x10187, (char**)codexEndgameText2, 5);
 
     u4fclose(avatar);
 
@@ -65,23 +65,23 @@ int codexInit() {
  * Frees all memory associated with the Codex sequence
  */
 void codexDelete() {
-    codexVirtueQuestions.clear();
-    codexEndgameText1.clear();
-    codexEndgameText2.clear();
+    for (int i = 0; i < 11; i++) { free(codexVirtueQuestions[i]); }
+    for (int i = 0; i < 7; i++) { free(codexEndgameText1[i]); }
+    for (int i = 0; i < 5; i++) { free(codexEndgameText2[i]); }
 }
 
 /**
  * Begins the Chamber of the Codex sequence
  */
-void codexStart() { 
-    codexInit();  
+void codexStart() {
+    codexInit();
 
     /**
      * disable the whirlpool cursor and black out the screen
      */
     screenDisableCursor();
     screenUpdate(&game->mapArea, false, true);
-    
+
     /**
      * make the avatar alone
      */
@@ -93,7 +93,7 @@ void codexStart() {
      */
     gameSetViewMode(VIEW_CODEX);
 
-    screenMessage("\n\n\n\nThere is a sudden darkness, and you find yourself alone in an empty chamber.\n");    
+    screenMessage("\n\n\n\nThere is a sudden darkness, and you find yourself alone in an empty chamber.\n");
     EventHandler::sleep(4000);
 
     /**
@@ -110,8 +110,8 @@ void codexStart() {
     screenMessage("\nYou use your key of Three Parts.\n");
     EventHandler::sleep(3000);
 
-    screenMessage("\nA voice rings out:\n\"What is the Word of Passage?\"\n\n");    
-    
+    screenMessage("\nA voice rings out:\n\"What is the Word of Passage?\"\n\n");
+
     /**
      * Get the Word of Passage
      */
@@ -133,24 +133,24 @@ void codexEject(CodexEjectCode code) {
         { 158, 21 },
         { 105, 183 },
         { 23, 129 },
-        { 186, 171 }        
+        { 186, 171 }
     };
 
     switch(code) {
     case CODEX_EJECT_NO_3_PART_KEY:
         screenMessage("\nThou dost not have the Key of Three Parts.\n\n");
-        break;    
+        break;
     case CODEX_EJECT_NO_FULL_PARTY:
       screenMessage("\nThou hast not proved thy leadership in all eight virtues.\n\n");
       EventHandler::sleep(2000);
-      screenMessage("\nPassage is not granted.\n\n");      
+      screenMessage("\nPassage is not granted.\n\n");
       break;
     case CODEX_EJECT_NO_FULL_AVATAR:
         screenMessage("\nThou art not ready.\n");
         EventHandler::sleep(2000);
         screenMessage("\nPassage is not granted.\n\n");
         break;
-    case CODEX_EJECT_BAD_WOP:        
+    case CODEX_EJECT_BAD_WOP:
         screenMessage("\nPassage is not granted.\n\n");
         break;
     case CODEX_EJECT_HONESTY:
@@ -169,7 +169,7 @@ void codexEject(CodexEjectCode code) {
     case CODEX_EJECT_BAD_INFINITY:
         screenMessage("\nThou dost not know the true nature of the Universe.\n\n");
         break;
-    default: 
+    default:
         screenMessage("\nOops, you just got too close to beating the game.\nBAD AVATAR!\n");
         break;
     }
@@ -182,21 +182,21 @@ void codexEject(CodexEjectCode code) {
     /* re-enable the cursor and show it */
     screenEnableCursor();
     screenShowCursor();
-        
+
     /* return view to normal and exit the Abyss */
     gameSetViewMode(VIEW_NORMAL);
-    game->exitToParentMap();    
+    game->exitToParentMap();
     zu4_music_play(c->location->map->music);
-    
+
     /**
-     * if being ejected because of a missed virtue question, 
+     * if being ejected because of a missed virtue question,
      * then teleport the party to the starting location for
      * that virtue.
      */
     if (code >= CODEX_EJECT_HONESTY && code <= CODEX_EJECT_HUMILITY) {
         int virtue = code - CODEX_EJECT_HONESTY;
         c->location->coords.x = startLocations[virtue].x;
-        c->location->coords.y = startLocations[virtue].y;        
+        c->location->coords.y = startLocations[virtue].y;
     }
 
     /* finally, finish the turn */
@@ -211,15 +211,15 @@ void codexHandleWOP(const string &word) {
     static int tries = 1;
     int i;
 
-    eventHandler->popKeyHandler();    
+    eventHandler->popKeyHandler();
 
     /* slight pause before continuing */
-    screenMessage("\n");    
+    screenMessage("\n");
     screenDisableCursor();
-    EventHandler::sleep(1000);    
+    EventHandler::sleep(1000);
 
     /* entered correctly */
-    if (strcasecmp(word.c_str(), "veramocor") == 0) {        
+    if (strcasecmp(word.c_str(), "veramocor") == 0) {
         tries = 1; /* reset 'tries' in case we need to enter this again later */
 
         /* eject them if they don't have all 8 party members */
@@ -227,15 +227,15 @@ void codexHandleWOP(const string &word) {
             codexEject(CODEX_EJECT_NO_FULL_PARTY);
             return;
         }
-        
+
         /* eject them if they're not a full avatar at this point */
         for (i = 0; i < VIRT_MAX; i++) {
             if (c->saveGame->karma[i] != 0) {
                 codexEject(CODEX_EJECT_NO_FULL_AVATAR);
                 return;
             }
-        }        
-        
+        }
+
         screenMessage("\nPassage is granted.\n");
         EventHandler::sleep(4000);
 
@@ -245,20 +245,20 @@ void codexHandleWOP(const string &word) {
         /* Ask the Virtue questions */
         screenMessage("\n\nThe voice asks:\n");
         EventHandler::sleep(2000);
-        screenMessage("\n%s\n\n", codexVirtueQuestions[0].c_str());
+        screenMessage("\n%s\n\n", codexVirtueQuestions[0]);
 
         codexHandleVirtues(gameGetInput());
-        
+
         return;
     }
-    
+
     /* entered incorrectly - give 3 tries before ejecting */
     else if (tries++ < 3) {
         codexImpureThoughts();
         screenMessage("\"What is the Word of Passage?\"\n\n");
         codexHandleWOP(gameGetInput());
     }
-    
+
     /* 3 tries are up... eject! */
     else {
         tries = 1;
@@ -271,7 +271,7 @@ void codexHandleWOP(const string &word) {
  */
 void codexHandleVirtues(const string &virtue) {
     static const char *codexImageNames[] = {
-        BKGD_HONESTY, BKGD_COMPASSN, BKGD_VALOR, BKGD_JUSTICE, 
+        BKGD_HONESTY, BKGD_COMPASSN, BKGD_VALOR, BKGD_JUSTICE,
         BKGD_SACRIFIC, BKGD_HONOR, BKGD_SPIRIT, BKGD_HUMILITY,
         BKGD_TRUTH, BKGD_LOVE, BKGD_COURAGE
     };
@@ -281,13 +281,13 @@ void codexHandleVirtues(const string &virtue) {
 
     eventHandler->popKeyHandler();
 
-    /* slight pause before continuing */    
+    /* slight pause before continuing */
     screenMessage("\n");
-    screenDisableCursor();    
-    EventHandler::sleep(1000);    
-        
+    screenDisableCursor();
+    EventHandler::sleep(1000);
+
     /* answered with the correct one of eight virtues */
-    if ((current < VIRT_MAX) && 
+    if ((current < VIRT_MAX) &&
         (strcasecmp(virtue.c_str(), getVirtueName(static_cast<Virtue>(current))) == 0)) {
 
         screenDrawImageInMapArea(codexImageNames[current]);
@@ -305,7 +305,7 @@ void codexHandleVirtues(const string &virtue) {
 
         screenMessage("\n\nThe voice asks:\n");
         EventHandler::sleep(2000);
-        screenMessage("\n%s\n\n", codexVirtueQuestions[current].c_str());
+        screenMessage("\n%s\n\n", codexVirtueQuestions[current]);
         codexHandleVirtues(gameGetInput());
     }
 
@@ -322,33 +322,33 @@ void codexHandleVirtues(const string &virtue) {
         if (current < VIRT_MAX+3) {
             screenMessage("\n\nThe voice asks:\n");
             EventHandler::sleep(2000);
-            screenMessage("\n%s\n\n", codexVirtueQuestions[current].c_str());  
+            screenMessage("\n%s\n\n", codexVirtueQuestions[current]);
             codexHandleVirtues(gameGetInput());
         }
-        else {            
+        else {
             screenMessage("\nThe ground rumbles beneath your feet.\n");
             EventHandler::sleep(1000);
             screenShake(10);
 
             EventHandler::sleep(3000);
             screenEnableCursor();
-            screenMessage("\nAbove the din, the voice asks:\n\nIf all eight virtues of the Avatar combine into and are derived from the Three Principles of Truth, Love and Courage...");  
+            screenMessage("\nAbove the din, the voice asks:\n\nIf all eight virtues of the Avatar combine into and are derived from the Three Principles of Truth, Love and Courage...");
             eventHandler->pushKeyHandler(&codexHandleInfinityAnyKey);
         }
     }
-    
+
     /* give them 3 tries to enter the correct virtue, then eject them! */
     else if (tries++ < 3) {
         codexImpureThoughts();
-        screenMessage("%s\n\n", codexVirtueQuestions[current].c_str());
+        screenMessage("%s\n\n", codexVirtueQuestions[current]);
         codexHandleVirtues(gameGetInput());
     }
-    
+
     /* failed 3 times... eject! */
-    else {        
+    else {
         codexEject(static_cast<CodexEjectCode>(CODEX_EJECT_HONESTY + current));
 
-        tries = 1;        
+        tries = 1;
         current = 0;
     }
 }
@@ -366,19 +366,19 @@ void codexHandleInfinity(const string &answer) {
 
     eventHandler->popKeyHandler();
 
-    /* slight pause before continuing */    
+    /* slight pause before continuing */
     screenMessage("\n");
     screenDisableCursor();
     EventHandler::sleep(1000);
 
-    if (strcasecmp(answer.c_str(), "infinity") == 0) {        
+    if (strcasecmp(answer.c_str(), "infinity") == 0) {
         EventHandler::sleep(2000);
         screenShake(10);
-        
-        screenEnableCursor();
-        screenMessage("\n%s", codexEndgameText1[0].c_str());
 
-        eventHandler->pushKeyHandler(&codexHandleEndgameAnyKey); 
+        screenEnableCursor();
+        screenMessage("\n%s", codexEndgameText1[0]);
+
+        eventHandler->pushKeyHandler(&codexHandleEndgameAnyKey);
     }
     else if (tries++ < 3) {
         codexImpureThoughts();
@@ -400,25 +400,25 @@ bool codexHandleEndgameAnyKey(int key, void *data) {
                 screenEraseMapArea();
                 screenRedrawMapArea();
             }
-            screenMessage("%s", codexEndgameText1[index].c_str());
-        } 
+            screenMessage("%s", codexEndgameText1[index]);
+        }
         else if (index == 7) {
             screenDrawImageInMapArea(BKGD_STONCRCL);
             screenRedrawMapArea();
-            screenMessage("\n\n%s", codexEndgameText2[index-7].c_str());
+            screenMessage("\n\n%s", codexEndgameText2[index-7]);
         }
         else if (index > 7)
-            screenMessage("%s", codexEndgameText2[index-7].c_str());
-    
+            screenMessage("%s", codexEndgameText2[index-7]);
+
         index++;
         eventHandler->pushKeyHandler(&codexHandleEndgameAnyKey);
     }
     else {
-        /* CONGRATULATIONS!... you have completed the game in x turns */    
+        /* CONGRATULATIONS!... you have completed the game in x turns */
         screenDisableCursor();
-        screenMessage("%s%d%s", codexEndgameText2[index-7].c_str(), c->saveGame->moves, codexEndgameText2[index-6].c_str());
+        screenMessage("%s%d%s", codexEndgameText2[index-7], c->saveGame->moves, codexEndgameText2[index-6]);
 
-        eventHandler->pushKeyHandler(&KeyHandler::ignoreKeys);        
+        eventHandler->pushKeyHandler(&KeyHandler::ignoreKeys);
     }
 
     return true;

@@ -31,7 +31,7 @@ using std::string;
 using std::vector;
 
 int cycles, completedCycles;
-vector<string> shrineAdvice;
+static char *shrineAdvice[24];
 
 /**
  * Returns true if the player can use the portal to the shrine
@@ -79,13 +79,11 @@ void Shrine::setMantra(string m)    { mantra = m; }
  */
 void Shrine::enter() {
 
-    if (shrineAdvice.empty()) {
-        U4FILE *avatar = u4fopen("avatar.exe");
-        if (!avatar)
-            return;
-        shrineAdvice = u4read_stringtable(avatar, 93682, 24);
-        u4fclose(avatar);
-    }
+    U4FILE *avatar = u4fopen("avatar.exe");
+    if (!avatar)
+        return;
+    zu4_read_strtable(avatar, 93682, (char**)shrineAdvice, 24);
+    u4fclose(avatar);
 
     if (settings.enhancements && settings.enhancementsOptions.u5shrines)
         enhancedSequence();
@@ -218,11 +216,12 @@ void Shrine::showVision(bool elevated) {
         screenDrawImageInMapArea(visionImageNames[getVirtue()]);
     }
     else {
-        screenMessage("\n%s", shrineAdvice[getVirtue() * 3 + completedCycles - 1].c_str());
+        screenMessage("\n%s", shrineAdvice[getVirtue() * 3 + completedCycles - 1]);
     }
 }
 
 void Shrine::eject() {
+    for (int i = 0; i < 24; i++) { free(shrineAdvice[i]); }
     game->exitToParentMap();
     zu4_music_play(c->location->map->music);
     c->location->turnCompleter->finishTurn();
