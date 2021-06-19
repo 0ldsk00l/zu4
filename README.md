@@ -1,4 +1,4 @@
-# Ultima IV Recreated
+# Zesty Ultima IV
 
 This is a cleaned up, modernized fork of "xu4".
 
