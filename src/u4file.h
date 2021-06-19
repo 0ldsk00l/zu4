@@ -1,10 +1,8 @@
 #ifndef U4FILE_H
 #define U4FILE_H
 
-#include <map>
 #include <string>
 #include <vector>
-#include <list>
 
 #include "miniz.h"
 

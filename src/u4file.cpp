@@ -1,7 +1,7 @@
 /*
  * u4file.cpp
  * Copyright (C) 2014 xu4 Team
- * Copyright (C) 2020 R. Danbrook
+ * Copyright (C) 2020-2021 R. Danbrook
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@ long (*zu4_file_length)(U4FILE*);
 int (*zu4_file_getc)(U4FILE*);
 int (*zu4_file_putc)(U4FILE*, int);
 
-using std::map;
 using std::string;
 using std::vector;
 
@@ -49,6 +48,7 @@ static struct _u4paths {
 } u4paths;
 
 static U4ZipPackage u4base;
+static U4ZipPackage u4upgrade;
 
 bool u4isUpgradeAvailable() {
 	bool avail = false;
@@ -124,6 +124,28 @@ U4FILE *u4fopen(const char *fname) {
 		}
 	}
 
+	if (!u4upgrade.loaded) {
+		char path[64];
+		u4find_path(path, sizeof(path), "u4upgrad.zip", u4paths.zippath);
+
+		if (path[0] != '\0') {
+			mz_zip_archive zip_archive;
+			memset(&zip_archive, 0, sizeof(zip_archive));
+
+			if (!mz_zip_reader_init_file(&zip_archive, path, 0)) {
+				zu4_error(ZU4_LOG_ERR, "Archive corrupt, exiting...\n");
+			}
+
+			if (mz_zip_reader_locate_file(&zip_archive, "u4vga.pal", NULL, 0) >= 0) {
+				snprintf(u4upgrade.name, sizeof(u4upgrade.name), "%s", path);
+				snprintf(u4upgrade.path, sizeof(u4upgrade.path), "%s", "");
+				u4upgrade.loaded = 1;
+			}
+
+			mz_zip_reader_end(&zip_archive);
+		}
+	}
+
 	u4f = u4fopen_zip(fname, &u4base);
 	if (u4f) {
 		zu4_file_close = &zu4_file_zip_close;
@@ -135,37 +157,45 @@ U4FILE *u4fopen(const char *fname) {
 		zu4_file_putc = &zu4_file_zip_putc;
 		return u4f; /* file was found, return it! */
 	}
+	
+	u4f = u4fopen_zip(fname, &u4upgrade);
+	if (u4f) {
+		zu4_file_close = &zu4_file_zip_close;
+		zu4_file_seek = &zu4_file_zip_seek;
+		zu4_file_tell = &zu4_file_zip_tell;
+		zu4_file_read = &zu4_file_zip_read;
+		zu4_file_length = &zu4_file_zip_length;
+		zu4_file_getc = &zu4_file_zip_getc;
+		zu4_file_putc = &zu4_file_zip_putc;
+		return u4f; /* file was found, return it! */
+	}
 
-	/*
-	 * file not in a zipfile; check if it has been unzipped
-	 */
-	string fname_copy = (string)fname;
+	// file not in a zipfile; check if it has been unzipped
+	char fname_copy[64];
+	snprintf(fname_copy, sizeof(fname_copy), "%s", fname);
 
 	char path[64];
-	u4find_path(path, sizeof(path), fname_copy.c_str(), u4paths.dospath);
-	string pathname = (string)path;
-	if (pathname.empty()) {
-		using namespace std;
+	u4find_path(path, sizeof(path), fname_copy, u4paths.dospath);
+
+	if (path[0] == '\0') {
 		if (islower(fname_copy[0])) {
 			fname_copy[0] = toupper(fname_copy[0]);
-			u4find_path(path, sizeof(path), fname_copy.c_str(), u4paths.dospath);
-			pathname = (string)path;
+			u4find_path(path, sizeof(path), fname_copy, u4paths.dospath);
 		}
 
-		if (pathname.empty()) {
+		if (path[0] == '\0') {
 			for (unsigned int i = 0; fname_copy[i] != '\0'; i++) {
 				if (islower(fname_copy[i]))
 					fname_copy[i] = toupper(fname_copy[i]);
 			}
-			u4find_path(path, sizeof(path), fname_copy.c_str(), u4paths.dospath);
-			pathname = (string)path;
+			u4find_path(path, sizeof(path), fname_copy, u4paths.dospath);
 		}
 	}
 
-	if (!pathname.empty()) {
-		u4f = u4fopen_stdio(pathname.c_str());
+	if (path[0] != '\0') {
+		u4f = u4fopen_stdio(path);
 		if (u4f != NULL) {
-			zu4_error(ZU4_LOG_DBG, "%s successfully opened\n", pathname.c_str());
+			zu4_error(ZU4_LOG_DBG, "%s successfully opened\n", path);
 		}
 	}
 
