@@ -25,6 +25,7 @@ CSRCS=\
 		src/direction.c \
 		src/error.c \
 		src/image.c \
+		src/imageloader.c \
 		src/io.c \
 		src/miniz.c \
 		src/music.c \
@@ -65,7 +66,6 @@ CXXSRCS=\
 		src/event.cpp \
 		src/event_sdl.cpp \
 		src/game.cpp \
-		src/imageloader.cpp \
 		src/imagemgr.cpp \
 		src/imageview.cpp \
 		src/intro.cpp \

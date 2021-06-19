@@ -1,6 +1,10 @@
 #ifndef IMAGELOADER_H
 #define IMAGELOADER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "u4file.h"
 
 enum ImageType {
@@ -19,5 +23,9 @@ enum ImageType {
 Image* zu4_img_load(U4FILE *file, int width, int height, int bpp, int type);
 
 Image* zu4_png_load(const char *filename, int *x, int *y);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
