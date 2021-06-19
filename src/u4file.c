@@ -1,5 +1,5 @@
 /*
- * u4file.cpp
+ * u4file.c
  * Copyright (C) 2014 xu4 Team
  * Copyright (C) 2020-2021 R. Danbrook
  *
