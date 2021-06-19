@@ -95,7 +95,6 @@ CXXSRCS=\
 		src/tileset.cpp \
 		src/tileview.cpp \
 		src/u4.cpp \
-		src/utils.cpp \
 		src/view.cpp \
 		src/xml.cpp
 

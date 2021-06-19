@@ -18,6 +18,7 @@
 #include "utils.h"
 #include "weapon.h"
 
+static const char *strwhitespace = "\t\013\014 \n\r";
 
 CheatMenuController::CheatMenuController(GameController *game) : game(game) {
 }
@@ -93,13 +94,13 @@ bool CheatMenuController::keyPressed(int key) {
     case 'g': {
         screenMessage("Goto: ");
         string dest = gameGetInput(32);
-        lowercase(dest);
+        transform(dest.begin(), dest.end(), dest.begin(), ::tolower);
 
         bool found = false;
         for (unsigned p = 0; p < c->location->map->portals.size(); p++) {
             MapId destid = c->location->map->portals[p]->destid;
             string destNameLower = mapMgr->get(destid)->getName();
-            lowercase(destNameLower);
+            transform(destNameLower.begin(), destNameLower.end(), destNameLower.begin(), ::tolower);
             if (destNameLower.find(dest) != string::npos) {
                 screenMessage("\n%s\n", mapMgr->get(destid)->getName().c_str());
                 c->location->coords = c->location->map->portals[p]->coords;
@@ -386,7 +387,9 @@ void CheatMenuController::summonCreature(const string &name) {
     const Creature *m = NULL;
     string creatureName = name;
 
-    trim(creatureName);
+    creatureName.erase(creatureName.find_last_not_of(strwhitespace) + 1);
+    creatureName.erase(0, creatureName.find_first_not_of(strwhitespace));
+    
     if (creatureName.empty()) {
         screenMessage("\n");
         return;

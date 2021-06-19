@@ -58,7 +58,7 @@ Dialogue* U4HWDialogueLoader::load(void *source) {
 
     for (int v = 0; v < VIRT_MAX; v++) {
         string virtue(getVirtueName((Virtue) v));
-        lowercase(virtue);
+        transform(virtue.begin(), virtue.end(), virtue.begin(), ::tolower);
         virtue = virtue.substr(0, 4);
         dlg->addKeyword(virtue, new DynamicResponse(&hawkwindGetAdvice, virtue));
     }

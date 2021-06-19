@@ -3,7 +3,6 @@
  */
 
 #include <string.h>
-#include <string.h>
 #include <vector>
 
 #include "u4.h"
@@ -42,6 +41,29 @@ bool isPerson(Object *punknown) {
         return true;
     else
         return false;
+}
+
+/**
+ * Splits a string into substrings, divided by the charactars in
+ * separators.  Multiple adjacent seperators are treated as one.
+ */
+static std::vector<string> split(const string &s, const string &separators) {
+    std::vector<string> result;
+    string current;
+
+    for (unsigned i = 0; i < s.length(); i++) {
+        if (separators.find(s[i]) != string::npos) {
+            if (current.length() > 0)
+                result.push_back(current);
+            current.erase();
+        } else
+            current += s[i];
+    }
+
+    if (current.length() > 0)
+        result.push_back(current);
+
+    return result;
 }
 
 /**
@@ -190,7 +212,7 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
                     case Script::INPUT_STRING: {
                         string str = ReadStringController::get(script->getInputMaxLen(), TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
                         if (str.size()) {
-                            lowercase(str);                        
+                            transform(str.begin(), str.end(), str.begin(), ::tolower);
                             script->setVar(script->getInputName(), str);
                         }
                         else script->unsetVar(script->getInputName());
@@ -200,9 +222,10 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
                         ReadPlayerController getPlayerCtrl;
                         eventHandler->pushController(&getPlayerCtrl);
                         int player = getPlayerCtrl.waitFor();
-                        if (player != -1) {                            
-                            string player_str = zu4_to_string(player+1);
-                            script->setVar(script->getInputName(), player_str);
+                        if (player != -1) {
+                            char buffer[16];
+                            snprintf(buffer, sizeof(buffer), "%d", player + 1);
+                            script->setVar(script->getInputName(), (string)buffer);
                         }
                         else script->unsetVar(script->getInputName());
                     } break;

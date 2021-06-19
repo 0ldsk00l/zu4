@@ -21,6 +21,12 @@
 
 static string hittile, misstile;
 
+static string zu4_to_string(int val) {
+    char buffer[16];
+    sprintf(buffer, "%d", val);
+    return buffer;
+}
+
 bool isPartyMember(Object *punknown) {
     PartyMember *pm;
     if ((pm = dynamic_cast<PartyMember*>(punknown)) != NULL)

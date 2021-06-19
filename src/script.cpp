@@ -29,6 +29,35 @@
 #include "weapon.h"
 #include "xml.h"
 
+static string zu4_to_string(int val) {
+    char buffer[16];
+    sprintf(buffer, "%d", val);
+    return buffer;
+}
+
+/**
+ * Splits a string into substrings, divided by the charactars in
+ * separators.  Multiple adjacent seperators are treated as one.
+ */
+static std::vector<string> split(const string &s, const string &separators) {
+    std::vector<string> result;
+    string current;
+
+    for (unsigned i = 0; i < s.length(); i++) {
+        if (separators.find(s[i]) != string::npos) {
+            if (current.length() > 0)
+                result.push_back(current);
+            current.erase();
+        } else
+            current += s[i];
+    }
+
+    if (current.length() > 0)
+        result.push_back(current);
+
+    return result;
+}
+
 using namespace std;
 
 /*

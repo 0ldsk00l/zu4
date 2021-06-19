@@ -3,6 +3,8 @@
  */
 
 #include <string.h>
+#include <algorithm>
+
 #include "conversation.h"
 #include "error.h"
 #include "person.h"
@@ -23,6 +25,8 @@ const ResponsePart ResponsePart::STARTMUSIC_HW("<STARTMUSIC_HW>", "", true);
 const ResponsePart ResponsePart::STOPMUSIC("<STOPMUSIC>", "", true);
 const ResponsePart ResponsePart::HAWKWIND("<HAWKWIND>", "", true);
 const unsigned int Conversation::BUFFERLEN = 16;
+
+static const char *strwhitespace = "\t\013\014 \n\r";
 
 Response::Response(const string &response) : references(0) {
     add(response);
@@ -112,14 +116,16 @@ Response *Dialogue::Question::getResponse(bool yes) {
  */ 
 Dialogue::Keyword::Keyword(const string &kw, Response *resp) :
     keyword(kw), response(resp->addref()) {
-    trim(keyword);
-    lowercase(keyword);
+    keyword.erase(keyword.find_last_not_of(strwhitespace) + 1);
+    keyword.erase(0, keyword.find_first_not_of(strwhitespace));
+    transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
 }
 
 Dialogue::Keyword::Keyword(const string &kw, const string &resp) :
     keyword(kw), response((new Response(resp))->addref()) {
-    trim(keyword);
-    lowercase(keyword);
+    keyword.erase(keyword.find_last_not_of(strwhitespace) + 1);
+    keyword.erase(0, keyword.find_first_not_of(strwhitespace));
+    transform(keyword.begin(), keyword.end(), keyword.begin(), ::tolower);
 }
 
 Dialogue::Keyword::~Keyword() {
