@@ -20,7 +20,7 @@ bool ImageInfo::hasBlackBackground()
 	return this->filetype == "image/x-u4raw";
 }
 
-class ImageSet {
+struct ImageSet {
 public:
     ~ImageSet();
 

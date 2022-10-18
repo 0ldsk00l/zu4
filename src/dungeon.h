@@ -65,7 +65,7 @@ enum DungeonToken {
     DUNGEON_WALL                = 0xF0
 };
 
-class Dungeon : public Map {
+struct Dungeon : public Map {
 public:
     Dungeon() {}
 

@@ -46,13 +46,13 @@ using std::string;
 
 extern int eventTimerGranularity;
 
-class EventHandler;
-class TextView;
+struct EventHandler;
+struct TextView;
 
 /**
- * A class for handling keystrokes. 
+ * A struct for handling keystrokes. 
  */
-class KeyHandler {
+struct KeyHandler {
 public:
     virtual ~KeyHandler() {}
 
@@ -101,7 +101,7 @@ protected:
  * A controller that wraps a keyhander function.  Keyhandlers are
  * deprecated -- please use a controller instead.
  */
-class KeyHandlerController : public Controller {
+struct KeyHandlerController : public Controller {
 public:
     KeyHandlerController(KeyHandler *handler);
     ~KeyHandlerController();
@@ -116,7 +116,7 @@ private:
 /**
  * A controller to read a string, terminated by the enter key.
  */
-class ReadStringController : public WaitableController<string> {
+struct ReadStringController : public WaitableController<string> {
 public:
     ReadStringController(int maxlen, int screenX, int screenY, const string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
     ReadStringController(int maxlen, TextView *view, const string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
@@ -135,7 +135,7 @@ protected:
  * A controller to read a integer, terminated by the enter key.
  * Non-numeric keys are ignored.
  */
-class ReadIntController : public ReadStringController {
+struct ReadIntController : public ReadStringController {
 public:
     ReadIntController(int maxlen, int screenX, int screenY);
 
@@ -146,7 +146,7 @@ public:
 /**
  * A controller to read a single key from a provided list.
  */
-class ReadChoiceController : public WaitableController<int> {
+struct ReadChoiceController : public WaitableController<int> {
 public:
     ReadChoiceController(const string &choices);
     virtual bool keyPressed(int key);
@@ -160,7 +160,7 @@ protected:
 /**
  * A controller to read a direction enter with the arrow keys.
  */
-class ReadDirController : public WaitableController<Direction> {
+struct ReadDirController : public WaitableController<Direction> {
 public:    
     ReadDirController();
     virtual bool keyPressed(int key);    
@@ -170,7 +170,7 @@ public:
  * A controller to pause for a given length of time, ignoring all
  * keyboard input.
  */
-class WaitController : public Controller {
+struct WaitController : public Controller {
 public:
     WaitController(unsigned int cycles);
     virtual bool keyPressed(int key);
@@ -185,9 +185,9 @@ private:
 };
 
 /**
- * A class for handling timed events.
+ * A struct for handling timed events.
  */ 
-class TimedEvent {
+struct TimedEvent {
 public:
     /* Typedefs */
     typedef std::list<TimedEvent*> List;
@@ -210,9 +210,9 @@ protected:
 };
 
 /**
- * A class for managing timed events
+ * A struct for managing timed events
  */ 
-class TimedEventMgr {
+struct TimedEventMgr {
 public:
     /* Typedefs */
     typedef TimedEvent::List List;    
@@ -255,9 +255,9 @@ protected:
 
 typedef void(*updateScreenCallback)(void);
 /**
- * A class for handling game events. 
+ * A struct for handling game events. 
  */
-class EventHandler {
+struct EventHandler {
 public:
     /* Constructors */
     EventHandler();    

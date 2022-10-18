@@ -12,12 +12,12 @@
 #include "textview.h"
 
 struct SaveGame;
-class Aura;
-class Ingredients;
-class Menu;
-class MenuEvent;
-class Party;
-class PartyEvent;
+struct Aura;
+struct Ingredients;
+struct Menu;
+struct MenuEvent;
+struct Party;
+struct PartyEvent;
 
 using std::string;
 
@@ -45,7 +45,7 @@ enum StatsView {
     MIX_REAGENTS
 };
 
-class StatsArea : public Observer<Aura *>, public Observer<Party *, PartyEvent &>, public Observer<Menu *, MenuEvent &>, public Observable<StatsArea *, string> {
+struct StatsArea : public Observer<Aura *>, public Observer<Party *, PartyEvent &>, public Observer<Menu *, MenuEvent &>, public Observable<StatsArea *, string> {
 public:
     StatsArea();
 
@@ -90,7 +90,7 @@ private:
  * Controller for the reagents menu used when mixing spells.  Fills
  * the passed in Ingredients with the selected reagents.
  */
-class ReagentsMenuController : public MenuController {
+struct ReagentsMenuController : public MenuController {
 public:
     ReagentsMenuController(Menu *menu, Ingredients *i, TextView *view) : MenuController(menu, view), ingredients(i) { }
 

@@ -10,8 +10,8 @@
 
 #include "map.h"
 
-class U4FILE;
-class Dungeon;
+struct U4FILE;
+struct Dungeon;
 
 /**
  * The generic map loader interface.  Map loaders should override the
@@ -27,7 +27,7 @@ class Dungeon;
  *      </li>
  * </ul>
  */
-class MapLoader {
+struct MapLoader {
 public:
     virtual ~MapLoader() {}
 
@@ -44,7 +44,7 @@ private:
     static std::map<Map::Type, MapLoader *> *loaderMap;
 };
 
-class CityMapLoader : public MapLoader {
+struct CityMapLoader : public MapLoader {
     static MapLoader *instance;
 
 public:
@@ -52,7 +52,7 @@ public:
 
 };
 
-class ConMapLoader : public MapLoader {
+struct ConMapLoader : public MapLoader {
     static MapLoader *instance;
 
 public:
@@ -60,7 +60,7 @@ public:
 
 };
 
-class DngMapLoader : public MapLoader {
+struct DngMapLoader : public MapLoader {
     static MapLoader *instance;
 
 public:
@@ -70,7 +70,7 @@ private:
     void initDungeonRoom(Dungeon *dng, int room);
 };
 
-class WorldMapLoader : public MapLoader {
+struct WorldMapLoader : public MapLoader {
     static MapLoader *instance;
 
 public:

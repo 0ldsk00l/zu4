@@ -51,7 +51,7 @@ IntroController *intro = NULL;
 #define GYP_SEGUE1 13
 #define GYP_SEGUE2 14
 
-class IntroObjectState {
+struct IntroObjectState {
 public:
     IntroObjectState() : x(0), y(0), tile(0) {}
     int x, y;

@@ -155,7 +155,7 @@ TimedEventMgr::TimedEventMgr(int i) : baseInterval(i) {
  */
 TimedEventMgr::~TimedEventMgr() {
     SDL_RemoveTimer(id);
-    id = NULL;
+    id = 0;
     
     if (instances == 1)
         u4_SDL_QuitSubSystem(SDL_INIT_TIMER);
@@ -191,7 +191,7 @@ void TimedEventMgr::reset(unsigned int interval) {
 void TimedEventMgr::stop() {
     if (id) {
         SDL_RemoveTimer(id);
-        id = NULL;
+        id = 0;
     }
 }
 

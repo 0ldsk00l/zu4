@@ -26,9 +26,9 @@ typedef enum {
 #define CTX_NON_COMBAT      (LocationContext)(CTX_ANY & ~CTX_COMBAT)
 #define CTX_CAN_SAVE_GAME   (LocationContext)(CTX_WORLDMAP | CTX_DUNGEON)
 
-class TurnCompleter;
+struct TurnCompleter;
 
-class Location : public Observable<Location *, MoveEvent &> {
+struct Location : public Observable<Location *, MoveEvent &> {
 public:
     Location(Coords coords, Map *map, int viewmode, LocationContext ctx, TurnCompleter *turnCompleter, Location *prev);
 

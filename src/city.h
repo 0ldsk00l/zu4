@@ -11,8 +11,8 @@
 
 using std::string;
 
-class Person;
-class Dialogue;
+struct Person;
+struct Dialogue;
 
 #include "map.h"
 
@@ -24,7 +24,7 @@ struct PersonRole {
 typedef std::vector<Person *> PersonList;
 typedef std::list<PersonRole*> PersonRoleList;
 
-class City : public Map {
+struct City : public Map {
 public:
     City();
     ~City();

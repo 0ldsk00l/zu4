@@ -16,9 +16,9 @@
 
 using std::string;
 
-class ConfigElement;
-class ImageSet;
-class Settings;
+struct ConfigElement;
+struct ImageSet;
+struct Settings;
 
 /*
  * The image manager is responsible for loading and keeping track of
@@ -77,7 +77,7 @@ enum ImageFixup {
 /**
  * Image meta info.
  */
-class ImageInfo {
+struct ImageInfo {
 public:
     ~ImageInfo();
 
@@ -98,7 +98,7 @@ public:
 /**
  * The image manager singleton that keeps track of all the images.
  */
-class ImageMgr {
+struct ImageMgr {
 public:
     static ImageMgr *getInstance();
     static void destroy();

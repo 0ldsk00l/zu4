@@ -7,8 +7,8 @@
 
 #include "types.h"
 
-class Map;
-class Coords;
+struct Map;
+struct Coords;
 
 enum SearchCondition {
     SC_NONE         = 0x00,

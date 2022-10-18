@@ -16,7 +16,7 @@
     const char *mantra;
 } Shrine;*/
 
-class Shrine : public Map {
+struct Shrine : public Map {
 public:
     Shrine();
 

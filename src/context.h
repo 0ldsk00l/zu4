@@ -14,11 +14,11 @@
 #include "types.h"
 #include "savegame.h"
 
-class Object;
-class Party;
-class Person;
-class Script;
-class StatsArea;
+struct Object;
+struct Party;
+struct Person;
+struct Script;
+struct StatsArea;
 
 typedef enum {
     TRANSPORT_FOOT      = 0x1,
@@ -32,7 +32,7 @@ typedef enum {
 typedef struct Context {
     Party *party;
     SaveGame *saveGame;
-    class Location *location;
+    struct Location *location;
     int line, col;
     StatsArea *stats;
     int moonPhase;
@@ -44,7 +44,7 @@ typedef struct Context {
     int opacity;
     TransportContext transportContext;
     time_t lastCommandTime;
-    class Object *lastShip;
+    struct Object *lastShip;
 } Context;
 
 extern Context *c;

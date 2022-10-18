@@ -17,14 +17,14 @@
 
 using std::vector;
 
-class Map;
+struct Map;
 struct Portal;
-class Creature;
-class Location;
-class MoveEvent;
-class Party;
-class PartyEvent;
-class PartyMember;
+struct Creature;
+struct Location;
+struct MoveEvent;
+struct Party;
+struct PartyEvent;
+struct PartyMember;
 
 typedef enum {
     VIEW_NORMAL,
@@ -42,7 +42,7 @@ const char *gameGetInputC();
 /**
  * A controller to read a player number.
  */
-class ReadPlayerController : public ReadChoiceController {
+struct ReadPlayerController : public ReadChoiceController {
 public:
     ReadPlayerController();
     ~ReadPlayerController();
@@ -56,7 +56,7 @@ public:
  * A controller to handle input for commands requiring a letter
  * argument in the range 'a' - lastValidLetter.
  */
-class AlphaActionController : public WaitableController<int> {
+struct AlphaActionController : public WaitableController<int> {
 public:
     AlphaActionController(char letter, const string &p) : lastValidLetter(letter), prompt(p) {}
     bool keyPressed(int key);
@@ -71,12 +71,12 @@ private:
 /**
  * Controls interaction while Ztats are being displayed.
  */
-class ZtatsController : public WaitableController<void *> {
+struct ZtatsController : public WaitableController<void *> {
 public:
     bool keyPressed(int key);
 };
 
-class TurnCompleter {
+struct TurnCompleter {
 public:
     virtual ~TurnCompleter() {}
     virtual void finishTurn() = 0;
@@ -87,10 +87,10 @@ public:
  *
  * @todo
  *  <ul> 
- *      <li>separate the dungeon specific stuff into another class (subclass?)</li>
+ *      <li>separate the dungeon specific stuff into another struct (subclass?)</li>
  *  </ul>
  */
-class GameController : public Controller, public Observer<Party *, PartyEvent &>, public Observer<Location *, MoveEvent &>,
+struct GameController : public Controller, public Observer<Party *, PartyEvent &>, public Observer<Location *, MoveEvent &>,
     public TurnCompleter {
 public:
     GameController();
@@ -167,7 +167,7 @@ void gameCheckHullIntegrity(void);
 /* creature functions */
 bool creatureRangeAttack(const Coords &coords, Creature *m);
 void gameCreatureCleanup(void);
-bool gameSpawnCreature(const class Creature *m);
+bool gameSpawnCreature(const struct Creature *m);
 
 /* etc */
 string gameGetInput(int maxlen = 32);

@@ -10,7 +10,7 @@
 #include "tile.h"
 #include "types.h"
 
-typedef std::deque<class Object *> ObjectDeque;
+typedef std::deque<struct Object *> ObjectDeque;
 
 typedef enum {
     MOVEMENT_FIXED,
@@ -19,7 +19,7 @@ typedef enum {
     MOVEMENT_ATTACK_AVATAR
 } ObjectMovementBehavior;
 
-class Object {
+struct Object {
 public:
     enum Type {
         UNKNOWN,
@@ -61,7 +61,7 @@ public:
     void setVisible(bool v = true)          { visible = v; }
     void setAnimated(bool a = true)         { animated = a; }
     
-    void setMap(class Map *m);
+    void setMap(struct Map *m);
     Map *getMap();    
     void remove();  /**< Removes itself from any maps that it is a part of */
 
@@ -75,7 +75,7 @@ protected:
     Coords coords, prevCoords;
     ObjectMovementBehavior movement_behavior;
     Type objType;
-    std::deque<class Map *> maps;           /**< A list of maps this object is a part of */    
+    std::deque<struct Map *> maps;           /**< A list of maps this object is a part of */    
     
     bool focused;
     bool visible;

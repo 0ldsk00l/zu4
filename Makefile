@@ -1,5 +1,5 @@
-CC := cc
-CXX := c++
+CC ?= cc
+CXX ?= c++
 prefix := /usr/local
 bindir = $(prefix)/bin
 libdir = $(prefix)/lib

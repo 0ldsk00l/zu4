@@ -11,15 +11,15 @@
 
 using std::string;
 
-class ConfigElement;
-class Tile;
+struct ConfigElement;
+struct Tile;
 
-typedef std::map<string, class TileRule *> TileRuleMap;
+typedef std::map<string, struct TileRule *> TileRuleMap;
 
 /**
- * TileRule class
+ * TileRule struct
  */
-class TileRule {
+struct TileRule {
 public:    
     static TileRule *findByName(const string &name);
     static void load();
@@ -37,9 +37,9 @@ public:
 };
 
 /**
- * Tileset class
+ * Tileset struct
  */
-class Tileset {
+struct Tileset {
 public:
     typedef std::map<string, Tileset*> TilesetMap;
     typedef std::map<TileId, Tile*> TileIdMap;

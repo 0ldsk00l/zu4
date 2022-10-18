@@ -16,7 +16,7 @@
 using std::string;
 
 /**
- * An xml-scripting class. It loads and runs xml scripts that
+ * An xml-scripting struct. It loads and runs xml scripts that
  * take information and interact with the game environment itself.
  * Currently, it is mainly useful for writing vendor code; however,
  * it should be possible to write scripts for other parts of the
@@ -28,16 +28,16 @@ using std::string;
  *      <li>Fill in some of the missing integration with the game</li>
  * </ul>
  */ 
-class Script {
+struct Script {
 public:    
     /**
-     * A class that provides information to a script.  It is designed to
+     * A struct that provides information to a script.  It is designed to
      * translate qualifiers and identifiers in a script to another value.
      * Each provider is assigned a qualifier that the script uses to
      * select a provider.  The provider then uses the rest of the information
      * to translate the information to something useful.
      */
-    class Provider {
+    struct Provider {
     public:
         virtual ~Provider() {}
         virtual string translate(std::vector<string>& parts) = 0;
@@ -45,9 +45,9 @@ public:
 
 private:
     /**
-     * A class that represents a script variable
+     * A struct that represents a script variable
      */ 
-    class Variable {
+    struct Variable {
     public:
         Variable();
         Variable(const string &v);

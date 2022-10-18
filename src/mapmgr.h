@@ -10,12 +10,12 @@
 
 #include "map.h"
 
-class City;
-class ConfigElement;
-class Dungeon;
+struct City;
+struct ConfigElement;
+struct Dungeon;
 struct PersonRole;
 struct Portal;
-class Shrine;
+struct Shrine;
 
 /*
  * The map manager is responsible for loading and keeping track of the
@@ -83,7 +83,7 @@ class Shrine;
 /**
  * The map manager singleton that keeps track of all the maps.
  */
-class MapMgr {
+struct MapMgr {
 public:
     static MapMgr *getInstance();
     static void destroy();

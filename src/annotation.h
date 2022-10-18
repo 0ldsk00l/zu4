@@ -10,7 +10,7 @@
 #include "coords.h"
 #include "types.h"
 
-class Annotation;
+struct Annotation;
 
 /**
  * Annotation are updates to a map.
@@ -19,7 +19,7 @@ class Annotation;
  * - turn based: lasts a given number of cycles
  * - time based: lasts a given number of time units (1/4 seconds) 
  */
-class Annotation {
+struct Annotation {
 public:    
     typedef std::list<Annotation> List;
 
@@ -58,7 +58,7 @@ private:
  * adding and removing annotations, as well as finding annotations
  * and managing their existence.
  */
-class AnnotationMgr {    
+struct AnnotationMgr {
 public:        
     AnnotationMgr();
 
