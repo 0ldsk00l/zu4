@@ -4,6 +4,9 @@ CXX ?= c++
 CFLAGS ?= -O2
 CXXFLAGS ?= -O2
 
+FLAGS_C := -std=c99
+FLAGS_CXX := -std=c++11
+
 PREFIX ?= /usr/local
 DATAROOTDIR ?= $(PREFIX)/share
 DATADIR ?= $(DATAROOTDIR)
@@ -128,10 +131,10 @@ OBJS := $(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
 all: $(TARGET)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(UIFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(FLAGS_C) $(UIFLAGS) -c $< -o $@
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(UIFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(FLAGS_CXX) $(UIFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJS)
 	$(CXX) $^ $(LDFLAGS) $(UILIBS) -o $@
