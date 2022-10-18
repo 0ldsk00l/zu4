@@ -1,21 +1,31 @@
 CC ?= cc
 CXX ?= c++
-prefix := /usr/local
-bindir = $(prefix)/bin
-libdir = $(prefix)/lib
-datadir = $(prefix)/share
 
-UILIBS = $(shell sdl2-config --libs) -lGL -lGLU
-UIFLAGS = $(shell sdl2-config --cflags)
+CFLAGS ?= -O2
+CXXFLAGS ?= -O2
 
-CXXFLAGS = -g -Isrc -Wall $(UIFLAGS) $(shell xml2-config --cflags)
-#CXXFLAGS += -ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
-CFLAGS = $(CXXFLAGS)
-LIBS = $(UILIBS) $(shell xml2-config --libs)
+PREFIX ?= /usr/local
+DATAROOTDIR ?= $(PREFIX)/share
+DATADIR ?= $(DATAROOTDIR)
+DOCDIR ?= $(DATAROOTDIR)/doc/$(NAME)
+LIBDIR ?= $(PREFIX)/lib
 
-MAIN = u4
+PKG_CONFIG ?= pkg-config
 
-CSRCS=\
+CFLAGS_SDL2 := $(shell $(PKG_CONFIG) --cflags sdl2)
+LIBS_SDL2 := $(shell $(PKG_CONFIG) --libs sdl2)
+
+CFLAGS_XML2 := $(shell $(PKG_CONFIG) --cflags libxml-2.0)
+LIBS_XML2 := $(shell $(PKG_CONFIG) --libs libxml-2.0)
+
+#UIFLAGS += -ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
+
+UIFLAGS := -Wall -Isrc $(CFLAGS_SDL2) $(CFLAGS_XML2)
+UILIBS := $(LIBS_SDL2) $(LIBS_XML2) -lGL -lGLU
+
+TARGET := u4
+
+CSRCS := \
 		src/lzw/hash.c \
 		src/lzw/lzw.c \
 		src/lzw/u4decode.c \
@@ -44,7 +54,7 @@ CSRCS=\
 		src/u4file.c \
 		src/yxml.c
 
-CXXSRCS=\
+CXXSRCS := \
 		src/annotation.cpp \
 		src/aura.cpp \
 		src/camp.cpp \
@@ -98,12 +108,20 @@ CXXSRCS=\
 		src/view.cpp \
 		src/xml.cpp
 
-OBJS += $(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
+.PHONY: all clean
 
-all:: $(MAIN)
+OBJS := $(CSRCS:.c=.o) $(CXXSRCS:.cpp=.o)
 
-$(MAIN): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+all: $(TARGET)
 
-clean::
-	rm -rf *~ */*~ $(OBJS) $(MAIN)
+%.o: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(UIFLAGS) -c $< -o $@
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(UIFLAGS) -c $< -o $@
+
+$(TARGET): $(OBJS)
+	$(CXX) $^ $(LDFLAGS) $(UILIBS) -o $@
+
+clean:
+	rm -rf *~ */*~ $(OBJS) $(TARGET)
