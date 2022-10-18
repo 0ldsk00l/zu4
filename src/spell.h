@@ -35,7 +35,7 @@ enum EnergyFieldType {
 /**
  * The ingredients for a spell mixture.
  */
-class Ingredients {
+struct Ingredients {
 public:
     Ingredients();
     bool addReagent(Reagent reagent);

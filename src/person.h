@@ -14,10 +14,10 @@
 using std::list;
 using std::string;
 
-class Conversation;
-class Dialogue;
-class Response;
-class ResponsePart;
+struct Conversation;
+struct Dialogue;
+struct Response;
+struct ResponsePart;
 
 typedef enum {
    NPC_EMPTY,
@@ -39,7 +39,7 @@ typedef enum {
    NPC_MAX
 } PersonNpcType;
 
-class Person : public Creature {
+struct Person : public Creature {
 public:
     Person(MapTile tile);
     Person(const Person *p);

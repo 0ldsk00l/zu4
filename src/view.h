@@ -5,13 +5,13 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-class Image;
+struct Image;
 
 /**
- * Generic base class for reflecting the state of a game object onto
+ * Generic base struct for reflecting the state of a game object onto
  * the screen.
  */
-class View {
+struct View {
 public:
     View(int x, int y, int width, int height);
     virtual ~View() {}

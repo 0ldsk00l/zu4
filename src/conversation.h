@@ -16,14 +16,14 @@ using std::list;
 using std::string;
 using std::vector;
 
-class Person;
-class Script;
+struct Person;
+struct Script;
 
 /**
  * A response part can be text or a "command" that triggers an
  * action.
  */
-class ResponsePart {
+struct ResponsePart {
 public:
     // the valid command response parts
     static const ResponsePart NONE;
@@ -54,7 +54,7 @@ private:
  * A static response.  Each response can be made up of any number of
  * ResponseParts, which are either text fragments or commands.
  */
-class Response {
+struct Response {
 public:
     Response(const string &response);
     virtual ~Response() {}
@@ -74,11 +74,11 @@ private:
 };
 
 /**
- * A dynamically generated response.  This class allows the response
+ * A dynamically generated response.  This struct allows the response
  * to be generated dynamically at the time of the conversation instead
  * of when the conversation data is loaded.
  */
-class DynamicResponse : public Response {
+struct DynamicResponse : public Response {
 public:
     DynamicResponse(Response *(*generator)(const DynamicResponse *), const string &param = "");
     virtual ~DynamicResponse();
@@ -94,17 +94,17 @@ private:
 };
 
 /**
- * The dialogue class, which holds conversation information for
+ * The dialogue struct, which holds conversation information for
  * townspeople and others who may talk to you.  It includes information
  * like pronouns, keywords, actual conversation text (of course), 
  * questions, and what happens when you answer these questions.
  */
-class Dialogue {
+struct Dialogue {
 public:
     /**
      * A question-response to a keyword.
      */ 
-    class Question {
+    struct Question {
     public:
         Question(const string &txt, Response *yes, Response *no);
 
@@ -121,7 +121,7 @@ public:
      * It contains all the keywords that the talker will respond to, as
      * well as the responses to those keywords.
      */ 
-    class Keyword {
+    struct Keyword {
     public:        
         Keyword(const string &kw, Response *resp);
         Keyword(const string &kw, const string &resp);
@@ -199,11 +199,11 @@ private:
 };
 
 /**
- * The conversation class, which handles the flow of text from the
+ * The conversation struct, which handles the flow of text from the
  * player to the talker and vice-versa.  It is responsible for beginning
  * and termination conversations and handing state changes during.
  */ 
-class Conversation {
+struct Conversation {
 public:
     /** Different states the conversation may be in */
     enum State {
@@ -249,7 +249,7 @@ public:
     State state;                /**< The state of the conversation */
     string playerInput;         /**< A string holding the text the player inputs */
     list<string> reply;         /**< What the talker says */
-    class Script *script;       /**< A script that this person follows during the conversation (may be NULL) */
+    struct Script *script;      /**< A script that this person follows during the conversation (may be NULL) */
     Dialogue::Question *question; /**< The current question the player is being asked */
     int quant;                  /**< For vendor transactions */
     int player;                 /**< For vendor transactions */

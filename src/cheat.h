@@ -11,9 +11,9 @@
 
 using std::string;
 
-class GameController;
+struct GameController;
 
-class CheatMenuController : public WaitableController<void *> {
+struct CheatMenuController : public WaitableController<void *> {
 public:
     CheatMenuController(GameController *game);
     bool keyPressed(int key);
@@ -25,11 +25,11 @@ private:
 };
 
 /**
- * This class controls the wind option from the cheat menu.  It
+ * This struct controls the wind option from the cheat menu.  It
  * handles setting the wind direction as well as locking/unlocking.
  * The value field of WaitableController isn't used.
  */
-class WindCmdController : public WaitableController<void *> {
+struct WindCmdController : public WaitableController<void *> {
 public:
     bool keyPressed(int key);
 };

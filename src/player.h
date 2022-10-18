@@ -19,13 +19,13 @@
 #include "types.h"
 #include "weapon.h"
 
-//class Armor;
-class Party;
-class Weapon;
+//struct Armor;
+struct Party;
+struct Weapon;
 
 using std::string;
 
-typedef std::vector<class PartyMember *> PartyMemberVector;
+typedef std::vector<struct PartyMember *> PartyMemberVector;
 
 #define ALL_PLAYERS -1
 
@@ -86,9 +86,9 @@ enum EquipError {
 };
 
 /**
- * PartyMember class
+ * PartyMember struct
  */ 
-class PartyMember : public Creature, public Script::Provider {
+struct PartyMember : public Creature, public Script::Provider {
 public:
     PartyMember(Party *p, SaveGamePlayerRecord *pr);
     virtual ~PartyMember();
@@ -145,13 +145,13 @@ protected:
     static MapTile tileForClass(int klass);
 
     SaveGamePlayerRecord *player;
-    class Party *party;    
+    struct Party *party;    
 };
 
 /**
- * Party class
+ * Party struct
  */ 
-class PartyEvent {
+struct PartyEvent {
 public:
     enum Type {
         GENERIC,
@@ -174,8 +174,8 @@ public:
 
 typedef std::vector<PartyMember *> PartyMemberVector;
 
-class Party : public Observable<Party *, PartyEvent &>, public Script::Provider {
-    friend class PartyMember;
+struct Party : public Observable<Party *, PartyEvent &>, public Script::Provider {
+    friend struct PartyMember;
 public:
     Party(SaveGame *saveGame);
     virtual ~Party();

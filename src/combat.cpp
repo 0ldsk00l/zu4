@@ -97,7 +97,7 @@ void CombatController::showCombatMessage(bool show)         { showMessage = show
 /**
  * Initializes the combat controller with combat information
  */
-void CombatController::init(class Creature *m) {
+void CombatController::init(struct Creature *m) {
     int i;
     
     creature = m;    

@@ -12,7 +12,7 @@ typedef enum _AuraType {
 	AURA_QUICKNESS
 } AuraType;
 
-class Aura : public Observable<Aura *> {
+struct Aura : public Observable<Aura *> {
 public:
     Aura();
 

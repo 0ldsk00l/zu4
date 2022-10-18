@@ -16,13 +16,13 @@
 #include "textview.h"
 #include "tileview.h"
 
-class IntroObjectState;
-class Tile;
+struct IntroObjectState;
+struct Tile;
 
 /**
  * Binary data loaded from the U4DOS title.exe file.
  */
-class IntroBinData {
+struct IntroBinData {
 public:
     const static int INTRO_TEXT_OFFSET;
     const static int INTRO_MAP_OFFSET;
@@ -70,7 +70,7 @@ private:
  *      <li>get rid global intro instance -- should only need to be accessed from u4.cpp</li>
  * </ul>
  */
-class IntroController : public Controller, public Observer<Menu *, MenuEvent &> {
+struct IntroController : public Controller, public Observer<Menu *, MenuEvent &> {
 public:
     IntroController();
 

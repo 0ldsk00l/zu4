@@ -16,10 +16,10 @@
 using std::string;
 using std::set;
 
-class Menu;
-class TextView;
+struct Menu;
+struct TextView;
 
-class MenuEvent {
+struct MenuEvent {
 public:
     enum Type {
         ACTIVATE,
@@ -46,9 +46,9 @@ private:
 };
 
 /**
- * Menu class definition
+ * Menu struct definition
  */
-class Menu : public Observable<Menu *, MenuEvent &> {
+struct Menu : public Observable<Menu *, MenuEvent &> {
 public:
     typedef std::list<MenuItem *> MenuItemList;
 
@@ -92,10 +92,10 @@ private:
 };
 
 /**
- * This class controls a menu.  The value field of WaitableController
+ * This struct controls a menu.  The value field of WaitableController
  * isn't used.
  */
-class MenuController : public WaitableController<void *> {
+struct MenuController : public WaitableController<void *> {
 public:
     MenuController(Menu *menu, TextView *view);
     bool keyPressed(int key);

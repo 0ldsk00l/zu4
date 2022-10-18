@@ -12,7 +12,7 @@
  * areas of the screen.
  *
  * Most of the functions here are obsolete and are slowly being
- * migrated to the xxxView classes.
+ * migrated to the xxxView structs.
  *
  * @todo
  *  <ul> 
@@ -31,11 +31,11 @@
 #include "types.h"
 #include "u4file.h"
 
-class Image;
-class Map;
-class Tile;
-class TileView;
-class Coords;
+struct Image;
+struct Map;
+struct Tile;
+struct TileView;
+struct Coords;
 
 #if __GNUC__
 #define PRINTF_LIKE(x,y)  __attribute__ ((format (printf, (x), (y))))

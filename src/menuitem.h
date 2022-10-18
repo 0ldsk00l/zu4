@@ -13,7 +13,7 @@ using std::string;
 using std::set;
 using std::vector;
 
-class MenuEvent;
+struct MenuEvent;
 
 /**
  * custom output types for with menu items that need
@@ -29,7 +29,7 @@ typedef enum {
     MENU_OUTPUT_REAGENT
 } menuOutputType;
 
-class MenuItem {
+struct MenuItem {
 public:
     MenuItem(string text, short x, short y, int shortcutKey = -1);
     virtual ~MenuItem() {}
@@ -75,7 +75,7 @@ protected:
  * A menu item that toggles a boolean value, and displays the current
  * setting as part of the text.
  */
-class BoolMenuItem : public MenuItem {
+struct BoolMenuItem : public MenuItem {
 public:
     BoolMenuItem(string text, short x, short y, int shortcutKey, bool *val);
 
@@ -93,7 +93,7 @@ protected:
  * A menu item that cycles through a list of possible string values, and
  * displays the current setting as part of the text.
  */
-class StringMenuItem : public MenuItem {
+struct StringMenuItem : public MenuItem {
 public:
     StringMenuItem(string text, short x, short y, int shortcutKey, string *val, const vector<string> &validSettings);
 
@@ -109,7 +109,7 @@ protected:
  * A menu item that cycles through a list of possible integer values,
  * and displays the current setting as part of the text.
  */
-class IntMenuItem : public MenuItem {
+struct IntMenuItem : public MenuItem {
 public:
     IntMenuItem(string text, short x, short y, int shortcutKey, int *val, int min, int max, int increment, menuOutputType output=MENU_OUTPUT_INT);
 

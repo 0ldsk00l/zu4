@@ -15,7 +15,7 @@ bool Object::setDirection(Direction d) {
     return tile.setDirection(d);
 }
 
-void Object::setMap(class Map *m) {
+void Object::setMap(struct Map *m) {
     if (find(maps.begin(), maps.end(), m) == maps.end())
         maps.push_back(m);
 }

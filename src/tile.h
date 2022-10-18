@@ -15,10 +15,10 @@
 using std::string;
 using std::vector;
 
-class ConfigElement;
-class Image;
-class Tileset;
-class TileAnim;
+struct ConfigElement;
+struct Image;
+struct Tileset;
+struct TileAnim;
 
 /* attr masks */
 #define MASK_SHIP               	0x0001
@@ -47,7 +47,7 @@ class TileAnim;
  * A Tile object represents a specific tile type.  Every tile is a
  * member of a Tileset.  
  */
-class Tile : private Uncopyable {
+struct Tile : private Uncopyable {
 public:
     Tile(Tileset *tileset);
 

@@ -22,13 +22,13 @@ using std::string;
 
 #define MAP_IS_OOB(mapptr, c) (((c).x) < 0 || ((c).x) >= (static_cast<int>((mapptr)->width)) || ((c).y) < 0 || ((c).y) >= (static_cast<int>((mapptr)->height)) || ((c).z) < 0 || ((c).z) >= (static_cast<int>((mapptr)->levels)))
 
-class AnnotationMgr;
-class Map;
-class Object;
-class Person;
-class Creature;
-class TileMap;
-class Tileset;
+struct AnnotationMgr;
+struct Map;
+struct Object;
+struct Person;
+struct Creature;
+struct TileMap;
+struct Tileset;
 struct Portal;
 struct _Dungeon;
 
@@ -46,20 +46,20 @@ typedef std::vector<MapTile> MapData;
 #define WITH_GROUND_OBJECTS 1
 #define WITH_OBJECTS        2
 
-int movementDistance(Coords oc, Coords c, const class Map *map = NULL);
-int distance(Coords oc, Coords c, const class Map *map = NULL);
-void movedir(Coords *oc, Direction d, const class Map *map = NULL);
-void movexy(Coords *oc, int dx, int dy, const class Map *map = NULL);
+int movementDistance(Coords oc, Coords c, const struct Map *map = NULL);
+int distance(Coords oc, Coords c, const struct Map *map = NULL);
+void movedir(Coords *oc, Direction d, const struct Map *map = NULL);
+void movexy(Coords *oc, int dx, int dy, const struct Map *map = NULL);
 void wrap(Coords *oc, const Map *map);
-void putInBounds(Coords *oc, const class Map *map);
-int getRelativeDirection(Coords oc, Coords c, const class Map *map = NULL);
-Direction pathTo(Coords oc, Coords c, int valid_dirs = MASK_DIR_ALL, bool towards = true, const class Map *map = NULL);
+void putInBounds(Coords *oc, const struct Map *map);
+int getRelativeDirection(Coords oc, Coords c, const struct Map *map = NULL);
+Direction pathTo(Coords oc, Coords c, int valid_dirs = MASK_DIR_ALL, bool towards = true, const struct Map *map = NULL);
 Direction pathAway(Coords oc, Coords c, int valid_dirs = MASK_DIR_ALL);
 
 /**
- * Map class
+ * Map struct
  */ 
-class Map {    
+struct Map {
 public:
     enum Type {
         WORLD,
@@ -76,7 +76,7 @@ public:
     };
 
 
-    class Source {
+    struct Source {
     public:
         Source() {}
         Source(const string &f, Type t) : fname(f), type(t) {}
@@ -91,20 +91,20 @@ public:
     // Member functions
     virtual string getName();
     
-    class Object *objectAt(const Coords &coords);    
+    struct Object *objectAt(const Coords &coords);    
     const Portal *portalAt(const Coords &coords, int actionFlags);
     MapTile* getTileFromData(const Coords &coords);
     MapTile* tileAt(const Coords &coords, int withObjects);
     const Tile *tileTypeAt(const Coords &coords, int withObjects);
     bool isWorldMap();
     bool isEnclosed(const Coords &party);
-    class Creature *addCreature(const class Creature *m, Coords coords);
-    class Object *addObject(MapTile tile, MapTile prevTile, Coords coords);
-    class Object *addObject(Object *obj, Coords coords);
-    void removeObject(const class Object *rem, bool deleteObject = true);
+    struct Creature *addCreature(const struct Creature *m, Coords coords);
+    struct Object *addObject(MapTile tile, MapTile prevTile, Coords coords);
+    struct Object *addObject(Object *obj, Coords coords);
+    void removeObject(const struct Object *rem, bool deleteObject = true);
     ObjectDeque::iterator removeObject(ObjectDeque::iterator rem, bool deleteObject = true);    
     void clearObjects();
-    class Creature *moveObjects(Coords avatar);
+    struct Creature *moveObjects(Coords avatar);
     void resetObjectAnimations();
     int getNumberOfCreatures();
     int getValidMoves(Coords from, MapTile transport);

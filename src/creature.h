@@ -13,13 +13,13 @@
 #include "savegame.h"
 #include "types.h"
 
-class CombatController;
-class ConfigElement;
-class Tile;
+struct CombatController;
+struct ConfigElement;
+struct Tile;
 
 typedef unsigned short CreatureId;
-typedef std::map<CreatureId, class Creature*> CreatureMap;
-typedef std::vector<class Creature *> CreatureVector;
+typedef std::map<CreatureId, struct Creature*> CreatureMap;
+typedef std::vector<struct Creature *> CreatureVector;
 
 #define MAX_CREATURES 128
 
@@ -139,7 +139,7 @@ typedef enum {
  *      <li>creatures can be looked up by name, ids can probably go away</li>
  * </ul>
  */ 
-class Creature : public Object {
+struct Creature : public Object {
     typedef std::list<StatusType> StatusList;
 
 public:
@@ -250,7 +250,7 @@ protected:
 /**
  * CreatureMgr Class Definition
  */ 
-class CreatureMgr {
+struct CreatureMgr {
 public:
     static CreatureMgr *getInstance();
 

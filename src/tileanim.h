@@ -11,15 +11,15 @@
 
 #include "direction.h"
 
-class ConfigElement;
-class Image;
-class Tile;
+struct ConfigElement;
+struct Image;
+struct Tile;
 struct RGBA;
 
 /**
  * The interface for tile animation transformations.
  */
-class  TileAnimTransform {
+struct TileAnimTransform {
 public:
     static TileAnimTransform *create(const ConfigElement &config);    
     static RGBA *loadColorFromConf(const ConfigElement &conf);
@@ -39,7 +39,7 @@ public:
  * A tile animation transformation that turns a piece of the tile
  * upside down.  Used for animating the flags on building and ships.
  */
-class TileAnimInvertTransform : public TileAnimTransform {
+struct TileAnimInvertTransform : public TileAnimTransform {
 public:
     TileAnimInvertTransform(int x, int y, int w, int h);
     virtual void draw(Image *dest, Tile *tile, MapTile &mapTile);
@@ -54,7 +54,7 @@ private:
  * random color selected from a list.  Used for animating the
  * campfire in EGA mode.
  */
-class TileAnimPixelTransform : public TileAnimTransform {
+struct TileAnimPixelTransform : public TileAnimTransform {
 public:
     TileAnimPixelTransform(int x, int y);
     virtual void draw(Image *dest, Tile *tile, MapTile &mapTile);
@@ -68,7 +68,7 @@ public:
  * A tile animation transformation that scrolls the tile's contents
  * vertically within the tile's boundaries.
  */ 
-class TileAnimScrollTransform : public TileAnimTransform {
+struct TileAnimScrollTransform : public TileAnimTransform {
 public:    
     TileAnimScrollTransform(int increment);
     virtual void draw(Image *dest, Tile *tile, MapTile &mapTile);    
@@ -81,7 +81,7 @@ private:
  * A tile animation transformation that advances the tile's frame
  * by 1.
  */ 
-class TileAnimFrameTransform : public TileAnimTransform {
+struct TileAnimFrameTransform : public TileAnimTransform {
 public:
 	TileAnimFrameTransform() : currentFrame(0){}
     virtual void draw(Image *dest, Tile *tile, MapTile &mapTile);
@@ -95,7 +95,7 @@ protected:
  * that fall in a given range to another color.  Used to animate
  * the campfire in VGA mode.
  */ 
-class TileAnimPixelColorTransform : public TileAnimTransform {
+struct TileAnimPixelColorTransform : public TileAnimTransform {
 public:
     TileAnimPixelColorTransform(int x, int y, int w, int h);
     virtual void draw(Image *dest, Tile *tile, MapTile &mapTile);
@@ -108,7 +108,7 @@ public:
 /**
  * A context in which to perform the animation
  */ 
-class TileAnimContext {    
+struct TileAnimContext {    
 public:
     typedef std::vector<TileAnimTransform *> TileAnimTransformList;
     typedef enum {
@@ -130,7 +130,7 @@ private:
 /**
  * An animation context which changes the animation based on the tile's current frame
  */ 
-class TileAnimFrameContext : public TileAnimContext {
+struct TileAnimFrameContext : public TileAnimContext {
 public:
     TileAnimFrameContext(int frame);    
     virtual bool isInContext(Tile *t, MapTile &mapTile, Direction d);
@@ -142,7 +142,7 @@ private:
 /**
  * An animation context which changes the animation based on the player's current facing direction
  */ 
-class TileAnimPlayerDirContext : public TileAnimContext {
+struct TileAnimPlayerDirContext : public TileAnimContext {
 public:
     TileAnimPlayerDirContext(Direction dir);
     virtual bool isInContext(Tile *t, MapTile &mapTile, Direction d);
@@ -156,7 +156,7 @@ private:
  * of a list of transformations which are applied to the tile after it
  * is drawn.
  */
-class TileAnim {
+struct TileAnim {
 public:
     TileAnim(const ConfigElement &conf);
 
@@ -174,7 +174,7 @@ public:
  * A set of tile animations.  Tile animations are associated with a
  * specific image set which shares the same name.
  */
-class TileAnimSet {
+struct TileAnimSet {
     typedef std::map<std::string, TileAnim *> TileAnimMap;
 
 public:

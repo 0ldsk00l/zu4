@@ -9,12 +9,12 @@
 #include <vector>
 #include <libxml/xmlmemory.h>
 
-class ConfigElement;
+struct ConfigElement;
 
 /**
- * Singleton class that manages the XML configuration tree.
+ * Singleton struct that manages the XML configuration tree.
  */
-class Config {
+struct Config {
 public:
     static const Config *getInstance();
 
@@ -39,7 +39,7 @@ private:
  * A single configuration element in the config tree.  Right now, a
  * thin wrapper around the XML DOM element.
  */
-class ConfigElement {
+struct ConfigElement {
 public:
     ConfigElement(xmlNodePtr xmlNode);
     ConfigElement(const ConfigElement &e);

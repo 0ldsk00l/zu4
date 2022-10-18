@@ -9,8 +9,8 @@
 #include "context.h"
 #include "map.h"
 
-class Map;
-class Location;
+struct Map;
+struct Location;
 struct _Portal;
 
 typedef enum {

@@ -8,7 +8,7 @@
 #include <map>
 #include <string>
 
-class Dialogue;
+struct Dialogue;
 
 /**
  * The generic dialogue loader interface.  Different dialogue
@@ -19,7 +19,7 @@ class Dialogue;
  * registerLoader() is an xu4-specific mime type.
  * The two main types used are application/x-u4tlk and text/x-u4cfg.
  */
-class DialogueLoader {
+struct DialogueLoader {
 public:    
     virtual ~DialogueLoader() {}
 

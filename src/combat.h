@@ -22,10 +22,10 @@
 #define AREA_CREATURES   16
 #define AREA_PLAYERS    8
 
-class CombatMap;
-class Creature;
-class MoveEvent;
-class Weapon;
+struct CombatMap;
+struct Creature;
+struct MoveEvent;
+struct Weapon;
 
 typedef enum {
     CA_ATTACK,
@@ -37,9 +37,9 @@ typedef enum {
 } CombatAction;
 
 /**
- * CombatController class
+ * CombatController struct
  */ 
-class CombatController : public Controller, public Observer<Party *, PartyEvent &>, public TurnCompleter {
+struct CombatController : public Controller, public Observer<Party *, PartyEvent &>, public TurnCompleter {
 protected:
     CombatController();
 public:
@@ -126,9 +126,9 @@ private:
 };
 
 /**
- * CombatMap class
+ * CombatMap struct
  */
-class CombatMap : public Map {
+struct CombatMap : public Map {
 public:
     CombatMap();
         

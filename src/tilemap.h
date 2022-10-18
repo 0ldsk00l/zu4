@@ -9,14 +9,14 @@
 #include <string>
 #include "types.h"
 
-class ConfigElement;
+struct ConfigElement;
 
 using std::string;
 
 /**
  * A tilemap maps the raw bytes in a map file to MapTiles.
  */
-class TileMap {
+struct TileMap {
 public:
     typedef std::map<string, TileMap *> TileIndexMapMap;
     
@@ -35,5 +35,3 @@ private:
 };
 
 #endif
-
-

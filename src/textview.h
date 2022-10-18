@@ -21,7 +21,7 @@
 /**
  * A view of a text area.  Keeps track of the cursor position.
  */
-class TextView : public View {
+struct TextView : public View {
 public:
     TextView(int x, int y, int columns, int rows);
     virtual ~TextView();

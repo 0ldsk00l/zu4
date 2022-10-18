@@ -8,7 +8,7 @@
 #include "direction.h"
 //#include "tileset.h"
 
-class Tile;
+struct Tile;
 
 typedef unsigned int TileId;
 typedef unsigned char MapId;
@@ -44,7 +44,7 @@ typedef enum {
 /**
  * A MapTile is a specific instance of a Tile.
  */
-class MapTile {
+struct MapTile {
 public:
     MapTile() : id(0), frame(0) {}
     MapTile(const TileId &i, unsigned char f = 0) : id(i), frame(f), freezeAnimation(false) {}
@@ -77,7 +77,7 @@ public:
  * constructor or operator=. See also, boost::noncopyable Uncopyable (from the Boost project) and
  * Item 6 from Scott Meyers Effective C++.
  */
-class Uncopyable {
+struct Uncopyable {
 protected:
     Uncopyable() {}
     ~Uncopyable() {}

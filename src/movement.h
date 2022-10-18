@@ -8,9 +8,9 @@
 #include "direction.h"
 #include "map.h"
 
-class Object;
-class Map;
-class Tile;
+struct Object;
+struct Map;
+struct Tile;
 
 enum SlowedType {
     SLOWED_BY_NOTHING,
@@ -30,7 +30,7 @@ enum MoveResult {
     MOVE_MUST_USE_SAME_EXIT = 0x0100
 };
 
-class MoveEvent {
+struct MoveEvent {
 public:
     MoveEvent(Direction d, bool user) : dir(d), userEvent(user), result(MOVE_SUCCEEDED) {}
 
@@ -41,8 +41,8 @@ public:
 
 void moveAvatar(MoveEvent &event);
 void moveAvatarInDungeon(MoveEvent &event);
-int moveObject(class Map *map, class Creature *obj, Coords avatar);
-int moveCombatObject(int action, class Map *map, class Creature *obj, Coords target);
+int moveObject(struct Map *map, struct Creature *obj, Coords avatar);
+int moveCombatObject(int action, struct Map *map, struct Creature *obj, Coords target);
 void movePartyMember(MoveEvent &event);
 bool slowedByTile(const Tile *tile);
 bool slowedByWind(int direction);
