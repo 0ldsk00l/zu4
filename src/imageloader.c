@@ -103,7 +103,7 @@ Image* zu4_img_load(U4FILE *file, int width, int height, int bpp, int type) {
 	uint8_t *compressed = NULL;
 	uint32_t *converted = (uint32_t*)malloc(width * height * sizeof(uint32_t));
 
-	long rawLen;
+	long rawLen = 0;
 	long compressedLen;
 
 	if (type == ZU4_IMG_RAW) {
