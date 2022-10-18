@@ -10,6 +10,8 @@ DATADIR ?= $(DATAROOTDIR)
 DOCDIR ?= $(DATAROOTDIR)/doc/$(NAME)
 LIBDIR ?= $(PREFIX)/lib
 
+USE_EXTERNAL_MINIZ ?= 0
+
 PKG_CONFIG ?= pkg-config
 
 CFLAGS_SDL2 := $(shell $(PKG_CONFIG) --cflags sdl2)
@@ -37,7 +39,6 @@ CSRCS := \
 		src/image.c \
 		src/imageloader.c \
 		src/io.c \
-		src/miniz.c \
 		src/moongate.c \
 		src/music.c \
 		src/names.c \
@@ -107,6 +108,18 @@ CXXSRCS := \
 		src/u4.cpp \
 		src/view.cpp \
 		src/xml.cpp
+
+ifeq ($(USE_EXTERNAL_MINIZ), 0)
+	CFLAGS_MINIZ := -Ideps/miniz
+	LIBS_MINIZ :=
+	CSRCS += deps/miniz/miniz.c
+else
+	CFLAGS_MINIZ := $(shell $(PKG_CONFIG) --cflags miniz)
+	LIBS_MINIZ := $(shell $(PKG_CONFIG) --libs miniz)
+endif
+
+UIFLAGS += $(CFLAGS_MINIZ)
+UILIBS += $(LIBS_MINIZ)
 
 .PHONY: all clean
 
