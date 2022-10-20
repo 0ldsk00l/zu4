@@ -6,26 +6,18 @@
 
 #include <algorithm>
 #include <cstring>
-#include "u4.h"
 
 #include "intro.h"
 
 #include "error.h"
-#include "event.h"
 #include "imagemgr.h"
-#include "menu.h"
 #include "music.h"
-#include "sound.h"
 #include "player.h"
 #include "random.h"
-#include "savegame.h"
 #include "screen.h"
-#include "settings.h"
-#include "shrine.h"
-#include "tileset.h"
+#include "sound.h"
 #include "tilemap.h"
-#include "u4file.h"
-#include "utils.h"
+#include "u4.h"
 
 static bool notblanked = true;
 

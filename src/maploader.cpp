@@ -16,6 +16,7 @@
 #include "map.h"
 #include "maploader.h"
 #include "mapmgr.h"
+#include "music.h"
 #include "object.h"
 #include "person.h"
 #include "portal.h"

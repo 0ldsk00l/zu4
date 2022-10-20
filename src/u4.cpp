@@ -23,6 +23,7 @@
 #include "settings.h"
 #include "sound.h"
 #include "tileset.h"
+#include "u4file.h"
 #include "utils.h"
 
 bool verbose = false;

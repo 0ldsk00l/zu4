@@ -17,6 +17,7 @@
 #include "location.h"
 #include "mapmgr.h"
 #include "movement.h"
+#include "music.h"
 #include "names.h"
 #include "object.h"
 #include "player.h"

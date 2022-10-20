@@ -11,6 +11,7 @@
 #include "game.h"
 #include "location.h"
 #include "mapmgr.h"
+#include "music.h"
 #include "names.h"
 #include "screen.h"
 #include "shrine.h"

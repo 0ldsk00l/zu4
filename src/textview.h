@@ -15,7 +15,6 @@
 #define CHAR_HEIGHT 8
 
 #include "view.h"
-#include "image.h"
 #include "textcolor.h"
 
 /**

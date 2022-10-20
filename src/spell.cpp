@@ -16,6 +16,7 @@
 #include "location.h"
 #include "map.h"
 #include "mapmgr.h"
+#include "music.h"
 #include "creature.h"
 #include "moongate.h"
 #include "player.h"

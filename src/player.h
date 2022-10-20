@@ -5,18 +5,13 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <list>
 #include <string>
 #include <vector>
 
 #include "armor.h"
 #include "creature.h"
-#include "direction.h"
 #include "observable.h"
-#include "savegame.h"
 #include "script.h"
-#include "tile.h"
-#include "types.h"
 #include "weapon.h"
 
 //struct Armor;

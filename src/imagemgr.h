@@ -10,7 +10,6 @@
 #include <vector>
 
 #include "image.h"
-#include "observer.h"
 #include "settings.h"
 #include "u4file.h"
 

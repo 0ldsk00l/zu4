@@ -8,10 +8,7 @@
 #include <map>
 #include <vector>
 
-#include "object.h"
 #include "movement.h"
-#include "savegame.h"
-#include "types.h"
 
 struct CombatController;
 struct ConfigElement;
