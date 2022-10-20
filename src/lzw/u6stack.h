@@ -1,7 +1,5 @@
 #include <vector>
 
-using std::vector;
-
 class U6Decode::Stack {
 public:
     bool is_empty() {
@@ -41,7 +39,7 @@ public:
 private:
     static const unsigned int stack_size = 10000;
 
-    vector<unsigned char> stack;
+    std::vector<unsigned char> stack;
 };
 
 

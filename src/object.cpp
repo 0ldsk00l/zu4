@@ -8,8 +8,6 @@
 
 #include "map.h"
 
-using namespace std;
-
 bool Object::setDirection(Direction d) {
     return tile.setDirection(d);
 }

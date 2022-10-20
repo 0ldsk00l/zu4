@@ -1,7 +1,5 @@
 #include <vector>
 
-using std::vector;
-
 class U6Decode::Dict {
 public:
     void init() {
@@ -29,6 +27,6 @@ private:
         int codeword;
     };
 
-    vector<dict_entry> dict;
+    std::vector<dict_entry> dict;
     int contains;
 };

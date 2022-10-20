@@ -14,8 +14,6 @@
 #include "screen.h"
 #include "stats.h"
 
-using namespace std;
-
 int codexInit();
 void codexDelete();
 void codexEject(CodexEjectCode code);

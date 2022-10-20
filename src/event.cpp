@@ -12,8 +12,6 @@
 #include "settings.h"
 #include "textview.h"
 
-using namespace std;
-
 int eventTimerGranularity = 250;
 
 extern bool quit;
@@ -186,7 +184,7 @@ void TimedEventMgr::unlock()    { locked = false; }
  * @param screenY the screen row where to begin input
  * @param accepted_chars a string characters to be accepted for input
  */
-ReadStringController::ReadStringController(int maxlen, int screenX, int screenY, const string &accepted_chars) {
+ReadStringController::ReadStringController(int maxlen, int screenX, int screenY, const std::string &accepted_chars) {
     this->maxlen = maxlen;
     this->screenX = screenX;
     this->screenY = screenY;
@@ -194,7 +192,7 @@ ReadStringController::ReadStringController(int maxlen, int screenX, int screenY,
     this->accepted = accepted_chars;
 }
 
-ReadStringController::ReadStringController(int maxlen, TextView *view, const string &accepted_chars) {
+ReadStringController::ReadStringController(int maxlen, TextView *view, const std::string &accepted_chars) {
     this->maxlen = maxlen;
     this->screenX = view->getCursorX();
     this->screenY = view->getCursorY();
@@ -205,12 +203,12 @@ ReadStringController::ReadStringController(int maxlen, TextView *view, const str
 bool ReadStringController::keyPressed(int key) {
     int valid = true,
         len = value.length();
-    string::size_type pos = string::npos;
+    std::string::size_type pos = std::string::npos;
 
     if (key < U4_ALT)
          pos = accepted.find_first_of(key);
 
-    if (pos != string::npos) {
+    if (pos != std::string::npos) {
         if (key == U4_BACKSPACE) {
             if (len > 0) {
                 /* remove the last character */
@@ -250,7 +248,7 @@ bool ReadStringController::keyPressed(int key) {
     return valid || KeyHandler::defaultHandler(key, NULL);
 }
 
-string ReadStringController::get(int maxlen, int screenX, int screenY, EventHandler *eh) {
+std::string ReadStringController::get(int maxlen, int screenX, int screenY, EventHandler *eh) {
     if (!eh)
         eh = eventHandler;
 
@@ -259,7 +257,7 @@ string ReadStringController::get(int maxlen, int screenX, int screenY, EventHand
     return ctrl.waitFor();
 }
 
-string ReadStringController::get(int maxlen, TextView *view, EventHandler *eh) {
+std::string ReadStringController::get(int maxlen, TextView *view, EventHandler *eh) {
     if (!eh)
         eh = eventHandler;
 
@@ -284,7 +282,7 @@ int ReadIntController::getInt() const {
     return static_cast<int>(strtol(value.c_str(), NULL, 10));
 }
 
-ReadChoiceController::ReadChoiceController(const string &choices) {
+ReadChoiceController::ReadChoiceController(const std::string &choices) {
     this->choices = choices;
 }
 
@@ -307,7 +305,7 @@ bool ReadChoiceController::keyPressed(int key) {
     return false;
 }
 
-char ReadChoiceController::get(const string &choices, EventHandler *eh) {
+char ReadChoiceController::get(const std::string &choices, EventHandler *eh) {
     if (!eh)
         eh = eventHandler;
 

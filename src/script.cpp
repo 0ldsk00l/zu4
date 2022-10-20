@@ -47,8 +47,6 @@ static std::vector<std::string> split(const std::string &s, const std::string &s
     return result;
 }
 
-using namespace std;
-
 /*
  * Script::Variable class
  */
@@ -740,7 +738,7 @@ std::string Script::getPropAsStr(xmlNodePtr node, const std::string &prop, bool 
 /**
  * Gets a property as int from the script
  */
-int Script::getPropAsInt(std::list<xmlNodePtr>& nodes, const string &prop, bool recursive) {
+int Script::getPropAsInt(std::list<xmlNodePtr>& nodes, const std::string &prop, bool recursive) {
     std::string propvalue = getPropAsStr(nodes, prop, recursive);
     return mathValue(propvalue);
 }
