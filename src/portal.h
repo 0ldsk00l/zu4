@@ -7,7 +7,6 @@
 
 #include <string.h>
 #include "context.h"
-#include "map.h"
 
 struct Map;
 struct Location;

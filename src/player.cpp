@@ -4,20 +4,15 @@
 
 #include "player.h"
 #include "annotation.h"
-#include "armor.h"
 #include "combat.h"
 #include "context.h"
 #include "error.h"
-#include "game.h"
-#include "location.h"
 #include "mapmgr.h"
 #include "names.h"
 #include "random.h"
+#include "sound.h"
 #include "tilemap.h"
-#include "tileset.h"
-#include "types.h"
 #include "utils.h"
-#include "weapon.h"
 
 static std::string hittile, misstile;
 

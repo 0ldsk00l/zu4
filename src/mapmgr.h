@@ -6,9 +6,6 @@
 #define MAPMGR_H
 
 #include <vector>
-#include <utility>
-
-#include "map.h"
 
 struct City;
 struct ConfigElement;

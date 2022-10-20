@@ -8,7 +8,6 @@
 #include <deque>
 #include "coords.h"
 #include "tile.h"
-#include "types.h"
 
 typedef std::deque<struct Object *> ObjectDeque;
 

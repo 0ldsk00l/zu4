@@ -3,18 +3,15 @@
  */
 
 #include <string>
+
 #include "dungeon.h"
-#include "error.h"
 #include "annotation.h"
 #include "context.h"
-#include "game.h"
+#include "error.h"
 #include "item.h"
-#include "location.h"
 #include "mapmgr.h"
-#include "player.h"
 #include "screen.h"
-#include "stats.h"
-#include "tileset.h"
+#include "sound.h"
 #include "utils.h"
 
 /**

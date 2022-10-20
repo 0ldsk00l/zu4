@@ -8,10 +8,9 @@
 #include "context.h"
 #include "conversation.h"
 #include "dialogueloader_hw.h"
+#include "names.h"
 #include "player.h"
-#include "savegame.h"
 #include "u4file.h"
-#include "utils.h"
 
 Response *hawkwindGetAdvice(const DynamicResponse *kw);
 Response *hawkwindGetIntro(const DynamicResponse *dynResp);

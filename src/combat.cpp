@@ -3,32 +3,23 @@
  */
 
 #include <time.h>
-#include "u4.h"
+
 #include "combat.h"
 #include "annotation.h"
-#include "context.h"
-#include "creature.h"
 #include "death.h"
 #include "dungeon.h"
 #include "error.h"
-#include "event.h"
-#include "game.h"
 #include "item.h"
-#include "location.h"
 #include "mapmgr.h"
-#include "movement.h"
 #include "music.h"
 #include "names.h"
-#include "object.h"
-#include "player.h"
 #include "portal.h"
 #include "random.h"
 #include "screen.h"
 #include "settings.h"
-#include "spell.h"
+#include "sound.h"
 #include "stats.h"
-#include "tileset.h"
-#include "utils.h"
+#include "u4.h"
 
 /**
  * Returns true if 'map' points to a Combat Map

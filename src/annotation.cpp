@@ -2,13 +2,9 @@
  * $Id: annotation.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-#include "annotation.h"
+#include <cstdio>
 
-#include "context.h"
-#include "error.h"
-#include "event.h"
-#include "map.h"
-#include "settings.h"
+#include "annotation.h"
 
 /**
  * Annotation class implementation

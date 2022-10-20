@@ -7,13 +7,10 @@
 
 #include <vector>
 
-#include "controller.h"
 #include "event.h"
 #include "map.h"
 #include "observer.h"
-#include "sound.h"
 #include "tileview.h"
-#include "types.h"
 
 struct Map;
 struct Portal;

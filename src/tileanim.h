@@ -9,8 +9,6 @@
 #include <map>
 #include <vector>
 
-#include "direction.h"
-
 struct ConfigElement;
 struct Image;
 struct Tile;

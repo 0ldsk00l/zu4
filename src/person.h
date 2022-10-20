@@ -9,7 +9,6 @@
 #include <string>
 
 #include "creature.h"
-#include "types.h"
 
 struct Conversation;
 struct Dialogue;

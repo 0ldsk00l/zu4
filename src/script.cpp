@@ -2,31 +2,21 @@
  * $Id: script.cpp 3064 2014-07-19 15:44:38Z darren_janeczek $
  */
 
-#include <cctype>
 #include <map>
 #include <string>
+
 #include "script.h"
 
-#include "armor.h"
 #include "camp.h"
-#include "context.h"
 #include "conversation.h"
 #include "error.h"
-#include "event.h"
-#include "game.h"
 #include "music.h"
-#include "player.h"
 #include "random.h"
-#include "savegame.h"
 #include "screen.h"
-#include "settings.h"
+#include "sound.h"
 #include "spell.h"
 #include "stats.h"
-#include "tileset.h"
-#include "u4file.h"
 #include "utils.h"
-#include "weapon.h"
-#include "xml.h"
 
 static std::string zu4_to_string(int val) {
     char buffer[16];

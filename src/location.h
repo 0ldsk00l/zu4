@@ -7,10 +7,8 @@
 
 #include <vector>
 
-#include "map.h"
 #include "movement.h"
 #include "observable.h"
-#include "types.h"
 
 typedef enum {
     CTX_WORLDMAP    = 0x0001,

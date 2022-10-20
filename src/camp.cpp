@@ -2,32 +2,17 @@
  * $Id: camp.cpp 3059 2013-01-06 22:37:10Z darren_janeczek $
  */
 
-#include "u4.h"
-
 #include "camp.h"
 
-#include "annotation.h"
 #include "city.h"
-#include "combat.h"
 #include "context.h"
 #include "conversation.h"
-#include "event.h"
-#include "game.h"
-#include "location.h"
-#include "map.h"
 #include "mapmgr.h"
-#include "creature.h"
 #include "music.h"
-#include "names.h"
-#include "object.h"
 #include "person.h"
-#include "player.h"
 #include "random.h"
 #include "screen.h"
 #include "settings.h"
-#include "stats.h"
-#include "tileset.h"
-#include "utils.h"
 
 void campTimer(void *data);
 void campEnd(void);
