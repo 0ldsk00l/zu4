@@ -34,7 +34,7 @@ typedef struct _PortalDestination {
 struct Portal {
     Coords coords;
     MapId destid;
-    Coords start;    
+    Coords start;
     PortalTriggerAction trigger_action;
     PortalConditionsMet portalConditionsMet;
     struct _PortalDestination *retroActiveDest;

@@ -2,7 +2,6 @@
  * $Id: xml.cpp 2661 2006-01-14 23:43:54Z solus $
  */
 
-
 #include <cstdlib>
 #include <cstdarg>
 
@@ -16,8 +15,6 @@
 #include "settings.h"
 #include "u4file.h"
 
-using namespace std;
-
 void xmlAccumError(void *l, const char *fmt, ...);
 
 extern bool verbose;
@@ -28,7 +25,7 @@ void *xmlXu4FileOpen (const char *filename) {
     void *result;
     char path[64];
     u4find_conf(path, sizeof(path), filename);
-    string pathname = (string)path;
+    std::string pathname = (std::string)path;
 
     if (pathname.empty())
         return NULL;
@@ -59,7 +56,7 @@ xmlDocPtr xmlParse(const char *filename) {
         zu4_error(ZU4_LOG_ERR, "error parsing %s", filename);
 
     if (settings.validateXml && doc->intSubset) {
-        string errorMessage;        
+        std::string errorMessage;
         xmlValidCtxt cvp;
 
         if (verbose)
@@ -68,15 +65,15 @@ xmlDocPtr xmlParse(const char *filename) {
         cvp.userData = &errorMessage;
         cvp.error = &xmlAccumError;
 
-        if (!xmlValidateDocument(&cvp, doc))            
-            zu4_error(ZU4_LOG_ERR, "xml parse error:\n%s", errorMessage.c_str());        
+        if (!xmlValidateDocument(&cvp, doc))
+            zu4_error(ZU4_LOG_ERR, "xml parse error:\n%s", errorMessage.c_str());
     }
 
     return doc;
 }
 
 void xmlAccumError(void *l, const char *fmt, ...) {
-    string* errorMessage = (string*) l;
+    std::string* errorMessage = (std::string*) l;
     char buffer[1000];
     va_list args;
 
@@ -95,19 +92,19 @@ bool xmlPropExists(xmlNodePtr node, const char *name) {
     return exists;
 }
 
-string xmlGetPropAsString(xmlNodePtr node, const char *name) {
+std::string xmlGetPropAsString(xmlNodePtr node, const char *name) {
     xmlChar *prop;
 
     if (settings.validateXml && !xmlHasProp(node, (const xmlChar *)name))
         return "";
-    
+
     prop = xmlGetProp(node, (const xmlChar *)name);
     if (!prop)
         return "";
 
-    string result((char *)prop);
+    std::string result((char *)prop);
     xmlFree(prop);
-    
+
     return result;
 }
 
@@ -189,12 +186,12 @@ int xmlGetPropAsEnum(xmlNodePtr node, const char *name, const char *enumValues[]
  */
 int xmlPropCmp(xmlNodePtr node, const char *name, const char *s) {
     int result;
-    xmlChar *prop;    
-    
+    xmlChar *prop;
+
     prop = xmlGetProp(node, (const xmlChar *)name);
     result = xmlStrcmp(prop, (const xmlChar *) s);
     xmlFree(prop);
-    
+
     return result;
 }
 
@@ -205,10 +202,10 @@ int xmlPropCmp(xmlNodePtr node, const char *name, const char *s) {
 int xmlPropCaseCmp(xmlNodePtr node, const char *name, const char *s) {
     int result;
     xmlChar *prop;
-    
+
     prop = xmlGetProp(node, (const xmlChar *)name);
     result = xmlStrcasecmp(prop, (const xmlChar *) s);
     xmlFree(prop);
-    
+
     return result;
 }

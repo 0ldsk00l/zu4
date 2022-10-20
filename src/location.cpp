@@ -2,7 +2,6 @@
  * $Id: location.cpp 3082 2014-09-10 01:05:01Z darren_janeczek $
  */
 
-
 #include <list>
 #include <map>
 #include <set>
@@ -54,12 +53,12 @@ std::vector<MapTile> Location::tilesAt(Coords coords, bool &focus) {
     bool avatar = zu4_coords_equal(this->coords, coords);
 
     /* Do not return objects for VIEW_GEM mode, show only the avatar and tiles */
-    if (viewMode == VIEW_GEM && (!settings.enhancements || !settings.enhancementsOptions.peerShowsObjects)) {        
+    if (viewMode == VIEW_GEM && (!settings.enhancements || !settings.enhancementsOptions.peerShowsObjects)) {
         // When viewing a gem, always show the avatar regardless of whether or not
         // it is shown in our normal view
         if (avatar)
             tiles.push_back(c->party->getTransport());
-        else             
+        else
             tiles.push_back(*map->getTileFromData(coords));
 
         return tiles;
@@ -68,10 +67,10 @@ std::vector<MapTile> Location::tilesAt(Coords coords, bool &focus) {
     /* Add the avatar to gem view */
     if (avatar && viewMode == VIEW_GEM)
         tiles.push_back(c->party->getTransport());
-    
+
     /* Add visual-only annotations to the list */
     for (i = a.begin(); i != a.end(); i++) {
-        if ((*i)->isVisualOnly())        
+        if ((*i)->isVisualOnly())
         {
             tiles.push_back((*i)->getTile());
 
@@ -143,7 +142,6 @@ std::vector<MapTile> Location::tilesAt(Coords coords, bool &focus) {
 
     return tiles;
 }
-
 
 /**
  * Finds a valid replacement tile for the given location, using surrounding tiles
@@ -234,7 +232,7 @@ int Location::getCurrentPosition(Coords *coords) {
     if (context & CTX_COMBAT) {
         CombatController *cc = dynamic_cast<CombatController *>(eventHandler->getController());
         PartyMemberVector *party = cc->getParty();
-        *coords = (*party)[cc->getFocus()]->getCoords();    
+        *coords = (*party)[cc->getFocus()]->getCoords();
     }
     else
         *coords = this->coords;
@@ -264,7 +262,6 @@ MoveResult Location::move(Direction dir, bool userEvent) {
 
     return event.result;
 }
-
 
 /**
  * Pop a location from the stack and free the memory

@@ -19,8 +19,6 @@ struct MenuEvent;
 struct Party;
 struct PartyEvent;
 
-using std::string;
-
 #define STATS_AREA_WIDTH 15
 #define STATS_AREA_HEIGHT 8
 #define STATS_AREA_X TEXT_AREA_X
@@ -45,7 +43,7 @@ enum StatsView {
     MIX_REAGENTS
 };
 
-struct StatsArea : public Observer<Aura *>, public Observer<Party *, PartyEvent &>, public Observer<Menu *, MenuEvent &>, public Observable<StatsArea *, string> {
+struct StatsArea : public Observer<Aura *>, public Observer<Party *, PartyEvent &>, public Observer<Menu *, MenuEvent &>, public Observable<StatsArea *, std::string> {
 public:
     StatsArea();
 
@@ -75,12 +73,12 @@ private:
     void showItems();
     void showReagents(bool active = false);
     void showMixtures();
-    void setTitle(const string &s);
+    void setTitle(const std::string &s);
 
     TextView title;
     TextView mainArea;
     TextView summary;
-    
+
     StatsView view;
 
     Menu reagentsMixMenu;

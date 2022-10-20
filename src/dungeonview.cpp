@@ -2,7 +2,6 @@
  * $Id: dungeonview.cpp 3071 2014-07-26 18:01:08Z darren_janeczek $
  */
 
-
 #include "dungeonview.h"
 #include "image.h"
 #include "imagemgr.h"
@@ -13,12 +12,10 @@
 #include "u4.h"
 #include "error.h"
 
-
 DungeonView::DungeonView(int x, int y, int columns, int rows) : TileView(x, y, rows, columns)
 , screen3dDungeonViewEnabled(true)
 {
 }
-
 
 DungeonView * DungeonView::instance(NULL);
 DungeonView * DungeonView::getInstance()
@@ -38,7 +35,7 @@ void DungeonView::display(Context * c, TileView *view)
         //Note: This shouldn't go above 4, unless we check opaque tiles each step of the way.
         const int farthest_non_wall_tile_visibility = 4;
 
-    	vector<MapTile> tiles;
+        std::vector<MapTile> tiles;
 
         screenEraseMapArea();
         if (c->party->getTorchDuration() > 0) {
@@ -63,7 +60,7 @@ void DungeonView::display(Context * c, TileView *view)
                	{
                		for (int y_obj = farthest_non_wall_tile_visibility; y_obj > y; y_obj--)
                		{
-               		vector<MapTile> distant_tiles = getTiles(y_obj     , 0);
+                        std::vector<MapTile> distant_tiles = getTiles(y_obj     , 0);
                		DungeonGraphicType distant_type = tilesToGraphic(distant_tiles);
 
 					if ((distant_type == DNGGRAPHIC_DNGTILE) || (distant_type == DNGGRAPHIC_BASETILE))
@@ -78,7 +75,7 @@ void DungeonView::display(Context * c, TileView *view)
 
     /* 3rd-person perspective */
     else {
-    	vector<MapTile> tiles;
+        std::vector<MapTile> tiles;
 
         static MapTile black = c->location->map->tileset->getByName("black")->getId();
         static MapTile avatar = c->location->map->tileset->getByName("avatar")->getId();
@@ -100,13 +97,13 @@ void DungeonView::display(Context * c, TileView *view)
 }
 
 void DungeonView::drawInDungeon(Tile *tile, int x_offset, int distance, Direction orientation, bool tiledWall) {
-	Image *scaled;
+    Image *scaled;
 
-  	const static int nscale_vga[] = { 12, 8, 4, 2, 1};
+    const static int nscale_vga[] = { 12, 8, 4, 2, 1};
     const static int nscale_ega[] = { 8, 4, 2, 1, 0};
 
-	const int lscale_vga[] = { 22, 18, 10, 4, 1};
-	const int lscale_ega[] = { 22, 14, 6, 3, 1};
+    const int lscale_vga[] = { 22, 18, 10, 4, 1};
+    const int lscale_ega[] = { 22, 14, 6, 3, 1};
 
     const int * lscale;
     const int * nscale;

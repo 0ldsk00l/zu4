@@ -65,11 +65,11 @@ long U6Decode::get_filesize(FILE *input_file) {
 bool U6Decode::is_valid_lzw_file(FILE *input_file) {
     // file must contain 4-byte size header and space for the 9-bit value 0x100
     if (get_filesize(input_file) < 6)
-        return false; 
+        return false;
 
     // the last byte of the size header must be 0 (U6's files aren't *that* big)
     fseek(input_file, 3, SEEK_SET);
-    unsigned char byte3 = fgetc(input_file); 
+    unsigned char byte3 = fgetc(input_file);
     fseek(input_file, 0, SEEK_SET);
     if (byte3 != 0) { return(false); }
     // the 9 bits after the size header must be 0x100
@@ -92,7 +92,7 @@ long U6Decode::get_uncompressed_size(FILE *input_file) {
         fseek(input_file, 0, SEEK_SET);
         return(uncompressed_file_length);
     }
-    else { 
+    else {
         return -1;
     }
 }
@@ -103,7 +103,7 @@ long U6Decode::get_uncompressed_size(FILE *input_file) {
 int U6Decode::get_next_codeword (long& bits_read, unsigned char *source, int codeword_size) {
     unsigned char b0,b1,b2;
     int codeword;
-   
+
     b0 = source[bits_read/8];
     b1 = source[bits_read/8+1];
     b2 = source[bits_read/8+2];
@@ -134,13 +134,13 @@ int U6Decode::get_next_codeword (long& bits_read, unsigned char *source, int cod
 
 void U6Decode::output_root(unsigned char root, unsigned char *destination, long& position) {
     destination[position] = root;
-    position++;   
+    position++;
 }
 
 void U6Decode::get_string(Stack &stack, int codeword) {
     unsigned char root;
     int current_codeword;
-   
+
     current_codeword = codeword;
     while (current_codeword > 0xff)
         {
@@ -163,7 +163,7 @@ int U6Decode::lzw_decompress(unsigned char *source, long source_length, unsigned
 
     bool end_marker_reached = false;
     int codeword_size = 9;
-    long bits_read = 0; 
+    long bits_read = 0;
     int next_free_codeword = 0x102;
     int dictionary_size = 0x200;
 
@@ -232,13 +232,13 @@ int U6Decode::lzw_decompress(unsigned char *source, long source_length, unsigned
                 }
                 // add pW+C to the dictionary
                 dict.add(C,pW);
-             
+
                 next_free_codeword++;
                 if (next_free_codeword >= dictionary_size) {
                     if (codeword_size < max_codeword_length) {
                         codeword_size += 1;
                         dictionary_size *= 2;
-                    } 
+                    }
                 }
             }
             break;
@@ -270,7 +270,7 @@ int U6Decode::lzw_decompress(FILE *input_file, FILE* output_file) {
         destination_buffer = new unsigned char[destination_buffer_size];
 
         // read the input file into the source buffer
-        fseek(input_file, 4, SEEK_SET);  
+        fseek(input_file, 4, SEEK_SET);
         fread(source_buffer, 1, source_buffer_size, input_file);
 
         // decompress the input file
@@ -315,14 +315,14 @@ int one_argument(char *file_name) {
             printf("The input file is not a valid LZW-compressed file.\n");
             return(EXIT_FAILURE);
         }
-        else {     
+        else {
             printf("The uncompressed file '%s' would be %ld bytes long.\n",file_name,get_uncompressed_size(compressed_file));
             fclose(compressed_file);
             return(EXIT_SUCCESS);
         }
     }
 }
-   
+
 
 // -----------------------------------------------------------
 // called if the program is run with 2 command line parameters
@@ -338,7 +338,7 @@ int two_arguments(char *source_file_name, char *destination_file_name) {
     }
     else {
         if (!(source=fopen(source_file_name,"rb"))||!(destination=fopen(destination_file_name,"wb"))) {
-            printf("Couldn't open '%s' or '%s' or both.\n.", source_file_name, destination_file_name);   
+            printf("Couldn't open '%s' or '%s' or both.\n.", source_file_name, destination_file_name);
             return(EXIT_FAILURE);
         }
         else {

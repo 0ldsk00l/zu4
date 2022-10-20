@@ -19,7 +19,7 @@
 
 /**
  * Returns true if 'map' points to a dungeon map
- */ 
+ */
 bool isDungeon(Map *punknown) {
     Dungeon *pd;
     if ((pd = dynamic_cast<Dungeon*>(punknown)) != NULL)
@@ -30,8 +30,8 @@ bool isDungeon(Map *punknown) {
 
 /**
  * Returns the name of the dungeon
- */ 
-string Dungeon::getName() {
+ */
+std::string Dungeon::getName() {
     return name;
 }
 
@@ -41,8 +41,8 @@ string Dungeon::getName() {
 DungeonToken Dungeon::tokenForTile(MapTile tile) {
     const static std::string tileNames[] = {
         "brick_floor", "up_ladder", "down_ladder", "up_down_ladder", "chest",
-        "unimpl_ceiling_hole", "unimpl_floor_hole", "magic_orb", 
-        "ceiling_hole", "fountain", 
+        "unimpl_ceiling_hole", "unimpl_floor_hole", "magic_orb",
+        "ceiling_hole", "fountain",
         "brick_floor", "dungeon_altar", "dungeon_door", "dungeon_room",
         "secret_door", "brick_wall", ""
     };
@@ -52,12 +52,12 @@ DungeonToken Dungeon::tokenForTile(MapTile tile) {
     int i;
     Tile *t = tileset->get(tile.getId());
 
-    for (i = 0; !tileNames[i].empty(); i++) {        
+    for (i = 0; !tileNames[i].empty(); i++) {
         if (t->getName() == tileNames[i])
             return DungeonToken(i<<4);
     }
 
-    for (i = 0; !fieldNames[i].empty(); i++) {        
+    for (i = 0; !fieldNames[i].empty(); i++) {
         if (t->getName() == fieldNames[i])
             return DUNGEON_FIELD;
     }
@@ -74,7 +74,7 @@ DungeonToken Dungeon::currentToken() {
 
 /**
  * Return the dungeon sub-token associated with the given dungeon tile.
- * 
+ *
  */
 /**
  * Returns the dungeon sub-token for the current location
@@ -107,7 +107,7 @@ unsigned char Dungeon::subTokenAt(Coords coords) {
  */
 void dungeonSearch(void) {
     Dungeon *dungeon = dynamic_cast<Dungeon *>(c->location->map);
-    DungeonToken token = dungeon->currentToken(); 
+    DungeonToken token = dungeon->currentToken();
     Annotation::List a = dungeon->annotations->allAt(c->location->coords);
     const ItemLocation *item;
     if (a.size() > 0)
@@ -125,14 +125,14 @@ void dungeonSearch(void) {
         dungeonDrinkFountain();
         break;
 
-    default: 
+    default:
         {
             /* see if there is an item at the current location (stones on altars, etc.) */
             item = itemAtLocation(dungeon, c->location->coords);
             if (item) {
                 if (*item->isItemInInventory != NULL && (*item->isItemInInventory)(item->data))
                     screenMessage("Nothing Here!\n");
-                else {                
+                else {
                     if (item->name)
                         screenMessage("You find...\n%s!\n", item->name);
                     (*item->putItemInInventory)(item->data);
@@ -140,7 +140,7 @@ void dungeonSearch(void) {
             } else
                 screenMessage("\nYou find Nothing!\n");
         }
-        
+
         break;
     }
 }
@@ -155,40 +155,40 @@ void dungeonDrinkFountain() {
         return;
 
     Dungeon *dungeon = dynamic_cast<Dungeon *>(c->location->map);
-    FountainType type = (FountainType) dungeon->currentSubToken();    
+    FountainType type = (FountainType) dungeon->currentSubToken();
 
     switch(type) {
     /* plain fountain */
-    case FOUNTAIN_NORMAL: 
+    case FOUNTAIN_NORMAL:
         screenMessage("\nHmmm--No Effect!\n");
         break;
 
     /* healing fountain */
-    case FOUNTAIN_HEALING: 
+    case FOUNTAIN_HEALING:
         if (c->party->member(player)->heal(HT_FULLHEAL))
             screenMessage("\nAhh-Refreshing!\n");
         else screenMessage("\nHmmm--No Effect!\n");
         break;
-    
+
     /* acid fountain */
     case FOUNTAIN_ACID:
-        c->party->member(player)->applyDamage(100); /* 100 damage to drinker */        
+        c->party->member(player)->applyDamage(100); /* 100 damage to drinker */
         screenMessage("\nBleck--Nasty!\n");
         break;
 
     /* cure fountain */
     case FOUNTAIN_CURE:
-        if (c->party->member(player)->heal(HT_CURE))        
+        if (c->party->member(player)->heal(HT_CURE))
             screenMessage("\nHmmm--Delicious!\n");
         else screenMessage("\nHmmm--No Effect!\n");
         break;
 
     /* poison fountain */
-    case FOUNTAIN_POISON: 
+    case FOUNTAIN_POISON:
         if (c->party->member(player)->getStatus() != STAT_POISONED) {
             zu4_snd_play(SOUND_POISON_DAMAGE, true, -1);
             c->party->member(player)->applyEffect(EFFECT_POISON);
-            c->party->member(player)->applyDamage(100); /* 100 damage to drinker also */            
+            c->party->member(player)->applyDamage(100); /* 100 damage to drinker also */
             screenMessage("\nArgh-Choke-Gasp!\n");
         }
         else screenMessage("\nHmm--No Effect!\n");
@@ -209,9 +209,9 @@ void dungeonTouchOrb() {
         return;
 
     int stats = 0;
-    int damage = 0;    
-    
-    /* Get current position and find a replacement tile for it */   
+    int damage = 0;
+
+    /* Get current position and find a replacement tile for it */
     Tile * orb_tile = c->location->map->tileset->getByName("magic_orb");
     MapTile replacementTile(c->location->getReplacementTile(c->location->coords, orb_tile));
 
@@ -234,17 +234,17 @@ void dungeonTouchOrb() {
     }
     if (stats & STATSBONUS_DEX) {
         screenMessage("Dexterity + 5\n");
-        AdjustValueMax(c->saveGame->players[player].dex, 5, 50);        
+        AdjustValueMax(c->saveGame->players[player].dex, 5, 50);
         damage += 200;
     }
     if (stats & STATSBONUS_INT) {
         screenMessage("Intelligence + 5\n");
-        AdjustValueMax(c->saveGame->players[player].intel, 5, 50);        
+        AdjustValueMax(c->saveGame->players[player].intel, 5, 50);
         damage += 200;
-    }   
-    
+    }
+
     /* deal damage to the party member who touched the orb */
-    c->party->member(player)->applyDamage(damage);    
+    c->party->member(player)->applyDamage(damage);
     /* remove the orb from the map */
     c->location->map->annotations->add(c->location->coords, replacementTile);
 }
@@ -278,7 +278,7 @@ bool dungeonHandleTrap(TrapType trap) {
 /**
  * Returns true if a ladder-up is found at the given coordinates
  */
-bool Dungeon::ladderUpAt(Coords coords) {    
+bool Dungeon::ladderUpAt(Coords coords) {
     Annotation::List a = annotations->allAt(coords);
 
     if (tokenAt(coords) == DUNGEON_LADDER_UP ||
@@ -317,5 +317,5 @@ bool Dungeon::ladderDownAt(Coords coords) {
 
 bool Dungeon::validTeleportLocation(Coords coords) {
     MapTile *tile = tileAt(coords, WITH_OBJECTS);
-    return tokenForTile(*tile) == DUNGEON_CORRIDOR;    
+    return tokenForTile(*tile) == DUNGEON_CORRIDOR;
 }

@@ -2,7 +2,6 @@
  * $Id: event.cpp 3003 2012-02-08 21:45:39Z twschulz $
  */
 
-
 #include <cctype>
 #include <list>
 
@@ -26,19 +25,19 @@ unsigned int TimedEventMgr::instances = 0;
 
 EventHandler *EventHandler::instance = NULL;
 EventHandler *EventHandler::getInstance() {
-    if (instance == NULL) 
+    if (instance == NULL)
         instance = new EventHandler();
     return instance;
 }
 
 /**
- * Waits a given number of milliseconds before continuing 
- */ 
+ * Waits a given number of milliseconds before continuing
+ */
 void EventHandler::wait_msecs(unsigned int msecs) {
     int msecs_per_cycle = (1000 / settings.gameCyclesPerSecond);
     int cycles = msecs / msecs_per_cycle;
 
-    if (cycles > 0) {        
+    if (cycles > 0) {
         WaitController waitCtrl(cycles);
         getInstance()->pushController(&waitCtrl);
         waitCtrl.wait();
@@ -49,16 +48,16 @@ void EventHandler::wait_msecs(unsigned int msecs) {
 
 /**
  * Waits a given number of game cycles before continuing
- */ 
+ */
 void EventHandler::wait_cycles(unsigned int cycles) {
     WaitController waitCtrl(cycles);
     getInstance()->pushController(&waitCtrl);
     waitCtrl.wait();
 }
 
-void EventHandler::setControllerDone(bool done) 
-{ 
-	controllerDone = done; 
+void EventHandler::setControllerDone(bool done)
+{
+	controllerDone = done;
 }     /**< Sets the controller exit flag for the event handler */
 bool EventHandler::getControllerDone()         { return controllerDone; }      /**< Returns the current value of the global exit flag */
 void EventHandler::end() { ended = true; }                                     /**< End all event processing */
@@ -81,7 +80,6 @@ Controller *EventHandler::popController() {
     return getController();
 }
 
-
 Controller *EventHandler::getController() const {
     if (controllers.empty())
         return NULL;
@@ -93,7 +91,6 @@ void EventHandler::setController(Controller *c) {
     while (popController() != NULL) {}
     pushController(c);
 }
-
 
 /* TimedEvent functions */
 TimedEvent::TimedEvent(TimedEvent::Callback cb, int i, void *d) :
@@ -171,9 +168,9 @@ void TimedEventMgr::remove(TimedEvent::Callback callback, void *data) {
 void TimedEventMgr::tick() {
     List::iterator i;
     lock();
-    
+
     for (i = events.begin(); i != events.end(); i++)
-        (*i)->tick();   
+        (*i)->tick();
 
     unlock();
 
@@ -211,7 +208,7 @@ bool ReadStringController::keyPressed(int key) {
     int valid = true,
         len = value.length();
     string::size_type pos = string::npos;
-    
+
     if (key < U4_ALT)
          pos = accepted.find_first_of(key);
 
@@ -232,7 +229,7 @@ bool ReadStringController::keyPressed(int key) {
                 }
             }
         }
-        else if (key == '\n' || key == '\r') {            
+        else if (key == '\n' || key == '\r') {
             doneWaiting();
         }
         else if (len < maxlen) {
@@ -246,11 +243,11 @@ bool ReadStringController::keyPressed(int key) {
                 screenTextAt(screenX + len, screenY, "%c", key);
                 screenSetCursorPos(screenX + len + 1, screenY);
                 c->col = len + 1;
-                screenShowCursor();            
+                screenShowCursor();
             }
         }
     }
-    else valid = false;    
+    else valid = false;
 
     return valid || KeyHandler::defaultHandler(key, NULL);
 }
@@ -315,7 +312,7 @@ bool ReadChoiceController::keyPressed(int key) {
 char ReadChoiceController::get(const string &choices, EventHandler *eh) {
     if (!eh)
         eh = eventHandler;
-    
+
     ReadChoiceController ctrl(choices);
     eh->pushController(&ctrl);
     return ctrl.waitFor();
@@ -328,7 +325,7 @@ ReadDirController::ReadDirController() {
 bool ReadDirController::keyPressed(int key) {
     Direction d = keyToDirection(key);
     bool valid = (d != DIR_NONE);
-    
+
     switch(key) {
     case U4_ESC:
     case U4_SPACE:
@@ -344,7 +341,7 @@ bool ReadDirController::keyPressed(int key) {
             return true;
         }
         break;
-    }    
+    }
 
     return false;
 }
@@ -363,11 +360,10 @@ bool WaitController::keyPressed(int key) {
 }
 
 void WaitController::wait() {
-    Controller_startWait();    
+    Controller_startWait();
 }
 
 void WaitController::setCycles(int c) {
     cycles = c;
 }
-
 

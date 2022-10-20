@@ -78,7 +78,7 @@ bool KeyHandler::ignoreKeys(int key, void *data) {
  * through the global key handler. If the global handler
  * does not process the keystroke, then the key handler
  * handles it itself by calling its handler callback function.
- */ 
+ */
 bool KeyHandler::handle(int key) {
     bool processed = false;
     if (!isKeyIgnored(key)) {
@@ -86,7 +86,7 @@ bool KeyHandler::handle(int key) {
         if (!processed)
             processed = handler(key, data);
     }
-    
+
     return processed;
 }
 
@@ -110,7 +110,7 @@ bool KeyHandler::isKeyIgnored(int key) {
 }
 
 bool KeyHandler::operator==(Callback cb) const {
-    return (handler == cb) ? true : false;        
+    return (handler == cb) ? true : false;
 }
 
 KeyHandlerController::KeyHandlerController(KeyHandler *handler) {
@@ -137,7 +137,7 @@ KeyHandler *KeyHandlerController::getKeyHandler() {
  * controls.
  */
 TimedEventMgr::TimedEventMgr(int i) : baseInterval(i) {
-    /* start the SDL timer */    
+    /* start the SDL timer */
     if (instances == 0) {
         if (u4_SDL_InitSubSystem(SDL_INIT_TIMER) < 0)
             zu4_error(ZU4_LOG_ERR, "unable to init SDL: %s", SDL_GetError());
@@ -156,7 +156,7 @@ TimedEventMgr::TimedEventMgr(int i) : baseInterval(i) {
 TimedEventMgr::~TimedEventMgr() {
     SDL_RemoveTimer(id);
     id = 0;
-    
+
     if (instances == 1)
         u4_SDL_QuitSubSystem(SDL_INIT_TIMER);
 
@@ -181,11 +181,11 @@ unsigned int TimedEventMgr::callback(unsigned int interval, void *param) {
 
 /**
  * Re-initializes the timer manager to a new timer granularity
- */ 
+ */
 void TimedEventMgr::reset(unsigned int interval) {
     baseInterval = interval;
     stop();
-    start();    
+    start();
 }
 
 void TimedEventMgr::stop() {
@@ -201,7 +201,7 @@ void TimedEventMgr::start() {
 }
 
 /**
- * Constructs an event handler object. 
+ * Constructs an event handler object.
  */
 EventHandler::EventHandler() : timer(eventTimerGranularity), updateScreen(NULL) {
 }
@@ -209,9 +209,9 @@ EventHandler::EventHandler() : timer(eventTimerGranularity), updateScreen(NULL) 
 static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, updateScreenCallback updateScreen) {
     int processed;
     int key;
-    
+
     key = event.key.keysym.sym;
-    
+
     if (event.key.keysym.mod & KMOD_ALT)
         key += U4_ALT;
     if (event.key.keysym.mod & KMOD_CTRL)
@@ -222,7 +222,7 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
 		&& event.key.keysym.sym >= SDLK_a   // without using SDL_TEXTINPUT
 		&& event.key.keysym.sym <= SDLK_z)
         key -= 0x20;
-    
+
     switch (event.key.keysym.sym) {
 		case SDLK_UP: key = U4_UP; break;
 		case SDLK_DOWN: key = U4_DOWN; break;
@@ -231,10 +231,10 @@ static void handleKeyDownEvent(const SDL_Event &event, Controller *controller, u
 		case SDLK_BACKSPACE: case SDLK_DELETE: key = U4_BACKSPACE; break;
 		default: break;
 	}
-    
+
     /* handle the keypress */
     processed = controller->notifyKeyPressed(key);
-    
+
     if (processed) {
         if (updateScreen)
             (*updateScreen)();
@@ -260,7 +260,7 @@ void EventHandler::sleep(unsigned int usec) {
     // Start a timer for the amount of time we want to sleep from user input.
     static bool stopUserInput = true; // Make this static so that all instance stop. (e.g., sleep calling sleep).
     SDL_TimerID sleepingTimer = SDL_AddTimer(usec, sleepTimerCallback, 0);
-    
+
     stopUserInput = true;
     while (stopUserInput) {
         SDL_Event event;
@@ -322,7 +322,7 @@ void EventHandler::setScreenUpdate(void (*updateScreen)(void)) {
 }
 
 /**
- * Returns true if the queue is empty of events that match 'mask'. 
+ * Returns true if the queue is empty of events that match 'mask'.
  */
  bool EventHandler::timerQueueEmpty() {
     SDL_Event event;
@@ -333,10 +333,9 @@ void EventHandler::setScreenUpdate(void (*updateScreen)(void)) {
         return true;
 }
 
-
 /**
  * Adds a key handler to the stack.
- */ 
+ */
 void EventHandler::pushKeyHandler(KeyHandler kh) {
     KeyHandler *new_kh = new KeyHandler(kh);
     KeyHandlerController *khc = new KeyHandlerController(new_kh);
@@ -347,7 +346,7 @@ void EventHandler::pushKeyHandler(KeyHandler kh) {
  * Pops a key handler off the stack.
  * Returns a pointer to the resulting key handler after
  * the current handler is popped.
- */ 
+ */
 void EventHandler::popKeyHandler() {
     if (controllers.empty())
         return;
@@ -358,7 +357,7 @@ void EventHandler::popKeyHandler() {
 /**
  * Returns a pointer to the current key handler.
  * Returns NULL if there is no key handler.
- */ 
+ */
 KeyHandler *EventHandler::getKeyHandler() const {
     if (controllers.empty())
         return NULL;
@@ -377,7 +376,7 @@ KeyHandler *EventHandler::getKeyHandler() const {
  * the key handler provided to the stack, making it the
  * only key handler left. Use this function only if you
  * are sure the key handlers in the stack are disposable.
- */ 
+ */
 void EventHandler::setKeyHandler(KeyHandler kh) {
     while (popController() != NULL) {}
     pushKeyHandler(kh);

@@ -13,7 +13,7 @@
 
 enum SpellCastError {
     CASTERR_NOERROR,            /* success */
-    CASTERR_NOMIX,              /* no mixture available */    
+    CASTERR_NOMIX,              /* no mixture available */
     CASTERR_MPTOOLOW,           /* caster doesn't have enough mp */
     CASTERR_FAILED,             /* the spell failed */
     CASTERR_WRONGCONTEXT,       /* generic 'wrong-context' error (generrally finds the correct
@@ -81,7 +81,7 @@ const char *spellGetName(unsigned int spell);
 int spellGetRequiredMP(unsigned int spell);
 LocationContext spellGetContext(unsigned int spell);
 TransportContext spellGetTransportContext(unsigned int spell);
-string spellGetErrorMessage(unsigned int spell, SpellCastError error);
+std::string spellGetErrorMessage(unsigned int spell, SpellCastError error);
 int spellMix(unsigned int spell, const Ingredients *ingredients);
 Spell::Param spellGetParamType(unsigned int spell);
 SpellCastError spellCheckPrerequisites(unsigned int spell, int character);

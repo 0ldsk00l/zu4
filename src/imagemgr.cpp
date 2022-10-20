@@ -12,9 +12,6 @@
 #include "intro.h"
 #include "u4file.h"
 
-using std::map;
-using std::vector;
-
 bool ImageInfo::hasBlackBackground()
 {
 	return this->filetype == "image/x-u4raw";
@@ -24,10 +21,10 @@ struct ImageSet {
 public:
     ~ImageSet();
 
-    string name;
-    string location;
-    string extends;
-    map<string, ImageInfo *> info;
+    std::string name;
+    std::string location;
+    std::string extends;
+    std::map<std::string, ImageInfo *> info;
 };
 
 ImageMgr *ImageMgr::instance = NULL;
@@ -54,7 +51,7 @@ ImageMgr::ImageMgr() {
 
 ImageMgr::~ImageMgr() {
     //settings.deleteObserver(this);
-    for (std::map<string, ImageSet *>::iterator i = imageSets.begin(); i != imageSets.end(); i++)
+    for (std::map<std::string, ImageSet *>::iterator i = imageSets.begin(); i != imageSets.end(); i++)
         delete i->second;
 }
 
@@ -82,7 +79,7 @@ void ImageMgr::init() {
      * register all the images declared in the config files
      */
     const Config *config = Config::getInstance();
-    vector<ConfigElement> graphicsConf = config->getElement("graphics").getChildren();
+    std::vector<ConfigElement> graphicsConf = config->getElement("graphics").getChildren();
     for (std::vector<ConfigElement>::iterator conf = graphicsConf.begin(); conf != graphicsConf.end(); conf++) {
         if (conf->getName() == "imageset") {
             ImageSet *set = loadImageSetFromConf(*conf);
@@ -94,7 +91,7 @@ void ImageMgr::init() {
     }
 
     imageSetNames.clear();
-    for (std::map<string, ImageSet *>::const_iterator set = imageSets.begin(); set != imageSets.end(); set++)
+    for (std::map<std::string, ImageSet *>::const_iterator set = imageSets.begin(); set != imageSets.end(); set++)
         imageSetNames.push_back(set->first);
 
     update(&settings);
@@ -110,11 +107,11 @@ ImageSet *ImageMgr::loadImageSetFromConf(const ConfigElement &conf) {
 
     zu4_error(ZU4_LOG_DBG, "Loading image set: %s", set->name.c_str());
 
-    vector<ConfigElement> children = conf.getChildren();
+    std::vector<ConfigElement> children = conf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
         if (i->getName() == "image") {
             ImageInfo *info = loadImageInfoFromConf(*i);
-            std::map<string, ImageInfo *>::iterator dup = set->info.find(info->name);
+            std::map<std::string, ImageInfo *>::iterator dup = set->info.find(info->name);
             if (dup != set->info.end()) {
                 delete dup->second;
                 set->info.erase(dup);
@@ -144,7 +141,7 @@ ImageInfo *ImageMgr::loadImageInfoFromConf(const ConfigElement &conf) {
     info->fixup = static_cast<ImageFixup>(conf.getEnum("fixup", fixupEnumStrings));
     info->image = NULL;
 
-    vector<ConfigElement> children = conf.getChildren();
+    std::vector<ConfigElement> children = conf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
         if (i->getName() == "subimage") {
             SubImage *subimage = loadSubImageFromConf(info, *i);
@@ -160,10 +157,10 @@ SubImage *ImageMgr::loadSubImageFromConf(const ImageInfo *info, const ConfigElem
     static int x = 0,
                y = 0,
                last_width = 0,
-               last_height = 0;    
+               last_height = 0;
 
     subimage = new SubImage;
-    snprintf(subimage->name, sizeof(subimage->name), "%s", conf.getString("name").c_str());    
+    snprintf(subimage->name, sizeof(subimage->name), "%s", conf.getString("name").c_str());
     subimage->width = conf.getInt("width");
     subimage->height = conf.getInt("height");
     snprintf(subimage->srcImageName, sizeof(subimage->srcImageName), "%s", info->name.c_str());
@@ -194,22 +191,22 @@ void ImageMgr::fixupIntro(Image *im) {
 	const unsigned char *sigData;
 	int i, x, y;
 	RGBA color;
-	
+
 	sigData = intro->getSigData();
-	
+
 	// update the position of "and"
 	zu4_img_draw_subrect_on(im, im, 148, 17, 153, 17, 11, 4);
 	zu4_img_draw_subrect_on(im, im, 159, 17, 165, 18, 1, 4);
 	zu4_img_draw_subrect_on(im, im, 160, 17, 164, 17, 16, 4);
-	
+
 	// update the position of "Origin Systems, Inc."
 	//zu4_img_draw_subrect_on(im, im, 86, 21, 88, 21, 114, 9);
 	//zu4_img_draw_subrect_on(im, im, 199, 21, 202, 21, 6, 9);
 	zu4_img_draw_subrect_on(im, im, 207, 21, 208, 21, 28, 9);
-	
+
 	// update the position of "Ultima IV" -  move this prior to moving "present"
 	zu4_img_draw_subrect_on(im, im, 59, 33, 61, 33, 204, 46);
-	
+
 	// update the position of "Quest of the Avatar"
 	//zu4_img_draw_subrect_on(im, im, 69, 80, 70, 80, 11, 13); // quEst
 	//zu4_img_draw_subrect_on(im, im, 82, 80, 84, 80, 27, 13); // queST
@@ -218,14 +215,14 @@ void ImageMgr::fixupIntro(Image *im) {
 	//zu4_img_draw_subrect_on(im, im, 166, 80, 165, 80, 11, 13); // tHe
 	zu4_img_draw_subrect_on(im, im, 200, 80, 201, 80, 81, 13); // AVATAR
 	//zu4_img_draw_subrect_on(im, im, 227, 80, 228, 80, 11, 13); // avAtar
-	
+
 	// copy "present" to new location between "Origin Systems, Inc." and
 	// "Ultima IV" - do this after moving "Ultima IV"
 	zu4_img_draw_subrect_on(im, im, 132, 33, 135, 0, 56,5);
-	
+
 	// erase the original "present"
 	zu4_img_fill(im, 135, 0, 56, 5, 0, 0, 0, 255);
-	
+
 	// update the colors for VGA
 	if (settings.videoType == 1) { // VGA
 		ImageInfo *borderInfo = imageMgr->get(BKGD_BORDERS, true);
@@ -254,21 +251,21 @@ void ImageMgr::fixupIntro(Image *im) {
 		255, 250, 226, 226, 210, 194, 161, 161,
 		129, 97, 97, 64, 64, 32, 32, 0
 	};
-	
+
 	i = 0;
 	while (sigData[i] != 0) {
 		x = sigData[i] + 0x14;
 		y = 0xBF - sigData[i+1];
-		
+
 		if (settings.videoType) { // Not EGA
 			// yellow gradient
 			color = RGBA{255, (uint8_t)(y == 1 ? 250 : 255), blue[y], 255};
 		}
-		
+
 		zu4_img_fill(im, x, y, 2, 1, color.r, color.g, color.b, 255);
 		i += 2;
 	}
-	
+
 	// draw the red line between "Origin Systems, Inc." and "present"
 	if (settings.videoType) { // Not EGA
 		color = RGBA{0, 0, 161, 255}; // dark blue
@@ -276,7 +273,7 @@ void ImageMgr::fixupIntro(Image *im) {
 	else {
 		color = RGBA{128, 0, 0, 255}; // dark red for EGA
 	}
-	
+
 	for (i = 84; i < 236; i++) { // 152 px wide
 		zu4_img_fill(im, i, 31, 1, 1, color.r, color.g, color.b, 255);
 	}
@@ -328,8 +325,8 @@ void ImageMgr::fixupDungNS(Image *im) {
 /**
  * Returns information for the given image set.
  */
-ImageSet *ImageMgr::getSet(const string &setname) {
-    std::map<string, ImageSet *>::iterator i = imageSets.find(setname);
+ImageSet *ImageMgr::getSet(const std::string &setname) {
+    std::map<std::string, ImageSet *>::iterator i = imageSets.find(setname);
     if (i != imageSets.end())
         return i->second;
     else
@@ -339,19 +336,19 @@ ImageSet *ImageMgr::getSet(const string &setname) {
 /**
  * Returns image information for the current image set.
  */
-ImageInfo *ImageMgr::getInfo(const string &name) {
+ImageInfo *ImageMgr::getInfo(const std::string &name) {
     return getInfoFromSet(name, baseSet);
 }
 
 /**
  * Returns information for the given image set.
  */
-ImageInfo *ImageMgr::getInfoFromSet(const string &name, ImageSet *imageset) {
+ImageInfo *ImageMgr::getInfoFromSet(const std::string &name, ImageSet *imageset) {
     if (!imageset)
         return NULL;
 
     /* if the image set contains the image we want, AND IT EXISTS we are done */
-    std::map<string, ImageInfo *>::iterator i = imageset->info.find(name);
+    std::map<std::string, ImageInfo *>::iterator i = imageset->info.find(name);
     if (i != imageset->info.end())
     	if (imageExists(i->second))
     		return i->second;
@@ -366,7 +363,7 @@ ImageInfo *ImageMgr::getInfoFromSet(const string &name, ImageSet *imageset) {
     return NULL;
 }
 
-std::string ImageMgr::guessFileType(const string &filename) {
+std::string ImageMgr::guessFileType(const std::string &filename) {
     if (filename.length() >= 4 && filename.compare(filename.length() - 4, 4, ".png") == 0) {
         return "image/png";
     } else {
@@ -378,7 +375,7 @@ bool ImageMgr::imageExists(ImageInfo * info)
 {
 	if (info->filename == "") //If it is an abstract image like "screen"
 		return true;
-	
+
 	U4FILE * file = getImageFile(info);
 	if (file)
 	{
@@ -389,10 +386,9 @@ bool ImageMgr::imageExists(ImageInfo * info)
 	return false;
 }
 
-
 U4FILE * ImageMgr::getImageFile(ImageInfo *info)
 {
-	string filename = info->filename;
+	std::string filename = info->filename;
 
     /*
      * If the u4 VGA upgrade is installed (i.e. setup has been run and
@@ -401,7 +397,7 @@ U4FILE * ImageMgr::getImageFile(ImageInfo *info)
      * .old extention.  The charset and tiles have a .vga extention
      * and are not renamed in the upgrade installation process
      */
-	if (u4isUpgradeInstalled() && getInfoFromSet(info->name, getSet("VGA"))->filename.find(".old") != string::npos) {
+	if (u4isUpgradeInstalled() && getInfoFromSet(info->name, getSet("VGA"))->filename.find(".old") != std::string::npos) {
         if (!settings.videoType) // EGA
             filename = getInfoFromSet(info->name, getSet("VGA"))->filename;
         else
@@ -415,7 +411,7 @@ U4FILE * ImageMgr::getImageFile(ImageInfo *info)
     if (info->xu4Graphic) {
         char path[64];
         u4find_graphics(path, sizeof(path), filename.c_str());
-        string pathname = (string)path;
+        std::string pathname = (std::string)path;
 
         if (!pathname.empty())
             file = u4fopen_stdio(path);
@@ -429,7 +425,7 @@ U4FILE * ImageMgr::getImageFile(ImageInfo *info)
 /**
  * Load in a background image from a ".ega" file.
  */
-ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
+ImageInfo *ImageMgr::get(const std::string &name, bool returnUnscaled) {
     ImageInfo *info = getInfo(name);
     if (!info)
         return NULL;
@@ -446,10 +442,10 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         if (info->filetype.empty()) {
             info->filetype = guessFileType(info->filename);
 		}
-		
-        string filetype = info->filetype;
+
+        std::string filetype = info->filetype;
         int imgtype = 0;
-        
+
         if (filetype == "image/png") { imgtype = ZU4_IMG_PNG; }
         else if (filetype == "image/x-u4raw") { imgtype = ZU4_IMG_RAW; }
         else if (filetype == "image/x-u4rle") { imgtype = ZU4_IMG_RLE; }
@@ -457,7 +453,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         else {
 			zu4_error(ZU4_LOG_WRN, "can't find loader to load image \"%s\" with type \"%s\"", info->filename.c_str(), filetype.c_str());
 		}
-		
+
 		switch(imgtype) {
 			case ZU4_IMG_RAW: case ZU4_IMG_RLE: case ZU4_IMG_LZW:
 				unscaled = zu4_img_load(file, info->width, info->height, info->depth, imgtype);
@@ -466,7 +462,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 					info->height = unscaled->h;
 				}
 				break;
-			
+
 			case ZU4_IMG_PNG:
 				char imgpath[64];
 				u4find_graphics(imgpath, sizeof(imgpath), info->filename.c_str());
@@ -502,7 +498,7 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
         fixupDungNS(unscaled);
         break;
     }
-    
+
     info->image = unscaled;
     return info;
 }
@@ -510,22 +506,22 @@ ImageInfo *ImageMgr::get(const string &name, bool returnUnscaled) {
 /**
  * Returns information for the given image set.
  */
-SubImage *ImageMgr::getSubImage(const string &name) {
-    string setname;
+SubImage *ImageMgr::getSubImage(const std::string &name) {
+    std::string setname;
 
     ImageSet *set = baseSet;
 
     while (set != NULL) {
-        for (std::map<string, ImageInfo *>::iterator i = set->info.begin(); i != set->info.end(); i++) {
+        for (std::map<std::string, ImageInfo *>::iterator i = set->info.begin(); i != set->info.end(); i++) {
             ImageInfo *info = (ImageInfo *) i->second;
-            std::map<string, SubImage *>::iterator j = info->subImages.find(name);
+            std::map<std::string, SubImage *>::iterator j = info->subImages.find(name);
             if (j != info->subImages.end())
                 return j->second;
         }
 
         set = getSet(set->extends);
     }
-        
+
     return NULL;
 }
 
@@ -533,9 +529,9 @@ SubImage *ImageMgr::getSubImage(const string &name) {
  * Free up any background images used only in the animations.
  */
 void ImageMgr::freeIntroBackgrounds() {
-    for (std::map<string, ImageSet *>::iterator i = imageSets.begin(); i != imageSets.end(); i++) {
+    for (std::map<std::string, ImageSet *>::iterator i = imageSets.begin(); i != imageSets.end(); i++) {
         ImageSet *set = i->second;
-        for (std::map<string, ImageInfo *>::iterator j = set->info.begin(); j != set->info.end(); j++) {
+        for (std::map<std::string, ImageInfo *>::iterator j = set->info.begin(); j != set->info.end(); j++) {
             ImageInfo *info = j->second;
             if (info->image != NULL && info->introOnly) {
                 zu4_img_free(info->image);
@@ -545,7 +541,7 @@ void ImageMgr::freeIntroBackgrounds() {
     }
 }
 
-const vector<string> &ImageMgr::getSetNames() {
+const std::vector<std::string> &ImageMgr::getSetNames() {
     return imageSetNames;
 }
 
@@ -553,13 +549,13 @@ const vector<string> &ImageMgr::getSetNames() {
  * Find the new base image set when settings have changed.
  */
 void ImageMgr::update(SettingsData *newSettings) {
-    string setname = newSettings->videoType ? "VGA" : "EGA";//newSettings->videoType;
+    std::string setname = newSettings->videoType ? "VGA" : "EGA";//newSettings->videoType;
     zu4_error(ZU4_LOG_DBG, "Base image set is: %s", setname.c_str());
     baseSet = getSet(setname);
 }
 
 ImageSet::~ImageSet() {
-    for (std::map<string, ImageInfo *>::iterator i = info.begin(); i != info.end(); i++) {
+    for (std::map<std::string, ImageInfo *>::iterator i = info.begin(); i != info.end(); i++) {
         ImageInfo *imageInfo = i->second;
         if (imageInfo->name != "screen")
             delete imageInfo;
@@ -567,7 +563,7 @@ ImageSet::~ImageSet() {
 }
 
 ImageInfo::~ImageInfo() {
-    for (std::map<string, SubImage *>::iterator i = subImages.begin(); i != subImages.end(); i++)
+    for (std::map<std::string, SubImage *>::iterator i = subImages.begin(); i != subImages.end(); i++)
         delete i->second;
     if (image != NULL)
         zu4_img_free(image);

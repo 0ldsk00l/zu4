@@ -86,7 +86,6 @@ Config::Config() {
     }
 }
 
-
 vector<string> Config::getGames() {
     vector<string> result;
     result.push_back("Ultima IV");
@@ -159,7 +158,7 @@ string ConfigElement::getString(const string &name) const {
 
     string result(reinterpret_cast<const char *>(prop));
     xmlFree(prop);
-    
+
     return result;
 }
 

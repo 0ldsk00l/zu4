@@ -2,7 +2,6 @@
  * $Id: codex.cpp 2996 2011-12-03 22:41:33Z twschulz $
  */
 
-
 #include <string>
 #include <cstring>
 #include <vector>
@@ -27,9 +26,9 @@ using namespace std;
 int codexInit();
 void codexDelete();
 void codexEject(CodexEjectCode code);
-void codexHandleWOP(const string &word);
-void codexHandleVirtues(const string &virtue);
-void codexHandleInfinity(const string &answer);
+void codexHandleWOP(const std::string &word);
+void codexHandleVirtues(const std::string &virtue);
+void codexHandleInfinity(const std::string &answer);
 void codexImpureThoughts();
 
 /**
@@ -207,7 +206,7 @@ void codexEject(CodexEjectCode code) {
 /**
  * Handles entering the Word of Passage
  */
-void codexHandleWOP(const string &word) {
+void codexHandleWOP(const std::string &word) {
     static int tries = 1;
     int i;
 
@@ -269,7 +268,7 @@ void codexHandleWOP(const string &word) {
 /**
  * Handles naming of virtues in the Chamber of the Codex
  */
-void codexHandleVirtues(const string &virtue) {
+void codexHandleVirtues(const std::string &virtue) {
     static const char *codexImageNames[] = {
         BKGD_HONESTY, BKGD_COMPASSN, BKGD_VALOR, BKGD_JUSTICE,
         BKGD_SACRIFIC, BKGD_HONOR, BKGD_SPIRIT, BKGD_HUMILITY,
@@ -361,7 +360,7 @@ bool codexHandleInfinityAnyKey(int key, void *data) {
     return true;
 }
 
-void codexHandleInfinity(const string &answer) {
+void codexHandleInfinity(const std::string &answer) {
     static int tries = 1;
 
     eventHandler->popKeyHandler();

@@ -97,9 +97,9 @@ typedef enum {
     MATTR_GOOD          = 0x10,
     MATTR_WATER         = 0x20,
     MATTR_NONATTACKABLE = 0x40,
-    MATTR_NEGATE        = 0x80,    
-    MATTR_CAMOUFLAGE    = 0x100,    
-    MATTR_NOATTACK      = 0x200,    
+    MATTR_NEGATE        = 0x80,
+    MATTR_CAMOUFLAGE    = 0x100,
+    MATTR_NOATTACK      = 0x200,
     MATTR_AMBUSHES      = 0x400,
     MATTR_RANDOMRANGED  = 0x800,
     MATTR_INCORPOREAL   = 0x1000,
@@ -138,7 +138,7 @@ typedef enum {
  *      creature instance)</li>
  *      <li>creatures can be looked up by name, ids can probably go away</li>
  * </ul>
- */ 
+ */
 struct Creature : public Object {
     typedef std::list<StatusType> StatusList;
 
@@ -148,22 +148,22 @@ public:
     void load(const ConfigElement &conf);
 
     // Accessor methods
-    virtual string getName() const              {return name;}
-    virtual const string &getHitTile() const    {return rangedhittile;}
-    virtual const string &getMissTile() const   {return rangedmisstile;}
+    virtual std::string getName() const            {return name;}
+    virtual const std::string &getHitTile() const  {return rangedhittile;}
+    virtual const std::string &getMissTile() const {return rangedmisstile;}
     CreatureId getId() const                    {return id;}
     CreatureId getLeader() const                {return leader;}
     virtual int getHp() const                   {return hp;}
     virtual int getXp() const                   {return xp;}
-    virtual const string &getWorldrangedtile() const {return worldrangedtile;}
+    virtual const std::string &getWorldrangedtile() const {return worldrangedtile;}
     SlowedType getSlowedType() const            {return slowedType;}
     int getEncounterSize() const                {return encounterSize;}
     unsigned char getResists() const            {return resists;}
 
     // Setters
-    void setName(string s)                      {name = s;}
-    void setHitTile(const string &t)            {rangedhittile = t;}
-    void setMissTile(const string &t)           {rangedmisstile = t;}
+    void setName(std::string s)                 {name = s;}
+    void setHitTile(const std::string &t)       {rangedhittile = t;}
+    void setMissTile(const std::string &t)      {rangedmisstile = t;}
     virtual void setHp(int points)              {hp = points;}
 
     // Query methods
@@ -195,8 +195,8 @@ public:
     bool leavesTile() const             {return leavestile;}
     bool castsSleep() const             {return mattr & MATTR_CASTS_SLEEP;}
     bool isForceOfNature() const        {return mattr & MATTR_FORCE_OF_NATURE;}
-    int getDamage() const;    
-    const string &getCamouflageTile() const {return camouflageTile;}
+    int getDamage() const;
+    const std::string &getCamouflageTile() const {return camouflageTile;}
     void setRandomRanged();
     int setInitialHp(int hp = -1);
 
@@ -226,18 +226,18 @@ public:
 
     // Properties
 protected:
-    string          name;
-    string          rangedhittile;
-    string          rangedmisstile;
-    CreatureId      id;    
-    string          camouflageTile;    
+    std::string     name;
+    std::string     rangedhittile;
+    std::string     rangedmisstile;
+    CreatureId      id;
+    std::string     camouflageTile;
     CreatureId      leader;
     int             basehp;
     int             hp;
     StatusList      status;
     int             xp;
     unsigned char   ranged;
-    string          worldrangedtile;    
+    std::string     worldrangedtile;
     bool            leavestile;
     CreatureAttrib  mattr;
     CreatureMovementAttrib movementAttr;
@@ -249,7 +249,7 @@ protected:
 
 /**
  * CreatureMgr Class Definition
- */ 
+ */
 struct CreatureMgr {
 public:
     static CreatureMgr *getInstance();
@@ -258,12 +258,12 @@ public:
 
     Creature *getByTile(MapTile tile);
     Creature *getById(CreatureId id);
-    Creature *getByName(string name);
+    Creature *getByName(std::string name);
     Creature *randomForTile(const Tile *tile);
     Creature *randomForDungeon(int dnglevel);
     Creature *randomAmbushing();
 
-private:    
+private:
     CreatureMgr() {}
 
     // disallow assignments, copy contruction
@@ -272,7 +272,7 @@ private:
 
     static CreatureMgr *instance;
 
-    CreatureMap creatures;    
+    CreatureMap creatures;
 };
 
 bool isCreature(Object *punknown);

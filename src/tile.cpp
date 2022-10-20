@@ -2,7 +2,6 @@
  * $Id: tile.cpp 3028 2012-03-18 12:02:46Z daniel_santos $
  */
 
-
 #include "tile.h"
 
 #include "config.h"
@@ -48,7 +47,7 @@ Tile::Tile(Tileset *tileset)
 void Tile::loadProperties(const ConfigElement &conf) {
     if (conf.getName() != "tile")
         return;
-            
+
     name = conf.getString("name"); /* get the name of the tile */
 
     /* get the animation for the tile, if one is specified */
@@ -57,7 +56,7 @@ void Tile::loadProperties(const ConfigElement &conf) {
     }
 
     /* see if the tile is opaque */
-    opaque = conf.getBool("opaque"); 
+    opaque = conf.getBool("opaque");
 
     foreground = conf.getBool("usesReplacementTileAsBackground");
     waterForeground = conf.getBool("usesWaterReplacementTileAsBackground");
@@ -71,19 +70,19 @@ void Tile::loadProperties(const ConfigElement &conf) {
     }
     else rule = TileRule::findByName("default");
 
-    /* get the number of frames the tile has */    
+    /* get the number of frames the tile has */
     frames = conf.getInt("frames", 1);
 
     /* get the name of the image that belongs to this tile */
     if (conf.exists("image"))
         imageName = conf.getString("image");
-    else 
-        imageName = string("tile_") + name;
+    else
+        imageName = std::string("tile_") + name;
 
     tiledInDungeon = conf.getBool("tiledInDungeon");
 
     if (conf.exists("directions")) {
-        string dirs = conf.getString("directions");
+        std::string dirs = conf.getString("directions");
         if (dirs.length() != (unsigned) frames)
             zu4_error(ZU4_LOG_ERR, "Error: %ld directions for tile but only %d frames", (long) dirs.length(), frames);
         for (unsigned i = 0; i < dirs.length(); i++) {
@@ -109,7 +108,7 @@ Image *Tile::getImage() {
 
 /**
  * Loads the tile image
- */ 
+ */
 void Tile::loadImage() {
     if (!image) {
     	SubImage *subimage = NULL;
@@ -117,8 +116,8 @@ void Tile::loadImage() {
         ImageInfo *info = imageMgr->get(imageName);
         if (!info) {
             subimage = imageMgr->getSubImage(imageName);
-            if (subimage)            
-                info = imageMgr->get(subimage->srcImageName);            
+            if (subimage)
+                info = imageMgr->get(subimage->srcImageName);
         }
         if (!info) //IF still no info loaded
         {
@@ -141,7 +140,6 @@ void Tile::loadImage() {
             w = (subimage ? subimage->width : info->width);
             h = (subimage ? (subimage->height) / frames : info->height / frames);
             image = zu4_img_create(w, h * frames);
-
 
             //info->image->alphaOff();
 
@@ -166,7 +164,6 @@ void Tile::loadImage() {
         /* if we have animations, we always used 'animated' to draw from */
         //if (anim)
         //    image->alphaOff();
-
 
     }
 }
@@ -236,7 +233,6 @@ int Tile::frameForDirection(Direction d) const {
     }
     return -1;
 }
-
 
 const Tile *MapTile::getTileType() const {
     return Tileset::findTileById(id);

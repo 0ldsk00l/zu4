@@ -2,7 +2,6 @@
  * $Id: aura.cpp 3019 2012-03-18 11:31:13Z daniel_santos $
  */
 
-
 #include "aura.h"
 
 Aura::Aura() : type(AURA_NONE), duration(0) {}
@@ -29,7 +28,7 @@ void Aura::setType(AuraType t) {
 void Aura::passTurn() {
     if (duration > 0) {
         duration--;
-        
+
         if (duration == 0) {
             type = AURA_NONE;
 

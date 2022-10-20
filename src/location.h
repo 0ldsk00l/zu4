@@ -37,7 +37,7 @@ public:
     int getCurrentPosition(Coords *coords);
     MoveResult move(Direction dir, bool userEvent);
 
-    Coords coords;    
+    Coords coords;
     Map *map;
     int viewMode;
     LocationContext context;

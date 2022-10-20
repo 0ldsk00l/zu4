@@ -14,8 +14,6 @@
 #include "controller.h"
 #include "types.h"
 
-using std::string;
-
 #define eventHandler (EventHandler::getInstance())
 #endif
 
@@ -50,7 +48,7 @@ struct EventHandler;
 struct TextView;
 
 /**
- * A struct for handling keystrokes. 
+ * A struct for handling keystrokes.
  */
 struct KeyHandler {
 public:
@@ -61,24 +59,24 @@ public:
 
     /** Additional information to be passed as data param for read buffer key handler */
     typedef struct ReadBuffer {
-        int (*handleBuffer)(string*);
-        string *buffer;
+        int (*handleBuffer)(std::string*);
+        std::string *buffer;
         int bufferLen;
         int screenX, screenY;
     } ReadBuffer;
 
     /** Additional information to be passed as data param for get choice key handler */
     typedef struct GetChoice {
-        string choices;
+        std::string choices;
         int (*handleChoice)(int);
     } GetChoice;
 
     /* Constructors */
     KeyHandler(Callback func, void *data = NULL, bool asyncronous = true);
-    
-    /* Static functions */    
+
+    /* Static functions */
     static int setKeyRepeat(int delay, int interval);
-    static bool globalHandler(int key);    
+    static bool globalHandler(int key);
 
     /* Static default key handler functions */
     static bool defaultHandler(int key, void *data);
@@ -86,9 +84,9 @@ public:
 
     /* Operators */
     bool operator==(Callback cb) const;
-    
-    /* Member functions */    
-    bool handle(int key); 
+
+    /* Member functions */
+    bool handle(int key);
     virtual bool isKeyIgnored(int key);
 
 protected:
@@ -116,19 +114,19 @@ private:
 /**
  * A controller to read a string, terminated by the enter key.
  */
-struct ReadStringController : public WaitableController<string> {
+struct ReadStringController : public WaitableController<std::string> {
 public:
-    ReadStringController(int maxlen, int screenX, int screenY, const string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
-    ReadStringController(int maxlen, TextView *view, const string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
+    ReadStringController(int maxlen, int screenX, int screenY, const std::string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
+    ReadStringController(int maxlen, TextView *view, const std::string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
     virtual bool keyPressed(int key);
 
-    static string get(int maxlen, int screenX, int screenY, EventHandler *eh = NULL);
-    static string get(int maxlen, TextView *view, EventHandler *eh = NULL);
+    static std::string get(int maxlen, int screenX, int screenY, EventHandler *eh = NULL);
+    static std::string get(int maxlen, TextView *view, EventHandler *eh = NULL);
 
 protected:
     int maxlen, screenX, screenY;
     TextView *view;
-    string accepted;
+    std::string accepted;
 };
 
 /**
@@ -148,22 +146,22 @@ public:
  */
 struct ReadChoiceController : public WaitableController<int> {
 public:
-    ReadChoiceController(const string &choices);
+    ReadChoiceController(const std::string &choices);
     virtual bool keyPressed(int key);
 
-    static char get(const string &choices, EventHandler *eh = NULL);
+    static char get(const std::string &choices, EventHandler *eh = NULL);
 
 protected:
-    string choices;
+    std::string choices;
 };
 
 /**
  * A controller to read a direction enter with the arrow keys.
  */
 struct ReadDirController : public WaitableController<Direction> {
-public:    
+public:
     ReadDirController();
-    virtual bool keyPressed(int key);    
+    virtual bool keyPressed(int key);
 };
 
 /**
@@ -186,7 +184,7 @@ private:
 
 /**
  * A struct for handling timed events.
- */ 
+ */
 struct TimedEvent {
 public:
     /* Typedefs */
@@ -200,9 +198,9 @@ public:
     Callback getCallback() const;
     void *getData();
     void tick();
-    
+
     /* Properties */
-protected:    
+protected:
     Callback callback;
     void *data;
     int interval;
@@ -211,11 +209,11 @@ protected:
 
 /**
  * A struct for managing timed events
- */ 
+ */
 struct TimedEventMgr {
 public:
     /* Typedefs */
-    typedef TimedEvent::List List;    
+    typedef TimedEvent::List List;
 
     /* Constructors */
     TimedEventMgr(int baseInterval);
@@ -225,7 +223,7 @@ public:
     static unsigned int callback(unsigned int interval, void *param);
 
     /* Member functions */
-    bool isLocked() const;      /**< Returns true if the event list is locked (in use) */    
+    bool isLocked() const;      /**< Returns true if the event list is locked (in use) */
 
     void add(TimedEvent::Callback callback, int interval, void *data = NULL);
     List::iterator remove(List::iterator i);
@@ -234,7 +232,7 @@ public:
     void tick();
     void stop();
     void start();
-    
+
     void reset(unsigned int interval);     /**< Re-initializes the event manager to a new base interval */
 
 private:
@@ -255,14 +253,14 @@ protected:
 
 typedef void(*updateScreenCallback)(void);
 /**
- * A struct for handling game events. 
+ * A struct for handling game events.
  */
 struct EventHandler {
 public:
     /* Constructors */
-    EventHandler();    
+    EventHandler();
 
-    /* Static functions */    
+    /* Static functions */
     static EventHandler *getInstance();
     static void sleep(unsigned int usec);
     static void wait_msecs(unsigned int msecs);
@@ -275,7 +273,7 @@ public:
     /* Member functions */
     TimedEventMgr* getTimer();
 
-    /* Event functions */    
+    /* Event functions */
     void run();
     void setScreenUpdate(void (*updateScreen)(void));
 
@@ -291,7 +289,7 @@ public:
     KeyHandler *getKeyHandler() const;
     void setKeyHandler(KeyHandler kh);
 
-protected:    
+protected:
     static bool controllerDone;
     static bool ended;
     TimedEventMgr timer;

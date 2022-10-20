@@ -11,9 +11,6 @@
 #include "creature.h"
 #include "types.h"
 
-using std::list;
-using std::string;
-
 struct Conversation;
 struct Dialogue;
 struct Response;
@@ -46,35 +43,35 @@ public:
 
     bool canConverse() const;
     bool isVendor() const;
-    virtual string getName() const;
+    virtual std::string getName() const;
     void goToStartLocation();
     void setDialogue(Dialogue *d);
     Coords &getStart() { return start; }
     PersonNpcType getNpcType() const { return npcType; }
     void setNpcType(PersonNpcType t);
 
-    list<string> getConversationText(Conversation *cnv, const char *inquiry);
-    string getPrompt(Conversation *cnv);
+    std::list<std::string> getConversationText(Conversation *cnv, const char *inquiry);
+    std::string getPrompt(Conversation *cnv);
     const char *getChoices(Conversation *cnv);
 
-    string getIntro(Conversation *cnv);
-    string processResponse(Conversation *cnv, Response *response);
+    std::string getIntro(Conversation *cnv);
+    std::string processResponse(Conversation *cnv, Response *response);
     void runCommand(Conversation *cnv, const ResponsePart &command);
-    string getResponse(Conversation *cnv, const char *inquiry);
-    string talkerGetQuestionResponse(Conversation *cnv, const char *inquiry);
-    string beggarGetQuantityResponse(Conversation *cnv, const char *response);
-    string lordBritishGetQuestionResponse(Conversation *cnv, const char *answer);
-    string getQuestion(Conversation *cnv);
+    std::string getResponse(Conversation *cnv, const char *inquiry);
+    std::string talkerGetQuestionResponse(Conversation *cnv, const char *inquiry);
+    std::string beggarGetQuantityResponse(Conversation *cnv, const char *response);
+    std::string lordBritishGetQuestionResponse(Conversation *cnv, const char *answer);
+    std::string getQuestion(Conversation *cnv);
 
 private:
     Dialogue* dialogue;
-    Coords start;    
+    Coords start;
     PersonNpcType npcType;
 };
 
 bool isPerson(Object *punknown);
 
-list<string> replySplit(const string &text);
-int linecount(const string &s, int columnmax);
+std::list<std::string> replySplit(const std::string &text);
+int linecount(const std::string &s, int columnmax);
 
 #endif

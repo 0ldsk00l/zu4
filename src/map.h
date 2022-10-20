@@ -18,8 +18,6 @@
 #include "types.h"
 #include "u4file.h"
 
-using std::string;
-
 #define MAP_IS_OOB(mapptr, c) (((c).x) < 0 || ((c).x) >= (static_cast<int>((mapptr)->width)) || ((c).y) < 0 || ((c).y) >= (static_cast<int>((mapptr)->height)) || ((c).z) < 0 || ((c).z) >= (static_cast<int>((mapptr)->levels)))
 
 struct AnnotationMgr;
@@ -58,12 +56,12 @@ Direction pathAway(Coords oc, Coords c, int valid_dirs = MASK_DIR_ALL);
 
 /**
  * Map struct
- */ 
+ */
 struct Map {
 public:
     enum Type {
         WORLD,
-        CITY,    
+        CITY,
         SHRINE,
         COMBAT,
         DUNGEON
@@ -75,13 +73,12 @@ public:
         BORDER_FIXED
     };
 
-
     struct Source {
     public:
         Source() {}
-        Source(const string &f, Type t) : fname(f), type(t) {}
+        Source(const std::string &f, Type t) : fname(f), type(t) {}
 
-        string fname;
+        std::string fname;
         Type type;
     };
 
@@ -89,9 +86,9 @@ public:
     virtual ~Map();
 
     // Member functions
-    virtual string getName();
-    
-    struct Object *objectAt(const Coords &coords);    
+    virtual std::string getName();
+
+    struct Object *objectAt(const Coords &coords);
     const Portal *portalAt(const Coords &coords, int actionFlags);
     MapTile* getTileFromData(const Coords &coords);
     MapTile* tileAt(const Coords &coords, int withObjects);
@@ -102,7 +99,7 @@ public:
     struct Object *addObject(MapTile tile, MapTile prevTile, Coords coords);
     struct Object *addObject(Object *obj, Coords coords);
     void removeObject(const struct Object *rem, bool deleteObject = true);
-    ObjectDeque::iterator removeObject(ObjectDeque::iterator rem, bool deleteObject = true);    
+    ObjectDeque::iterator removeObject(ObjectDeque::iterator rem, bool deleteObject = true);
     void clearObjects();
     struct Creature *moveObjects(Coords avatar);
     void resetObjectAnimations();
@@ -110,16 +107,16 @@ public:
     int getValidMoves(Coords from, MapTile transport);
     bool move(Object *obj, Direction d);
     void alertGuards();
-    const Coords &getLabel(const string &name) const;
+    const Coords &getLabel(const std::string &name) const;
 
     // u4dos compatibility
-    bool fillMonsterTable();    
+    bool fillMonsterTable();
     MapTile translateFromRawTileIndex(int c) const;
     unsigned int translateToRawTileIndex(MapTile &tile) const;
 
 public:
-    MapId           id;    
-    string          fname;
+    MapId           id;
+    std::string     fname;
     Type            type;
     unsigned int    width,
                     height,
@@ -130,7 +127,7 @@ public:
 
     Source          baseSource;
     std::list<Source> extraSources;
-    
+
     CompressedChunkList     compressed_chunks;
     BorderBehavior          border_behavior;
 
@@ -140,7 +137,7 @@ public:
     int             music;
     MapData         data;
     ObjectDeque     objects;
-    std::map<string, Coords> labels;
+    std::map<std::string, Coords> labels;
     Tileset        *tileset;
     TileMap        *tilemap;
 

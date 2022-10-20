@@ -60,7 +60,6 @@
 //
 // See end of file for full version history.
 
-
 //////////////////////////////////////////////////////////////////////////////
 //
 //  HEADER BEGINS HERE
@@ -86,7 +85,6 @@ extern "C" {
 // Individual stb_vorbis* handles are not thread-safe; you cannot decode from
 // them from multiple threads at the same time. However, you can have multiple
 // stb_vorbis* handles and decode from them independently in multiple thrads.
-
 
 ///////////   MEMORY ALLOCATION
 
@@ -115,7 +113,6 @@ typedef struct
    char *alloc_buffer;
    int   alloc_buffer_length_in_bytes;
 } stb_vorbis_alloc;
-
 
 ///////////   FUNCTIONS USEABLE WITH ALL INPUT MODES
 
@@ -231,7 +228,6 @@ extern void stb_vorbis_flush_pushdata(stb_vorbis *f);
 // decoding is returning you data, call stb_vorbis_get_sample_offset, and
 // if you don't like the result, seek your file again and repeat.
 #endif
-
 
 //////////   PULLING INPUT API
 
@@ -395,7 +391,6 @@ enum STBVorbisError
    VORBIS_ogg_skeleton_not_supported
 };
 
-
 #ifdef __cplusplus
 }
 #endif
@@ -436,7 +431,6 @@ enum STBVorbisError
 //      does not use a fast float-to-int trick to accelerate float-to-int on
 //      most platforms which requires endianness be defined correctly.
 //#define STB_VORBIS_NO_FAST_SCALED_FLOAT
-
 
 // STB_VORBIS_MAX_CHANNELS [number]
 //     globally define this to the maximum number of channels you need.
@@ -533,9 +527,6 @@ enum STBVorbisError
 //     you'd ever want to do it except for debugging.
 // #define STB_VORBIS_NO_DEFER_FLOOR
 
-
-
-
 //////////////////////////////////////////////////////////////////////////////
 
 #ifdef STB_VORBIS_NO_PULLDATA_API
@@ -561,7 +552,6 @@ enum STBVorbisError
 
 #endif
 #endif
-
 
 #ifndef STB_VORBIS_NO_STDIO
 #include <stdio.h>
@@ -616,7 +606,6 @@ enum STBVorbisError
 #error "Value of STB_VORBIS_FAST_HUFFMAN_LENGTH outside of allowed range"
 #endif
 
-
 #if 0
 #include <crtdbg.h>
 #define CHECK(f)   _CrtIsValidHeapPointer(f->channel_buffers[1])
@@ -626,7 +615,6 @@ enum STBVorbisError
 
 #define MAX_BLOCKSIZE_LOG  13   // from specification
 #define MAX_BLOCKSIZE      (1 << MAX_BLOCKSIZE_LOG)
-
 
 typedef unsigned char  uint8;
 typedef   signed char   int8;
@@ -900,7 +888,6 @@ static int error(vorb *f, enum STBVorbisError e)
    return 0;
 }
 
-
 // these functions are used for allocating temporary memory
 // while decoding. if you can afford the stack space, use
 // alloca(); otherwise, provide a temp buffer and it will
@@ -986,7 +973,6 @@ static __forceinline uint32 crc32_update(uint32 crc, uint8 byte)
    return (crc << 8) ^ crc_table[byte ^ (crc >> 24)];
 }
 
-
 // used in setup, and for huffman that doesn't go fast path
 static unsigned int bit_reverse(unsigned int n)
 {
@@ -1044,7 +1030,6 @@ static float float32_unpack(uint32 x)
    double res = sign ? -(double)mantissa : (double)mantissa;
    return (float) ldexp((float)res, exp-788);
 }
-
 
 // zlib & jpeg huffman tables assume that the output symbols
 // can either be arbitrarily arranged, or have monotonically
@@ -1308,7 +1293,6 @@ static int STBV_CDECL point_compare(const void *p, const void *q)
 //
 /////////////////////// END LEAF SETUP FUNCTIONS //////////////////////////
 
-
 #if defined(STB_VORBIS_NO_STDIO)
    #define USE_MEMORY(z)    TRUE
 #else
@@ -1405,7 +1389,6 @@ static int set_file_offset(stb_vorbis *f, unsigned int loc)
    return 0;
    #endif
 }
-
 
 static uint8 ogg_page_header[4] = { 0x4f, 0x67, 0x67, 0x53 };
 
@@ -1741,11 +1724,6 @@ static int codebook_decode_scalar(vorb *f, Codebook *c)
   #define DECODE_VQ(var,f,c)   DECODE(var,f,c)
 #endif
 
-
-
-
-
-
 // CODEBOOK_ELEMENT_FAST is an optimization for the CODEBOOK_FLOATS case
 // where we avoid one addition
 #define CODEBOOK_ELEMENT(c,off)          (c->multiplicands[off])
@@ -1990,7 +1968,6 @@ static float inverse_db_table[256] =
   0.64356699f,    0.68538959f,    0.72993007f,    0.77736504f,
   0.82788260f,    0.88168307f,    0.9389798f,     1.0f
 };
-
 
 // @OPTIMIZE: if you want to replace this bresenham line-drawing routine,
 // note that you must produce bit-identical output to decode correctly;
@@ -2263,7 +2240,6 @@ static void decode_residue(vorb *f, float *residue_buffers[], int ch, int n, int
    temp_alloc_restore(f,temp_alloc_point);
 }
 
-
 #if 0
 // slow way for debugging
 void inverse_mdct_slow(float *buffer, int n)
@@ -2380,7 +2356,6 @@ void inverse_mdct(float *buffer, int n, vorb *f, int blocktype)
    mdct_backward(M, buffer, buffer);
 }
 #endif
-
 
 // the following were split out into separate functions while optimizing;
 // they could be pushed back up but eh. __forceinline showed no change;
@@ -2623,7 +2598,6 @@ static void inverse_mdct(float *buffer, int n, vorb *f, int blocktype)
 
    // kernel from paper
 
-
    // merged:
    //   copy and reflect spectral data
    //   step 0
@@ -2792,7 +2766,6 @@ static void inverse_mdct(float *buffer, int n, vorb *f, int blocktype)
    }
    // (paper output is u, now v)
 
-
    // data must be in buf2
    assert(v == buf2);
 
@@ -2843,7 +2816,6 @@ static void inverse_mdct(float *buffer, int n, vorb *f, int blocktype)
    }
 
    // data must be in buf2
-
 
    // step 8+decode   (paper output is X, now buffer)
    // this generates pairs of data a la 8 and pushes them directly through
@@ -3652,7 +3624,6 @@ static int start_decoder(vorb *f)
    x = get8_packet(f);
    if (!(x & 1))                                    return error(f, VORBIS_invalid_setup);
 
-
    skip(f, f->bytes_in_seg);
    f->bytes_in_seg = 0;
 
@@ -4155,7 +4126,6 @@ static int start_decoder(vorb *f)
          f->temp_memory_required = imdct_mem;
    }
 
-
    if (f->alloc.alloc_buffer) {
       assert(f->temp_offset == f->alloc.alloc_buffer_length_in_bytes);
       // check if there's enough temp memory so we don't error later
@@ -4600,7 +4570,6 @@ static uint32 vorbis_find_page(stb_vorbis *f, uint32 *end, uint32 *last)
    }
 }
 
-
 #define SAMPLE_unknown  0xffffffff
 
 // seeking is implemented with a binary search, which narrows down the range to
@@ -4995,8 +4964,6 @@ float stb_vorbis_stream_length_in_seconds(stb_vorbis *f)
    return stb_vorbis_stream_length_in_samples(f) / (float) f->sample_rate;
 }
 
-
-
 int stb_vorbis_get_frame_float(stb_vorbis *f, int *channels, float ***output)
 {
    int len, right,left,i;
@@ -5111,7 +5078,6 @@ static int8 channel_position[7][6] =
    { L, C, R, L, R },
    { L, C, R, L, R, C },
 };
-
 
 #ifndef STB_VORBIS_NO_FAST_SCALED_FLOAT
    typedef union {
@@ -5510,7 +5476,6 @@ int stb_vorbis_get_samples_float(stb_vorbis *f, int channels, float **buffer, in
 */
 
 #endif // STB_VORBIS_HEADER_ONLY
-
 
 /*
 ------------------------------------------------------------------------------

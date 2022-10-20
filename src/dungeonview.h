@@ -59,6 +59,4 @@ public:
     std::vector<MapTile> getTiles(int fwd, int side);
 };
 
-
-
 #endif /* DUNGEONVIEW_H */

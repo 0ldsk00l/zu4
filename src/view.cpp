@@ -47,14 +47,14 @@ void View::update(int x, int y, int width, int height) {
 
 /**
  * Highlight a piece of the screen by drawing it in inverted colors.
- */ 
+ */
 void View::highlight(int x, int y, int width, int height) {
     highlighted = true;
     highlightX = x;
     highlightY = y;
     highlightW = width;
     highlightH = height;
-    
+
     update(x, y, width, height);
 }
 
@@ -66,11 +66,11 @@ void View::unhighlight() {
 
 void View::drawHighlighted() {
     Image *screen = zu4_img_get_screen();
-    
+
     Image *tmp = zu4_img_create(highlightW, highlightH);
     if (!tmp)
         return;
-    
+
     zu4_img_draw_subrect_on(tmp, screen, 0, 0, this->x + highlightX, this->y + highlightY, highlightW, highlightH);
     zu4_img_draw_highlighted(tmp);
     zu4_img_draw(tmp, (this->x + highlightX), (this->y + highlightY));

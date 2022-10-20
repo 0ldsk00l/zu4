@@ -55,7 +55,6 @@ private:
     const IntroBinData &operator=(const IntroBinData&);
 };
 
-
 /**
  * Controls the title animation sequences, including the traditional
  * plotted "Lord British" signature, the pixelized fade-in of the
@@ -107,7 +106,7 @@ private:
     void drawMapAnimated();
     void drawBeasties();
     void drawBeastie(int beast, int vertoffset, int frame);
-    void animateTree(const string &frame);
+    void animateTree(const std::string &frame);
     void drawCard(int pos, int card);
     void drawAbacusBeads(int row, int selectedVirtue, int rejectedVirtue);
 
@@ -117,13 +116,13 @@ private:
     std::string getQuestion(int v1, int v2);
 
     void initiateNewGame();
-    void finishInitiateGame(const string &nameBuffer, SexType sex);
+    void finishInitiateGame(const std::string &nameBuffer, SexType sex);
     void startQuestions();
     void showStory();
     void journeyOnward();
     void about();
 
-    void showText(const string &text);
+    void showText(const std::string &text);
 
     void runMenu(Menu *menu, TextView *view, bool withBeasties);
 

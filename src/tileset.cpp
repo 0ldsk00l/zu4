@@ -13,8 +13,6 @@
 #include "tile.h"
 #include "tilemap.h"
 
-using std::vector;
-
 /**
  * TileRule Class Implementation
  */
@@ -23,7 +21,7 @@ TileRuleMap TileRule::rules;
 /**
  * Returns the tile rule with the given name, or NULL if none could be found
  */
-TileRule *TileRule::findByName(const string &name) {
+TileRule *TileRule::findByName(const std::string &name) {
     TileRuleMap::iterator i = rules.find(name);
     if (i != rules.end())
         return i->second;
@@ -35,28 +33,28 @@ TileRule *TileRule::findByName(const string &name) {
  */
 void TileRule::load() {
     const Config *config = Config::getInstance();
-    vector<ConfigElement> rules = config->getElement("tileRules").getChildren();
+    std::vector<ConfigElement> rules = config->getElement("tileRules").getChildren();
 
     for (std::vector<ConfigElement>::iterator i = rules.begin(); i != rules.end(); i++) {
         TileRule *rule = new TileRule;
         rule->initFromConf(*i);
         TileRule::rules[rule->name] = rule;
-    }    
-    
+    }
+
     if (TileRule::findByName("default") == NULL)
         zu4_error(ZU4_LOG_ERR, "no 'default' rule found in tile rules");
 }
 
 /**
- * Load properties for the current rule node 
+ * Load properties for the current rule node
  */
-bool TileRule::initFromConf(const ConfigElement &conf) {    
+bool TileRule::initFromConf(const ConfigElement &conf) {
     unsigned int i;
-    
+
     static const struct {
         const char *name;
-        unsigned int mask;        
-    } booleanAttributes[] = {        
+        unsigned int mask;
+    } booleanAttributes[] = {
         { "dispel", MASK_DISPEL },
         { "talkover", MASK_TALKOVER },
         { "door", MASK_DOOR },
@@ -76,12 +74,12 @@ bool TileRule::initFromConf(const ConfigElement &conf) {
 
     static const struct {
         const char *name;
-        unsigned int mask;      
-    } movementBooleanAttr[] = {        
+        unsigned int mask;
+    } movementBooleanAttr[] = {
         { "swimable", MASK_SWIMABLE },
-        { "sailable", MASK_SAILABLE },       
-        { "unflyable", MASK_UNFLYABLE },       
-        { "creatureunwalkable", MASK_CREATURE_UNWALKABLE }        
+        { "sailable", MASK_SAILABLE },
+        { "unflyable", MASK_UNFLYABLE },
+        { "creatureunwalkable", MASK_CREATURE_UNWALKABLE }
     };
     static const char *speedEnumStrings[] = { "fast", "slow", "vslow", "vvslow", NULL };
     static const char *effectsEnumStrings[] = { "none", "fire", "sleep", "poison", "poisonField", "electricity", "lava", NULL };
@@ -91,12 +89,12 @@ bool TileRule::initFromConf(const ConfigElement &conf) {
     this->speed = FAST;
     this->effect = EFFECT_NONE;
     this->walkonDirs = MASK_DIR_ALL;
-    this->walkoffDirs = MASK_DIR_ALL;    
+    this->walkoffDirs = MASK_DIR_ALL;
     this->name = conf.getString("name");
 
     for (i = 0; i < sizeof(booleanAttributes) / sizeof(booleanAttributes[0]); i++) {
         if (conf.getBool(booleanAttributes[i].name))
-            this->mask |= booleanAttributes[i].mask;        
+            this->mask |= booleanAttributes[i].mask;
     }
 
     for (i = 0; i < sizeof(movementBooleanAttr) / sizeof(movementBooleanAttr[0]); i++) {
@@ -104,7 +102,7 @@ bool TileRule::initFromConf(const ConfigElement &conf) {
             this->movementMask |= movementBooleanAttr[i].mask;
     }
 
-    string cantwalkon = conf.getString("cantwalkon");
+    std::string cantwalkon = conf.getString("cantwalkon");
     if (cantwalkon == "all")
         this->walkonDirs = 0;
     else if (cantwalkon == "west")
@@ -120,7 +118,7 @@ bool TileRule::initFromConf(const ConfigElement &conf) {
     else if (cantwalkon == "retreat")
         this->walkonDirs = DIR_REMOVE_FROM_MASK(DIR_RETREAT, this->walkonDirs);
 
-    string cantwalkoff = conf.getString("cantwalkoff");
+    std::string cantwalkoff = conf.getString("cantwalkoff");
     if (cantwalkoff == "all")
         this->walkoffDirs = 0;
     else if (cantwalkoff == "west")
@@ -142,21 +140,20 @@ bool TileRule::initFromConf(const ConfigElement &conf) {
     return true;
 }
 
-
 /**
  * Tileset Class Implementation
  */
 
 /* static member variables */
-Tileset::TilesetMap Tileset::tilesets;    
+Tileset::TilesetMap Tileset::tilesets;
 
 /**
  * Loads all tilesets using the filename
  * indicated by 'filename' as a definition
  */
 void Tileset::loadAll() {
-    const Config *config = Config::getInstance();    
-    vector<ConfigElement> conf;
+    const Config *config = Config::getInstance();
+    std::vector<ConfigElement> conf;
 
     zu4_error(ZU4_LOG_DBG, "Unloading all tilesets");
     unloadAll();
@@ -164,7 +161,7 @@ void Tileset::loadAll() {
     // get the config element for all tilesets
     zu4_error(ZU4_LOG_DBG, "Loading tilesets info from config");
     conf = config->getElement("tilesets").getChildren();
-    
+
     // load tile rules
     zu4_error(ZU4_LOG_DBG, "Loading tile rules");
     if (!TileRule::rules.size())
@@ -193,16 +190,16 @@ void Tileset::loadAll() {
  */
 void Tileset::unloadAll() {
     TilesetMap::iterator i;
-    
+
     // unload all tilemaps
     TileMap::unloadAll();
-    
+
     for (i = tilesets.begin(); i != tilesets.end(); i++) {
         i->second->unload();
         delete i->second;
     }
     tilesets.clear();
-    
+
     Tile::resetNextId();
 }
 
@@ -219,11 +216,10 @@ void Tileset::unloadAllImages() {
     Tile::resetNextId();
 }
 
-
 /**
  * Returns the tileset with the given name, if it exists
  */
-Tileset* Tileset::get(const string &name) {
+Tileset* Tileset::get(const std::string &name) {
     if (tilesets.find(name) != tilesets.end())
         return tilesets[name];
     else return NULL;
@@ -232,12 +228,12 @@ Tileset* Tileset::get(const string &name) {
 /**
  * Returns the tile that has the given name from any tileset, if there is one
  */
-Tile* Tileset::findTileByName(const string &name) {
+Tile* Tileset::findTileByName(const std::string &name) {
     TilesetMap::iterator i;
     for (i = tilesets.begin(); i != tilesets.end(); i++) {
         Tile *t = i->second->getByName(name);
         if (t)
-            return t;        
+            return t;
     }
 
     return NULL;
@@ -248,7 +244,7 @@ Tile* Tileset::findTileById(TileId id) {
     for (i = tilesets.begin(); i != tilesets.end(); i++) {
         Tile *t = i->second->get(id);
         if (t)
-            return t;        
+            return t;
     }
 
     return NULL;
@@ -268,11 +264,11 @@ void Tileset::load(const ConfigElement &tilesetConf) {
     zu4_error(ZU4_LOG_DBG, "\tLoading Tiles...");
 
     int index = 0;
-    vector<ConfigElement> children = tilesetConf.getChildren();
+    std::vector<ConfigElement> children = tilesetConf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
         if (i->getName() != "tile")
             continue;
-        
+
         Tile *tile = new Tile(this);
         tile->loadProperties(*i);
 
@@ -281,10 +277,10 @@ void Tileset::load(const ConfigElement &tilesetConf) {
         /* add the tile to our tileset */
         tiles[tile->getId()] = tile;
         nameMap[tile->getName()] = tile;
-        
+
         index += tile->getFrames();
     }
-    totalFrames = index;   
+    totalFrames = index;
 }
 
 void Tileset::unloadImages()
@@ -302,15 +298,15 @@ void Tileset::unloadImages()
  * Unload the current tileset
  */
 void Tileset::unload() {
-    Tileset::TileIdMap::iterator i;    
-        
+    Tileset::TileIdMap::iterator i;
+
     /* free all the memory for the tiles */
     for (i = tiles.begin(); i != tiles.end(); i++)
-        delete i->second;    
+        delete i->second;
 
     tiles.clear();
     totalFrames = 0;
-    imageName.erase();    
+    imageName.erase();
 }
 
 /**
@@ -321,13 +317,13 @@ Tile* Tileset::get(TileId id) {
         return tiles[id];
     else if (extends)
         return extends->get(id);
-    return NULL;    
+    return NULL;
 }
 
 /**
  * Returns the tile with the given name from the tileset, if it exists
  */
-Tile* Tileset::getByName(const string &name) {
+Tile* Tileset::getByName(const std::string &name) {
     if (nameMap.find(name) != nameMap.end())
         return nameMap[name];
     else if (extends)
@@ -338,7 +334,7 @@ Tile* Tileset::getByName(const string &name) {
 /**
  * Returns the image name for the tileset, if it exists
  */
-string Tileset::getImageName() const {
+std::string Tileset::getImageName() const {
     if (imageName.empty() && extends)
         return extends->getImageName();
     else return imageName;
@@ -353,7 +349,7 @@ unsigned int Tileset::numTiles() const {
 
 /**
  * Returns the total number of frames in the tileset
- */ 
+ */
 unsigned int Tileset::numFrames() const {
     return totalFrames;
 }

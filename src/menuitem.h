@@ -9,10 +9,6 @@
 #include <set>
 #include <vector>
 
-using std::string;
-using std::set;
-using std::vector;
-
 struct MenuEvent;
 
 /**
@@ -31,7 +27,7 @@ typedef enum {
 
 struct MenuItem {
 public:
-    MenuItem(string text, short x, short y, int shortcutKey = -1);
+    MenuItem(std::string text, short x, short y, int shortcutKey = -1);
     virtual ~MenuItem() {}
 
     virtual void activate(MenuEvent &event) {}
@@ -42,32 +38,32 @@ public:
     short getY() const;
     int getScOffset() const;
 
-    virtual string getText() const;
+    virtual std::string getText() const;
     bool isHighlighted() const;
     bool isSelected() const;
     bool isVisible() const;
-    const set<int> &getShortcutKeys() const;
+    const std::set<int> &getShortcutKeys() const;
     bool getClosesMenu() const;
 
     void setId(int id);
     void setX(int xpos);
     void setY(int ypos);
-    void setText(string text);
+    void setText(std::string text);
     void setHighlighted(bool h = true);
     void setSelected(bool s = true);
     void setVisible(bool v = true);
     void addShortcutKey(int shortcutKey);
     void setClosesMenu(bool closesMenu);
-    
+
 protected:
     int id;
     short x, y;
-    string text;
+    std::string text;
     bool highlighted;
     bool selected;
     bool visible;
     int scOffset;
-    set<int> shortcutKeys;
+    std::set<int> shortcutKeys;
     bool closesMenu;
 };
 
@@ -77,16 +73,16 @@ protected:
  */
 struct BoolMenuItem : public MenuItem {
 public:
-    BoolMenuItem(string text, short x, short y, int shortcutKey, bool *val);
+    BoolMenuItem(std::string text, short x, short y, int shortcutKey, bool *val);
 
-    BoolMenuItem *setValueStrings(const string &onString, const string &offString);
+    BoolMenuItem *setValueStrings(const std::string &onString, const std::string &offString);
 
     virtual void activate(MenuEvent &event);
-    virtual string getText() const;
+    virtual std::string getText() const;
 
 protected:
     bool *val;
-    string on, off;
+    std::string on, off;
 };
 
 /**
@@ -95,14 +91,14 @@ protected:
  */
 struct StringMenuItem : public MenuItem {
 public:
-    StringMenuItem(string text, short x, short y, int shortcutKey, string *val, const vector<string> &validSettings);
+    StringMenuItem(std::string text, short x, short y, int shortcutKey, std::string *val, const std::vector<std::string> &validSettings);
 
     virtual void activate(MenuEvent &event);
-    virtual string getText() const;
+    virtual std::string getText() const;
 
 protected:
-    string *val;
-    vector<string> validSettings;
+    std::string *val;
+    std::vector<std::string> validSettings;
 };
 
 /**
@@ -111,10 +107,10 @@ protected:
  */
 struct IntMenuItem : public MenuItem {
 public:
-    IntMenuItem(string text, short x, short y, int shortcutKey, int *val, int min, int max, int increment, menuOutputType output=MENU_OUTPUT_INT);
+    IntMenuItem(std::string text, short x, short y, int shortcutKey, int *val, int min, int max, int increment, menuOutputType output=MENU_OUTPUT_INT);
 
     virtual void activate(MenuEvent &event);
-    virtual string getText() const;
+    virtual std::string getText() const;
 
 protected:
     int *val;

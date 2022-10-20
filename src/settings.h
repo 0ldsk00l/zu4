@@ -55,7 +55,7 @@ typedef struct SettingsEnhancementOptions {
     bool slimeDivides;
     bool gazerSpawnsInsects;
     bool textColorization;
-    bool c64chestTraps;    
+    bool c64chestTraps;
     bool smartEnterKey;
     bool peerShowsObjects;
 } SettingsEnhancementOptions;
@@ -66,7 +66,7 @@ typedef struct SettingsData {
     int                 campTime;
     bool                debug;
     bool                enhancements;
-    SettingsEnhancementOptions enhancementsOptions;    
+    SettingsEnhancementOptions enhancementsOptions;
     bool                filterMoveMessages;
     bool                fullscreen;
     int                 gameCyclesPerSecond;

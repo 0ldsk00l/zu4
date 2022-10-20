@@ -20,7 +20,7 @@ public:
 
     unsigned char pop() {
         unsigned char element;
-      
+
         if (!is_empty()) {
             element = stack.back();
             stack.pop_back();

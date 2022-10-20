@@ -15,8 +15,6 @@
 #include "u4.h"
 #include "error.h"
 
-using std::vector;
-
 TileView::TileView(int x, int y, int columns, int rows) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
     this->columns = columns;
     this->rows = rows;
@@ -26,7 +24,7 @@ TileView::TileView(int x, int y, int columns, int rows) : View(x, y, columns * T
     animated = zu4_img_create(tileWidth, tileHeight);
 }
 
-TileView::TileView(int x, int y, int columns, int rows, const string &tileset) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
+TileView::TileView(int x, int y, int columns, int rows, const std::string &tileset) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
     this->columns = columns;
     this->rows = rows;
     this->tileWidth = TILE_WIDTH;
@@ -88,13 +86,13 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
         // Then draw it to the screen
         zu4_img_draw_subrect(animated, x * tileWidth + this->x,
                               y * tileHeight + this->y,
-                              0, 
-                              0, 
-                              tileWidth, 
+                              0,
+                              0,
+                              tileWidth,
                               tileHeight);
     }
     else {
-        zu4_img_draw_subrect(image, x * tileWidth + this->x, 
+        zu4_img_draw_subrect(image, x * tileWidth + this->x,
                            y * tileHeight + this->y,
                            0,
                            tileHeight * mapTile.frame,
@@ -107,7 +105,7 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
         drawFocus(x, y);
 }
 
-void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
+void TileView::drawTile(std::vector<MapTile> &tiles, bool focus, int x, int y) {
 	zu4_assert(x < columns, "x value of %d out of range", x);
 	zu4_assert(y < rows, "y value of %d out of range", y);
 
@@ -121,7 +119,7 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 
 	//int layer = 0;
 
-	for (vector<MapTile>::reverse_iterator t = tiles.rbegin();
+	for (std::vector<MapTile>::reverse_iterator t = tiles.rbegin();
 			t != tiles.rend();
 			++t)
 	{
@@ -136,7 +134,6 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 
 		Image *image = frontTileType->getImage();
 
-
 		// draw the tile to the screen
 		if (frontTileType->getAnim()) {
 			// First, create our animated version of the tile
@@ -144,7 +141,7 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 		}
 		else {
             if (!image)
-                return; //This is a problem //FIXME, error message it. 
+                return; //This is a problem //FIXME, error message it.
 			zu4_img_draw_subrect_on(animated, image,
 								0, 0,
 								0, tileHeight * frontTile.frame,
@@ -159,7 +156,6 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 							  tileWidth,
 							  tileHeight);
 	}
-
 
 	// draw the focus around the tile if it has the focus
 	if (focus)

@@ -22,7 +22,7 @@ extern bool verbose;
 /**
  * StatsArea class implementation
  */
-StatsArea::StatsArea() : 
+StatsArea::StatsArea() :
     title(STATS_AREA_X * CHAR_WIDTH, 0 * CHAR_HEIGHT, STATS_AREA_WIDTH, 1),
     mainArea(STATS_AREA_X * CHAR_WIDTH, STATS_AREA_Y * CHAR_HEIGHT, STATS_AREA_WIDTH, STATS_AREA_HEIGHT),
     summary(STATS_AREA_X * CHAR_WIDTH, (STATS_AREA_Y + STATS_AREA_HEIGHT + 1) * CHAR_HEIGHT, STATS_AREA_WIDTH, 1),
@@ -40,7 +40,7 @@ StatsArea::StatsArea() :
 
     reagentsMixMenu.addObserver(this);
 }
- 
+
 void StatsArea::setView(StatsView view) {
     this->view = view;
     update();
@@ -62,7 +62,7 @@ void StatsArea::prevItem() {
  * Sets the stats item to the next in sequence.
  */
 void StatsArea::nextItem() {
-    view = (StatsView)(view + 1);    
+    view = (StatsView)(view + 1);
     if (view > STATS_MIXTURES)
         view = STATS_CHAR1;
     if (view <= STATS_CHAR8 && (view - STATS_CHAR1 + 1) > c->party->size())
@@ -155,7 +155,7 @@ void StatsArea::update(Aura *aura) {
     case AURA_QUICKNESS:
         summary.drawChar('Q', STATS_AREA_WIDTH/2, 0);
         break;
-    }    
+    }
 
     summary.update();
 }
@@ -185,7 +185,7 @@ void StatsArea::redraw() {
 /**
  * Sets the title of the stats area.
  */
-void StatsArea::setTitle(const string &s) {
+void StatsArea::setTitle(const std::string &s) {
     int titleStart = (STATS_AREA_WIDTH / 2) - ((s.length() + 2) / 2);
     title.textAt(titleStart, 0, "%c%s%c", 16, s.c_str(), 17);
 }
@@ -207,7 +207,7 @@ void StatsArea::showPartyView(bool avatarOnly) {
             mainArea.textAt(0, i, format, i+1, (i==activePlayer) ? CHARSET_BULLET : '-', p->getName().c_str(), p->getHp(), mainArea.colorizeStatus(p->getStatus()).c_str());
         }
     }
-    else {        
+    else {
         p = c->party->member(0);
         mainArea.textAt(0, 0, format, 1, (activePlayer==0) ? CHARSET_BULLET : '-', p->getName().c_str(), p->getHp(), mainArea.colorizeStatus(p->getStatus()).c_str());
     }
@@ -224,7 +224,7 @@ void StatsArea::showPlayerDetails() {
     PartyMember *p = c->party->member(player);
     setTitle(p->getName());
     mainArea.textAt(0, 0, "%c             %c", p->getSex(), p->getStatus());
-    string classStr = getClassName(p->getClass());
+    std::string classStr = getClassName(p->getClass());
     int classStart = (STATS_AREA_WIDTH / 2) - (classStr.length() / 2);
     mainArea.textAt(classStart, 0, "%s", classStr.c_str());
     mainArea.textAt(0, 2, " MP:%02d  LV:%d", p->getMp(), p->getRealLevel());
@@ -259,7 +259,7 @@ void StatsArea::showWeapons() {
                 col += 8;
             }
         }
-    }    
+    }
 }
 
 /**
@@ -273,7 +273,7 @@ void StatsArea::showArmor() {
     for (int a = ARMR_NONE + 1; a < ARMR_MAX; a++) {
         if (c->saveGame->armor[a] > 0) {
             const char *format = (c->saveGame->armor[a] >= 10) ? "%c%d-%s" : "%c-%d-%s";
-            
+
             mainArea.textAt(0, line++, format, a - ARMR_NONE + 'A', c->saveGame->armor[a], zu4_armor_name((ArmorType)a));
         }
     }
@@ -290,7 +290,7 @@ void StatsArea::showEquipment() {
     mainArea.textAt(0, line++, "%2d Gems", c->saveGame->gems);
     mainArea.textAt(0, line++, "%2d Keys", c->saveGame->keys);
     if (c->saveGame->sextants > 0)
-        mainArea.textAt(0, line++, "%2d Sextants", c->saveGame->sextants);    
+        mainArea.textAt(0, line++, "%2d Sextants", c->saveGame->sextants);
 }
 
 /**
@@ -353,7 +353,7 @@ void StatsArea::showItems() {
     if (c->saveGame->items & ITEM_WHEEL)
         mainArea.textAt(0, line++, "%s", getItemName(ITEM_WHEEL));
     if (c->saveGame->items & ITEM_SKULL)
-        mainArea.textAt(0, line++, "%s", getItemName(ITEM_SKULL));    
+        mainArea.textAt(0, line++, "%s", getItemName(ITEM_SKULL));
 }
 
 /**
@@ -366,7 +366,7 @@ void StatsArea::showReagents(bool active)
     Menu::MenuItemList::iterator i;
     int line = 0,
         r = REAG_ASH;
-    string shortcut ("A");
+    std::string shortcut ("A");
 
     reagentsMixMenu.show(&mainArea);
 
@@ -450,12 +450,12 @@ bool ReagentsMenuController::keyPressed(int key) {
     case U4_LEFT:
     case U4_RIGHT:
     case U4_SPACE:
-        if (menu->isVisible()) {            
+        if (menu->isVisible()) {
             MenuItem *item = *menu->getCurrent();
-            
+
             /* change whether or not it's selected */
             item->setSelected(!item->isSelected());
-                        
+
             if (item->isSelected())
                 ingredients->addReagent((Reagent)item->getId());
             else

@@ -28,9 +28,7 @@
 bool verbose = false;
 bool quit = false;
 bool useProfile = false;
-string profileName = "";
-
-using namespace std;
+std::string profileName = "";
 
 int main(int argc, char *argv[]) {
 	if (!u4fopen("AVATAR.EXE")) {
@@ -39,7 +37,6 @@ int main(int argc, char *argv[]) {
 
 	unsigned int i;
     int skipIntro = 0;
-
 
     /*
      * if the -p or -profile arguments are passed to the application,
@@ -84,7 +81,6 @@ int main(int argc, char *argv[]) {
             }
             else
                 zu4_error(ZU4_LOG_ERR, "%s is invalid alone: Requires a number for input. See --help for more detail.\n", argv[i]);
-
 
         }
         else if ( strcmp(argv[i], "-p") == 0
@@ -172,7 +168,7 @@ int main(int argc, char *argv[]) {
     ++pb;
 
     intro = new IntroController();
-    
+
     if (!skipIntro)
     {
         /* do the intro */
@@ -204,7 +200,7 @@ int main(int argc, char *argv[]) {
     zu4_snd_deinit();
     zu4_music_deinit();
     screenDelete();
-    
+
     game->deinit();
 
     return 0;

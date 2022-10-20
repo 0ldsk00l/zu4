@@ -65,13 +65,13 @@ static const ItemLocation items[] = {
     { "Nightshade", NULL, "nightshade1",
       &isReagentInInventory, &putReagentInInventory, NULL, REAG_NIGHTSHADE, SC_NEWMOONS | SC_REAGENTDELAY},
     { "Nightshade", NULL, "nightshade2",
-      &isReagentInInventory, &putReagentInInventory, NULL, REAG_NIGHTSHADE, SC_NEWMOONS | SC_REAGENTDELAY },    
+      &isReagentInInventory, &putReagentInInventory, NULL, REAG_NIGHTSHADE, SC_NEWMOONS | SC_REAGENTDELAY },
     { "the Bell of Courage", "bell", "bell",
       &isItemInInventory, &putItemInInventory, &useBBC, ITEM_BELL, 0 },
     { "the Book of Truth", "book", "book",
       &isItemInInventory, &putItemInInventory, &useBBC, ITEM_BOOK, 0 },
     { "the Candle of Love", "candle", "candle",
-      &isItemInInventory, &putItemInInventory, &useBBC, ITEM_CANDLE, 0 },    
+      &isItemInInventory, &putItemInInventory, &useBBC, ITEM_CANDLE, 0 },
     { "A Silver Horn", "horn", "horn",
       &isItemInInventory, &putItemInInventory, &useHorn, ITEM_HORN, 0 },
     { "the Wheel from the H.M.S. Cape", "wheel", "wheel",
@@ -99,8 +99,8 @@ static const ItemLocation items[] = {
     { NULL, "stone",  NULL, &isStoneInInventory, NULL, &useStone, -1, 0 },
     { NULL, "stones", NULL, &isStoneInInventory, NULL, &useStone, -1, 0 },
     { NULL, "key",    NULL, &isItemInInventory, NULL, &useKey, (ITEM_KEY_C | ITEM_KEY_L | ITEM_KEY_T), 0 },
-    { NULL, "keys",   NULL, &isItemInInventory, NULL, &useKey, (ITEM_KEY_C | ITEM_KEY_L | ITEM_KEY_T), 0 },    
-    
+    { NULL, "keys",   NULL, &isItemInInventory, NULL, &useKey, (ITEM_KEY_C | ITEM_KEY_L | ITEM_KEY_T), 0 },
+
     /* Lycaeum telescope */
     { NULL, NULL, "telescope", NULL, &useTelescope, NULL, 0, 0 },
 
@@ -136,7 +136,7 @@ bool isRuneInInventory(int virt) {
 }
 
 void putRuneInInventory(int virt) {
-    c->party->member(0)->awardXp(100);    
+    c->party->member(0)->awardXp(100);
     c->party->adjustKarma(KA_FOUND_ITEM);
     c->saveGame->runes |= virt;
     c->saveGame->lastreagent = c->saveGame->moves & 0xF0;
@@ -144,7 +144,7 @@ void putRuneInInventory(int virt) {
 
 bool isStoneInInventory(int virt) {
     /* generic test: does the party have any stones yet? */
-    if (virt == -1) 
+    if (virt == -1)
         return (c->saveGame->stones > 0);
     /* specific test: does the party have a specific stone? */
     else return c->saveGame->stones & virt;
@@ -168,7 +168,7 @@ bool isSkullInInventory(int unused) {
 void putItemInInventory(int item) {
     c->party->member(0)->awardXp(400);
     c->party->adjustKarma(KA_FOUND_ITEM);
-    c->saveGame->items |= item;  
+    c->saveGame->items |= item;
     c->saveGame->lastreagent = c->saveGame->moves & 0xF0;
 }
 
@@ -191,7 +191,7 @@ void useBBC(int item) {
         }
         /* then the candle */
         else if ((item == ITEM_CANDLE) && (c->saveGame->items & ITEM_BOOK_USED)) {
-            screenMessage("\nAs you light the Candle the Earth Trembles!\n");    
+            screenMessage("\nAs you light the Candle the Earth Trembles!\n");
             c->saveGame->items |= ITEM_CANDLE_USED;
         }
         else screenMessage("\nHmm...No effect!\n");
@@ -205,7 +205,7 @@ void useBBC(int item) {
  */
 void useHorn(int item) {
     screenMessage("\nThe Horn sounds an eerie tone!\n");
-    c->aura->set(AURA_HORN, 10);    
+    c->aura->set(AURA_HORN, 10);
 }
 
 /**
@@ -216,7 +216,7 @@ void useWheel(int item) {
         screenMessage("\nOnce mounted, the Wheel glows with a blue light!\n");
         c->party->setShipHull(99);
     }
-    else screenMessage("\nHmm...No effect!\n");    
+    else screenMessage("\nHmm...No effect!\n");
 }
 
 /**
@@ -226,8 +226,8 @@ void useSkull(int item) {
     /* FIXME: check to see if the abyss must be opened first
        for the skull to be *able* to be destroyed */
 
-    /* We do the check here instead of in the table, because we need to distinguish between a 
-       never-found skull and a destroyed skull. */ 
+    /* We do the check here instead of in the table, because we need to distinguish between a
+       never-found skull and a destroyed skull. */
     if (c->saveGame->items & ITEM_SKULL_DESTROYED) {
         screenMessage("\nNone owned!\n");
         return;
@@ -244,10 +244,10 @@ void useSkull(int item) {
     /* use the skull... bad, very bad */
     else {
         screenMessage("\n\nYou hold the evil Skull of Mondain the Wizard aloft...\n");
-    
-        /* destroy all creatures */    
+
+        /* destroy all creatures */
         (*destroyAllCreaturesCallback)();
-    
+
         /* we don't lose the skull until we toss it into the abyss */
         //c->saveGame->items = (c->saveGame->items & ~ITEM_SKULL);
         c->party->adjustKarma(KA_USED_SKULL);
@@ -260,24 +260,24 @@ void useSkull(int item) {
 void useStone(int item) {
     Coords coords;
     unsigned char stone = static_cast<unsigned char>(item);
-    
+
     static unsigned char truth   = STONE_WHITE | STONE_PURPLE | STONE_GREEN  | STONE_BLUE;
     static unsigned char love    = STONE_WHITE | STONE_YELLOW | STONE_GREEN  | STONE_ORANGE;
     static unsigned char courage = STONE_WHITE | STONE_RED    | STONE_PURPLE | STONE_ORANGE;
     static unsigned char *attr   = NULL;
-    
+
     c->location->getCurrentPosition(&coords);
 
     /**
      * Named a specific stone (after using "stone" or "stones")
-     */    
+     */
     if (item != -1) {
         CombatMap *cm = getCombatMap();
 
         if (needStoneNames) {
             /* named a stone while in a dungeon altar room */
             if (c->location->context & CTX_ALTAR_ROOM) {
-                needStoneNames--;                
+                needStoneNames--;
 
                 switch(cm->getAltarRoom()) {
                 case VIRT_TRUTH: attr = &truth; break;
@@ -285,7 +285,7 @@ void useStone(int item) {
                 case VIRT_COURAGE: attr = &courage; break;
                 default: break;
                 }
-                
+
                 /* make sure we're in an altar room */
                 if (attr) {
                     /* we need to use the stone, and we haven't used it yet */
@@ -295,7 +295,7 @@ void useStone(int item) {
                     else if (stone & stoneMask) {
                         screenMessage("\nAlready used!\n");
                         needStoneNames = 0;
-                        stoneMask = 0; /* reset the mask so you can try again */                
+                        stoneMask = 0; /* reset the mask so you can try again */
                         return;
                     }
                 }
@@ -323,12 +323,12 @@ void useStone(int item) {
                     }
                     else screenMessage("\nHmm...No effect!\n");
 
-                    stoneMask = 0; /* reset the mask so you can try again */                
+                    stoneMask = 0; /* reset the mask so you can try again */
                 }
             }
 
             /* Otherwise, we're asking for a stone while in the abyss on top of an altar */
-            else {                
+            else {
                 /* see if they entered the correct stone */
                 if (stone == (1 << c->location->coords.z)) {
                     if (c->location->coords.z < 7) {
@@ -340,15 +340,15 @@ void useStone(int item) {
                     }
                     /* start chamber of the codex sequence... */
                     else {
-                        codexStart();                        
+                        codexStart();
                     }
                 }
                 else screenMessage("\nHmm...No effect!\n");
             }
         }
         else {
-            screenMessage("\nNot a Usable Item!\n");            
-            stoneMask = 0; /* reset the mask so you can try again */            
+            screenMessage("\nNot a Usable Item!\n");
+            stoneMask = 0; /* reset the mask so you can try again */
         }
     }
 
@@ -356,7 +356,7 @@ void useStone(int item) {
      * in the abyss, on an altar to place the stones
      */
     else if ((c->location->map->id == MAP_ABYSS) &&
-             (c->location->context & CTX_DUNGEON) && 
+             (c->location->context & CTX_DUNGEON) &&
              (dynamic_cast<Dungeon *>(c->location->map)->currentToken() == DUNGEON_ALTAR)) {
 
         int virtueMask = getBaseVirtues((Virtue)c->location->coords.z);
@@ -383,7 +383,7 @@ void useStone(int item) {
     else if ((c->location->context & CTX_ALTAR_ROOM) &&
              coords.x == 5 && coords.y == 5) {
         needStoneNames = 4;
-        screenMessage("\n\nThere are holes for 4 stones.\nWhat colors:\nA:");        
+        screenMessage("\n\nThere are holes for 4 stones.\nWhat colors:\nA:");
         itemHandleStones(gameGetInputC());
     }
     else screenMessage("\nNo place to Use them!\n");
@@ -398,7 +398,7 @@ void useKey(int item) {
 bool isMysticInInventory(int mystic) {
     /* FIXME: you could feasibly get more mystic weapons and armor if you
        have 8 party members and equip them all with everything,
-       then search for Mystic Weapons/Armor again 
+       then search for Mystic Weapons/Armor again
 
        or, you could just sell them all and search again.  What an easy
        way to make some cash!
@@ -411,7 +411,7 @@ bool isMysticInInventory(int mystic) {
     else if (mystic == ARMR_MYSTICROBES)
         return c->saveGame->armor[ARMR_MYSTICROBES] > 0;
     else
-        zu4_assert(0, "Invalid mystic item was tested in isMysticInInventory()");    
+        zu4_assert(0, "Invalid mystic item was tested in isMysticInInventory()");
     return false;
 }
 
@@ -423,7 +423,7 @@ void putMysticInInventory(int mystic) {
     else if (mystic == ARMR_MYSTICROBES)
         c->saveGame->armor[ARMR_MYSTICROBES] += 8;
     else
-        zu4_assert(0, "Invalid mystic item was added in putMysticInInventory()");        
+        zu4_assert(0, "Invalid mystic item was added in putMysticInInventory()");
     c->saveGame->lastreagent = c->saveGame->moves & 0xF0;
 }
 
@@ -519,7 +519,7 @@ void itemUse(const char *shortname) {
     for (i = 0; i < N_ITEMS; i++) {
         if (items[i].shortname &&
             strcasecmp(items[i].shortname, shortname) == 0) {
-            
+
             item = &items[i];
 
             /* item name found, see if we have that item in our inventory */
@@ -532,7 +532,7 @@ void itemUse(const char *shortname) {
                     (*item->useItem)(items[i].data);
             }
             else
-                screenMessage("\nNone owned!\n");            
+                screenMessage("\nNone owned!\n");
 
             /* we found the item, no need to keep searching */
             break;
@@ -551,7 +551,7 @@ bool isAbyssOpened(const Portal *p) {
     /* make sure the bell, book and candle have all been used */
     int items = c->saveGame->items;
     int isopened = (items & ITEM_BELL_USED) && (items & ITEM_BOOK_USED) && (items & ITEM_CANDLE_USED);
-    
+
     if (!isopened)
         screenMessage("Enter Can't!\n");
     return isopened;
@@ -563,14 +563,14 @@ bool isAbyssOpened(const Portal *p) {
 void itemHandleStones(const char *color) {
     bool found = false;
 
-    for (int i = 0; i < 8; i++) {        
+    for (int i = 0; i < 8; i++) {
         if (strcasecmp(color, getStoneName((Virtue)i)) == 0 &&
             isStoneInInventory(1<<i)) {
             found = true;
             itemUse(color);
         }
     }
-    
+
     if (!found) {
         screenMessage("\nNone owned!\n");
         stoneMask = 0; /* make sure stone mask is reset */

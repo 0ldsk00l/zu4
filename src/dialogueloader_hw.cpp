@@ -2,7 +2,6 @@
  * $Id: dialogueloader_hw.cpp 2720 2009-12-28 21:01:57Z andrewtaylor $
  */
 
-
 #include <string>
 #include <cstring>
 
@@ -13,8 +12,6 @@
 #include "savegame.h"
 #include "u4file.h"
 #include "utils.h"
-
-using std::string;
 
 Response *hawkwindGetAdvice(const DynamicResponse *kw);
 Response *hawkwindGetIntro(const DynamicResponse *dynResp);
@@ -54,10 +51,10 @@ Dialogue* U4HWDialogueLoader::load(void *source) {
     Response *intro = new DynamicResponse(&hawkwindGetIntro);
     dlg->setIntro(intro);
     dlg->setLongIntro(intro);
-    dlg->setDefaultAnswer(new Response(string("\n" + (string)hawkwindText[HW_DEFAULT])));
+    dlg->setDefaultAnswer(new Response(std::string("\n" + (std::string)hawkwindText[HW_DEFAULT])));
 
     for (int v = 0; v < VIRT_MAX; v++) {
-        string virtue(getVirtueName((Virtue) v));
+        std::string virtue(getVirtueName((Virtue) v));
         transform(virtue.begin(), virtue.end(), virtue.begin(), ::tolower);
         virtue = virtue.substr(0, 4);
         dlg->addKeyword(virtue, new DynamicResponse(&hawkwindGetAdvice, virtue));
@@ -79,7 +76,7 @@ Dialogue* U4HWDialogueLoader::load(void *source) {
  * the next one.
  */
 Response *hawkwindGetAdvice(const DynamicResponse *dynResp) {
-    string text;
+    std::string text;
     int virtue = -1, virtueLevel = -1;
 
     /* check if asking about a virtue */
@@ -92,19 +89,19 @@ Response *hawkwindGetAdvice(const DynamicResponse *dynResp) {
     }
     if (virtue != -1) {
         text = "\n\n";
-        if (virtueLevel == 0)            
-            text += (string)hawkwindText[HW_ALREADYAVATAR] + "\n";        
-        else if (virtueLevel < 80)            
-            text += (string)hawkwindText[(virtueLevel/20) * 8 + virtue];
+        if (virtueLevel == 0)
+            text += (std::string)hawkwindText[HW_ALREADYAVATAR] + "\n";
+        else if (virtueLevel < 80)
+            text += (std::string)hawkwindText[(virtueLevel/20) * 8 + virtue];
         else if (virtueLevel < 99)
-            text += (string)hawkwindText[3 * 8 + virtue];
+            text += (std::string)hawkwindText[3 * 8 + virtue];
         else /* virtueLevel >= 99 */
-            text = (string)hawkwindText[4 * 8 + virtue] + hawkwindText[HW_GOTOSHRINE];
+            text = (std::string)hawkwindText[4 * 8 + virtue] + hawkwindText[HW_GOTOSHRINE];
     }
     else {
-        text = string("\n") + (string)hawkwindText[HW_DEFAULT];
+        text = std::string("\n") + (std::string)hawkwindText[HW_DEFAULT];
     }
-        
+
     return new Response(text);
 }
 

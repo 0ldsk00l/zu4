@@ -19,7 +19,7 @@ ImageView::~ImageView() {
 /**
  * Draw the image at the optionally specified offset.
  */
-void ImageView::draw(const string &imageName, int x, int y) {
+void ImageView::draw(const std::string &imageName, int x, int y) {
     ImageInfo *info = imageMgr->get(imageName);
     if (info) {
         zu4_img_draw(info->image, this->x + x, this->y + y);
