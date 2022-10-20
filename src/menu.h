@@ -79,7 +79,7 @@ public:
     void                    setClosed(bool closed);
     void                    setTitle(const std::string &text, int x, int y);
 
-private:    
+private:
     MenuItemList items;
     MenuItemList::iterator current;
     MenuItemList::iterator selected;

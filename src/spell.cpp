@@ -74,7 +74,7 @@ static const struct {
     SpellCastError err;
     const char *msg;
 } spellErrorMsgs[] = {
-    { CASTERR_NOMIX, "None Mixed!\n" },        
+    { CASTERR_NOMIX, "None Mixed!\n" },
     { CASTERR_MPTOOLOW, "Not Enough MP!\n" },
     { CASTERR_FAILED, "Failed!\n" },
     { CASTERR_WRONGCONTEXT, "Not here!\n" },
@@ -105,7 +105,7 @@ static const Spell spells[] = {
     { "Open",         ASH | MOSS,               CTX_ANY,        TRANSPORT_ANY,  &spellOpen,    Spell::PARAM_NONE,    5 },
     { "Protection",   ASH | GINSENG | GARLIC,   CTX_ANY,        TRANSPORT_ANY,  &spellProtect, Spell::PARAM_NONE,    15 },
     { "Quickness",    ASH | GINSENG | MOSS,     CTX_ANY,        TRANSPORT_ANY,  &spellQuick,   Spell::PARAM_NONE,    20 },
-    { "Resurrect",    ASH | GINSENG | GARLIC | SILK | MOSS | MANDRAKE, 
+    { "Resurrect",    ASH | GINSENG | GARLIC | SILK | MOSS | MANDRAKE,
                                                 CTX_NON_COMBAT, TRANSPORT_ANY,  &spellRez,     Spell::PARAM_PLAYER,  45 },
     { "Sleep",        SILK | GINSENG,           CTX_COMBAT,     TRANSPORT_ANY,  &spellSleep,   Spell::PARAM_NONE,    15 },
     { "Tremor",       ASH | MOSS | MANDRAKE,    CTX_COMBAT,     TRANSPORT_ANY,  &spellTremor,  Spell::PARAM_NONE,    30 },
@@ -120,7 +120,7 @@ static const Spell spells[] = {
 #define N_SPELLS (sizeof(spells) / sizeof(spells[0]))
 
 void spellSetEffectCallback(SpellEffectCallback callback) {
-    spellEffectCallback = callback;    
+    spellEffectCallback = callback;
 }
 
 Ingredients::Ingredients() {
@@ -128,10 +128,10 @@ Ingredients::Ingredients() {
 }
 
 bool Ingredients::addReagent(Reagent reagent) {
-    zu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);    
+    zu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);
     if (c->party->getReagent(reagent) < 1)
         return false;
-    c->party->adjustReagent(reagent, -1);    
+    c->party->adjustReagent(reagent, -1);
     reagents[reagent]++;
     return true;
 }
@@ -140,7 +140,7 @@ bool Ingredients::removeReagent(Reagent reagent) {
     zu4_assert(reagent < REAG_MAX, "invalid reagent: %d", reagent);
     if (reagents[reagent] == 0)
         return false;
-    c->party->adjustReagent(reagent, 1);    
+    c->party->adjustReagent(reagent, 1);
     reagents[reagent]--;
     return true;
 }
@@ -165,7 +165,7 @@ bool Ingredients::checkMultiple(int batches) const {
         if (reagents[i] > 0 && c->saveGame->reagents[i] < batches - 1) {
             return false;
         }
-    }    
+    }
     return true;
 }
 
@@ -187,7 +187,7 @@ const char *spellGetName(unsigned int spell) {
 
 int spellGetRequiredMP(unsigned int spell) {
     zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
-    
+
     return spells[spell].mp;
 }
 
@@ -268,7 +268,7 @@ SpellCastError spellCheckPrerequisites(unsigned int spell, int character) {
         return CASTERR_NOMIX;
 
     if ((c->location->context & spells[spell].context) == 0)
-        return CASTERR_WRONGCONTEXT;        
+        return CASTERR_WRONGCONTEXT;
 
     if ((c->transportContext & spells[spell].transportContext) == 0)
         return CASTERR_FAILED;
@@ -286,7 +286,7 @@ SpellCastError spellCheckPrerequisites(unsigned int spell, int character) {
 bool spellCast(unsigned int spell, int character, int param, SpellCastError *error, bool spellEffect) {
     int subject = (spells[spell].paramType == Spell::PARAM_PLAYER) ? param : -1;
     PartyMember *p = c->party->member(character);
-    
+
     zu4_assert(spell < N_SPELLS, "invalid spell: %d", spell);
     zu4_assert(character >= 0 && character < c->saveGame->members, "character out of range: %d", character);
 
@@ -294,7 +294,7 @@ bool spellCast(unsigned int spell, int character, int param, SpellCastError *err
 
     // subtract the mixture for even trying to cast the spell
     AdjustValueMin(c->saveGame->mixtures[spell], -1, 0);
-        
+
     if (*error != CASTERR_NOERROR)
         return false;
 
@@ -318,7 +318,7 @@ bool spellCast(unsigned int spell, int character, int param, SpellCastError *err
 
         (*spellEffectCallback)(spell + 'a', subject, SOUND_MAGIC);
     }
-    
+
     if (!(*spells[spell].spellFunc)(param)) {
         *error = CASTERR_FAILED;
         return false;
@@ -335,7 +335,7 @@ CombatController *spellCombatController() {
 /**
  * Makes a special magic ranged attack in the given direction
  */
-void spellMagicAttack(const std::string &tilename, Direction dir, int minDamage, int maxDamage) {    
+void spellMagicAttack(const std::string &tilename, Direction dir, int minDamage, int maxDamage) {
     CombatController *controller = spellCombatController();
     PartyMemberVector *party = controller->getParty();
 
@@ -345,7 +345,7 @@ void spellMagicAttack(const std::string &tilename, Direction dir, int minDamage,
         zu4_random((maxDamage + 1) - minDamage) + minDamage :
         maxDamage;
 
-    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, (*party)[controller->getFocus()]->getCoords(), 
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, (*party)[controller->getFocus()]->getCoords(),
                                                        1, 11, Tile::canAttackOverTile, false);
     for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (spellMagicAttackAt(*i, tile, attackDamage))
@@ -355,9 +355,9 @@ void spellMagicAttack(const std::string &tilename, Direction dir, int minDamage,
 
 bool spellMagicAttackAt(const Coords &coords, MapTile attackTile, int attackDamage) {
     bool objectHit = false;
-//    int attackdelay = MAX_BATTLE_SPEED - settings.battleSpeed;    
+//    int attackdelay = MAX_BATTLE_SPEED - settings.battleSpeed;
     CombatMap *cm = getCombatMap();
-    
+
     Creature *creature = cm->creatureAt(coords);
 
     if (!creature) {
@@ -393,14 +393,14 @@ static int spellAwaken(int player) {
 }
 
 static int spellBlink(int dir) {
-    int i,        
+    int i,
         failed = 0,
         distance,
         diff,
         *var;
     Direction reverseDir = dirReverse((Direction)dir);
     Coords coords = c->location->coords;
-    
+
     /* Blink doesn't work near the mouth of the abyss */
     /* Note: This means you can teleport to Hythloth from the top of the map,
        and that you can teleport to the abyss from the left edge of the map,
@@ -410,12 +410,12 @@ static int spellBlink(int dir) {
 
     /* figure out what numbers we're working with */
     var = (dir & (DIR_WEST | DIR_EAST)) ? &coords.x : &coords.y;
-        
+
     /* find the distance we are going to move */
     distance = (*var) % 0x10;
     if (dir == DIR_EAST || dir == DIR_SOUTH)
         distance = 0x10 - distance;
-    
+
     /* see if we move another 16 spaces over */
     diff = 0x10 - distance;
     if ((diff > 0) && (zu4_random(diff * diff) > distance))
@@ -423,13 +423,13 @@ static int spellBlink(int dir) {
 
     /* test our distance, and see if it works */
     for (i = 0; i < distance; i++)
-        movedir(&coords, (Direction)dir, c->location->map);    
-    
-    i = distance;   
+        movedir(&coords, (Direction)dir, c->location->map);
+
+    i = distance;
     /* begin walking backward until you find a valid spot */
     while ((i-- > 0) && !c->location->map->tileTypeAt(coords, WITH_OBJECTS)->isWalkable())
         movedir(&coords, reverseDir, c->location->map);
-    
+
     if (c->location->map->tileTypeAt(coords, WITH_OBJECTS)->isWalkable()) {
         /* we didn't move! */
         if (zu4_coords_equal(c->location->coords, coords))
@@ -439,8 +439,8 @@ static int spellBlink(int dir) {
         c->location->coords.x = coords.x;
         c->location->coords.y = coords.y;
         c->location->coords.z = coords.z;
-        
-    } else failed = 1;    
+
+    } else failed = 1;
 
     return (failed ? 0 : 1);
 }
@@ -452,14 +452,14 @@ static int spellCure(int player) {
     return c->party->member(player)->heal(HT_CURE);
 }
 
-static int spellDispel(int dir) {    
-    MapTile *tile; 
+static int spellDispel(int dir) {
+    MapTile *tile;
     Coords field;
 
-    /* 
+    /*
      * get the location of the avatar (or current party member, if in battle)
      */
-    c->location->getCurrentPosition(&field);        
+    c->location->getCurrentPosition(&field);
 
     /*
      * find where we want to dispel the field
@@ -477,7 +477,7 @@ static int spellDispel(int dir) {
     Annotation::List a = c->location->map->annotations->allAt(field);
     if (a.size() > 0) {
         Annotation::List::iterator i;
-        for (i = a.begin(); i != a.end(); i++) {            
+        for (i = a.begin(); i != a.end(); i++) {
             if (i->getTile().getTileType()->canDispel()) {
 
                 /*
@@ -488,15 +488,15 @@ static int spellDispel(int dir) {
                 c->location->map->annotations->remove(*i);
                 c->location->map->annotations->add(field, newTile, false, true);
                 return 1;
-            }                
+            }
         }
-    }    
+    }
 
     /*
      * if the map tile itself is a field, overlay it with a replacement tile
      */
 
-    tile = c->location->map->tileAt(field, WITHOUT_OBJECTS);    
+    tile = c->location->map->tileAt(field, WITHOUT_OBJECTS);
     if (!tile->getTileType()->canDispel())
         return 0;
 
@@ -504,22 +504,22 @@ static int spellDispel(int dir) {
      * get a replacement tile for the field
      */
     MapTile newTile(c->location->getReplacementTile(field, tile->getTileType()));
-    
+
     c->location->map->annotations->add(field, newTile, false, true);
 
     return 1;
 }
 
-static int spellEField(int param) {    
+static int spellEField(int param) {
     MapTile fieldTile(0);
     int fieldType;
     int dir;
     Coords coords;
-    
+
     /* Unpack fieldType and direction */
     fieldType = param >> 4;
     dir = param & 0xF;
-    
+
     /* Make sure params valid */
     switch (fieldType) {
         case ENERGYFIELD_FIRE: fieldTile = c->location->map->tileset->getByName("fire_field")->getId(); break;
@@ -531,9 +531,9 @@ static int spellEField(int param) {
 
     Coords mc(coords);
     c->location->getCurrentPosition(&mc);
-    coords.x = mc.x; coords.y = mc.y; coords.z = mc.z;        
-    
-    movedir(&coords, (Direction)dir, c->location->map);    
+    coords.x = mc.x; coords.y = mc.y; coords.z = mc.z;
+
+    movedir(&coords, (Direction)dir, c->location->map);
     if (MAP_IS_OOB(c->location->map, coords))
         return 0;
     else {
@@ -547,17 +547,17 @@ static int spellEField(int param) {
          */
         const Tile *tile = c->location->map->tileTypeAt(coords, WITH_GROUND_OBJECTS);
         if (!tile->isWalkable()) return 0;
-        
+
         /* Get rid of old field, if any */
         Annotation::List a = c->location->map->annotations->allAt(coords);
         if (a.size() > 0) {
             Annotation::List::iterator i;
-            for (i = a.begin(); i != a.end(); i++) {                
+            for (i = a.begin(); i != a.end(); i++) {
                 if (i->getTile().getTileType()->canDispel())
                     c->location->map->annotations->remove(*i);
             }
-        }     
-            
+        }
+
         c->location->map->annotations->add(coords, fieldTile);
     }
 
@@ -565,7 +565,7 @@ static int spellEField(int param) {
 }
 
 static int spellFireball(int dir) {
-    spellMagicAttack("hit_flash", (Direction)dir, 24, 128);    
+    spellMagicAttack("hit_flash", (Direction)dir, 24, 128);
     return 1;
 }
 
@@ -575,10 +575,10 @@ static int spellGate(int phase) {
     GameController::flashTile(c->location->coords, "moongate", 2);
 
     moongate = moongateGetGateCoordsForPhase(phase);
-    if (moongate) 
+    if (moongate)
         c->location->coords = *moongate;
 
-    return 1;    
+    return 1;
 }
 
 static int spellHeal(int player) {
@@ -590,12 +590,12 @@ static int spellHeal(int player) {
 }
 
 static int spellIceball(int dir) {
-    spellMagicAttack("magic_flash", (Direction)dir, 32, 224);    
+    spellMagicAttack("magic_flash", (Direction)dir, 32, 224);
     return 1;
 }
 
 static int spellJinx(int unused) {
-    c->aura->set(AURA_JINX, 10);    
+    c->aura->set(AURA_JINX, 10);
     return 1;
 }
 
@@ -615,17 +615,17 @@ static int spellMMissle(int dir) {
 }
 
 static int spellNegate(int unused) {
-    c->aura->set(AURA_NEGATE, 10);    
+    c->aura->set(AURA_NEGATE, 10);
     return 1;
 }
 
-static int spellOpen(int unused) {    
+static int spellOpen(int unused) {
     getChest(-2);   // HACK: -2 will not prompt for opener
     return 1;
 }
 
 static int spellProtect(int unused) {
-    c->aura->set(AURA_PROTECTION, 10);    
+    c->aura->set(AURA_PROTECTION, 10);
     return 1;
 }
 
@@ -636,18 +636,18 @@ static int spellRez(int player) {
 }
 
 static int spellQuick(int unused) {
-    c->aura->set(AURA_QUICKNESS, 10);    
+    c->aura->set(AURA_QUICKNESS, 10);
     return 1;
 }
 
-static int spellSleep(int unused) {    
+static int spellSleep(int unused) {
     CombatMap *cm = getCombatMap();
     CreatureVector creatures = cm->getCreatures();
     CreatureVector::iterator i;
 
     /* try to put each creature to sleep */
 
-    for (i = creatures.begin(); i != creatures.end(); i++) {         
+    for (i = creatures.begin(); i != creatures.end(); i++) {
         Creature *m = *i;
         Coords coords = m->getCoords();
         GameController::flashTile(coords, "wisp", 1);
@@ -666,7 +666,7 @@ static int spellSleep(int unused) {
 }
 
 static int spellTremor(int unused) {
-    CombatController *ct = spellCombatController();    
+    CombatController *ct = spellCombatController();
     CreatureVector creatures = ct->getMap()->getCreatures();
     CreatureVector::iterator i;
 
@@ -702,25 +702,25 @@ static int spellTremor(int unused) {
             }
         }
     }
-    
+
     return 1;
 }
 
-static int spellUndead(int unused) {    
+static int spellUndead(int unused) {
     CombatController *ct = spellCombatController();
     CreatureVector creatures = ct->getMap()->getCreatures();
     CreatureVector::iterator i;
 
-    for (i = creatures.begin(); i != creatures.end(); i++) {         
+    for (i = creatures.begin(); i != creatures.end(); i++) {
         Creature *m = *i;
         if (m && m->isUndead() && zu4_random(2) == 0)
             m->setHp(23);
     }
-    
+
     return 1;
 }
 
-static int spellView(int unsued) {    
+static int spellView(int unsued) {
     peer(false);
     return 1;
 }
@@ -763,7 +763,7 @@ static int spellYup(int unused) {
         zu4_music_play(c->location->map->music);
         return 1;
     }
-    
+
     /* didn't find a place to go, failed! */
     return 0;
 }
@@ -771,7 +771,7 @@ static int spellYup(int unused) {
 static int spellZdown(int unused) {
     Coords coords = c->location->coords;
     Dungeon *dungeon = dynamic_cast<Dungeon *>(c->location->map);
-    
+
     /* can't cast in the Abyss */
     if (c->location->map->id == MAP_ABYSS)
         return 0;
@@ -787,7 +787,7 @@ static int spellZdown(int unused) {
             }
         }
     }
-    
+
     /* didn't find a place to go, failed! */
     return 0;
 }

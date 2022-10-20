@@ -66,8 +66,8 @@ xmlDocPtr xmlParse(const char *filename) {
         cvp.userData = &errorMessage;
         cvp.error = &xmlAccumError;
 
-        if (!xmlValidateDocument(&cvp, doc))            
-            zu4_error(ZU4_LOG_ERR, "xml parse error:\n%s", errorMessage.c_str());        
+        if (!xmlValidateDocument(&cvp, doc))
+            zu4_error(ZU4_LOG_ERR, "xml parse error:\n%s", errorMessage.c_str());
     }
 
     return doc;
@@ -98,14 +98,14 @@ std::string xmlGetPropAsString(xmlNodePtr node, const char *name) {
 
     if (settings.validateXml && !xmlHasProp(node, (const xmlChar *)name))
         return "";
-    
+
     prop = xmlGetProp(node, (const xmlChar *)name);
     if (!prop)
         return "";
 
     std::string result((char *)prop);
     xmlFree(prop);
-    
+
     return result;
 }
 
@@ -187,12 +187,12 @@ int xmlGetPropAsEnum(xmlNodePtr node, const char *name, const char *enumValues[]
  */
 int xmlPropCmp(xmlNodePtr node, const char *name, const char *s) {
     int result;
-    xmlChar *prop;    
-    
+    xmlChar *prop;
+
     prop = xmlGetProp(node, (const xmlChar *)name);
     result = xmlStrcmp(prop, (const xmlChar *) s);
     xmlFree(prop);
-    
+
     return result;
 }
 
@@ -203,10 +203,10 @@ int xmlPropCmp(xmlNodePtr node, const char *name, const char *s) {
 int xmlPropCaseCmp(xmlNodePtr node, const char *name, const char *s) {
     int result;
     xmlChar *prop;
-    
+
     prop = xmlGetProp(node, (const xmlChar *)name);
     result = xmlStrcasecmp(prop, (const xmlChar *) s);
     xmlFree(prop);
-    
+
     return result;
 }

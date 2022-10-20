@@ -32,7 +32,7 @@ static char *shrineAdvice[24];
 
 /**
  * Returns true if the player can use the portal to the shrine
- */ 
+ */
 bool shrineCanEnter(const Portal *p) {
     Shrine *shrine = dynamic_cast<Shrine*>(mapMgr->get(p->destid));
     if (!c->party->canEnterShrine(shrine->getVirtue())) {
@@ -44,7 +44,7 @@ bool shrineCanEnter(const Portal *p) {
 
 /**
  * Returns true if 'map' points to a Shrine map
- */ 
+ */
 bool isShrine(Map *punknown) {
     Shrine *ps;
     if ((ps = dynamic_cast<Shrine*>(punknown)) != NULL)
@@ -55,7 +55,7 @@ bool isShrine(Map *punknown) {
 
 /**
  * Shrine class implementation
- */ 
+ */
 Shrine::Shrine() {}
 
 std::string Shrine::getName() {
@@ -84,7 +84,7 @@ void Shrine::enter() {
 
     if (settings.enhancements && settings.enhancementsOptions.u5shrines)
         enhancedSequence();
-    else  
+    else
         screenMessage("You enter the ancient shrine and sit before the altar...");
 
     screenMessage("\nUpon which virtue dost thou meditate?\n");
@@ -114,32 +114,32 @@ void Shrine::enter() {
         screenMessage("Begin Meditation\n");
         meditationCycle();
     }
-    else { 
+    else {
         screenMessage("Thy mind is still weary from thy last Meditation!\n");
         eject();
     }
 }
 
 void Shrine::enhancedSequence() {
-    /* replace the 'static' avatar tile with grass */        
+    /* replace the 'static' avatar tile with grass */
     annotations->add((Coords){5, 6, c->location->coords.z}, tileset->getByName("grass")->getId(), false, true);
 
     screenDisableCursor();
     screenMessage("You approach\nthe ancient\nshrine...\n");
     gameUpdateScreen(); EventHandler::wait_cycles(settings.gameCyclesPerSecond);
-        
+
     Object *obj = addCreature(creatureMgr->getById(BEGGAR_ID), (Coords){5, 10, c->location->coords.z});
     obj->setTile(tileset->getByName("avatar")->getId());
 
-    gameUpdateScreen(); EventHandler::wait_msecs(400);        
+    gameUpdateScreen(); EventHandler::wait_msecs(400);
     c->location->map->move(obj, DIR_NORTH); gameUpdateScreen(); EventHandler::wait_msecs(400);
     c->location->map->move(obj, DIR_NORTH); gameUpdateScreen(); EventHandler::wait_msecs(400);
     c->location->map->move(obj, DIR_NORTH); gameUpdateScreen(); EventHandler::wait_msecs(400);
     c->location->map->move(obj, DIR_NORTH); gameUpdateScreen(); EventHandler::wait_msecs(800);
     obj->setTile(creatureMgr->getById(BEGGAR_ID)->getTile());
     gameUpdateScreen();
-        
-    screenMessage("\n...and kneel before the altar.\n");        
+
+    screenMessage("\n...and kneel before the altar.\n");
     EventHandler::wait_cycles(settings.gameCyclesPerSecond);
     screenEnableCursor();
 }
@@ -150,7 +150,7 @@ void Shrine::meditationCycle() {
     interval -= (interval % eventTimerGranularity);
     interval /= eventTimerGranularity;
     if (interval <= 0)
-        interval = 1;    
+        interval = 1;
 
     c->saveGame->lastmeditation = (c->saveGame->moves / SHRINE_MEDITATION_INTERVAL) & 0xffff;
 
@@ -203,7 +203,7 @@ void Shrine::askMantra() {
 
 void Shrine::showVision(bool elevated) {
     static const char *visionImageNames[] = {
-        BKGD_SHRINE_HON, BKGD_SHRINE_COM, BKGD_SHRINE_VAL, BKGD_SHRINE_JUS, 
+        BKGD_SHRINE_HON, BKGD_SHRINE_COM, BKGD_SHRINE_VAL, BKGD_SHRINE_JUS,
         BKGD_SHRINE_SAC, BKGD_SHRINE_HNR, BKGD_SHRINE_SPI, BKGD_SHRINE_HUM
     };
 

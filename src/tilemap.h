@@ -17,7 +17,7 @@ struct ConfigElement;
 struct TileMap {
 public:
     typedef std::map<std::string, TileMap *> TileIndexMapMap;
-    
+
     MapTile translate(unsigned int index);
     unsigned int untranslate(MapTile &tile);
 

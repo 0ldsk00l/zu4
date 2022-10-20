@@ -92,14 +92,14 @@ private:
 /**
  * The dialogue struct, which holds conversation information for
  * townspeople and others who may talk to you.  It includes information
- * like pronouns, keywords, actual conversation text (of course), 
+ * like pronouns, keywords, actual conversation text (of course),
  * questions, and what happens when you answer these questions.
  */
 struct Dialogue {
 public:
     /**
      * A question-response to a keyword.
-     */ 
+     */
     struct Question {
     public:
         Question(const std::string &txt, Response *yes, Response *no);
@@ -116,13 +116,13 @@ public:
      * A dialogue keyword.
      * It contains all the keywords that the talker will respond to, as
      * well as the responses to those keywords.
-     */ 
+     */
     struct Keyword {
-    public:        
+    public:
         Keyword(const std::string &kw, Response *resp);
         Keyword(const std::string &kw, const std::string &resp);
         ~Keyword();
-        
+
         bool operator==(const std::string &kw) const;
 
         /*
@@ -130,7 +130,7 @@ public:
          */
 		const std::string &getKeyword()	{return keyword;}
 		Response *getResponse()		{return response;}
-        
+
     private:
         std::string keyword;
         Response *response;
@@ -149,7 +149,7 @@ public:
 
     /*
      * Accessor methods
-     */ 
+     */
     const std::string &getName() const                   {return name;}
     const std::string &getPronoun() const                {return pronoun;}
     const std::string &getPrompt() const                 {return prompt;}
@@ -160,7 +160,7 @@ public:
 
     /*
      * Getters
-     */ 
+     */
     void setName(const std::string &n)       {name           = n;}
     void setPronoun(const std::string &pn)   {pronoun        = pn;}
     void setPrompt(const std::string &prompt){this->prompt   = prompt;}
@@ -175,10 +175,10 @@ public:
     std::string dump(const std::string &arg);
 
     /*
-     * Operators 
+     * Operators
      */
     Keyword *operator[](const std::string &kw);
-    
+
 private:
     std::string name;
     std::string pronoun;
@@ -189,7 +189,7 @@ private:
     KeywordMap keywords;
     union {
         int turnAwayProb;
-        int attackProb;    
+        int attackProb;
     };
     Question *question;
 };
@@ -198,7 +198,7 @@ private:
  * The conversation struct, which handles the flow of text from the
  * player to the talker and vice-versa.  It is responsible for beginning
  * and termination conversations and handing state changes during.
- */ 
+ */
 struct Conversation {
 public:
     /** Different states the conversation may be in */
@@ -225,11 +225,11 @@ public:
     };
 
     /** Different types of conversation input required */
-    enum InputType {      
+    enum InputType {
         INPUT_STRING,
         INPUT_CHARACTER,
         INPUT_NONE
-    };      
+    };
 
     /* Constructor/Destructors */
     Conversation();
@@ -240,8 +240,8 @@ public:
 
     /* Static variables */
     static const unsigned int BUFFERLEN;    /**< The default maxixum length of input */
-    
-public:    
+
+public:
     State state;                /**< The state of the conversation */
     std::string playerInput;    /**< A string holding the text the player inputs */
     std::list<std::string> reply; /**< What the talker says */

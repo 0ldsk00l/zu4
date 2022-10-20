@@ -18,12 +18,12 @@ public:
     void setBorderColor(int r, int g, int b, int a = 255);
     void setBorderWidth(unsigned int width);
     void setColor(int r, int g, int b, int a = 255);
-    
+
 protected:
     int min, max;
     int current;
     RGBA color, bcolor;
-    int bwidth;    
-};  
+    int bwidth;
+};
 
 #endif

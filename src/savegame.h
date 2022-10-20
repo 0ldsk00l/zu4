@@ -21,7 +21,7 @@ extern "C" {
  */
 typedef enum _WeaponType {
 	WEAP_HANDS,
-	WEAP_STAFF, 
+	WEAP_STAFF,
 	WEAP_DAGGER,
 	WEAP_SLING,
 	WEAP_MACE,
@@ -161,7 +161,7 @@ typedef enum _Rune {
 } Rune;
 
 /**
- * The Ultima IV savegame player record data.  
+ * The Ultima IV savegame player record data.
  */
 typedef struct _SaveGamePlayerRecord {
 	uint16_t hp;

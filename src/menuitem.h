@@ -54,7 +54,7 @@ public:
     void setVisible(bool v = true);
     void addShortcutKey(int shortcutKey);
     void setClosesMenu(bool closesMenu);
-    
+
 protected:
     int id;
     short x, y;

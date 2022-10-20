@@ -42,7 +42,7 @@ struct TileAnim;
 
 /**
  * A Tile object represents a specific tile type.  Every tile is a
- * member of a Tileset.  
+ * member of a Tileset.
  */
 struct Tile : private Uncopyable {
 public:
@@ -117,7 +117,7 @@ private:
     int w, h;           /**< width and height of the tile */
     int frames;         /**< The number of frames this tile has */
     int scale;          /**< The scale of the tile */
-    TileAnim *anim;     /**< The tile animation for this tile */    
+    TileAnim *anim;     /**< The tile animation for this tile */
     bool opaque;        /**< Is this tile opaque? */
 
     bool foreground;    /**< As a maptile, is a foreground that will search neighbour maptiles for a land-based background replacement. ex: chests */
@@ -125,7 +125,7 @@ private:
 
     TileRule *rule;     /**< The rules that govern the behavior of this tile */
     std::string imageName;/**< The name of the image that belongs to this tile */
-    std::string looks_like;/**< The name of the tile that this tile looks exactly like (if any) */    
+    std::string looks_like;/**< The name of the tile that this tile looks exactly like (if any) */
 
     Image *image;       /**< The original image for this tile (with all of its frames) */
     bool tiledInDungeon;

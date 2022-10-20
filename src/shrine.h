@@ -39,7 +39,7 @@ public:
 private:
     std::string name;
     Virtue virtue;
-    std::string mantra;   
+    std::string mantra;
 };
 
 bool shrineCanEnter(const struct _Portal *p);

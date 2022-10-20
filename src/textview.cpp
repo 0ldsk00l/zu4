@@ -113,7 +113,7 @@ std::string TextView::colorizeString(std::string input, ColorFG color, unsigned 
     std::string::size_type i;
     bool colorization = false;
 
-    // loop through the entire string and 
+    // loop through the entire string and
     for (i = 0; i < length; i++) {
         if (i == colorstart) {
             output += color;

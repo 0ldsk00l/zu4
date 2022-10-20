@@ -56,7 +56,7 @@ void CampController::init(Creature *m) {
 void CampController::begin() {
     // make sure everyone's asleep
     for (int i = 0; i < c->party->size(); i++)
-        c->party->member(i)->putToSleep();            
+        c->party->member(i)->putToSleep();
 
     CombatController::begin();
 
@@ -70,15 +70,15 @@ void CampController::begin() {
     screenEnableCursor();
 
     /* Is the party ambushed during their rest? */
-    if (settings.campingAlwaysCombat || (zu4_random(8) == 0)) {        
+    if (settings.campingAlwaysCombat || (zu4_random(8) == 0)) {
         const Creature *m = creatureMgr->randomAmbushing();
-                
+
         zu4_music_play(c->location->map->music);
         screenMessage("Ambushed!\n");
-        
+
         /* create an ambushing creature (so it leaves a chest) */
         setCreature(c->location->prev->map->addCreature(m, c->location->prev->coords));
-        
+
         /* fill the creature table with creatures and place them */
         fillCreatureTable(m);
         placeCreatures();
@@ -87,9 +87,9 @@ void CampController::begin() {
         finishTurn();
     }
     else {
-        /* Wake everyone up! */    
+        /* Wake everyone up! */
         for (int i = 0; i < c->party->size(); i++)
-            c->party->member(i)->wakeUp();    
+            c->party->member(i)->wakeUp();
 
         /* Make sure we've waited long enough for camping to be effective */
         bool healed = false;
@@ -98,7 +98,7 @@ void CampController::begin() {
 
         screenMessage(healed ? "Party Healed!\n" : "No effect.\n");
         c->saveGame->lastcamp = (c->saveGame->moves / CAMP_HEAL_INTERVAL) & 0xffff;
-    
+
         eventHandler->popController();
         game->exitToParentMap();
         zu4_music_fadein(CAMP_FADE_IN_TIME, true);
@@ -109,7 +109,7 @@ void CampController::begin() {
 void CampController::end(bool adjustKarma) {
     // wake everyone up!
     for (int i = 0; i < c->party->size(); i++)
-        c->party->member(i)->wakeUp();        
+        c->party->member(i)->wakeUp();
     CombatController::end(adjustKarma);
 }
 
@@ -142,7 +142,7 @@ void InnController::begin() {
     /* in the original, the vendor music plays straight through sleeping */
     if (settings.enhancements)
         zu4_music_fadeout(INN_FADE_OUT_TIME); /* Fade volume out to ease into rest */
-    
+
     EventHandler::wait_msecs(INN_FADE_OUT_TIME);
 
     /* show the sleeping avatar */
@@ -243,7 +243,7 @@ void InnController::maybeAmbush()
         MapId mapid;
         Creature *creature;
         bool showMessage = true;
-            
+
         /* Rats seem much more rare than meeting rogues in the streets */
         if (zu4_random(4) == 0) {
             /* Rats! */

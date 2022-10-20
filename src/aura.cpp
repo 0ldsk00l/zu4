@@ -29,7 +29,7 @@ void Aura::setType(AuraType t) {
 void Aura::passTurn() {
     if (duration > 0) {
         duration--;
-        
+
         if (duration == 0) {
             type = AURA_NONE;
 

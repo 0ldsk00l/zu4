@@ -22,7 +22,7 @@ bool Controller::notifyKeyPressed(int key) {
     bool processed = KeyHandler::globalHandler(key);
     if (!processed)
         processed = keyPressed(key);
-    
+
     return processed;
 }
 

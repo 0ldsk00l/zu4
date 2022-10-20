@@ -56,12 +56,12 @@ Direction pathAway(Coords oc, Coords c, int valid_dirs = MASK_DIR_ALL);
 
 /**
  * Map struct
- */ 
+ */
 struct Map {
 public:
     enum Type {
         WORLD,
-        CITY,    
+        CITY,
         SHRINE,
         COMBAT,
         DUNGEON
@@ -88,8 +88,8 @@ public:
 
     // Member functions
     virtual std::string getName();
-    
-    struct Object *objectAt(const Coords &coords);    
+
+    struct Object *objectAt(const Coords &coords);
     const Portal *portalAt(const Coords &coords, int actionFlags);
     MapTile* getTileFromData(const Coords &coords);
     MapTile* tileAt(const Coords &coords, int withObjects);
@@ -100,7 +100,7 @@ public:
     struct Object *addObject(MapTile tile, MapTile prevTile, Coords coords);
     struct Object *addObject(Object *obj, Coords coords);
     void removeObject(const struct Object *rem, bool deleteObject = true);
-    ObjectDeque::iterator removeObject(ObjectDeque::iterator rem, bool deleteObject = true);    
+    ObjectDeque::iterator removeObject(ObjectDeque::iterator rem, bool deleteObject = true);
     void clearObjects();
     struct Creature *moveObjects(Coords avatar);
     void resetObjectAnimations();
@@ -111,12 +111,12 @@ public:
     const Coords &getLabel(const std::string &name) const;
 
     // u4dos compatibility
-    bool fillMonsterTable();    
+    bool fillMonsterTable();
     MapTile translateFromRawTileIndex(int c) const;
     unsigned int translateToRawTileIndex(MapTile &tile) const;
 
 public:
-    MapId           id;    
+    MapId           id;
     std::string     fname;
     Type            type;
     unsigned int    width,
@@ -128,7 +128,7 @@ public:
 
     Source          baseSource;
     std::list<Source> extraSources;
-    
+
     CompressedChunkList     compressed_chunks;
     BorderBehavior          border_behavior;
 

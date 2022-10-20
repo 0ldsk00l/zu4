@@ -86,13 +86,13 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
         // Then draw it to the screen
         zu4_img_draw_subrect(animated, x * tileWidth + this->x,
                               y * tileHeight + this->y,
-                              0, 
-                              0, 
-                              tileWidth, 
+                              0,
+                              0,
+                              tileWidth,
                               tileHeight);
     }
     else {
-        zu4_img_draw_subrect(image, x * tileWidth + this->x, 
+        zu4_img_draw_subrect(image, x * tileWidth + this->x,
                            y * tileHeight + this->y,
                            0,
                            tileHeight * mapTile.frame,
@@ -142,7 +142,7 @@ void TileView::drawTile(std::vector<MapTile> &tiles, bool focus, int x, int y) {
 		}
 		else {
             if (!image)
-                return; //This is a problem //FIXME, error message it. 
+                return; //This is a problem //FIXME, error message it.
 			zu4_img_draw_subrect_on(animated, image,
 								0, 0,
 								0, tileHeight * frontTile.frame,

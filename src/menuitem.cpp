@@ -168,7 +168,7 @@ std::string IntMenuItem::getText() const {
  *
  * settings.shrineTime is only used in one function within shrine.cpp, and that code appears
  * to handle the min value, caping the minimum interval at 1.
- *  
+ *
             // make sure that the setting we're trying for is even possible
             if (event.getType() == MenuEvent::INCREMENT || event.getType() == MenuEvent::ACTIVATE) {
                 settingsChanged.shrineTime++;
@@ -212,7 +212,7 @@ std::string IntMenuItem::getText() const {
     return buffer;
 }
 
-void IntMenuItem::activate(MenuEvent &event) { 
+void IntMenuItem::activate(MenuEvent &event) {
     if (event.getType() == MenuEvent::INCREMENT || event.getType() == MenuEvent::ACTIVATE) {
         *val += increment;
         if (*val > max)

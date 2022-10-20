@@ -48,7 +48,7 @@ struct EventHandler;
 struct TextView;
 
 /**
- * A struct for handling keystrokes. 
+ * A struct for handling keystrokes.
  */
 struct KeyHandler {
 public:
@@ -73,10 +73,10 @@ public:
 
     /* Constructors */
     KeyHandler(Callback func, void *data = NULL, bool asyncronous = true);
-    
-    /* Static functions */    
+
+    /* Static functions */
     static int setKeyRepeat(int delay, int interval);
-    static bool globalHandler(int key);    
+    static bool globalHandler(int key);
 
     /* Static default key handler functions */
     static bool defaultHandler(int key, void *data);
@@ -84,9 +84,9 @@ public:
 
     /* Operators */
     bool operator==(Callback cb) const;
-    
-    /* Member functions */    
-    bool handle(int key); 
+
+    /* Member functions */
+    bool handle(int key);
     virtual bool isKeyIgnored(int key);
 
 protected:
@@ -159,9 +159,9 @@ protected:
  * A controller to read a direction enter with the arrow keys.
  */
 struct ReadDirController : public WaitableController<Direction> {
-public:    
+public:
     ReadDirController();
-    virtual bool keyPressed(int key);    
+    virtual bool keyPressed(int key);
 };
 
 /**
@@ -184,7 +184,7 @@ private:
 
 /**
  * A struct for handling timed events.
- */ 
+ */
 struct TimedEvent {
 public:
     /* Typedefs */
@@ -198,9 +198,9 @@ public:
     Callback getCallback() const;
     void *getData();
     void tick();
-    
+
     /* Properties */
-protected:    
+protected:
     Callback callback;
     void *data;
     int interval;
@@ -209,11 +209,11 @@ protected:
 
 /**
  * A struct for managing timed events
- */ 
+ */
 struct TimedEventMgr {
 public:
     /* Typedefs */
-    typedef TimedEvent::List List;    
+    typedef TimedEvent::List List;
 
     /* Constructors */
     TimedEventMgr(int baseInterval);
@@ -223,7 +223,7 @@ public:
     static unsigned int callback(unsigned int interval, void *param);
 
     /* Member functions */
-    bool isLocked() const;      /**< Returns true if the event list is locked (in use) */    
+    bool isLocked() const;      /**< Returns true if the event list is locked (in use) */
 
     void add(TimedEvent::Callback callback, int interval, void *data = NULL);
     List::iterator remove(List::iterator i);
@@ -232,7 +232,7 @@ public:
     void tick();
     void stop();
     void start();
-    
+
     void reset(unsigned int interval);     /**< Re-initializes the event manager to a new base interval */
 
 private:
@@ -253,14 +253,14 @@ protected:
 
 typedef void(*updateScreenCallback)(void);
 /**
- * A struct for handling game events. 
+ * A struct for handling game events.
  */
 struct EventHandler {
 public:
     /* Constructors */
-    EventHandler();    
+    EventHandler();
 
-    /* Static functions */    
+    /* Static functions */
     static EventHandler *getInstance();
     static void sleep(unsigned int usec);
     static void wait_msecs(unsigned int msecs);
@@ -273,7 +273,7 @@ public:
     /* Member functions */
     TimedEventMgr* getTimer();
 
-    /* Event functions */    
+    /* Event functions */
     void run();
     void setScreenUpdate(void (*updateScreen)(void));
 
@@ -289,7 +289,7 @@ public:
     KeyHandler *getKeyHandler() const;
     void setKeyHandler(KeyHandler kh);
 
-protected:    
+protected:
     static bool controllerDone;
     static bool ended;
     TimedEventMgr timer;

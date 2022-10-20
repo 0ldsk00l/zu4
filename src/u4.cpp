@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
     ++pb;
 
     intro = new IntroController();
-    
+
     if (!skipIntro)
     {
         /* do the intro */
@@ -202,7 +202,7 @@ int main(int argc, char *argv[]) {
     zu4_snd_deinit();
     zu4_music_deinit();
     screenDelete();
-    
+
     game->deinit();
 
     return 0;

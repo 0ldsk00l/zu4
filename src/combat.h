@@ -33,12 +33,12 @@ typedef enum {
     CA_ADVANCE,
     CA_RANGED,
     CA_FLEE,
-    CA_TELEPORT    
+    CA_TELEPORT
 } CombatAction;
 
 /**
  * CombatController struct
- */ 
+ */
 struct CombatController : public Controller, public Observer<Party *, PartyEvent &>, public TurnCompleter {
 protected:
     CombatController();
@@ -47,7 +47,7 @@ public:
     CombatController(MapId id);
     virtual ~CombatController();
 
-    // Accessor Methods    
+    // Accessor Methods
     bool          isCombatController() const { return true; }
     bool          isCamping() const;
     bool          isWinOrLose() const;
@@ -57,7 +57,7 @@ public:
     Creature *    getCreature() const;
     PartyMemberVector* getParty();
     PartyMember*  getCurrentPlayer();
-    
+
     void setExitDir(Direction d);
     void setCreature(Creature *);
     void setWinOrLose(bool worl = true);
@@ -66,7 +66,7 @@ public:
     // Methods
     virtual void init(Creature *m);
     void initDungeonRoom(int room, Direction from);
-    
+
     void applyCreatureTileEffects();
     virtual void begin();
     virtual void end(bool adjustKarma);
@@ -88,7 +88,7 @@ public:
     void rangedMiss(const Coords &coords, Creature *attacker);
     bool returnWeaponToOwner(const Coords &coords, int distance, int dir, const weapon_t *weapon);
 
-    /** 
+    /**
      * Static member functions
      */
     static void attackFlash(const Coords &coords, MapTile tile, int timeFactor);
@@ -105,12 +105,12 @@ public:
     // Properties
 protected:
     CombatMap *map;
-    
+
     PartyMemberVector party;
     unsigned char focus;
 
     const Creature *creatureTable[AREA_CREATURES];
-    Creature *creature;    
+    Creature *creature;
 
     bool camping;
     bool forceStandardEncounterSize;
@@ -131,12 +131,12 @@ private:
 struct CombatMap : public Map {
 public:
     CombatMap();
-        
+
     CreatureVector getCreatures();
     PartyMemberVector getPartyMembers();
-    PartyMember* partyMemberAt(Coords coords);    
-    Creature* creatureAt(Coords coords);    
-    
+    PartyMember* partyMemberAt(Coords coords);
+    Creature* creatureAt(Coords coords);
+
     static MapId mapForTile(const Tile *ground, const Tile *transport, Object *obj);
 
     // Getters
@@ -149,7 +149,7 @@ public:
     void setAltarRoom(BaseVirtue ar){altarRoom = ar;}
     void setDungeonRoom(bool d)     {dungeonRoom = d;}
     void setContextual(bool c)      {contextual = c;}
-    
+
     // Properties
 protected:
     bool dungeonRoom;

@@ -110,10 +110,10 @@ Response *Dialogue::Question::getResponse(bool yes) {
     return noresp;
 }
 
-            
+
 /*
  * Dialogue::Keyword class
- */ 
+ */
 Dialogue::Keyword::Keyword(const std::string &kw, Response *resp) :
     keyword(kw), response(resp->addref()) {
     keyword.erase(keyword.find_last_not_of(strwhitespace) + 1);
@@ -146,8 +146,8 @@ bool Dialogue::Keyword::operator==(const std::string &kw) const {
 }
 
 /*
- * Dialogue class 
- */ 
+ * Dialogue class
+ */
 
 Dialogue::Dialogue()
 	: intro(NULL)
@@ -171,21 +171,21 @@ void Dialogue::addKeyword(const std::string &kw, Response *response) {
 
 Dialogue::Keyword *Dialogue::operator[](const std::string &kw) {
     KeywordMap::iterator i = keywords.find(kw);
-    
+
     // If they entered the keyword verbatim, return it!
     if (i != keywords.end())
         return i->second;
     // Otherwise, go find one that fits the description.
-    else {            
+    else {
         for (i = keywords.begin(); i != keywords.end(); i++) {
             if ((*i->second) == kw)
                 return i->second;
-        }            
+        }
     }
     return NULL;
 }
 
-const ResponsePart &Dialogue::getAction() const { 
+const ResponsePart &Dialogue::getAction() const {
     int prob = zu4_random(0x100);
 
     /* Does the person turn away from/attack you? */
@@ -215,8 +215,8 @@ std::string Dialogue::dump(const std::string &arg) {
 }
 
 /*
- * Conversation class 
- */ 
+ * Conversation class
+ */
 
 Conversation::Conversation() : state(INTRO), script(new Script()) {
 }
@@ -225,7 +225,7 @@ Conversation::~Conversation() {
     delete script;
 }
 
-Conversation::InputType Conversation::getInputRequired(int *bufferlen) {    
+Conversation::InputType Conversation::getInputRequired(int *bufferlen) {
     switch (state) {
     case BUY_QUANTITY:
     case SELL_QUANTITY:

@@ -28,7 +28,7 @@ City::~City() {
 
 /**
  * Returns the name of the city
- */ 
+ */
 std::string City::getName() {
     return name;
 }
@@ -36,26 +36,26 @@ std::string City::getName() {
 /**
  * Adds a person object to the map
  */
-Person *City::addPerson(Person *person) {    
-    // Make a copy of the person before adding them, so 
+Person *City::addPerson(Person *person) {
+    // Make a copy of the person before adding them, so
     // things like angering the guards, etc. will be
     // forgotten the next time you visit :)
     Person *p = new Person(person);
-    
+
     /* set the start coordinates for the person */
     p->setMap(this);
     p->goToStartLocation();
 
-    objects.push_back(p);    
+    objects.push_back(p);
     return p;
 }
 
 /**
  * Add people to the map
- */ 
+ */
 void City::addPeople() {
-    PersonList::iterator current;    
-    
+    PersonList::iterator current;
+
     // Make sure the city has no people in it already
     removeAllPeople();
 
@@ -90,7 +90,7 @@ Person *City::personAt(const Coords &coords) {
 
     obj = objectAt(coords);
     if (isPerson(obj))
-        return dynamic_cast<Person*>(obj);    
+        return dynamic_cast<Person*>(obj);
     else
         return NULL;
 }
@@ -98,11 +98,11 @@ Person *City::personAt(const Coords &coords) {
 /**
  * Returns true if the Map pointed to by 'punknown'
  * is a City map
- */ 
+ */
 bool isCity(Map *punknown) {
     City *pCity;
     if ((pCity = dynamic_cast<City*>(punknown)) != NULL)
         return true;
-    else 
+    else
         return false;
 }

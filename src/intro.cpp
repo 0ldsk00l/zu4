@@ -53,7 +53,7 @@ struct IntroObjectState {
 public:
     IntroObjectState() : x(0), y(0), tile(0) {}
     int x, y;
-    MapTile tile; /* base tile + tile frame */    
+    MapTile tile; /* base tile + tile frame */
 };
 
 /* temporary place-holder for settings changes */
@@ -76,9 +76,9 @@ static char *introQuestions[28];
 static char *introText[24];
 static char *introGypsy[15];
 
-IntroBinData::IntroBinData() : 
-    sigData(NULL), 
-    scriptTable(NULL), 
+IntroBinData::IntroBinData() :
+    sigData(NULL),
+    scriptTable(NULL),
     baseTileTable(NULL),
     beastie1FrameTable(NULL),
     beastie2FrameTable(NULL) {
@@ -120,9 +120,9 @@ bool IntroBinData::load() {
 
     u4fseek(title, INTRO_MAP_OFFSET, SEEK_SET);
     introMap.resize(INTRO_MAP_WIDTH * INTRO_MAP_HEIGHT, MapTile(0));
-    for (i = 0; i < INTRO_MAP_HEIGHT * INTRO_MAP_WIDTH; i++)        
+    for (i = 0; i < INTRO_MAP_HEIGHT * INTRO_MAP_WIDTH; i++)
         introMap[i] = TileMap::get("base")->translate(u4fgetc(title));
-        
+
     u4fseek(title, INTRO_SCRIPT_TABLE_OFFSET, SEEK_SET);
     scriptTable = new unsigned char[INTRO_SCRIPT_TABLE_SIZE];
     for (i = 0; i < INTRO_SCRIPT_TABLE_SIZE; i++)
@@ -158,8 +158,8 @@ bool IntroBinData::load() {
     return true;
 }
 
-IntroController::IntroController() : 
-    Controller(1), 
+IntroController::IntroController() :
+    Controller(1),
     backgroundArea(),
     menuArea(1 * CHAR_WIDTH, 13 * CHAR_HEIGHT, 38, 11),
     extendedMenuArea(2 * CHAR_WIDTH, 10 * CHAR_HEIGHT, 36, 13),
@@ -199,7 +199,7 @@ IntroController::IntroController() :
     videoMenu.addShortcutKey(CANCEL, ' ');
     videoMenu.setClosesMenu(USE_SETTINGS);
     videoMenu.setClosesMenu(CANCEL);
-    
+
     gfxMenu.setTitle("Game Graphics Options", 0,0);
     //IntMenuItem(string text, short x, short y, int shortcutKey, int *val, int min, int max, int increment, menuOutputType output=MENU_OUTPUT_INT);
     gfxMenu.add(MI_GFX_SCHEME, new IntMenuItem							("Graphics Scheme    %d", 2, 2, /*'G'*/ 0, &settingsChanged.videoType, 0, 1, 1));
@@ -228,7 +228,7 @@ IntroController::IntroController() :
     inputMenu.addShortcutKey(CANCEL, ' ');
     inputMenu.setClosesMenu(USE_SETTINGS);
     inputMenu.setClosesMenu(CANCEL);
-    
+
     speedMenu.setTitle("Speed Options:", 0, 0);
     speedMenu.add(MI_SPEED_01, new IntMenuItem("Game Cycles per Second    %3d",      2,  2,/*'g'*/  0, &settingsChanged.gameCyclesPerSecond, 1, MAX_CYCLES_PER_SECOND, 1));
     speedMenu.add(MI_SPEED_02, new IntMenuItem("Battle Speed              %3d",      2,  3,/*'b'*/  0, &settingsChanged.battleSpeed, 1, MAX_BATTLE_SPEED, 1));
@@ -250,7 +250,7 @@ IntroController::IntroController() :
     gameplayMenu.add(MI_GAMEPLAY_03,   new BoolMenuItem("Gazer Spawns Insects       %s", 2,  4,/*'g'*/  0, &settingsChanged.enhancementsOptions.gazerSpawnsInsects));
     gameplayMenu.add(MI_GAMEPLAY_04,   new BoolMenuItem("Gem View Shows Objects     %s", 2,  5,/*'e'*/  1, &settingsChanged.enhancementsOptions.peerShowsObjects));
     gameplayMenu.add(MI_GAMEPLAY_05,   new BoolMenuItem("Slime Divides              %s", 2,  6,/*'s'*/  0, &settingsChanged.enhancementsOptions.slimeDivides));
-    gameplayMenu.add(MI_GAMEPLAY_06,   new BoolMenuItem("Debug Mode (Cheats)        %s", 2,  8,/*'d'*/  0, &settingsChanged.debug)); 
+    gameplayMenu.add(MI_GAMEPLAY_06,   new BoolMenuItem("Debug Mode (Cheats)        %s", 2,  8,/*'d'*/  0, &settingsChanged.debug));
     gameplayMenu.add(USE_SETTINGS,                      "\010 Use These Settings",       2, 11,/*'u'*/  2);
     gameplayMenu.add(CANCEL,                            "\010 Cancel",                   2, 12,/*'c'*/  2);
     gameplayMenu.addShortcutKey(CANCEL, ' ');
@@ -455,8 +455,8 @@ void IntroController::drawMap() {
                 dataNibble = binData->scriptTable[scrPos] & 0xf;
                 objectStateTable[dataNibble].x = binData->scriptTable[scrPos+1] & 0x1f;
                 objectStateTable[dataNibble].y = commandNibble;
-                
-                // See if the tile id needs to be recalculated 
+
+                // See if the tile id needs to be recalculated
                 if ((binData->scriptTable[scrPos+1] >> 5) >= binData->baseTileTable[dataNibble]->getFrames()) {
                     int frame = (binData->scriptTable[scrPos+1] >> 5) - binData->baseTileTable[dataNibble]->getFrames();
                     objectStateTable[dataNibble].tile = MapTile(binData->baseTileTable[dataNibble]->getId() + 1);
@@ -466,7 +466,7 @@ void IntroController::drawMap() {
                     objectStateTable[dataNibble].tile = MapTile(binData->baseTileTable[dataNibble]->getId());
                     objectStateTable[dataNibble].tile.frame = (binData->scriptTable[scrPos+1] >> 5);
                 }
-                
+
                 scrPos += 2;
                 break;
             case 7:
@@ -520,7 +520,7 @@ void IntroController::drawMapStatic() {
 }
 
 void IntroController::drawMapAnimated() {
-    int i;    
+    int i;
 
     // draw animated objects
     for (i = 0; i < IntroBinData::INTRO_BASETILE_TABLE_SIZE; i++)
@@ -578,9 +578,9 @@ void IntroController::animateTree(const std::string &frame) {
  * Draws the cards in the character creation sequence with the gypsy.
  */
 void IntroController::drawCard(int pos, int card) {
-    static const char *cardNames[] = { 
+    static const char *cardNames[] = {
         "honestycard", "compassioncard", "valorcard", "justicecard",
-        "sacrificecard", "honorcard", "spiritualitycard", "humilitycard" 
+        "sacrificecard", "honorcard", "spiritualitycard", "humilitycard"
     };
 
     zu4_assert(pos == 0 || pos == 1, "invalid pos: %d", pos);
@@ -596,7 +596,7 @@ void IntroController::drawAbacusBeads(int row, int selectedVirtue, int rejectedV
     zu4_assert(row >= 0 && row < 7, "invalid row: %d", row);
     zu4_assert(selectedVirtue < 8 && selectedVirtue >= 0, "invalid virtue: %d", selectedVirtue);
     zu4_assert(rejectedVirtue < 8 && rejectedVirtue >= 0, "invalid virtue: %d", rejectedVirtue);
-    
+
     backgroundArea.draw("whitebead", 128 + (selectedVirtue * 9), 24 + (row * 15));
     backgroundArea.draw("blackbead", 128 + (rejectedVirtue * 9), 24 + (row * 15));
 }
@@ -728,7 +728,7 @@ void IntroController::finishInitiateGame(const std::string &nameBuffer, SexType 
 
     u4settings_t *u4settings = zu4_settings_ptr();
     char saveGameFileName[80];
-    
+
     snprintf(saveGameFileName, sizeof(saveGameFileName), "%s%s", u4settings->path, PARTY_SAV_BASE_FILENAME);
     FILE *saveGameFile = fopen(saveGameFileName, "wb");
     if (!saveGameFile) {
@@ -841,7 +841,7 @@ void IntroController::startQuestions() {
         questionArea.clear();
         questionArea.textAt(0, 0, "%s", introGypsy[questionRound == 0 ? GYP_PLACES_FIRST : (questionRound == 6 ? GYP_PLACES_LAST : GYP_PLACES_TWOMORE)]);
         questionArea.textAt(0, 1, "%s", introGypsy[GYP_UPON_TABLE]);
-        questionArea.textAt(0, 2, "%s and %s.  She says", 
+        questionArea.textAt(0, 2, "%s and %s.  She says",
                             introGypsy[questionTree[questionRound * 2] + 4],
                             introGypsy[questionTree[questionRound * 2 + 1] + 4]);
         questionArea.textAt(0, 3, "\"Consider this:\"");
@@ -891,7 +891,7 @@ std::string IntroController::getQuestion(int v1, int v2) {
  * Starts the game.
  */
 void IntroController::journeyOnward() {
-    FILE *saveGameFile;    
+    FILE *saveGameFile;
     bool validSave = false;
 
     /*
@@ -916,7 +916,7 @@ void IntroController::journeyOnward() {
         //delete saveGame;
         fclose(saveGameFile);
     }
-    
+
     if (!validSave) {
         errorMessage = "Initiate a new game first!";
         updateScreen();
@@ -958,14 +958,14 @@ void IntroController::showText(const std::string &text) {
     int lineNo = 0;
 
     questionArea.clear();
-    
+
     unsigned long pos = current.find("\n");
     while (pos < current.length()) {
         questionArea.textAt(0, lineNo++, "%s", current.substr(0, pos).c_str());
         current = current.substr(pos+1);
         pos = current.find("\n");
     }
-    
+
     /* write the last line (possibly only line) */
     questionArea.textAt(0, lineNo++, "%s", current.substr(0, pos).c_str());
 }
@@ -1015,7 +1015,7 @@ void IntroController::timerFired() {
 				break;
 			default: break;
 		}
-        
+
         if (updateTitle() == false)
         {
             // setup the map screen
@@ -1220,7 +1220,7 @@ void IntroController::updateInputMenu(MenuEvent &event) {
             settingsChanged = settings;
             break;
         default: break;
-        }    
+        }
     }
 
     // draw the extended background for all option screens
@@ -1238,11 +1238,11 @@ void IntroController::updateSpeedMenu(MenuEvent &event) {
             // save settings
             zu4_settings_setdata(settingsChanged);
             zu4_settings_write();
-    
+
             // re-initialize events
             eventTimerGranularity = (1000 / settings.gameCyclesPerSecond);
-            eventHandler->getTimer()->reset(eventTimerGranularity);            
-        
+            eventHandler->getTimer()->reset(eventTimerGranularity);
+
             break;
         case CANCEL:
             // discard settings
@@ -1331,7 +1331,7 @@ void IntroController::initQuestionTree() {
         questionTree[0] = questionTree[1];
         questionTree[1] = tmp;
     }
-        
+
 }
 
 /**
@@ -1344,7 +1344,7 @@ bool IntroController::doQuestion(int answer) {
         questionTree[answerInd] = questionTree[questionRound * 2];
     else
         questionTree[answerInd] = questionTree[questionRound * 2 + 1];
-    
+
     drawAbacusBeads(questionRound, questionTree[answerInd],
         questionTree[questionRound * 2 + ((answer) ? 0 : 1)]);
 
@@ -1482,7 +1482,7 @@ void IntroController::initPlayers(SaveGame *saveGame) {
  */
 void IntroController::preloadMap()
 {
-    int x, y, i;    
+    int x, y, i;
 
     // draw unmodified map
     for (y = 0; y < INTRO_MAP_HEIGHT; y++)

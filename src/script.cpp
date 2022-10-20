@@ -1,7 +1,7 @@
 /**
  * $Id: script.cpp 3064 2014-07-19 15:44:38Z darren_janeczek $
  */
-    
+
 
 #include <cctype>
 #include <map>
@@ -90,16 +90,16 @@ bool    Script::Variable::isString() const          { return i_val == 0; }
 bool    Script::Variable::isSet() const             { return set; }
 
 /*
- * Static member variables 
- */ 
+ * Static member variables
+ */
 Script::ActionMap Script::action_map;
 
 /**
  * Constructs a script object
- */ 
+ */
 Script::Script() : vendorScriptDoc(NULL), scriptNode(NULL), debug(NULL), state(STATE_UNLOADED),
     nounName("item"), idPropName("id")
-{       
+{
     action_map["context"]           = ACTION_SET_CONTEXT;
     action_map["unset_context"]     = ACTION_UNSET_CONTEXT;
     action_map["end"]               = ACTION_END;
@@ -123,18 +123,18 @@ Script::Script() : vendorScriptDoc(NULL), scriptNode(NULL), debug(NULL), state(S
     action_map["damage"]            = ACTION_DAMAGE;
     action_map["karma"]             = ACTION_KARMA;
     action_map["music"]             = ACTION_MUSIC;
-    action_map["var"]               = ACTION_SET_VARIABLE;    
-    action_map["ztats"]             = ACTION_ZTATS;    
+    action_map["var"]               = ACTION_SET_VARIABLE;
+    action_map["ztats"]             = ACTION_ZTATS;
 }
 
 Script::~Script() {
     unload();
-    
+
     // We have many Variables that are allocated but need to have delete called on them.
     // We do not need to clear the containers (that will happen automatically), but we do need to delete
     // these things. Do NOT clean up the providers though, it seems the providers map doesn't own its pointers.
     // Smart pointers anyone?
-   
+
     // Clean variables
     std::map<std::string, Script::Variable *>::iterator variableItem = variables.begin();
     std::map<std::string, Script::Variable *>::iterator variablesEnd = variables.end();
@@ -161,7 +161,7 @@ void Script::addProvider(const std::string &name, Provider *p) {
 
 /**
  * Loads the vendor script
- */ 
+ */
 bool Script::load(const std::string &filename, const std::string &baseId, const std::string &subNodeName, const std::string &subNodeId) {
     xmlNodePtr root, node, child;
     this->state = STATE_NORMAL;
@@ -171,7 +171,7 @@ bool Script::load(const std::string &filename, const std::string &baseId, const 
 
     /**
      * Open and parse the .xml file
-     */ 
+     */
     this->vendorScriptDoc = xmlParse(filename.c_str());
     root = xmlDocGetRootElement(vendorScriptDoc);
     if (xmlStrcmp(root->name, (const xmlChar *) "scripts") != 0)
@@ -191,27 +191,27 @@ bool Script::load(const std::string &filename, const std::string &baseId, const 
     for (node = root->xmlChildrenNode; node; node = node->next) {
         if (xmlNodeIsText(node) || (xmlStrcmp(node->name, (const xmlChar *) "script") != 0))
             continue;
-        
+
         if (baseId == xmlGetPropAsString(node, "id")) {
             /**
              * We use the base node as our main script node
              */
             if (subNodeName.empty()) {
-                this->scriptNode = node;            
+                this->scriptNode = node;
                 this->translationContext.push_back(node);
 
-                break;                
+                break;
             }
 
             for (child = node->xmlChildrenNode; child; child = child->next) {
                 if (xmlNodeIsText(child) ||
                     xmlStrcmp(child->name, (const xmlChar *) subNodeName.c_str()) != 0)
                     continue;
-         
+
                 std::string id = xmlGetPropAsString(child, "id");
 
-                if (id == subNodeId) {                    
-                    this->scriptNode = child;                    
+                if (id == subNodeId) {
+                    this->scriptNode = child;
                     this->translationContext.push_back(child);
 
                     /**
@@ -223,10 +223,10 @@ bool Script::load(const std::string &filename, const std::string &baseId, const 
                         idPropName = xmlGetPropAsString(node, "id_prop");
 
                     break;
-                }                
-            }    
-            
-            if (scriptNode) 
+                }
+            }
+
+            if (scriptNode)
                 break;
         }
     }
@@ -243,7 +243,7 @@ bool Script::load(const std::string &filename, const std::string &baseId, const 
         if (debug)
             fprintf(debug, "\n<Loaded subscript '%s' where id='%s' for script '%s'>\n", subNodeName.c_str(), subNodeId.c_str(), baseId.c_str());
     }
-    else {    
+    else {
         if (subNodeName.empty())
             zu4_error(ZU4_LOG_ERR, "Couldn't find script '%s' in %s", baseId.c_str(), filename.c_str());
         else zu4_error(ZU4_LOG_ERR, "Couldn't find subscript '%s' where id='%s' in script '%s' in %s", subNodeName.c_str(), subNodeId.c_str(), baseId.c_str(), filename.c_str());
@@ -256,7 +256,7 @@ bool Script::load(const std::string &filename, const std::string &baseId, const 
 
 /**
  * Unloads the script
- */ 
+ */
 void Script::unload() {
     if (vendorScriptDoc) {
         xmlFreeDoc(vendorScriptDoc);
@@ -271,17 +271,17 @@ void Script::unload() {
 
 /**
  * Runs a script after it's been loaded
- */ 
+ */
  void Script::run(const std::string &script) {
     xmlNodePtr scriptNode;
     std::string search_id;
-    
+
     if (variables.find(idPropName) != variables.end()) {
         if (variables[idPropName]->isSet())
             search_id = variables[idPropName]->getString();
         else search_id = "null";
     }
-    
+
     scriptNode = find(this->scriptNode, script, search_id);
 
     if (!scriptNode)
@@ -292,20 +292,20 @@ void Script::unload() {
 
 /**
  * Executes the subscript 'script' of the main script
- */ 
+ */
 Script::ReturnCode Script::execute(xmlNodePtr script, xmlNodePtr currentItem, std::string *output) {
-    xmlNodePtr current;    
+    xmlNodePtr current;
     Script::ReturnCode retval = RET_OK;
-    
+
     if (!script->children) {
         /* redirect the script to another node */
         if (xmlPropExists(script, "redirect"))
-            retval = redirect(NULL, script);        
+            retval = redirect(NULL, script);
         /* end the conversation */
         else {
             if (debug)
                 fprintf(debug, "\nA script with no children found (nowhere to go). Ending script...\n");
-            screenMessage("\n");            
+            screenMessage("\n");
             this->state = STATE_DONE;
         }
     }
@@ -317,9 +317,9 @@ Script::ReturnCode Script::execute(xmlNodePtr script, xmlNodePtr currentItem, st
             fprintf(debug, "\nReturning to execution from end of '%s' script\n", currentItem->name);
     }
     else current = script->children;
-        
+
     for (; current; current = current->next) {
-        std::string name = (char *)current->name;        
+        std::string name = (char *)current->name;
         retval = RET_OK;
         ActionMap::iterator action;
 
@@ -327,7 +327,7 @@ Script::ReturnCode Script::execute(xmlNodePtr script, xmlNodePtr currentItem, st
         if (this->state == STATE_DONE)
             break;
 
-        /* begin execution of script */       
+        /* begin execution of script */
 
         /**
          * Handle Text
@@ -346,77 +346,77 @@ Script::ReturnCode Script::execute(xmlNodePtr script, xmlNodePtr currentItem, st
         else {
             /**
              * Search for the corresponding action and execute it!
-             */ 
+             */
             action = action_map.find(name);
             if (action != action_map.end()) {
                 /**
                  * Found it!
-                 */ 
-                switch(action->second) {                
+                 */
+                switch(action->second) {
                 case ACTION_SET_CONTEXT:    retval = pushContext(script, current); break;
                 case ACTION_UNSET_CONTEXT:  retval = popContext(script, current); break;
-                case ACTION_END:            retval = end(script, current); break;                    
+                case ACTION_END:            retval = end(script, current); break;
                 case ACTION_REDIRECT:       retval = redirect(script, current); break;
                 case ACTION_WAIT_FOR_KEY:   retval = waitForKeypress(script, current); break;
-                case ACTION_WAIT:           retval = wait(script, current); break;                    
+                case ACTION_WAIT:           retval = wait(script, current); break;
                 case ACTION_STOP:           retval = RET_STOP; break;
-                case ACTION_INCLUDE:        retval = include(script, current); break;                    
+                case ACTION_INCLUDE:        retval = include(script, current); break;
                 case ACTION_FOR_LOOP:       retval = forLoop(script, current); break;
                 case ACTION_RANDOM:         retval = random(script, current); break;
                 case ACTION_MOVE:           retval = move(script, current); break;
                 case ACTION_SLEEP:          retval = sleep(script, current); break;
                 case ACTION_CURSOR:         retval = cursor(script, current); break;
-                case ACTION_PAY:            retval = pay(script, current); break;                    
+                case ACTION_PAY:            retval = pay(script, current); break;
                 case ACTION_IF:             retval = _if(script, current); break;
                 case ACTION_INPUT:          retval = input(script, current); break;
-                case ACTION_ADD:            retval = add(script, current); break;                    
-                case ACTION_LOSE:           retval = lose(script, current); break;                    
+                case ACTION_ADD:            retval = add(script, current); break;
+                case ACTION_LOSE:           retval = lose(script, current); break;
                 case ACTION_HEAL:           retval = heal(script, current); break;
-                case ACTION_CAST_SPELL:     retval = castSpell(script, current); break;                    
-                case ACTION_DAMAGE:         retval = damage(script, current); break;                    
-                case ACTION_KARMA:          retval = karma(script, current); break;                    
-                case ACTION_MUSIC:          retval = music(script, current); break;                    
+                case ACTION_CAST_SPELL:     retval = castSpell(script, current); break;
+                case ACTION_DAMAGE:         retval = damage(script, current); break;
+                case ACTION_KARMA:          retval = karma(script, current); break;
+                case ACTION_MUSIC:          retval = music(script, current); break;
                 case ACTION_SET_VARIABLE:   retval = setVar(script, current); break;
                 case ACTION_ZTATS:          retval = ztats(script, current); break;
                 default:
-                    
+
                     break;
                 }
             }
             /**
              * Didn't find the corresponding action...
-             */ 
+             */
             else if (debug)
                  fprintf(debug, "ERROR: '%s' method not found", name.c_str());
 
             /* The script was redirected or stopped, stop now! */
             if ((retval == RET_REDIRECTED) || (retval== RET_STOP))
                 break;
-        }        
-        
+        }
+
         if (debug)
-            fprintf(debug, "\n");        
-    }    
+            fprintf(debug, "\n");
+    }
 
     return retval;
 }
 
 /**
  * Continues the script from where it left off, or where the last script indicated
- */ 
+ */
 void Script::_continue() {
     /* reset our script state to normal */
     resetState();
-    
-    /* there's no target indicated, just start where we left off! */            
+
+    /* there's no target indicated, just start where we left off! */
     if (target.empty())
-        execute(currentScript, currentItem);                
+        execute(currentScript, currentItem);
     else run(target);
 }
 
 /**
  * Set and retrieve property values
- */ 
+ */
 void Script::resetState()               { state = STATE_NORMAL; }
 void Script::setState(Script::State s)  { state = s; }
 void Script::setTarget(const std::string &val)      { target = val; }
@@ -439,12 +439,12 @@ int Script::getInputMaxLen()            { return inputMaxLen; }
 
 /**
  * Translates a script string with dynamic variables
- */ 
+ */
 void Script::translate(std::string *text) {
     unsigned int pos;
     bool nochars = true;
     xmlNodePtr node = this->translationContext.back();
-    
+
     /* determine if the script is completely whitespace */
     for (std::string::iterator current = text->begin(); current != text->end(); current++) {
         if (isalnum(*current)) {
@@ -460,8 +460,8 @@ void Script::translate(std::string *text) {
     while ((pos = text->find_first_of("{")) < text->length()) {
         std::string pre = text->substr(0, pos);
         std::string post;
-        std::string item = text->substr(pos+1);        
-        
+        std::string item = text->substr(pos+1);
+
         /**
          * Handle embedded items
          */
@@ -489,12 +489,12 @@ void Script::translate(std::string *text) {
                 num_embedded--;
                 total_pos += 1;
                 current = current.substr(close+1);
-            }            
-        }        
-        
+            }
+        }
+
         /**
          * Separate the item itself from the pre- and post-data
-         */ 
+         */
         post = item.substr(pos+1);
         item = item.substr(0, pos);
 
@@ -511,7 +511,7 @@ void Script::translate(std::string *text) {
             std::string varName = item.substr(1);
             if (variables.find(varName) != variables.end())
                 prop = variables[varName]->getString();
-        }        
+        }
         // Get the current iterator for our loop
         else if (item == "iterator")
             prop = zu4_to_string(this->iterator);
@@ -523,25 +523,25 @@ void Script::translate(std::string *text) {
 
             xmlNodePtr item;
             prop.erase();
-            
+
             /**
              * Save iterator
-             */ 
-            int oldIterator = this->iterator;            
+             */
+            int oldIterator = this->iterator;
 
             /* start iterator at 0 */
             this->iterator = 0;
-            
+
             for (item = node->children; item; item = item->next) {
                 if (xmlStrcmp(item->name, (const xmlChar *)nounName.c_str()) == 0) {
-                    bool hidden = (bool)xmlGetPropAsBool(item, "hidden");                    
+                    bool hidden = (bool)xmlGetPropAsBool(item, "hidden");
 
                     if (!hidden) {
                         /* make sure the item's requisites are met */
                         if (!xmlPropExists(item, "req") || compare(getPropAsStr(item, "req"))) {
                             /* put a newline after each */
                             if (this->iterator > 0)
-                                prop += "\n";                            
+                                prop += "\n";
 
                             /* set translation context to item */
                             translationContext.push_back(item);
@@ -550,20 +550,20 @@ void Script::translate(std::string *text) {
 
                             this->iterator++;
                         }
-                    }                    
+                    }
                 }
             }
-            
+
             /**
              * Restore iterator to previous value
-             */             
+             */
             this->iterator = oldIterator;
         }
 
         /**
          * Make a string containing the available ids using the
          * vendor's inventory (i.e. "bcde")
-         */ 
+         */
         else if (item == "inventory_choices") {
             xmlNodePtr item;
             std::string ids;
@@ -596,15 +596,15 @@ void Script::translate(std::string *text) {
                 prop = p->translate(parts);
             }
         }
-        
+
         /**
          * Resolve as a property name or a function
          */
-        else {            
+        else {
             std::string funcName, content;
 
             funcParse(item, &funcName, &content);
-            
+
             /*
              * Check to see if it's a property name
              */
@@ -612,10 +612,10 @@ void Script::translate(std::string *text) {
                 /* we have the property name, now go get the property value! */
                 prop = getPropAsStr(translationContext, item, true);
             }
-            
+
             /**
              * We have a function, make it work!
-             */ 
+             */
             else {
                 /* perform the <math> function on the content */
                 if (funcName == "math") {
@@ -640,7 +640,7 @@ void Script::translate(std::string *text) {
                     std::string::iterator current;
                     for (current = content.begin(); current != content.end(); current++)
                         *current = toupper(*current);
-                
+
                     prop = content;
                 }
                 /* make the string lower case */
@@ -648,25 +648,25 @@ void Script::translate(std::string *text) {
                     std::string::iterator current;
                     for (current = content.begin(); current != content.end(); current++)
                         *current = tolower(*current);
-                    
+
                     prop = content;
                 }
-                
+
                 /* generate a random number */
                 else if (funcName == "random")
                     prop = zu4_to_string(zu4_random((int)strtol(content.c_str(), NULL, 10)));
-                
+
                 /* replaced with "true" if content is empty, or "false" if not */
-                else if (funcName == "isempty") {                    
+                else if (funcName == "isempty") {
                     if (content.empty())
                         prop = "true";
                     else prop = "false";
-                }                
+                }
             }
-        }        
-       
+        }
+
         if (prop.empty() && debug)
-            fprintf(debug, "\nWarning: dynamic property '{%s}' not found in vendor script (was this intentional?)", item.c_str());        
+            fprintf(debug, "\nWarning: dynamic property '{%s}' not found in vendor script (was this intentional?)", item.c_str());
 
         if (debug)
             fprintf(debug, "\"%s\"", prop.c_str());
@@ -675,18 +675,18 @@ void Script::translate(std::string *text) {
         *text = pre + prop + post;
     }
 
-    /* remove all unnecessary spaces from xml */    
+    /* remove all unnecessary spaces from xml */
     while ((pos = text->find("\t")) < text->length())
         text->replace(pos, 1, "");
     while ((pos = text->find("  ")) < text->length())
         text->replace(pos, 2, "");
     while ((pos = text->find("\n ")) < text->length())
-        text->replace(pos, 2, "\n");    
+        text->replace(pos, 2, "\n");
 }
 
 /**
  * Finds a subscript of script 'node'
- */ 
+ */
  xmlNodePtr Script::find(xmlNodePtr node, const std::string &script_to_find, const std::string &id, bool _default) {
     xmlNodePtr current;
     if (node) {
@@ -708,7 +708,7 @@ void Script::translate(std::string *text) {
         /* find the default script instead */
         if (!current && !id.empty() && !_default)
             current = find(node, script_to_find, "", true);
-        return current;        
+        return current;
     }
     return NULL;
 }
@@ -716,11 +716,11 @@ void Script::translate(std::string *text) {
 /**
  * Gets a property as string from the script, and
  * translates it using scriptTranslate.
- */ 
+ */
 std::string Script::getPropAsStr(std::list<xmlNodePtr>& nodes, const std::string &prop, bool recursive) {
     std::string propvalue;
     std::list<xmlNodePtr>::reverse_iterator i;
-    
+
     for (i = nodes.rbegin(); i != nodes.rend(); i++) {
         xmlNodePtr node = *i;
         if (xmlPropExists(node, prop.c_str())) {
@@ -738,19 +738,19 @@ std::string Script::getPropAsStr(std::list<xmlNodePtr>& nodes, const std::string
             }
         }
     }
-    
+
     translate(&propvalue);
     return propvalue;
 }
 std::string Script::getPropAsStr(xmlNodePtr node, const std::string &prop, bool recursive) {
     std::list<xmlNodePtr> list;
     list.push_back(node);
-    return getPropAsStr(list, prop, recursive);    
+    return getPropAsStr(list, prop, recursive);
 }
 
 /**
  * Gets a property as int from the script
- */ 
+ */
 int Script::getPropAsInt(std::list<xmlNodePtr>& nodes, const string &prop, bool recursive) {
     std::string propvalue = getPropAsStr(nodes, prop, recursive);
     return mathValue(propvalue);
@@ -762,7 +762,7 @@ int Script::getPropAsInt(xmlNodePtr node, const std::string &prop, bool recursiv
 
 /**
  * Gets the content of a script node
- */ 
+ */
 std::string Script::getContent(xmlNodePtr node) {
     xmlChar *nodeContent = xmlNodeGetContent(node);
     std::string content = reinterpret_cast<char *>(nodeContent);
@@ -773,12 +773,12 @@ std::string Script::getContent(xmlNodePtr node) {
 
 /**
  * Sets a new translation context for the script
- */ 
+ */
 Script::ReturnCode Script::pushContext(xmlNodePtr script, xmlNodePtr current) {
     std::string nodeName = getPropAsStr(current, "name");
     std::string search_id;
 
-    if (xmlPropExists(current, idPropName.c_str()))         
+    if (xmlPropExists(current, idPropName.c_str()))
         search_id = getPropAsStr(current, idPropName);
     else if (variables.find(idPropName) != variables.end()) {
         if (variables[idPropName]->isSet())
@@ -799,7 +799,7 @@ Script::ReturnCode Script::pushContext(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Removes a node from the translation context
- */ 
+ */
 Script::ReturnCode Script::popContext(xmlNodePtr script, xmlNodePtr current) {
     if (translationContext.size() > 1) {
         translationContext.pop_back();
@@ -811,7 +811,7 @@ Script::ReturnCode Script::popContext(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * End script execution
- */ 
+ */
 Script::ReturnCode Script::end(xmlNodePtr script, xmlNodePtr current) {
     /**
      * See if there's a global 'end' node declared for cleanup
@@ -822,15 +822,15 @@ Script::ReturnCode Script::end(xmlNodePtr script, xmlNodePtr current) {
 
     if (debug)
         fprintf(debug, "\n<End script>");
-    
+
     this->state = STATE_DONE;
-    
+
     return RET_STOP;
 }
 
 /**
  * Wait for keypress from the user
- */ 
+ */
 Script::ReturnCode Script::waitForKeypress(xmlNodePtr script, xmlNodePtr current) {
     this->currentScript = script;
     this->currentItem = current;
@@ -847,17 +847,17 @@ Script::ReturnCode Script::waitForKeypress(xmlNodePtr script, xmlNodePtr current
 
 /**
  * Redirects script execution to another script
- */ 
+ */
 Script::ReturnCode Script::redirect(xmlNodePtr script, xmlNodePtr current) {
     std::string target;
-    
+
     if (xmlPropExists(current, "redirect"))
         target = getPropAsStr(current, "redirect");
     else target = getPropAsStr(current, "target");
 
     /* set a new search id */
     std::string search_id = getPropAsStr(current, idPropName);
-    
+
     xmlNodePtr newScript = find(this->scriptNode, target, search_id);
     if (!newScript)
         zu4_error(ZU4_LOG_ERR, "Error: redirect failed -- could not find target script '%s' with %s=\"%s\"", target.c_str(), idPropName.c_str(), search_id.c_str());
@@ -868,14 +868,14 @@ Script::ReturnCode Script::redirect(xmlNodePtr script, xmlNodePtr current) {
             fprintf(debug, " %s=\"%s\"", idPropName.c_str(), search_id.c_str());
         fprintf(debug, " .../>");
     }
-    
+
     execute(newScript);
     return RET_REDIRECTED;
 }
 
 /**
  * Includes a script to be executed
- */ 
+ */
 Script::ReturnCode Script::include(xmlNodePtr script, xmlNodePtr current) {
     std::string scriptName = getPropAsStr(current, "script");
     std::string id = getPropAsStr(current, idPropName);
@@ -897,16 +897,16 @@ Script::ReturnCode Script::include(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Waits a given number of milliseconds before continuing execution
- */ 
+ */
 Script::ReturnCode Script::wait(xmlNodePtr script, xmlNodePtr current) {
     int msecs = getPropAsInt(current, "msecs");
-    EventHandler::wait_msecs(msecs);    
+    EventHandler::wait_msecs(msecs);
     return RET_OK;
 }
 
 /**
  * Executes a 'for' loop script
- */ 
+ */
 Script::ReturnCode Script::forLoop(xmlNodePtr script, xmlNodePtr current) {
     Script::ReturnCode retval = RET_OK;
     int start = getPropAsInt(current, "start"),
@@ -917,11 +917,11 @@ Script::ReturnCode Script::forLoop(xmlNodePtr script, xmlNodePtr current) {
 
     if (debug)
         fprintf(debug, "\n\n<For Start=%d End=%d>\n", start, end);
-    
+
     for (i = start, this->iterator = start;
          i <= end;
          i++, this->iterator++) {
-        
+
         if (debug)
             fprintf(debug, "\n%d: ", i);
 
@@ -938,7 +938,7 @@ Script::ReturnCode Script::forLoop(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Randomely executes script code
- */ 
+ */
 Script::ReturnCode Script::random(xmlNodePtr script, xmlNodePtr current) {
     int perc = getPropAsInt(current, "chance");
     int num = zu4_random(100);
@@ -955,7 +955,7 @@ Script::ReturnCode Script::random(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Moves the player's current position
- */ 
+ */
 Script::ReturnCode Script::move(xmlNodePtr script, xmlNodePtr current) {
     if (xmlPropExists(current, "x"))
         c->location->coords.x = getPropAsInt(current, "x");
@@ -966,14 +966,14 @@ Script::ReturnCode Script::move(xmlNodePtr script, xmlNodePtr current) {
 
     if (debug)
         fprintf(debug, "\nMove: x-%d y-%d z-%d", c->location->coords.x, c->location->coords.y, c->location->coords.z);
-    
+
     gameUpdateScreen();
     return RET_OK;
 }
 
 /**
  * Puts the player to sleep. Useful when coding inn scripts
- */ 
+ */
 Script::ReturnCode Script::sleep(xmlNodePtr script, xmlNodePtr current) {
     if (debug)
         fprintf(debug, "\nSleep!\n");
@@ -986,7 +986,7 @@ Script::ReturnCode Script::sleep(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Enables/Disables the keyboard cursor
- */ 
+ */
 Script::ReturnCode Script::cursor(xmlNodePtr script, xmlNodePtr current) {
     bool enable = (bool)xmlGetPropAsBool(current, "enable");
     if (enable)
@@ -998,10 +998,10 @@ Script::ReturnCode Script::cursor(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Pay gold to someone
- */ 
-Script::ReturnCode Script::pay(xmlNodePtr script, xmlNodePtr current) {    
+ */
+Script::ReturnCode Script::pay(xmlNodePtr script, xmlNodePtr current) {
     int price = getPropAsInt(current, "price");
-    int quant = getPropAsInt(current, "quantity");       
+    int quant = getPropAsInt(current, "quantity");
 
     std::string cantpay = getPropAsStr(current, "cantpay");
 
@@ -1009,11 +1009,11 @@ Script::ReturnCode Script::pay(xmlNodePtr script, xmlNodePtr current) {
         zu4_error(ZU4_LOG_ERR, "Error: could not find price for item");
 
     if (debug) {
-        fprintf(debug, "\nPay: price(%d) quantity(%d)", price, quant);                
+        fprintf(debug, "\nPay: price(%d) quantity(%d)", price, quant);
         fprintf(debug, "\n\tParty gold:  %d -", c->saveGame->gold);
         fprintf(debug, "\n\tTotal price: %d", price * quant);
     }
-    
+
     price *= quant;
     if (price > c->saveGame->gold) {
         if (debug)
@@ -1031,7 +1031,7 @@ Script::ReturnCode Script::pay(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Perform a limited 'if' statement
- */ 
+ */
 Script::ReturnCode Script::_if(xmlNodePtr script, xmlNodePtr current) {
     std::string test = getPropAsStr(current, "test");
     Script::ReturnCode retval = RET_OK;
@@ -1043,7 +1043,7 @@ Script::ReturnCode Script::_if(xmlNodePtr script, xmlNodePtr current) {
         if (debug)
             fprintf(debug, "True - Executing '%s'", current->name);
 
-        retval = execute(current);                
+        retval = execute(current);
     }
     else if (debug)
         fprintf(debug, "False");
@@ -1053,10 +1053,10 @@ Script::ReturnCode Script::_if(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Get input from the player
- */ 
+ */
 Script::ReturnCode Script::input(xmlNodePtr script, xmlNodePtr current) {
     std::string type = getPropAsStr(current, "type");
-            
+
     this->currentScript = script;
     this->currentItem = current;
 
@@ -1079,7 +1079,7 @@ Script::ReturnCode Script::input(xmlNodePtr script, xmlNodePtr current) {
         if (type == "choice")
             this->inputName = idPropName;
     }
-        
+
     if (type == "number")
         this->inputType = INPUT_NUMBER;
     else if (type == "keypress")
@@ -1094,18 +1094,18 @@ Script::ReturnCode Script::input(xmlNodePtr script, xmlNodePtr current) {
     else if (type == "direction")
         this->inputType = INPUT_DIRECTION;
     else if (type == "player")
-        this->inputType = INPUT_PLAYER;        
+        this->inputType = INPUT_PLAYER;
 
     if (debug)
         fprintf(debug, "\nInput: %s", type.c_str());
 
     /* the script stops here, at least for now */
-    return RET_STOP;    
+    return RET_STOP;
 }
 
 /**
  * Add item to inventory
- */ 
+ */
 Script::ReturnCode Script::add(xmlNodePtr script, xmlNodePtr current) {
     std::string type = getPropAsStr(current, "type");
     std::string subtype = getPropAsStr(current, "subtype");
@@ -1121,8 +1121,8 @@ Script::ReturnCode Script::add(xmlNodePtr script, xmlNodePtr current) {
             fprintf(debug, "- %s ", subtype.c_str());
     }
 
-    if (type == "gold")        
-        c->party->adjustGold(quant);    
+    if (type == "gold")
+        c->party->adjustGold(quant);
     else if (type == "food") {
         quant *= 100;
         c->party->adjustFood(quant);
@@ -1180,16 +1180,16 @@ Script::ReturnCode Script::add(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Lose item
- */ 
+ */
 Script::ReturnCode Script::lose(xmlNodePtr script, xmlNodePtr current) {
     std::string type = getPropAsStr(current, "type");
     std::string subtype = getPropAsStr(current, "subtype");
     int quant = getPropAsInt(current, "quantity");
 
     if (type == "weapon")
-        AdjustValueMin(c->saveGame->weapons[subtype[0] - 'a'], -quant, 0);            
+        AdjustValueMin(c->saveGame->weapons[subtype[0] - 'a'], -quant, 0);
     else if (type == "armor")
-        AdjustValueMin(c->saveGame->armor[subtype[0] - 'a'], -quant, 0);            
+        AdjustValueMin(c->saveGame->armor[subtype[0] - 'a'], -quant, 0);
 
     if (debug) {
         fprintf(debug, "\nLose: %s ", type.c_str());
@@ -1203,7 +1203,7 @@ Script::ReturnCode Script::lose(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Heals a party member
- */ 
+ */
 Script::ReturnCode Script::heal(xmlNodePtr script, xmlNodePtr current) {
     std::string type = getPropAsStr(current, "type");
     PartyMember *p = c->party->member(getPropAsInt(current, "player")-1);
@@ -1222,7 +1222,7 @@ Script::ReturnCode Script::heal(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Performs all of the visual/audio effects of casting a spell
- */ 
+ */
 Script::ReturnCode Script::castSpell(xmlNodePtr script, xmlNodePtr current) {
     extern SpellEffectCallback spellEffectCallback;
     (*spellEffectCallback)('r', -1, SOUND_MAGIC);
@@ -1234,12 +1234,12 @@ Script::ReturnCode Script::castSpell(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Apply damage to a player
- */ 
+ */
 Script::ReturnCode Script::damage(xmlNodePtr script, xmlNodePtr current) {
     int player = getPropAsInt(current, "player") - 1;
     int pts = getPropAsInt(current, "pts");
     PartyMember *p;
-    
+
     p = c->party->member(player);
     p->applyDamage(pts);
 
@@ -1251,12 +1251,12 @@ Script::ReturnCode Script::damage(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Apply karma changes based on the action taken
- */ 
+ */
 Script::ReturnCode Script::karma(xmlNodePtr script, xmlNodePtr current) {
-    std::string action = getPropAsStr(current, "action");            
+    std::string action = getPropAsStr(current, "action");
 
     if (debug)
-        fprintf(debug, "\nKarma: adjusting - '%s'", action.c_str());            
+        fprintf(debug, "\nKarma: adjusting - '%s'", action.c_str());
 
     typedef std::map<std::string, KarmaAction, std::less<std::string> > KarmaActionMap;
     static KarmaActionMap action_map;
@@ -1296,9 +1296,9 @@ Script::ReturnCode Script::karma(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Set the currently playing music
- */ 
+ */
 Script::ReturnCode Script::music(xmlNodePtr script, xmlNodePtr current) {
-    if (xmlGetPropAsBool(current, "reset"))        
+    if (xmlGetPropAsBool(current, "reset"))
         zu4_music_play(c->location->map->music);
     else {
         std::string type = getPropAsStr(current, "type");
@@ -1318,7 +1318,7 @@ Script::ReturnCode Script::music(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Sets a variable
- */ 
+ */
 Script::ReturnCode Script::setVar(xmlNodePtr script, xmlNodePtr current) {
     std::string name = getPropAsStr(current, "name");
     std::string value = getPropAsStr(current, "value");
@@ -1328,7 +1328,7 @@ Script::ReturnCode Script::setVar(xmlNodePtr script, xmlNodePtr current) {
             fprintf(debug, "Variable name empty!");
         return RET_STOP;
     }
-    
+
     removeCurrentVariable(name);
     variables[name] = new Variable(value);
 
@@ -1340,12 +1340,12 @@ Script::ReturnCode Script::setVar(xmlNodePtr script, xmlNodePtr current) {
 
 /**
  * Display a different ztats screen
- */ 
+ */
 Script::ReturnCode Script::ztats(xmlNodePtr script, xmlNodePtr current) {
     typedef std::map<std::string, StatsView, std::less<std::string> > StatsViewMap;
     static StatsViewMap view_map;
 
-    if (view_map.size() == 0) {        
+    if (view_map.size() == 0) {
         view_map["party"]       = STATS_PARTY_OVERVIEW;
         view_map["party1"]      = STATS_CHAR1;
         view_map["party2"]      = STATS_CHAR2;
@@ -1369,12 +1369,12 @@ Script::ReturnCode Script::ztats(xmlNodePtr script, xmlNodePtr current) {
 
         if (debug)
             fprintf(debug, "\nZtats: %s", screen.c_str());
-    
+
         /**
          * Find the correct stats view
-         */ 
+         */
         view = view_map.find(screen);
-        if (view != view_map.end()) 
+        if (view != view_map.end())
             c->stats->setView(view->second); /* change it! */
         else if (debug)
             fprintf(debug, " <FAILED - view could not be found>");
@@ -1387,7 +1387,7 @@ Script::ReturnCode Script::ztats(xmlNodePtr script, xmlNodePtr current) {
 /**
  * Parses a math string's children into results so
  * there is only 1 equation remaining.
- * 
+ *
  * ie. <math>5*<math>6/3</math></math>
  */
 void Script::mathParseChildren(xmlNodePtr math, std::string *result) {
@@ -1396,22 +1396,22 @@ void Script::mathParseChildren(xmlNodePtr math, std::string *result) {
 
     for (current = math->children; current; current = current->next) {
         if (xmlNodeIsText(current)) {
-            *result = getContent(current);        
+            *result = getContent(current);
         }
         else if (xmlStrcmp(current->name, (const xmlChar *)"math") == 0) {
-            std::string children_results;            
-            
+            std::string children_results;
+
             mathParseChildren(current, &children_results);
-            *result = zu4_to_string(mathValue(children_results));            
+            *result = zu4_to_string(mathValue(children_results));
         }
-    }    
+    }
 }
 
 /**
  * Parses a string into left integer value, right integer value,
  * and operator. Returns false if the string is not a valid
  * math equation
- */ 
+ */
 bool Script::mathParse(const std::string &str, int *lval, int *rval, std::string *op) {
     std::string left, right;
     parseOperation(str, &left, &right, op);
@@ -1424,10 +1424,10 @@ bool Script::mathParse(const std::string &str, int *lval, int *rval, std::string
 
     /* make sure that we're dealing with numbers */
     if (!isdigit(left[0]) || !isdigit(right[0]))
-        return false;    
+        return false;
 
     *lval = (int)strtol(left.c_str(), NULL, 10);
-    *rval = (int)strtol(right.c_str(), NULL, 10);    
+    *rval = (int)strtol(right.c_str(), NULL, 10);
     return true;
 }
 
@@ -1442,7 +1442,7 @@ void Script::parseOperation(const std::string &str, std::string *left, std::stri
         i = 0;
 
     pos = str.find(ops[i]);
-    while ((pos <= 0) && !ops[i].empty()) {    
+    while ((pos <= 0) && !ops[i].empty()) {
         i++;
         pos = str.find(ops[i]);
     }
@@ -1459,29 +1459,29 @@ void Script::parseOperation(const std::string &str, std::string *left, std::stri
 
 /**
  * Takes a simple equation string and returns the value
- */ 
+ */
 int Script::mathValue(const std::string &str) {
     int lval, rval;
     std::string op;
-    
+
     /* something was invalid, just return the integer value */
-    if (!mathParse(str, &lval, &rval, &op))    
+    if (!mathParse(str, &lval, &rval, &op))
         return (int)strtol(str.c_str(), NULL, 10);
     else return math(lval, rval, op);
 }
 
 /**
  * Performs simple math operations in the script
- */ 
-int Script::math(int lval, int rval, std::string &op) {    
+ */
+int Script::math(int lval, int rval, std::string &op) {
     if (op == "+")
         return lval + rval;
     else if (op == "-")
-        return lval - rval; 
+        return lval - rval;
     else if (op == "*")
-        return lval * rval; 
+        return lval * rval;
     else if (op == "/")
-        return lval / rval; 
+        return lval / rval;
     else if (op == "%")
         return lval % rval;
     else if ((op == "=") || (op == "=="))
@@ -1503,14 +1503,14 @@ int Script::math(int lval, int rval, std::string &op) {
 /**
  * Does a boolean comparison on a string (math or string),
  * fails if the string doesn't contain a valid comparison
- */ 
+ */
 bool Script::compare(const std::string &statement) {
     std::string str = statement;
     int lval, rval;
     std::string left, right, op;
     int and_pos, or_pos;
     bool invert = false,
-         _and = false;         
+         _and = false;
 
     /**
      * Handle parsing of complex comparisons
@@ -1520,7 +1520,7 @@ bool Script::compare(const std::string &statement) {
      *
      * Since this resolves right-to-left, this would evaluate
      * similarly to (true && (true && (true || false))), returning
-     * true.     
+     * true.
      */
     and_pos = str.find_first_of("&&");
     or_pos = str.find_first_of("||");
@@ -1528,10 +1528,10 @@ bool Script::compare(const std::string &statement) {
     if ((and_pos > 0) || (or_pos > 0)) {
         bool retfirst, retsecond;
         int pos;
-        
+
         if ((or_pos < 0) || ((and_pos > 0) && (and_pos < or_pos)))
-            _and = true;        
-        
+            _and = true;
+
         if (_and)
             pos = and_pos;
         else pos = or_pos;
@@ -1567,7 +1567,7 @@ bool Script::compare(const std::string &statement) {
 
 /**
  * Parses a function into its name and contents
- */ 
+ */
 void Script::funcParse(const std::string & str, std::string *funcName, std::string *contents) {
     unsigned int pos;
     *funcName = str;
@@ -1575,7 +1575,7 @@ void Script::funcParse(const std::string & str, std::string *funcName, std::stri
     pos = funcName->find_first_of("(");
     if (pos < funcName->length()) {
         *funcName = funcName->substr(0, pos);
-        
+
         *contents = str.substr(pos+1);
         pos = contents->find_first_of(")");
         if (pos >= contents->length())

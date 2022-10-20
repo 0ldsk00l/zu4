@@ -34,7 +34,7 @@ int chars_needed(const char *s, int columnmax, int linesdesired, int *real_lines
 /**
  * Returns true of the object that 'punknown' points
  * to is a person object
- */ 
+ */
 bool isPerson(Object *punknown) {
     Person *p;
     if ((p = dynamic_cast<Person*>(punknown)) != NULL)
@@ -77,15 +77,15 @@ list<string> replySplit(const string &text) {
     /* skip over any initial newlines */
     if ((pos = str.find("\n\n")) == 0)
         str = str.substr(pos+1);
-    
+
     unsigned int num_chars = chars_needed(str.c_str(), TEXT_AREA_W, TEXT_AREA_H, &real_lines);
-    
+
     /* we only have one chunk, no need to split it up */
     unsigned int len = str.length();
     if (num_chars == len)
         reply.push_back(str);
     else {
-        string pre = str.substr(0, num_chars);        
+        string pre = str.substr(0, num_chars);
 
         /* add the first chunk to the list */
         reply.push_back(pre);
@@ -102,12 +102,12 @@ list<string> replySplit(const string &text) {
 
             /* find the next chunk and add it */
             num_chars = chars_needed(str.c_str(), TEXT_AREA_W, TEXT_AREA_H, &real_lines);
-            pre = str.substr(0, num_chars);            
+            pre = str.substr(0, num_chars);
 
             reply.push_back(pre);
         }
     }
-    
+
     return reply;
 }
 
@@ -167,20 +167,20 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
      * a convsation with a vendor
      */
     if (isVendor()) {
-        static const string ids[] = { 
+        static const string ids[] = {
             "Weapons", "Armor", "Food", "Tavern", "Reagents", "Healer", "Inn", "Guild", "Stable"
         };
         Script *script = cnv->script;
 
         /**
          * We aren't currently running a script, load the appropriate one!
-         */ 
+         */
         if (cnv->state == Conversation::INTRO) {
             // unload the previous script if it wasn't already unloaded
             if (script->getState() != Script::STATE_UNLOADED)
                 script->unload();
             script->load("vendorScript.xml", ids[npcType - NPC_VENDOR_WEAPONS], "vendor", c->location->map->getName());
-            script->run("intro");       
+            script->run("intro");
 
             while (script->getState() != Script::STATE_DONE) {
                 // Gather input for the script
@@ -203,7 +203,7 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
                     case Script::INPUT_KEYPRESS:
                         ReadChoiceController::get(" \015\033");
                         break;
-                        
+
                     case Script::INPUT_NUMBER: {
                         int val = ReadIntController::get(script->getInputMaxLen(), TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
                         script->setVar(script->getInputName(), val);
@@ -216,8 +216,8 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
                             script->setVar(script->getInputName(), str);
                         }
                         else script->unsetVar(script->getInputName());
-                    } break;                    
-                    
+                    } break;
+
                     case Script::INPUT_PLAYER: {
                         ReadPlayerController getPlayerCtrl;
                         eventHandler->pushController(&getPlayerCtrl);
@@ -236,10 +236,10 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
                     // Continue running the script!
                     c->line++;
                     script->_continue();
-                } // } if 
+                } // } if
             } // } while
         }
-        
+
         // Unload the script
         script->unload();
         cnv->state = Conversation::DONE;
@@ -267,7 +267,7 @@ list<string> Person::getConversationText(Conversation *cnv, const char *inquiry)
 
         case Conversation::ASK:
         case Conversation::ASKYESNO:
-            zu4_assert(npcType != NPC_HAWKWIND, "invalid state for hawkwind conversation");            
+            zu4_assert(npcType != NPC_HAWKWIND, "invalid state for hawkwind conversation");
             text += talkerGetQuestionResponse(cnv, inquiry) + "\n";
             break;
 
@@ -315,8 +315,8 @@ string Person::getPrompt(Conversation *cnv) {
 const char *Person::getChoices(Conversation *cnv) {
     if (isVendor())
         return cnv->script->getChoices().c_str();
-    
-    switch (cnv->state) {    
+
+    switch (cnv->state) {
     case Conversation::CONFIRMATION:
     case Conversation::CONTINUEQUESTION:
         return "ny\015 \033";
@@ -405,7 +405,7 @@ void Person::runCommand(Conversation *cnv, const ResponsePart &command) {
     else {
         zu4_assert(0, "unknown command trigger in dialogue response: %s\n", string(command).c_str());
     }
-} 
+}
 
 string Person::getResponse(Conversation *cnv, const char *inquiry) {
     string reply;
@@ -413,7 +413,7 @@ string Person::getResponse(Conversation *cnv, const char *inquiry) {
     const ResponsePart &action = dialogue->getAction();
 
     reply = "\n";
-    
+
     /* Does the person take action during the conversation? */
     if (action == ResponsePart::END) {
         runCommand(cnv, action);
@@ -444,7 +444,7 @@ string Person::getResponse(Conversation *cnv, const char *inquiry) {
         }
     }
 
-    else if ((*dialogue)[inquiry]) {        
+    else if ((*dialogue)[inquiry]) {
         Dialogue::Keyword *kw = (*dialogue)[inquiry];
 
         reply = processResponse(cnv, kw->getResponse());
@@ -477,7 +477,7 @@ string Person::talkerGetQuestionResponse(Conversation *cnv, const char *answer) 
     if (!valid) {
         cnv->state = Conversation::ASKYESNO;
         return "Yes or no!";
-    } 
+    }
 
     cnv->state = Conversation::TALK;
     return "\n" + processResponse(cnv, cnv->question->getResponse(yes));
@@ -515,7 +515,7 @@ string Person::lordBritishGetQuestionResponse(Conversation *cnv, const char *ans
 
     else if (tolower(answer[0]) == 'n') {
         reply = "N\n\nHe says: Let me heal thy wounds!\n";
-        cnv->state = Conversation::FULLHEAL;           
+        cnv->state = Conversation::FULLHEAL;
     }
 
     else
@@ -529,7 +529,7 @@ string Person::getQuestion(Conversation *cnv) {
 }
 
 /**
- * Returns the number of characters needed to get to 
+ * Returns the number of characters needed to get to
  * the next line of text (based on column width).
  */
 int chars_to_next_line(const char *s, int columnmax) {
@@ -573,10 +573,10 @@ int linecount(const string &s, int columnmax) {
  */
 int chars_needed(const char *s, int columnmax, int linesdesired, int *real_lines) {
     int chars = 0,
-        totalChars = 0;    
+        totalChars = 0;
 
     char *new_str = strdup(s),
-         *str = new_str;    
+         *str = new_str;
 
     // try breaking text into paragraphs first
     string text = s;
@@ -614,7 +614,7 @@ int chars_needed(const char *s, int columnmax, int linesdesired, int *real_lines
         int num_to_move = chars;
         if (*(str + num_to_move) == '\n')
             num_to_move++;
-        
+
         totalChars += num_to_move;
         str += num_to_move;
     }
@@ -622,5 +622,5 @@ int chars_needed(const char *s, int columnmax, int linesdesired, int *real_lines
     free(new_str);
 
     *real_lines = lines;
-    return totalChars;    
+    return totalChars;
 }

@@ -39,7 +39,7 @@ public:
     std::string type;
     PersonList persons;
     std::string tlk_fname;
-    PersonRoleList personroles;    
+    PersonRoleList personroles;
     std::vector<Dialogue *> extraDialogues;
 };
 

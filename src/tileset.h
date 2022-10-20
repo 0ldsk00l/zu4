@@ -18,7 +18,7 @@ typedef std::map<std::string, struct TileRule *> TileRuleMap;
  * TileRule struct
  */
 struct TileRule {
-public:    
+public:
     static TileRule *findByName(const std::string &name);
     static void load();
     static TileRuleMap rules;   // A map of rule names to rules
@@ -26,7 +26,7 @@ public:
     bool initFromConf(const ConfigElement &tileRuleConf);
 
     std::string name;
-    unsigned short mask;    
+    unsigned short mask;
     unsigned short movementMask;
     TileSpeed speed;
     TileEffect effect;
@@ -48,8 +48,8 @@ public:
     static void unloadAllImages();
     static Tileset* get(const std::string &name);
 
-    static Tile* findTileByName(const std::string &name);        
-    static Tile* findTileById(TileId id);        
+    static Tile* findTileByName(const std::string &name);
+    static Tile* findTileById(TileId id);
 
 public:
     void load(const ConfigElement &tilesetConf);
@@ -59,8 +59,8 @@ public:
     Tile* getByName(const std::string &name);
     std::string getImageName() const;
     unsigned int numTiles() const;
-    unsigned int numFrames() const;    
-    
+    unsigned int numFrames() const;
+
 private:
     static TilesetMap tilesets;
 

@@ -25,9 +25,9 @@
  *      <li>Strip vendor-specific code from the language</li>
  *      <li>Fill in some of the missing integration with the game</li>
  * </ul>
- */ 
+ */
 struct Script {
-public:    
+public:
     /**
      * A struct that provides information to a script.  It is designed to
      * translate qualifiers and identifiers in a script to another value.
@@ -44,7 +44,7 @@ public:
 private:
     /**
      * A struct that represents a script variable
-     */ 
+     */
     struct Variable {
     public:
         Variable();
@@ -53,7 +53,7 @@ private:
 
         int&    getInt();
         std::string& getString();
-        
+
         void    setValue(const int &v);
         void    setValue(const std::string &v);
         void    unset();
@@ -61,7 +61,7 @@ private:
         bool    isInt() const;
         bool    isString() const;
         bool    isSet() const;
-    
+
     private:
         int i_val;
         std::string s_val;
@@ -71,7 +71,7 @@ private:
 public:
     /**
      * A script return code
-     */ 
+     */
     enum ReturnCode {
         RET_OK,
         RET_REDIRECTED,
@@ -80,19 +80,19 @@ public:
 
     /**
      * The current state of the script
-     */ 
+     */
     enum State {
         STATE_UNLOADED,
-        STATE_NORMAL,        
-        STATE_DONE,        
+        STATE_NORMAL,
+        STATE_DONE,
         STATE_INPUT
     };
 
     /**
      * The type of input the script is requesting
-     */ 
+     */
     enum InputType {
-        INPUT_CHOICE, 
+        INPUT_CHOICE,
         INPUT_NUMBER,
         INPUT_STRING,
         INPUT_DIRECTION,
@@ -102,7 +102,7 @@ public:
 
     /**
      * The action that the script is taking
-     */ 
+     */
     enum Action {
         ACTION_SET_CONTEXT,
         ACTION_UNSET_CONTEXT,
@@ -127,7 +127,7 @@ public:
         ACTION_DAMAGE,
         ACTION_KARMA,
         ACTION_MUSIC,
-        ACTION_SET_VARIABLE,        
+        ACTION_SET_VARIABLE,
         ACTION_ZTATS
     };
 
@@ -138,37 +138,37 @@ public:
     bool load(const std::string &filename, const std::string &baseId, const std::string &subNodeName = "", const std::string &subNodeId = "");
     void unload();
     void run(const std::string &script);
-    ReturnCode execute(xmlNodePtr script, xmlNodePtr currentItem = NULL, std::string *output = NULL);    
+    ReturnCode execute(xmlNodePtr script, xmlNodePtr currentItem = NULL, std::string *output = NULL);
     void _continue();
-    
+
     void resetState();
     void setState(State state);
-    State getState();    
-    
+    State getState();
+
     void setTarget(const std::string &val);
     void setChoices(const std::string &val);
     void setVar(const std::string &name, const std::string &val);
     void setVar(const std::string &name, int val);
     void unsetVar(const std::string &name);
-    
+
     std::string getTarget();
     InputType getInputType();
     std::string getInputName();
     std::string getChoices();
     int getInputMaxLen();
-    
+
 private:
     void        translate(std::string *script);
-    xmlNodePtr  find(xmlNodePtr node, const std::string &script, const std::string &choice = "", bool _default = false);    
+    xmlNodePtr  find(xmlNodePtr node, const std::string &script, const std::string &choice = "", bool _default = false);
     std::string getPropAsStr(std::list<xmlNodePtr>& nodes, const std::string &prop, bool recursive);
     std::string getPropAsStr(xmlNodePtr node, const std::string &prop, bool recursive = false);
     int         getPropAsInt(std::list<xmlNodePtr>& nodes, const std::string &prop, bool recursive);
     int         getPropAsInt(xmlNodePtr node, const std::string &prop, bool recursive = false);
-    std::string getContent(xmlNodePtr node);   
+    std::string getContent(xmlNodePtr node);
 
     /*
      * Action Functions
-     */     
+     */
     ReturnCode pushContext(xmlNodePtr script, xmlNodePtr current);
     ReturnCode popContext(xmlNodePtr script, xmlNodePtr current);
     ReturnCode end(xmlNodePtr script, xmlNodePtr current);
@@ -190,7 +190,7 @@ private:
     ReturnCode castSpell(xmlNodePtr script, xmlNodePtr current);
     ReturnCode damage(xmlNodePtr script, xmlNodePtr current);
     ReturnCode karma(xmlNodePtr script, xmlNodePtr current);
-    ReturnCode music(xmlNodePtr script, xmlNodePtr current);    
+    ReturnCode music(xmlNodePtr script, xmlNodePtr current);
     ReturnCode setVar(xmlNodePtr script, xmlNodePtr current);
     ReturnCode setId(xmlNodePtr script, xmlNodePtr current);
     ReturnCode ztats(xmlNodePtr script, xmlNodePtr current);
@@ -218,7 +218,7 @@ private:
     xmlDocPtr vendorScriptDoc;
     xmlNodePtr scriptNode;
     FILE *debug;
-    
+
     State state;                    /**< The state the script is in */
     xmlNodePtr currentScript;       /**< The currently running script */
     xmlNodePtr currentItem;         /**< The current position in the script */
@@ -231,11 +231,11 @@ private:
     std::string nounName;           /**< The name that identifies a node name of noun nodes */
     std::string idPropName;         /**< The name of the property that uniquely identifies a noun node
                                          and is used to find a new translation context */
-    
-    std::string choices;
-    int iterator;   
 
-    std::map<std::string, Variable*> variables;    
+    std::string choices;
+    int iterator;
+
+    std::map<std::string, Variable*> variables;
     std::map<std::string, Provider*> providers;
 };
 

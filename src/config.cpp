@@ -159,7 +159,7 @@ string ConfigElement::getString(const string &name) const {
 
     string result(reinterpret_cast<const char *>(prop));
     xmlFree(prop);
-    
+
     return result;
 }
 
