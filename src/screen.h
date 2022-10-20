@@ -27,9 +27,7 @@
 #include <vector>
 #include <string>
 
-#include "direction.h"
 #include "types.h"
-#include "u4file.h"
 
 struct Image;
 struct Map;

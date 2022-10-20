@@ -5,7 +5,6 @@
 #ifndef MOVEMENT_H
 #define MOVEMENT_H
 
-#include "direction.h"
 #include "map.h"
 
 struct Object;

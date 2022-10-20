@@ -6,12 +6,10 @@
 #define MENU_H
 
 #include <list>
-#include <set>
 #include <string>
 #include "event.h"
 #include "menuitem.h"
 #include "observable.h"
-#include "types.h"
 
 struct Menu;
 struct TextView;

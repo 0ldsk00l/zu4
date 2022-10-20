@@ -8,10 +8,9 @@
 #include <string>
 #include <vector>
 
-#include "controller.h"
 #include "menu.h"
-#include "observer.h"
 #include "savegame.h"
+#include "image.h"
 #include "imageview.h"
 #include "textview.h"
 #include "tileview.h"

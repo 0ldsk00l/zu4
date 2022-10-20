@@ -13,6 +13,7 @@
 #include "game.h"
 #include "item.h"
 #include "imagemgr.h"
+#include "music.h"
 #include "names.h"
 #include "savegame.h"
 #include "screen.h"

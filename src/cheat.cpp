@@ -9,6 +9,7 @@
 #include "game.h"
 #include "mapmgr.h"
 #include "moongate.h"
+#include "music.h"
 #include "portal.h"
 #include "player.h"
 #include "screen.h"
