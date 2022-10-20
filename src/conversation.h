@@ -10,8 +10,6 @@
 #include <string>
 #include <vector>
 
-#include "utils.h"
-
 struct Person;
 struct Script;
 

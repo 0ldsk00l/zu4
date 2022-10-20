@@ -5,8 +5,6 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include "types.h"
-
 struct Map;
 struct Coords;
 

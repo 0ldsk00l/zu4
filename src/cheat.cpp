@@ -3,20 +3,15 @@
  */
 
 #include "cheat.h"
-#include "location.h"
-#include "map.h"
-#include "context.h"
 #include "game.h"
 #include "mapmgr.h"
 #include "moongate.h"
 #include "music.h"
+#include "names.h"
 #include "portal.h"
 #include "player.h"
 #include "screen.h"
 #include "stats.h"
-#include "tileset.h"
-#include "utils.h"
-#include "weapon.h"
 
 static const char *strwhitespace = "\t\013\014 \n\r";
 

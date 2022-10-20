@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-#include "direction.h"
-#include "types.h"
 #include "tileset.h"
 
 struct ConfigElement;

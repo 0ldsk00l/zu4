@@ -1,30 +1,20 @@
 /*
  * $Id: spell.cpp 3071 2014-07-26 18:01:08Z darren_janeczek $
  */
+
 #include <string.h>
 
-#include "u4.h"
 #include "spell.h"
 #include "annotation.h"
-#include "combat.h"
-#include "context.h"
-#include "direction.h"
 #include "dungeon.h"
 #include "error.h"
-#include "event.h"
-#include "game.h"
-#include "location.h"
-#include "map.h"
 #include "mapmgr.h"
 #include "music.h"
-#include "creature.h"
 #include "moongate.h"
-#include "player.h"
 #include "random.h"
 #include "screen.h"
 #include "settings.h"
-#include "tile.h"
-#include "tileset.h"
+#include "sound.h"
 #include "utils.h"
 
 SpellEffectCallback spellEffectCallback = NULL;

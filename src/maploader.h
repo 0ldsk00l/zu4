@@ -6,7 +6,6 @@
 #define MAPLOADER_H
 
 #include <map>
-#include <string>
 
 #include "map.h"
 

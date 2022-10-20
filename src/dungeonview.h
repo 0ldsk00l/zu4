@@ -7,14 +7,6 @@
 
 #include "context.h"
 #include "dungeon.h"
-#include "savegame.h"
-#include "tileset.h"
-
-#include "direction.h"
-#include "tileview.h"
-
-#include "types.h"
-#include "location.h"
 
 typedef enum {
     DNGGRAPHIC_NONE,

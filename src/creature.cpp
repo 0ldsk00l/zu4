@@ -2,23 +2,19 @@
  * $Id: creature.cpp 3077 2014-07-30 00:37:32Z darren_janeczek $
  */
 
+#include <cstring>
+
 #include "creature.h"
 
-#include <cstring>
 #include "combat.h"
 #include "config.h"
 #include "context.h"
 #include "error.h"
-#include "game.h"       /* required by specialAction and specialEffect functions */
-#include "location.h"
-#include "map.h"
-#include "player.h"     /* required by specialAction and specialEffect functions */
-#include "savegame.h"
 #include "screen.h"     /* FIXME: remove dependence on this */
 #include "settings.h"
 #include "random.h"
+#include "sound.h"
 #include "textcolor.h"  /* required to change the color of screen message text */
-#include "tileset.h"
 #include "utils.h"
 
 CreatureMgr *CreatureMgr::instance = NULL;

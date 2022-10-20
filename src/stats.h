@@ -6,8 +6,7 @@
 #define STATS_H
 
 #include <string>
-#include "observable.h"
-#include "observer.h"
+
 #include "menu.h"
 #include "textview.h"
 
