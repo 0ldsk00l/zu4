@@ -4,18 +4,12 @@
 
 #include "portal.h"
 
-#include "annotation.h"
 #include "city.h"
-#include "context.h"
 #include "dungeon.h"
-#include "game.h"
-#include "location.h"
 #include "mapmgr.h"
 #include "music.h"
-#include "names.h"
 #include "screen.h"
 #include "shrine.h"
-#include "tile.h"
 
 /**
  * Creates a dungeon ladder portal based on the action given

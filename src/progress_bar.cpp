@@ -6,9 +6,6 @@
 
 #include "progress_bar.h"
 
-#include "image.h"
-#include "settings.h"
-
 ProgressBar::ProgressBar(int x, int y, int width, int height, int _min, int _max) :
     View(x, y, width, height),
     min(_min),

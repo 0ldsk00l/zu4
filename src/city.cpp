@@ -3,13 +3,11 @@
  */
 
 #include <string>
-#include <typeinfo>
+
 #include "city.h"
 
 #include "context.h"
 #include "conversation.h"
-#include "creature.h"
-#include "object.h"
 #include "person.h"
 #include "player.h"
 

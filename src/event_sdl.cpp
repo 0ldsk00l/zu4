@@ -3,14 +3,11 @@
  */
 
 #include <SDL.h>
-#include "u4.h"
 
 #include "event.h"
 
 #include "context.h"
 #include "error.h"
-#include "screen.h"
-#include "settings.h"
 #include "u4_sdl.h"
 #include "video.h"
 

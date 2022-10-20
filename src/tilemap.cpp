@@ -5,11 +5,10 @@
 #include <vector>
 
 #include "tilemap.h"
-#include "tile.h"
 
 #include "config.h"
 #include "error.h"
-#include "tileset.h"
+#include "tile.h"
 
 /**
  * Static variables

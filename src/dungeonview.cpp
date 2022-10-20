@@ -3,12 +3,9 @@
  */
 
 #include "dungeonview.h"
-#include "image.h"
 #include "imagemgr.h"
-#include "settings.h"
 #include "screen.h"
 #include "tileanim.h"
-#include "tileset.h"
 #include "u4.h"
 #include "error.h"
 

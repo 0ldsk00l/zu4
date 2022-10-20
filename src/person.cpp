@@ -5,27 +5,18 @@
 #include <string.h>
 #include <vector>
 
-#include "u4.h"
 #include "person.h"
-#include "city.h"
+
 #include "context.h"
 #include "conversation.h"
 #include "error.h"
-#include "event.h"
 #include "game.h"   // Included for ReadPlayerController
-#include "io.h"
-#include "location.h"
 #include "music.h"
 #include "names.h"
 #include "player.h"
-#include "savegame.h"
 #include "settings.h"
-#include "stats.h"
 #include "random.h"
-#include "types.h"
-#include "u4file.h"
-#include "utils.h"
-#include "script.h"
+#include "u4.h"
 
 using namespace std;
 

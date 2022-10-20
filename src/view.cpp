@@ -1,9 +1,8 @@
 #include <stdint.h>
 
-#include "image.h"
-#include "imagemgr.h"
-#include "settings.h"
 #include "view.h"
+
+#include "imagemgr.h"
 
 Image *View::screen = NULL;
 

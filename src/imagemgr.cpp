@@ -10,7 +10,6 @@
 #include "imageloader.h"
 #include "imagemgr.h"
 #include "intro.h"
-#include "u4file.h"
 
 bool ImageInfo::hasBlackBackground()
 {

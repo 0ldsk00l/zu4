@@ -8,7 +8,6 @@
 #include "conversation.h"
 #include "dialogueloader_lb.h"
 #include "player.h"
-#include "savegame.h"
 #include "u4file.h"
 
 Response *lordBritishGetHelp(const DynamicResponse *resp);

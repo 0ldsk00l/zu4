@@ -8,8 +8,6 @@
 #include "event.h"
 
 #include "context.h"
-#include "location.h"
-#include "savegame.h"
 #include "screen.h"
 #include "settings.h"
 #include "textview.h"

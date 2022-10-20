@@ -2,13 +2,9 @@
  * $Id: imageview.cpp 2671 2006-09-04 18:56:09Z solus $
  */
 
-#include <stdint.h>
-
 #include "error.h"
-#include "image.h"
 #include "imagemgr.h"
 #include "imageview.h"
-#include "settings.h"
 
 ImageView::ImageView(int x, int y, int width, int height) : View(x, y, width, height) {
 }
