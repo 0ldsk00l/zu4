@@ -12,7 +12,7 @@
 #include "tile.h"
 
 TileAnimTransform *TileAnimTransform::create(const ConfigElement &conf) {
-    TileAnimTransform *transform;
+    TileAnimTransform *transform = NULL;
     static const char *transformTypeEnumStrings[] = { "invert", "pixel", "scroll", "frame", "pixel_color", NULL };
 
     int type = conf.getEnum("type", transformTypeEnumStrings);

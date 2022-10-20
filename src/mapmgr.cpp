@@ -70,7 +70,7 @@ void MapMgr::unloadMap(MapId id) {
 }
 
 Map *MapMgr::initMap(Map::Type type) {
-    Map *map;
+    Map *map = NULL;
 
     switch(type) {
     case Map::WORLD:
