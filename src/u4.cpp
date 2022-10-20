@@ -38,7 +38,6 @@ int main(int argc, char *argv[]) {
 	unsigned int i;
     int skipIntro = 0;
 
-
     /*
      * if the -p or -profile arguments are passed to the application,
      * they need to be identified before the settings are initialized.
@@ -82,7 +81,6 @@ int main(int argc, char *argv[]) {
             }
             else
                 zu4_error(ZU4_LOG_ERR, "%s is invalid alone: Requires a number for input. See --help for more detail.\n", argv[i]);
-
 
         }
         else if ( strcmp(argv[i], "-p") == 0

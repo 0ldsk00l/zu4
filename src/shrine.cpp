@@ -2,7 +2,6 @@
  * $Id: shrine.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-
 #include <string>
 #include <vector>
 

@@ -2,7 +2,6 @@
  * $Id: xml.cpp 2661 2006-01-14 23:43:54Z solus $
  */
 
-
 #include <cstdlib>
 #include <cstdarg>
 

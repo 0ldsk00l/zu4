@@ -333,7 +333,6 @@ void EventHandler::setScreenUpdate(void (*updateScreen)(void)) {
         return true;
 }
 
-
 /**
  * Adds a key handler to the stack.
  */

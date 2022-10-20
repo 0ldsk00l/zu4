@@ -2,7 +2,6 @@
  * $Id: dungeonview.cpp 3071 2014-07-26 18:01:08Z darren_janeczek $
  */
 
-
 #include "dungeonview.h"
 #include "image.h"
 #include "imagemgr.h"
@@ -13,12 +12,10 @@
 #include "u4.h"
 #include "error.h"
 
-
 DungeonView::DungeonView(int x, int y, int columns, int rows) : TileView(x, y, rows, columns)
 , screen3dDungeonViewEnabled(true)
 {
 }
-
 
 DungeonView * DungeonView::instance(NULL);
 DungeonView * DungeonView::getInstance()

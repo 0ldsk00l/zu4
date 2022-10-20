@@ -40,7 +40,6 @@ typedef struct {
   int length;
 } cm_SourceInfo;
 
-
 enum {
   CM_STATE_STOPPED,
   CM_STATE_PLAYING,
@@ -54,7 +53,6 @@ enum {
   CM_EVENT_SAMPLES,
   CM_EVENT_REWIND
 };
-
 
 const char* cm_get_error(void);
 void cm_init(int samplerate);

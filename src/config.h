@@ -25,7 +25,6 @@ public:
 
     static char * CONFIG_XML_LOCATION_POINTER;
 
-
 private:
     Config();
     static void *fileOpen(const char *filename);

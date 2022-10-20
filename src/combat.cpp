@@ -2,7 +2,6 @@
  * $Id: combat.cpp 3021 2012-03-18 11:31:48Z daniel_santos $
  */
 
-
 #include <time.h>
 #include "u4.h"
 #include "combat.h"
@@ -1074,7 +1073,6 @@ void CombatController::attack() {
     // the attack was already made, even if there is no valid target
     // so play the attack sound
     zu4_snd_play(SOUND_PC_ATTACK, false, -1); // PC_ATTACK, melee and ranged
-
 
     std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL,
                                                        attacker->getCoords(),

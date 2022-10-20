@@ -2,7 +2,6 @@
  * $Id: menuitem.cpp 2700 2007-08-02 08:53:48Z solus $
  */
 
-
 #include "error.h"
 #include "menu.h"
 #include "menuitem.h"

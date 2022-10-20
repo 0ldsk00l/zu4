@@ -134,7 +134,6 @@ void TileView::drawTile(std::vector<MapTile> &tiles, bool focus, int x, int y) {
 
 		Image *image = frontTileType->getImage();
 
-
 		// draw the tile to the screen
 		if (frontTileType->getAnim()) {
 			// First, create our animated version of the tile
@@ -157,7 +156,6 @@ void TileView::drawTile(std::vector<MapTile> &tiles, bool focus, int x, int y) {
 							  tileWidth,
 							  tileHeight);
 	}
-
 
 	// draw the focus around the tile if it has the focus
 	if (focus)

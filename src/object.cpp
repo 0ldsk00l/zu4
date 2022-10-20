@@ -2,7 +2,6 @@
  * $Id: object.cpp 3060 2013-01-06 23:17:15Z darren_janeczek $
  */
 
-
 #include <algorithm>
 
 #include "object.h"
@@ -34,7 +33,6 @@ void Object::remove() {
         else maps[i]->removeObject(this, false);
     }
 }
-
 
 #include "screen.h"
 #include "game.h"

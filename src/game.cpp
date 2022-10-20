@@ -2,7 +2,6 @@
  * $Id: game.cpp 3076 2014-07-30 00:20:58Z darren_janeczek $
  */
 
-
 #include <cctype>
 #include <ctime>
 #include <map>
@@ -257,7 +256,6 @@ void GameController::init() {
     else
         /* initialize the moons (must be done from the world map) */
         initMoons();
-
 
     /**
      * Translate info from the savegame to something we can use
@@ -679,7 +677,6 @@ void GameController::finishTurn() {
         }
     }
 
-
     /* draw a prompt */
     screenPrompt();
 }
@@ -707,7 +704,6 @@ void GameController::flashTile(const Coords &coords, const std::string &tilename
     zu4_assert(tile, "no tile named '%s' found in tileset", tilename.c_str());
     flashTile(coords, tile->getId(), timeFactor);
 }
-
 
 /**
  * Provide feedback to user after a party event happens.
@@ -1379,12 +1375,10 @@ bool GameController::keyPressed(int key) {
                 intro->init();
                 eventHandler->run();
 
-
                 if (!quit) {
                     eventHandler->setControllerDone(false);
                     eventHandler->popController();
                     eventHandler->pushController(this);
-
 
                 	if (intro->hasInitiatedNewGame())
                     {
@@ -1737,7 +1731,6 @@ void board() {
     c->location->map->removeObject(obj);
 }
 
-
 void castSpell(int player) {
     if (player == -1) {
         screenMessage("Cast Spell!\nPlayer: ");
@@ -1887,7 +1880,6 @@ bool fireAt(const Coords &coords, bool originAvatar) {
     bool objectHit = false;
 
     Object *obj = NULL;
-
 
     MapTile tile(c->location->map->tileset->getByName("miss_flash")->getId());
     GameController::flashTile(coords, tile, 1);
@@ -2843,7 +2835,6 @@ void talkRunConversation(Conversation &conv, Person *talker, bool showPrompt) {
             char message[2];
             int choice = ReadChoiceController::get("");
 
-
             message[0] = choice;
             message[1] = '\0';
 
@@ -2991,7 +2982,6 @@ void gameCheckHullIntegrity() {
         screenMessage("\nThy ship sinks!\n\n");
         killAll = true;
     }
-
 
     if (!collisionOverride && c->transportContext == TRANSPORT_FOOT &&
     	c->location->map->tileTypeAt(c->location->coords, WITHOUT_OBJECTS)->isSailable() &&

@@ -98,7 +98,6 @@ void screenInit() {
     if (!u4isUpgradeAvailable() && settings.videoType == 1)
         settings.videoType = 0;
 
-
     KeyHandler::setKeyRepeat(settings.keydelay, settings.keyinterval);
 
     /* find the tile animations for our tileset */
@@ -333,8 +332,6 @@ Layout *screenLoadLayoutFromConf(const ConfigElement &conf) {
     return layout;
 }
 
-
-
 std::vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int x, int y, bool &focus) {
     Coords center = c->location->coords;
     static MapTile grass = c->location->map->tileset->getByName("grass")->getId();
@@ -499,7 +496,6 @@ void screenDrawImageInMapArea(const std::string &name) {
                              VIEWPORT_H * TILE_HEIGHT);
 }
 
-
 /**
  * Change the current text color
  */
@@ -557,7 +553,6 @@ void screenScrollMessageArea() {
                           (TEXT_AREA_Y + 1) * CHAR_HEIGHT,
                           TEXT_AREA_W * charsetInfo->image->w,
                           (TEXT_AREA_H - 1) * CHAR_HEIGHT);
-
 
     zu4_img_fill(screen, TEXT_AREA_X * charsetInfo->image->w,
                      TEXT_AREA_Y * CHAR_HEIGHT + (TEXT_AREA_H - 1) * CHAR_HEIGHT,
@@ -683,7 +678,6 @@ void screenFindLineOfSight(std::vector <MapTile> viewportTiles[VIEWPORT_W][VIEWP
     else
         zu4_error(ZU4_LOG_ERR, "unknown line of sight style %s!\n", settings.lineOfSight ? "Enhanced" : "DOS");
 }
-
 
 /**
  * Finds which tiles in the viewport are visible from the avatars
@@ -1099,7 +1093,6 @@ Layout *screenGetGemLayout(const Map *map) {
         return gemlayout;
 }
 
-
 void screenGemUpdate() {
     MapTile tile;
     int x, y;
@@ -1112,7 +1105,6 @@ void screenGemUpdate() {
                      0, 0, 0, 255);
 
     Layout *layout = screenGetGemLayout(c->location->map);
-
 
     //TODO, move the code responsible for determining 'peer' visibility to a non SDL specific part of the code.
     if (c->location->map->type == Map::DUNGEON) {
@@ -1154,7 +1146,6 @@ void screenGemUpdate() {
 			tile = tiles.front();
 
 			TileId avatarTileId = c->location->map->tileset->getByName("avatar")->getId();
-
 
 			if (!weAreDrawingTheAvatarTile)
 			{

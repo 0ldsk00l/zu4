@@ -33,7 +33,6 @@ struct TileAnim;
 #define MASK_FOREGROUND         	0x1000
 #define MASK_LIVING_THING			0x2000
 
-
 /* movement masks */
 #define MASK_SWIMABLE           0x0001
 #define MASK_SAILABLE           0x0002
@@ -133,9 +132,7 @@ private:
 
     std::string animationRule;
 
-
     static TileId nextId;
 };
-
 
 #endif

@@ -2,7 +2,6 @@
  * $Id: tile.cpp 3028 2012-03-18 12:02:46Z daniel_santos $
  */
 
-
 #include "tile.h"
 
 #include "config.h"
@@ -142,7 +141,6 @@ void Tile::loadImage() {
             h = (subimage ? (subimage->height) / frames : info->height / frames);
             image = zu4_img_create(w, h * frames);
 
-
             //info->image->alphaOff();
 
             /* draw the tile from the image we found to our tile image */
@@ -166,7 +164,6 @@ void Tile::loadImage() {
         /* if we have animations, we always used 'animated' to draw from */
         //if (anim)
         //    image->alphaOff();
-
 
     }
 }
@@ -236,7 +233,6 @@ int Tile::frameForDirection(Direction d) const {
     }
     return -1;
 }
-
 
 const Tile *MapTile::getTileType() const {
     return Tileset::findTileById(id);

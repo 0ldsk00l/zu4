@@ -2,7 +2,6 @@
  * $Id: camp.cpp 3059 2013-01-06 22:37:10Z darren_janeczek $
  */
 
-
 #include "u4.h"
 
 #include "camp.h"
@@ -195,7 +194,6 @@ bool InnController::heal() {
     return healed;
 }
 
-
 void InnController::maybeMeetIsaac()
 {
     // Does Isaac the Ghost pay a visit to the Avatar?
@@ -256,7 +254,6 @@ void InnController::maybeAmbush()
             screenMessage("\nIn the middle of the night while out on a stroll...\n\n");
             showMessage = false;
         }
-
 
         map = getCombatMap(mapMgr->get(mapid));
         game->setMap(map, true, NULL, this);

@@ -55,7 +55,6 @@ public:
     std::string colorizeStatus(char statustype);
     std::string colorizeString(std::string input, ColorFG color, unsigned int colorstart, unsigned int colorlength=0);
 
-
 protected:
     int columns, rows;          /**< size of the view in character cells  */
     bool cursorEnabled;         /**< whether the cursor is enabled */

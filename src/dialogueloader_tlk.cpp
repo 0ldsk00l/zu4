@@ -2,7 +2,6 @@
  * $Id: dialogueloader_tlk.cpp 2844 2011-03-26 13:29:24Z twschulz $
  */
 
-
 #include <string>
 #include <cstring>
 

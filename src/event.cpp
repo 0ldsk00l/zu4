@@ -2,7 +2,6 @@
  * $Id: event.cpp 3003 2012-02-08 21:45:39Z twschulz $
  */
 
-
 #include <cctype>
 #include <list>
 
@@ -81,7 +80,6 @@ Controller *EventHandler::popController() {
     return getController();
 }
 
-
 Controller *EventHandler::getController() const {
     if (controllers.empty())
         return NULL;
@@ -93,7 +91,6 @@ void EventHandler::setController(Controller *c) {
     while (popController() != NULL) {}
     pushController(c);
 }
-
 
 /* TimedEvent functions */
 TimedEvent::TimedEvent(TimedEvent::Callback cb, int i, void *d) :
@@ -369,5 +366,4 @@ void WaitController::wait() {
 void WaitController::setCycles(int c) {
     cycles = c;
 }
-
 

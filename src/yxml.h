@@ -72,7 +72,6 @@ typedef enum {
  *   '>' ELEMEND
  */
 
-
 typedef struct {
 	/* PUBLIC (read-only) */
 
@@ -111,7 +110,6 @@ typedef struct {
 	uint64_t total;
 	uint32_t line;
 
-
 	/* PRIVATE */
 	int state;
 	unsigned char *stack; /* Stack of element names + attribute/PI name, separated by \0. Also starts with a \0. */
@@ -123,16 +121,13 @@ typedef struct {
 	unsigned char *string;
 } yxml_t;
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 void yxml_init(yxml_t *, void *, size_t);
 
-
 yxml_ret_t yxml_parse(yxml_t *, int);
-
 
 /* May be called after the last character has been given to yxml_parse().
  * Returns YXML_OK if the XML document is valid, YXML_EEOF otherwise.  Using
@@ -145,7 +140,6 @@ yxml_ret_t yxml_eof(yxml_t *);
 #ifdef __cplusplus
 }
 #endif
-
 
 /* Returns the length of the element name (x->elem), attribute name (x->attr),
  * or PI name (x->pi). This function should ONLY be used directly after the

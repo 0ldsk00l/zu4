@@ -40,7 +40,6 @@
 #define BUFFER_SIZE       (512)
 #define BUFFER_MASK       (BUFFER_SIZE - 1)
 
-
 struct cm_Source {
   cm_Source *next;              /* Next source in list */
   cm_Int16 buffer[BUFFER_SIZE]; /* Internal buffer with raw stereo PCM */
@@ -61,7 +60,6 @@ struct cm_Source {
   double pan;           /* Pan set by `cm_set_pan()` */
 };
 
-
 static struct {
   const char *lasterror;        /* Last error message */
   cm_EventHandler lock;         /* Event handler for lock/unlock events */
@@ -71,11 +69,9 @@ static struct {
   int gain;                     /* Master gain (fixed point) */
 } cmixer;
 
-
 static void dummy_handler(cm_Event *e) {
   UNUSED(e);
 }
-
 
 static void lock(void) {
   cm_Event e;
@@ -83,13 +79,11 @@ static void lock(void) {
   cmixer.lock(&e);
 }
 
-
 static void unlock(void) {
   cm_Event e;
   e.type = CM_EVENT_UNLOCK;
   cmixer.lock(&e);
 }
-
 
 const char* cm_get_error(void) {
   const char *res = cmixer.lasterror;
@@ -97,12 +91,10 @@ const char* cm_get_error(void) {
   return res;
 }
 
-
 static const char* error(const char *msg) {
   cmixer.lasterror = msg;
   return msg;
 }
-
 
 void cm_init(int samplerate) {
   cmixer.samplerate = samplerate;
@@ -111,16 +103,13 @@ void cm_init(int samplerate) {
   cmixer.gain = FX_UNIT;
 }
 
-
 void cm_set_lock(cm_EventHandler lock) {
   cmixer.lock = lock;
 }
 
-
 void cm_set_master_gain(double gain) {
   cmixer.gain = FX_FROM_FLOAT(gain);
 }
-
 
 static void rewind_source(cm_Source *src) {
   cm_Event e;
@@ -133,7 +122,6 @@ static void rewind_source(cm_Source *src) {
   src->nextfill = 0;
 }
 
-
 static void fill_source_buffer(cm_Source *src, int offset, int length) {
   cm_Event e;
   e.type = CM_EVENT_SAMPLES;
@@ -142,7 +130,6 @@ static void fill_source_buffer(cm_Source *src, int offset, int length) {
   e.length = length;
   src->handler(&e);
 }
-
 
 static void process_source(cm_Source *src, int len) {
   int i, n, a, b, p;
@@ -222,7 +209,6 @@ static void process_source(cm_Source *src, int len) {
   }
 }
 
-
 void cm_process(cm_Int16 *dst, int len) {
   int i;
   cm_Source **s;
@@ -259,7 +245,6 @@ void cm_process(cm_Int16 *dst, int len) {
   }
 }
 
-
 cm_Source* cm_new_source(const cm_SourceInfo *info) {
   cm_Source *src = calloc(1, sizeof(*src));
   if (!src) {
@@ -278,7 +263,6 @@ cm_Source* cm_new_source(const cm_SourceInfo *info) {
   return src;
 }
 
-
 static const char* wav_init(cm_SourceInfo *info, void *data, int len, int ownsdata);
 
 static const char* ogg_init(cm_SourceInfo *info, void *data, int len, int ownsdata);
@@ -287,7 +271,6 @@ static int check_header(void *data, int size, char *str, int offset) {
   int len = strlen(str);
   return (size >= offset + len) && !memcmp((char*) data + offset, str, len);
 }
-
 
 static cm_Source* new_source_from_mem(void *data, int size, int ownsdata) {
   const char *err;
@@ -312,7 +295,6 @@ static cm_Source* new_source_from_mem(void *data, int size, int ownsdata) {
   error("unknown format or invalid data");
   return NULL;
 }
-
 
 static void* load_file(const char *filename, int *size) {
   FILE *fp;
@@ -345,7 +327,6 @@ static void* load_file(const char *filename, int *size) {
   return data;
 }
 
-
 cm_Source* cm_new_source_from_file(const char *filename) {
   int size;
   cm_Source *src;
@@ -368,11 +349,9 @@ cm_Source* cm_new_source_from_file(const char *filename) {
   return src;
 }
 
-
 cm_Source* cm_new_source_from_mem(void *data, int size) {
   return new_source_from_mem(data, size, 0);
 }
-
 
 void cm_destroy_source(cm_Source *src) {
   cm_Event e;
@@ -393,21 +372,17 @@ void cm_destroy_source(cm_Source *src) {
   free(src);
 }
 
-
 double cm_get_length(cm_Source *src) {
   return src->length / (double) src->samplerate;
 }
-
 
 double cm_get_position(cm_Source *src) {
   return ((src->position >> FX_BITS) % src->length) / (double) src->samplerate;
 }
 
-
 int cm_get_state(cm_Source *src) {
   return src->state;
 }
-
 
 static void recalc_source_gains(cm_Source *src) {
   double l, r;
@@ -418,18 +393,15 @@ static void recalc_source_gains(cm_Source *src) {
   src->rgain = FX_FROM_FLOAT(r);
 }
 
-
 void cm_set_gain(cm_Source *src, double gain) {
   src->gain = gain;
   recalc_source_gains(src);
 }
 
-
 void cm_set_pan(cm_Source *src, double pan) {
   src->pan = CLAMP(pan, -1.0, 1.0);
   recalc_source_gains(src);
 }
-
 
 void cm_set_pitch(cm_Source *src, double pitch) {
   double rate;
@@ -441,11 +413,9 @@ void cm_set_pitch(cm_Source *src, double pitch) {
   src->rate = FX_FROM_FLOAT(rate);
 }
 
-
 void cm_set_loop(cm_Source *src, int loop) {
   src->loop = loop;
 }
-
 
 void cm_play(cm_Source *src) {
   lock();
@@ -458,17 +428,14 @@ void cm_play(cm_Source *src) {
   unlock();
 }
 
-
 void cm_pause(cm_Source *src) {
   src->state = CM_STATE_PAUSED;
 }
-
 
 void cm_stop(cm_Source *src) {
   src->state = CM_STATE_STOPPED;
   src->rewind = 1;
 }
-
 
 /*============================================================================
 ** Wav stream
@@ -488,7 +455,6 @@ typedef struct {
   int idx;
 } WavStream;
 
-
 static char* find_subchunk(char *data, int len, char *id, int *size) {
   /* TODO : Error handling on malformed wav file */
   int idlen = strlen(id);
@@ -502,7 +468,6 @@ next:
   }
   return p + 8;
 }
-
 
 static const char* read_wav(Wav *w, void *data, int len) {
   int bitdepth, channels, samplerate, format;
@@ -547,7 +512,6 @@ static const char* read_wav(Wav *w, void *data, int len) {
   /* Done */
   return NULL;
 }
-
 
 #define WAV_PROCESS_LOOP(X) \
   while (n--) {             \
@@ -609,7 +573,6 @@ fill:
   }
 }
 
-
 static const char* wav_init(cm_SourceInfo *info, void *data, int len, int ownsdata) {
   WavStream *stream;
   Wav wav;
@@ -643,7 +606,6 @@ static const char* wav_init(cm_SourceInfo *info, void *data, int len, int ownsda
   return NULL;
 }
 
-
 /*============================================================================
 ** Ogg stream
 **============================================================================*/
@@ -655,7 +617,6 @@ typedef struct {
   stb_vorbis *ogg;
   void *data;
 } OggStream;
-
 
 static void ogg_handler(cm_Event *e) {
   int n, len;
@@ -691,7 +652,6 @@ fill:
       break;
   }
 }
-
 
 static const char* ogg_init(cm_SourceInfo *info, void *data, int len, int ownsdata) {
   OggStream *stream;

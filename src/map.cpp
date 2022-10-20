@@ -335,8 +335,6 @@ bool Map::isWorldMap() {
     return type == WORLD;
 }
 
-
-
 /**
  * Returns true if the map is enclosed (to see if gem layouts should cut themselves off)
  */
@@ -499,7 +497,6 @@ Creature *Map::moveObjects(Coords avatar) {
 
             /* Before moving, Enact any special effects of the creature (such as storms eating objects, whirlpools teleporting, etc.) */
             m->specialEffect();
-
 
             /* Perform any special actions (such as pirate ships firing cannons, sea serpents' fireblast attect, etc.) */
             if (!m->specialAction())

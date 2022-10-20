@@ -2,7 +2,6 @@
  * $Id: script.cpp 3064 2014-07-19 15:44:38Z darren_janeczek $
  */
 
-
 #include <cctype>
 #include <map>
 #include <string>

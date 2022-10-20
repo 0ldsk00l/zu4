@@ -209,7 +209,6 @@ IntroController::IntroController() :
     gfxMenu.add(MI_GFX_RETURN,               "\010 Return to Video Options",              2,  12,/*'r'*/  2);
     gfxMenu.setClosesMenu(MI_GFX_RETURN);
 
-
     soundMenu.setTitle("Sound Options:", 0, 0);
     soundMenu.add(MI_SOUND_01,  new IntMenuItem("Music Volume         %s", 2,  2,/*'m'*/  0, &settingsChanged.musicVol, 0, MAX_VOLUME, 1, MENU_OUTPUT_VOLUME));
     soundMenu.add(MI_SOUND_02,  new IntMenuItem("Sound Effect Volume  %s", 2,  3,/*'s'*/  0, &settingsChanged.soundVol, 0, MAX_VOLUME, 1, MENU_OUTPUT_VOLUME));
@@ -1153,7 +1152,6 @@ void IntroController::updateGfxMenu(MenuEvent &event)
         event.getType() == MenuEvent::INCREMENT ||
         event.getType() == MenuEvent::DECREMENT) {
 
-
 		switch(event.getMenuItem()->getId()) {
 		case MI_GFX_RETURN:
 			runMenu(&videoMenu, &extendedMenuArea, true);
@@ -1476,7 +1474,6 @@ void IntroController::initPlayers(SaveGame *saveGame) {
     }
 }
 
-
 /**
  * Preload map tiles
  */
@@ -1495,7 +1492,6 @@ void IntroController::preloadMap()
             mapArea.loadTile(objectStateTable[i].tile);
     }
 }
-
 
 //
 // Initialize the title elements
@@ -1524,7 +1520,6 @@ void IntroController::initTitles()
     eventHandler->getTimer()->reset(settings.titleSpeedOther);
 }
 
-
 //
 // Add the intro element to the element list
 //
@@ -1544,7 +1539,6 @@ void IntroController::addTitle(int x, int y, int w, int h, AnimType method, int 
         std::vector<AnimPlot>()};
     titles.push_back(data);
 }
-
 
 //
 // Get the source data for title elements
@@ -1688,7 +1682,6 @@ void IntroController::getTitleSourceData()
             2 + titles[i].rh);
     }
 }
-
 
 int getTicks()
 {
@@ -1922,7 +1915,6 @@ bool IntroController::updateTitle()
                 (step+1) * 8,
                 title->srcImage->h);
 
-
             // create a destimage for the map tiles
             int newtime = getTicks();
             if (newtime > title->timeDuration + 250/4)
@@ -1999,7 +1991,6 @@ bool IntroController::updateTitle()
     return true;
 }
 
-
 //
 // The title element has finished drawing all frames, so
 // delete, remove, or free data that is no longer needed
@@ -2013,7 +2004,6 @@ void IntroController::compactTitle()
     }
     title->plotData.clear();
 }
-
 
 //
 // Scale the animation canvas, then draw it to the screen
@@ -2033,7 +2023,6 @@ void IntroController::drawTitle()
     zu4_img_free(t);
     t = NULL;
 }
-
 
 //
 // skip the remaining titles

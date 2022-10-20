@@ -11,7 +11,6 @@
 extern "C" {
 #endif
 
-
 int u4_SDL_InitSubSystem(Uint32 flags);
 void u4_SDL_QuitSubSystem(Uint32 flags);
 

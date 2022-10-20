@@ -110,7 +110,6 @@ Response *Dialogue::Question::getResponse(bool yes) {
     return noresp;
 }
 
-
 /*
  * Dialogue::Keyword class
  */

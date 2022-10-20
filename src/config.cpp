@@ -86,7 +86,6 @@ Config::Config() {
     }
 }
 
-
 vector<string> Config::getGames() {
     vector<string> result;
     result.push_back("Ultima IV");

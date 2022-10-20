@@ -2,7 +2,6 @@
  * $Id: codex.cpp 2996 2011-12-03 22:41:33Z twschulz $
  */
 
-
 #include <string>
 #include <cstring>
 #include <vector>

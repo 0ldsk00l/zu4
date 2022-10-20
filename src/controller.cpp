@@ -2,7 +2,6 @@
  * $Id: controller.cpp 2176 2004-09-09 03:26:10Z andrewtaylor $
  */
 
-
 #include "controller.h"
 #include "event.h"
 

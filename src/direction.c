@@ -62,7 +62,6 @@ Direction dirRotateCCW(Direction dir) {
 	return dir;
 }
 
-
 int dirGetBroadsidesDirs(Direction dir) {
 	// Returns the a mask containing the broadsides directions for a
 	// given direction. For instance, dirGetBroadsidesDirs(DIR_NORTH)

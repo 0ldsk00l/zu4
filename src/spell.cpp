@@ -370,7 +370,6 @@ bool spellMagicAttackAt(const Coords &coords, MapTile attackTile, int attackDama
         zu4_snd_play(SOUND_NPC_STRUCK, true, -1);
         GameController::flashTile(coords, attackTile, 3);
 
-
         /* apply the damage to the creature */
         CombatController *controller = spellCombatController();
         controller->getCurrentPlayer()->dealDamage(creature, attackDamage);
@@ -672,7 +671,6 @@ static int spellTremor(int unused) {
 
     for (i = creatures.begin(); i != creatures.end(); i++) {
         Creature *m = *i;
-
 
         Coords coords = m->getCoords();
         //GameController::flashTile(coords, "rocks", 1);

@@ -55,7 +55,6 @@ private:
     const IntroBinData &operator=(const IntroBinData&);
 };
 
-
 /**
  * Controls the title animation sequences, including the traditional
  * plotted "Lord British" signature, the pixelized fade-in of the

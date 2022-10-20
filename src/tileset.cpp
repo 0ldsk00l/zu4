@@ -140,7 +140,6 @@ bool TileRule::initFromConf(const ConfigElement &conf) {
     return true;
 }
 
-
 /**
  * Tileset Class Implementation
  */
@@ -216,7 +215,6 @@ void Tileset::unloadAllImages() {
 
     Tile::resetNextId();
 }
-
 
 /**
  * Returns the tileset with the given name, if it exists

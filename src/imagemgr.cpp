@@ -386,7 +386,6 @@ bool ImageMgr::imageExists(ImageInfo * info)
 	return false;
 }
 
-
 U4FILE * ImageMgr::getImageFile(ImageInfo *info)
 {
 	std::string filename = info->filename;

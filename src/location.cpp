@@ -2,7 +2,6 @@
  * $Id: location.cpp 3082 2014-09-10 01:05:01Z darren_janeczek $
  */
 
-
 #include <list>
 #include <map>
 #include <set>
@@ -144,7 +143,6 @@ std::vector<MapTile> Location::tilesAt(Coords coords, bool &focus) {
     return tiles;
 }
 
-
 /**
  * Finds a valid replacement tile for the given location, using surrounding tiles
  * as guidelines to choose the new tile.  The new tile will only be chosen if it
@@ -264,7 +262,6 @@ MoveResult Location::move(Direction dir, bool userEvent) {
 
     return event.result;
 }
-
 
 /**
  * Pop a location from the stack and free the memory

@@ -2,7 +2,6 @@
  * $Id: aura.cpp 3019 2012-03-18 11:31:13Z daniel_santos $
  */
 
-
 #include "aura.h"
 
 Aura::Aura() : type(AURA_NONE), duration(0) {}

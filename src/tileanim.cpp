@@ -151,7 +151,6 @@ void TileAnimFrameTransform::draw(Image *dest, Tile *tile, MapTile &mapTile) {
     	currentFrame = 0;
     zu4_img_draw_subrect_on(dest, tile->getImage(), 0, 0, 0, currentFrame * tile->getHeight(), tile->getWidth(), tile->getHeight());
 
-
 }
 
 TileAnimPixelColorTransform::TileAnimPixelColorTransform(int x, int y, int w, int h) {

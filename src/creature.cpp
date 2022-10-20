@@ -2,7 +2,6 @@
  * $Id: creature.cpp 3077 2014-07-30 00:37:32Z darren_janeczek $
  */
 
-
 #include "creature.h"
 
 #include <cstring>
@@ -519,7 +518,6 @@ void Creature::act(CombatController *controller) {
             zu4_snd_play(SOUND_PC_STRUCK, false, -1); // PC_STRUCK, melee and ranged
             GameController::flashTile(target->getCoords(), "hit_flash", 4);
 
-
             if (!dealDamage(target, getDamage()))
                 target = NULL;
 
@@ -1012,7 +1010,6 @@ Creature *CreatureMgr::randomForTile(const Tile *tile) {
     return getByTile(randTile);
 }
 
-
 /**
  * Creates a random creature based on the dungeon level given
  */
@@ -1027,7 +1024,6 @@ Creature *CreatureMgr::randomForDungeon(int dngLevel) {
 
 	return getById(monster);
 }
-
 
 /**
  * Creates a random ambushing creature

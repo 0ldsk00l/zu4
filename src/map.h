@@ -73,7 +73,6 @@ public:
         BORDER_FIXED
     };
 
-
     struct Source {
     public:
         Source() {}
