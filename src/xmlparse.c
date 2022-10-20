@@ -26,7 +26,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "yxml.h"
+#include <yxml.h>
 
 #include "xmlparse.h"
 
