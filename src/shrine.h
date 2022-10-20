@@ -21,12 +21,12 @@ public:
     Shrine();
 
     // Methods
-    virtual string  getName();
+    virtual std::string getName();
     Virtue          getVirtue() const;
-    string          getMantra() const;
+    std::string     getMantra() const;
 
     void            setVirtue(Virtue v);
-    void            setMantra(string mantra);
+    void            setMantra(std::string mantra);
 
     void enter();
     void enhancedSequence();
@@ -37,9 +37,9 @@ public:
 
     // Properties
 private:
-    string name;
+    std::string name;
     Virtue virtue;
-    string mantra;   
+    std::string mantra;   
 };
 
 bool shrineCanEnter(const struct _Portal *p);

@@ -232,7 +232,7 @@ Map::~Map() {
     delete annotations;
 }
 
-string Map::getName() {
+std::string Map::getName() {
     return baseSource.fname;
 }
 
@@ -731,8 +731,8 @@ void Map::alertGuards() {
     }
 }
 
-const Coords &Map::getLabel(const string &name) const {
-    std::map<string, Coords>::const_iterator i = labels.find(name);
+const Coords &Map::getLabel(const std::string &name) const {
+    std::map<std::string, Coords>::const_iterator i = labels.find(name);
     if (i == labels.end()) {
         return nowhere;
 	}

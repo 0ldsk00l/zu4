@@ -15,8 +15,6 @@
 #include "u4.h"
 #include "error.h"
 
-using std::vector;
-
 TileView::TileView(int x, int y, int columns, int rows) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
     this->columns = columns;
     this->rows = rows;
@@ -26,7 +24,7 @@ TileView::TileView(int x, int y, int columns, int rows) : View(x, y, columns * T
     animated = zu4_img_create(tileWidth, tileHeight);
 }
 
-TileView::TileView(int x, int y, int columns, int rows, const string &tileset) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
+TileView::TileView(int x, int y, int columns, int rows, const std::string &tileset) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
     this->columns = columns;
     this->rows = rows;
     this->tileWidth = TILE_WIDTH;
@@ -107,7 +105,7 @@ void TileView::drawTile(MapTile &mapTile, bool focus, int x, int y) {
         drawFocus(x, y);
 }
 
-void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
+void TileView::drawTile(std::vector<MapTile> &tiles, bool focus, int x, int y) {
 	zu4_assert(x < columns, "x value of %d out of range", x);
 	zu4_assert(y < rows, "y value of %d out of range", y);
 
@@ -121,7 +119,7 @@ void TileView::drawTile(vector<MapTile> &tiles, bool focus, int x, int y) {
 
 	//int layer = 0;
 
-	for (vector<MapTile>::reverse_iterator t = tiles.rbegin();
+	for (std::vector<MapTile>::reverse_iterator t = tiles.rbegin();
 			t != tiles.rend();
 			++t)
 	{

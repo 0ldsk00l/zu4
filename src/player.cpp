@@ -19,9 +19,9 @@
 #include "utils.h"
 #include "weapon.h"
 
-static string hittile, misstile;
+static std::string hittile, misstile;
 
-static string zu4_to_string(int val) {
+static std::string zu4_to_string(int val) {
     char buffer[16];
     sprintf(buffer, "%d", val);
     return buffer;
@@ -66,7 +66,7 @@ void PartyMember::notifyOfChange() {
 /**
  * Provides some translation information for scripts
  */
-string PartyMember::translate(std::vector<string>& parts) {
+std::string PartyMember::translate(std::vector<std::string>& parts) {
     if (parts.size() == 0)
         return "";
     else if (parts.size() == 1) {
@@ -97,7 +97,7 @@ string PartyMember::translate(std::vector<string>& parts) {
             return a->name;
 		}
         else if (parts[0] == "sex") {
-            string var = " ";
+            std::string var = " ";
             var[0] = getSex();
             return var;
         }
@@ -174,7 +174,7 @@ int PartyMember::getMaxMp() const {
 
 const weapon_t *PartyMember::getWeapon() const { return zu4_weapon(player->weapon); }
 const armor_t *PartyMember::getArmor() const   { return zu4_armor(player->armor); }
-string PartyMember::getName() const          { return player->name; }
+std::string PartyMember::getName() const       { return player->name; }
 SexType PartyMember::getSex() const          { return player->sex; }
 ClassType PartyMember::getClass() const      { return player->klass; }
 
@@ -502,7 +502,7 @@ int PartyMember::getDamage() {
  * Returns the tile that will be displayed when the party
  * member's attack hits
  */
-const string &PartyMember::getHitTile() const {
+const std::string &PartyMember::getHitTile() const {
     //return getWeapon()->getHitTile();
     const weapon_t *w = getWeapon();
     hittile = w->hittile;
@@ -513,7 +513,7 @@ const string &PartyMember::getHitTile() const {
  * Returns the tile that will be displayed when the party
  * member's attack fails
  */
-const string &PartyMember::getMissTile() const {
+const std::string &PartyMember::getMissTile() const {
     //return getWeapon()->getMissTile();
     const weapon_t *w = getWeapon();
     misstile = w->misstile;
@@ -632,7 +632,7 @@ void Party::notifyOfChange(PartyMember *pm, PartyEvent::Type eventType) {
     notifyObservers(event);
 }
 
-string Party::translate(std::vector<string>& parts) {        
+std::string Party::translate(std::vector<std::string>& parts) {
     if (parts.size() == 0)
         return "";
     else if (parts.size() == 1) {
@@ -673,13 +673,13 @@ string Party::translate(std::vector<string>& parts) {
     else if (parts.size() >= 2) {
         if (parts[0].find_first_of("member") == 0) {
             // Make a new parts list, but remove the first item
-            std::vector<string> new_parts = parts;
+            std::vector<std::string> new_parts = parts;
             new_parts.erase(new_parts.begin());
 
             // Find the member we'll be working with
-            string str = parts[0];
-            string::size_type pos = str.find_first_of("1234567890");
-            if (pos != string::npos) {
+            std::string str = parts[0];
+            std::string::size_type pos = str.find_first_of("1234567890");
+            if (pos != std::string::npos) {
                 str = str.substr(pos);
                 int p_member = (int)strtol(str.c_str(), NULL, 10);
 
@@ -919,7 +919,7 @@ bool Party::canEnterShrine(Virtue virtue) {
 /**
  * Returns true if the person can join the party
  */
-bool Party::canPersonJoin(string name, Virtue *v) {
+bool Party::canPersonJoin(std::string name, Virtue *v) {
     int i;
 
     if (name.empty())
@@ -1088,7 +1088,7 @@ bool Party::isDead() {
  * Returns true if the person with that name
  * is already in the party
  */
-bool Party::isPersonJoined(string name) {
+bool Party::isPersonJoined(std::string name) {
     int i;
 
     if (name.empty())
@@ -1105,7 +1105,7 @@ bool Party::isPersonJoined(string name) {
  * Attempts to add the person to the party.
  * Returns JOIN_SUCCEEDED if successful.
  */
-CannotJoinError Party::join(string name) {
+CannotJoinError Party::join(std::string name) {
     int i;
     SaveGamePlayerRecord tmp;
 

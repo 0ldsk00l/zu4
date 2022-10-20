@@ -84,8 +84,8 @@ void TextView::textSelectedAt(int x, int y, const char *text) {
 }
 
 /* depending on the status type, apply colorization to the character */
-string TextView::colorizeStatus(char statustype) {
-    string output;
+std::string TextView::colorizeStatus(char statustype) {
+    std::string output;
 
     if (!settings.enhancements || !settings.enhancementsOptions.textColorization) {
         output = statustype;
@@ -104,13 +104,13 @@ string TextView::colorizeStatus(char statustype) {
 }
 
 /* depending on the status type, apply colorization to the character */
-string TextView::colorizeString(string input, ColorFG color, unsigned int colorstart, unsigned int colorlength) {
+std::string TextView::colorizeString(std::string input, ColorFG color, unsigned int colorstart, unsigned int colorlength) {
     if (!settings.enhancements || !settings.enhancementsOptions.textColorization)
         return input;
 
-    string output = "";
-    string::size_type length = input.length();
-    string::size_type i;
+    std::string output = "";
+    std::string::size_type length = input.length();
+    std::string::size_type i;
     bool colorization = false;
 
     // loop through the entire string and 

@@ -24,7 +24,7 @@ struct MapTile;
 struct TileView : public View {
 public:
     TileView(int x, int y, int columns, int rows);
-    TileView(int x, int y, int columns, int rows, const string &tileset);
+    TileView(int x, int y, int columns, int rows, const std::string &tileset);
     virtual ~TileView();
 
     void reinit();

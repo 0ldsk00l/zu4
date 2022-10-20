@@ -14,8 +14,6 @@
 #include "controller.h"
 #include "types.h"
 
-using std::string;
-
 #define eventHandler (EventHandler::getInstance())
 #endif
 
@@ -61,15 +59,15 @@ public:
 
     /** Additional information to be passed as data param for read buffer key handler */
     typedef struct ReadBuffer {
-        int (*handleBuffer)(string*);
-        string *buffer;
+        int (*handleBuffer)(std::string*);
+        std::string *buffer;
         int bufferLen;
         int screenX, screenY;
     } ReadBuffer;
 
     /** Additional information to be passed as data param for get choice key handler */
     typedef struct GetChoice {
-        string choices;
+        std::string choices;
         int (*handleChoice)(int);
     } GetChoice;
 
@@ -116,19 +114,19 @@ private:
 /**
  * A controller to read a string, terminated by the enter key.
  */
-struct ReadStringController : public WaitableController<string> {
+struct ReadStringController : public WaitableController<std::string> {
 public:
-    ReadStringController(int maxlen, int screenX, int screenY, const string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
-    ReadStringController(int maxlen, TextView *view, const string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
+    ReadStringController(int maxlen, int screenX, int screenY, const std::string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
+    ReadStringController(int maxlen, TextView *view, const std::string &accepted_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 \n\r\010");
     virtual bool keyPressed(int key);
 
-    static string get(int maxlen, int screenX, int screenY, EventHandler *eh = NULL);
-    static string get(int maxlen, TextView *view, EventHandler *eh = NULL);
+    static std::string get(int maxlen, int screenX, int screenY, EventHandler *eh = NULL);
+    static std::string get(int maxlen, TextView *view, EventHandler *eh = NULL);
 
 protected:
     int maxlen, screenX, screenY;
     TextView *view;
-    string accepted;
+    std::string accepted;
 };
 
 /**
@@ -148,13 +146,13 @@ public:
  */
 struct ReadChoiceController : public WaitableController<int> {
 public:
-    ReadChoiceController(const string &choices);
+    ReadChoiceController(const std::string &choices);
     virtual bool keyPressed(int key);
 
-    static char get(const string &choices, EventHandler *eh = NULL);
+    static char get(const std::string &choices, EventHandler *eh = NULL);
 
 protected:
-    string choices;
+    std::string choices;
 };
 
 /**

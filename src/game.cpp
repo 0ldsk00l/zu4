@@ -149,7 +149,7 @@ bool AlphaActionController::keyPressed(int key) {
     return true;
 }
     
-int AlphaActionController::get(char lastValidLetter, const string &prompt, EventHandler *eh) {
+int AlphaActionController::get(char lastValidLetter, const std::string &prompt, EventHandler *eh) {
     if (!eh)
         eh = eventHandler;
 
@@ -702,7 +702,7 @@ void GameController::flashTile(const Coords &coords, MapTile tile, int frames) {
     screenTileUpdate(&game->mapArea, coords, false);
 }
 
-void GameController::flashTile(const Coords &coords, const string &tilename, int timeFactor) {
+void GameController::flashTile(const Coords &coords, const std::string &tilename, int timeFactor) {
     Tile *tile = c->location->map->tileset->getByName(tilename);
     zu4_assert(tile, "no tile named '%s' found in tileset", tilename.c_str());
     flashTile(coords, tile->getId(), timeFactor);
@@ -804,7 +804,7 @@ void gameSpellEffect(int spell, int player, int sound) {
 
 void gameCastSpell(unsigned int spell, int caster, int param) {
     SpellCastError spellError;
-    string msg;
+    std::string msg;
     
     if (!spellCast(spell, caster, param, &spellError, true)) {
         msg = spellGetErrorMessage(spell, spellError);
@@ -894,7 +894,7 @@ bool GameController::keyPressed(int key) {
         case U4_RIGHT:        
             {
                 /* move the avatar */
-                string previous_map = c->location->map->fname;
+                std::string previous_map = c->location->map->fname;
                 MoveResult retval = c->location->move(keyToDirection(key), true);
             
                 /* horse doubles speed (make sure we're on the same map as the previous move first) */
@@ -1454,7 +1454,7 @@ bool GameController::keyPressed(int key) {
     return valid || KeyHandler::defaultHandler(key, NULL);
 }
 
-string gameGetInput(int maxlen) {
+std::string gameGetInput(int maxlen) {
     screenEnableCursor();
     screenShowCursor();
     return ReadStringController::get(maxlen, TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
@@ -2463,7 +2463,7 @@ void readyWeapon(int player) {
         screenMessage("%cNone left!%c\n", FG_GREY, FG_WHITE);
         break;
     case EQUIP_CLASS_RESTRICTED: {
-        string indef_article;
+        std::string indef_article;
 
         switch(tolower(zu4_weapon_name(weapon)[0])) {
         case 'a': case 'e': case 'i':
@@ -2820,7 +2820,7 @@ void talkRunConversation(Conversation &conv, Person *talker, bool showPrompt) {
         }
 
         if (showPrompt) {
-            string prompt = talker->getPrompt(&conv);
+            std::string prompt = talker->getPrompt(&conv);
             if (!prompt.empty()) {
                 if (linesused + linecount(prompt, TEXT_AREA_W) > TEXT_AREA_H) {
                     ReadChoiceController::get("");

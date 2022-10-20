@@ -78,12 +78,12 @@ void Tile::loadProperties(const ConfigElement &conf) {
     if (conf.exists("image"))
         imageName = conf.getString("image");
     else 
-        imageName = string("tile_") + name;
+        imageName = std::string("tile_") + name;
 
     tiledInDungeon = conf.getBool("tiledInDungeon");
 
     if (conf.exists("directions")) {
-        string dirs = conf.getString("directions");
+        std::string dirs = conf.getString("directions");
         if (dirs.length() != (unsigned) frames)
             zu4_error(ZU4_LOG_ERR, "Error: %ld directions for tile but only %d frames", (long) dirs.length(), frames);
         for (unsigned i = 0; i < dirs.length(); i++) {

@@ -93,15 +93,15 @@ bool CheatMenuController::keyPressed(int key) {
 
     case 'g': {
         screenMessage("Goto: ");
-        string dest = gameGetInput(32);
+        std::string dest = gameGetInput(32);
         transform(dest.begin(), dest.end(), dest.begin(), ::tolower);
 
         bool found = false;
         for (unsigned p = 0; p < c->location->map->portals.size(); p++) {
             MapId destid = c->location->map->portals[p]->destid;
-            string destNameLower = mapMgr->get(destid)->getName();
+            std::string destNameLower = mapMgr->get(destid)->getName();
             transform(destNameLower.begin(), destNameLower.end(), destNameLower.begin(), ::tolower);
-            if (destNameLower.find(dest) != string::npos) {
+            if (destNameLower.find(dest) != std::string::npos) {
                 screenMessage("\n%s\n", mapMgr->get(destid)->getName().c_str());
                 c->location->coords = c->location->map->portals[p]->coords;
                 found = true;
@@ -383,9 +383,9 @@ bool CheatMenuController::keyPressed(int key) {
  * as the creature's name, or the creature's id.  Once it finds the
  * creature to be summoned, it calls gameSpawnCreature() to spawn it.
  */
-void CheatMenuController::summonCreature(const string &name) {
+void CheatMenuController::summonCreature(const std::string &name) {
     const Creature *m = NULL;
-    string creatureName = name;
+    std::string creatureName = name;
 
     creatureName.erase(creatureName.find_last_not_of(strwhitespace) + 1);
     creatureName.erase(0, creatureName.find_first_not_of(strwhitespace));

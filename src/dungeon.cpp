@@ -31,7 +31,7 @@ bool isDungeon(Map *punknown) {
 /**
  * Returns the name of the dungeon
  */ 
-string Dungeon::getName() {
+std::string Dungeon::getName() {
     return name;
 }
 

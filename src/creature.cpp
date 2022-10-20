@@ -325,9 +325,9 @@ bool Creature::specialAction() {
            Note: Monsters in settlements in U3 do fire on party
         */
         if (mapdist <= 3 && zu4_random(2) == 0 && (c->location->context & CTX_CITY) == 0) {
-            vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, coords,
+            std::vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, coords,
                                                                1, 3, NULL, false);
-            for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+            for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
                 if (creatureRangeAttack(*i, this))
                     break;
             }
@@ -346,9 +346,9 @@ bool Creature::specialAction() {
             ((broadsidesDirs & dir) > 0)) { /* pirate ship is firing broadsides */
 
             // nothing (not even mountains!) can block cannonballs
-            vector<Coords> path = gameGetDirectionalActionPath(dir, broadsidesDirs, coords,
+            std::vector<Coords> path = gameGetDirectionalActionPath(dir, broadsidesDirs, coords,
                                                                1, 3, NULL, false);
-            for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+            for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
                 if (fireAt(*i, false))
                     break;
             }
@@ -600,10 +600,10 @@ void Creature::act(CombatController *controller) {
 
         zu4_snd_play(SOUND_NPC_ATTACK, false, -1); // NPC_ATTACK, ranged
 
-        vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, m_coords,
+        std::vector<Coords> path = gameGetDirectionalActionPath(dir, MASK_DIR_ALL, m_coords,
                                                            1, 11, &Tile::canAttackOverTile, false);
         bool hit = false;
-        for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+        for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
             if (controller->rangedAttack(*i, this)) {
                 hit = true;
                 break;
@@ -913,7 +913,7 @@ CreatureMgr *CreatureMgr::getInstance() {
 
 void CreatureMgr::loadAll() {
     const Config *config = Config::getInstance();
-    vector<ConfigElement> creatureConfs = config->getElement("creatures").getChildren();
+    std::vector<ConfigElement> creatureConfs = config->getElement("creatures").getChildren();
 
     for (std::vector<ConfigElement>::iterator i = creatureConfs.begin(); i != creatureConfs.end(); i++) {
         if (i->getName() != "creature")
@@ -961,7 +961,7 @@ Creature *CreatureMgr::getById(CreatureId id) {
  * or returns NULL if no creature can be found with
  * that name (case insensitive)
  */ 
-Creature *CreatureMgr::getByName(string name) {
+Creature *CreatureMgr::getByName(std::string name) {
     CreatureMap::const_iterator i;
     for (i = creatures.begin(); i != creatures.end(); i++) {
         if (strcasecmp(i->second->getName().c_str(), name.c_str()) == 0)

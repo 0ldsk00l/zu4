@@ -11,21 +11,19 @@
 
 struct ConfigElement;
 
-using std::string;
-
 /**
  * A tilemap maps the raw bytes in a map file to MapTiles.
  */
 struct TileMap {
 public:
-    typedef std::map<string, TileMap *> TileIndexMapMap;
+    typedef std::map<std::string, TileMap *> TileIndexMapMap;
     
     MapTile translate(unsigned int index);
     unsigned int untranslate(MapTile &tile);
 
     static void loadAll();
     static void unloadAll();
-    static TileMap *get(string name);
+    static TileMap *get(std::string name);
 
 private:
     static void load(const ConfigElement &tilemapConf);

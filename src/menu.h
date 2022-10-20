@@ -13,9 +13,6 @@
 #include "observable.h"
 #include "types.h"
 
-using std::string;
-using std::set;
-
 struct Menu;
 struct TextView;
 
@@ -58,7 +55,7 @@ public:
 
     void                    removeAll();
 
-    void                    add(int id, string text, short x, short y, int shortcutKey = -1);
+    void                    add(int id, std::string text, short x, short y, int shortcutKey = -1);
     MenuItem *              add(int id, MenuItem *item);
     void                    addShortcutKey(int id, int shortcutKey);
     void                    setClosesMenu(int id);
@@ -80,14 +77,14 @@ public:
     bool                    activateItemByShortcut(int key, MenuEvent::Type action);
     bool                    getClosed() const;
     void                    setClosed(bool closed);
-    void                    setTitle(const string &text, int x, int y);
+    void                    setTitle(const std::string &text, int x, int y);
 
 private:    
     MenuItemList items;
     MenuItemList::iterator current;
     MenuItemList::iterator selected;
     bool closed;
-    string title;
+    std::string title;
     int titleX, titleY;
 };
 

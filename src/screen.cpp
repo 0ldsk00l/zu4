@@ -37,7 +37,7 @@ enum LayoutType {
 };
 
 struct Layout {
-    string name;
+    std::string name;
     LayoutType type;
     struct {
         int width, height;
@@ -48,28 +48,24 @@ struct Layout {
     } viewport;
 };
 
-
-
-using std::vector;
-
 void screenLoadGraphicsFromConf(void);
 Layout *screenLoadLayoutFromConf(const ConfigElement &conf);
 void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, int y);
 
-vector<Layout *> layouts;
-vector<TileAnimSet *> tileanimSets;
-vector<string> gemLayoutNames;
-vector<string> filterNames;
-vector<string> lineOfSightStyles;
+std::vector<Layout *> layouts;
+std::vector<TileAnimSet *> tileanimSets;
+std::vector<std::string> gemLayoutNames;
+std::vector<std::string> filterNames;
+std::vector<std::string> lineOfSightStyles;
 Layout *gemlayout = NULL;
-std::map<string, int> dungeonTileChars;
+std::map<std::string, int> dungeonTileChars;
 TileAnimSet *tileanims = NULL;
 ImageInfo *charsetInfo = NULL;
 ImageInfo *gemTilesInfo = NULL;
 
-void screenFindLineOfSight(vector<MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]);
-void screenFindLineOfSightDOS(vector<MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]);
-void screenFindLineOfSightEnhanced(vector<MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]);
+void screenFindLineOfSight(std::vector<MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]);
+void screenFindLineOfSightDOS(std::vector<MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]);
+void screenFindLineOfSightEnhanced(std::vector<MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]);
 
 int screenNeedPrompt = 1;
 int screenCurrentCycle = 0;
@@ -260,22 +256,22 @@ void screenMessage(const char *fmt, ...) {
     screenNeedPrompt = 1;
 }
 
-const vector<string> &screenGetFilterNames() {
+const std::vector<std::string> &screenGetFilterNames() {
     return filterNames;
 }
 
-const vector<string> &screenGetGemLayoutNames() {
+const std::vector<std::string> &screenGetGemLayoutNames() {
     return gemLayoutNames;
 }
 
-const vector<string> &screenGetLineOfSightStyles() {
+const std::vector<std::string> &screenGetLineOfSightStyles() {
     return lineOfSightStyles;
 }
 
 void screenLoadGraphicsFromConf() {
     const Config *config = Config::getInstance();
     
-    vector<ConfigElement> graphicsConf = config->getElement("graphics").getChildren();
+    std::vector<ConfigElement> graphicsConf = config->getElement("graphics").getChildren();
     for (std::vector<ConfigElement>::iterator conf = graphicsConf.begin(); conf != graphicsConf.end(); conf++) {
         
         if (conf->getName() == "layout")
@@ -320,7 +316,7 @@ Layout *screenLoadLayoutFromConf(const ConfigElement &conf) {
     layout->name = conf.getString("name");
     layout->type = static_cast<LayoutType>(conf.getEnum("type", typeEnumStrings));
     
-    vector<ConfigElement> children = conf.getChildren();
+    std::vector<ConfigElement> children = conf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
         if (i->getName() == "tileshape") {
             layout->tileshape.width = i->getInt("width");
@@ -339,7 +335,7 @@ Layout *screenLoadLayoutFromConf(const ConfigElement &conf) {
 
 
 
-vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int x, int y, bool &focus) {
+std::vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int x, int y, bool &focus) {
     Coords center = c->location->coords;    
     static MapTile grass = c->location->map->tileset->getByName("grass")->getId();
     
@@ -360,7 +356,7 @@ vector<MapTile> screenViewportTile(unsigned int width, unsigned int height, int 
     /* off the edge of the map: pad with grass tiles */
     if (MAP_IS_OOB(c->location->map, tc)) {        
         focus = false;
-        vector<MapTile> result;
+        std::vector<MapTile> result;
         result.push_back(grass);
         return result;
     }
@@ -381,7 +377,7 @@ bool screenTileUpdate(TileView *view, const Coords &coords, bool redraw)
 	mc.x = coords.x; mc.y = coords.y; mc.z = coords.z;
 	wrap(&mc, c->location->map);
 	Coords mc2(mc);
-	vector<MapTile> tiles = c->location->tilesAt(mc2, focus);
+	std::vector<MapTile> tiles = c->location->tilesAt(mc2, focus);
 
 	// Get the screen coordinates
 	int x = coords.x;
@@ -434,7 +430,7 @@ void screenUpdate(TileView *view, bool showmap, bool blackout) {
 
         int x, y;
 
-        vector<MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H];
+        std::vector<MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H];
         bool viewportFocus[VIEWPORT_W][VIEWPORT_H];
 
         for (y = 0; y < VIEWPORT_H; y++) {
@@ -467,7 +463,7 @@ void screenUpdate(TileView *view, bool showmap, bool blackout) {
 /**
  * Draw an image or subimage on the screen.
  */
-void screenDrawImage(const string &name, int x, int y) {
+void screenDrawImage(const std::string &name, int x, int y) {
     ImageInfo *info = imageMgr->get(name);
     if (info) {
         zu4_img_draw(info->image, x, y);
@@ -490,7 +486,7 @@ void screenDrawImage(const string &name, int x, int y) {
     zu4_error(ZU4_LOG_ERR, "ERROR 1006: Unable to load the image \"%s\".\t\n\nIs Ultima IV installed?\n\nVisit the XU4 website for additional information.\n\thttp://xu4.sourceforge.net/", name.c_str());
 }
 
-void screenDrawImageInMapArea(const string &name) {
+void screenDrawImageInMapArea(const std::string &name) {
     ImageInfo *info;
     
     info = imageMgr->get(name);
@@ -653,7 +649,7 @@ void screenSetCursorPos(int x, int y) {
  * Finds which tiles in the viewport are visible from the avatars
  * location in the middle. (original DOS algorithm)
  */
-void screenFindLineOfSight(vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]) {
+void screenFindLineOfSight(std::vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]) {
     int x, y;
 
     if (!c)
@@ -693,7 +689,7 @@ void screenFindLineOfSight(vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H
  * Finds which tiles in the viewport are visible from the avatars
  * location in the middle. (original DOS algorithm)
  */
-void screenFindLineOfSightDOS(vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]) {
+void screenFindLineOfSightDOS(std::vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]) {
     int x, y;
 
     screenLos[VIEWPORT_W / 2][VIEWPORT_H / 2] = 1;
@@ -791,7 +787,7 @@ void screenFindLineOfSightDOS(vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPOR
  * viewport width and height are odd values and that the player
  * is always at the center of the screen.
  */
-void screenFindLineOfSightEnhanced(vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]) {
+void screenFindLineOfSightEnhanced(std::vector <MapTile> viewportTiles[VIEWPORT_W][VIEWPORT_H]) {
     int x, y;
 
     /*
@@ -1044,7 +1040,7 @@ void screenShake(int iterations) {
  */
 void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, int y) {
     // Make sure we account for tiles that look like other tiles (dungeon tiles, mainly)
-    string looks_like = t.getTileType()->getLooksLike();
+    std::string looks_like = t.getTileType()->getLooksLike();
     if (!looks_like.empty())
         t = map->tileset->getByName(looks_like)->getId();
     
@@ -1052,7 +1048,7 @@ void screenShowGemTile(Layout *layout, Map *map, MapTile &t, bool focus, int x, 
     
     if (map->type == Map::DUNGEON) {
         zu4_assert(charsetInfo, "charset not initialized");
-        std::map<string, int>::iterator charIndex = dungeonTileChars.find(t.getTileType()->getName());
+        std::map<std::string, int>::iterator charIndex = dungeonTileChars.find(t.getTileType()->getName());
         if (charIndex != dungeonTileChars.end()) {
             zu4_img_draw_subrect(charsetInfo->image, (layout->viewport.x + (x * layout->tileshape.width)),
                                             (layout->viewport.y + (y * layout->tileshape.height)),
@@ -1121,7 +1117,7 @@ void screenGemUpdate() {
     //TODO, move the code responsible for determining 'peer' visibility to a non SDL specific part of the code.
     if (c->location->map->type == Map::DUNGEON) {
     	//DO THE SPECIAL DUNGEON MAP TRAVERSAL
-    	std::vector<std::vector<int> > drawnTiles(layout->viewport.width, vector<int>(layout->viewport.height, 0));
+    	std::vector<std::vector<int> > drawnTiles(layout->viewport.width, std::vector<int>(layout->viewport.height, 0));
     	std::list<std::pair<int,int> > coordStack;
         
     	//Put the avatar's position on the stack
@@ -1153,8 +1149,7 @@ void screenGemUpdate() {
     		// DRAW THE ACTUAL TILE
     		bool focus;
             
-            
-			vector<MapTile> tiles = screenViewportTile(layout->viewport.width,
+			std::vector<MapTile> tiles = screenViewportTile(layout->viewport.width,
                                                        layout->viewport.height, x - center_x + avt_x, y - center_y + avt_y, focus);
 			tile = tiles.front();
             

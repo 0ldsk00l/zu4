@@ -27,12 +27,10 @@
 #include "u4file.h"
 #include "utils.h"
 
-using namespace std;
-
 static bool notblanked = true;
 
 extern bool useProfile;
-extern string profileName;
+extern std::string profileName;
 extern bool quit;
 
 IntroController *intro = NULL;
@@ -572,7 +570,7 @@ void IntroController::drawBeastie(int beast, int vertoffset, int frame) {
  * painted: the circle without the moongate, but with a small white
  * dot representing the anhk and history book.
  */
-void IntroController::animateTree(const string &frame) {
+void IntroController::animateTree(const std::string &frame) {
     backgroundArea.draw(frame, 72, 68);
 }
 
@@ -682,7 +680,7 @@ void IntroController::initiateNewGame() {
 
     drawBeasties();
 
-    string nameBuffer = ReadStringController::get(12, &menuArea);
+    std::string nameBuffer = ReadStringController::get(12, &menuArea);
     if (nameBuffer.length() == 0) {
         // the user didn't enter a name
         menuArea.disableCursor();
@@ -713,7 +711,7 @@ void IntroController::initiateNewGame() {
     finishInitiateGame(nameBuffer, sex);
 }
 
-void IntroController::finishInitiateGame(const string &nameBuffer, SexType sex)
+void IntroController::finishInitiateGame(const std::string &nameBuffer, SexType sex)
 {
     // no more text entry, so disable the text cursor
     menuArea.disableCursor();
@@ -764,13 +762,13 @@ void IntroController::finishInitiateGame(const string &nameBuffer, SexType sex)
     justInitiatedNewGame = true;
 
     // show the text thats segues into the main game
-    showText((string)introGypsy[GYP_SEGUE1]);
+    showText((std::string)introGypsy[GYP_SEGUE1]);
 
     ReadChoiceController pauseController("");
     eventHandler->pushController(&pauseController);
     pauseController.waitFor();
 
-    showText((string)introGypsy[GYP_SEGUE2]);
+    showText((std::string)introGypsy[GYP_SEGUE2]);
 
     eventHandler->pushController(&pauseController);
     pauseController.waitFor();
@@ -811,7 +809,7 @@ void IntroController::showStory() {
         else if (storyInd == 23)
             backgroundArea.draw(BKGD_ABACUS);
 
-        showText((string)introText[storyInd]);
+        showText((std::string)introText[storyInd]);
 
         eventHandler->pushController(&pauseController);
         // enable the cursor here to avoid drawing in undesirable locations
@@ -871,7 +869,7 @@ void IntroController::startQuestions() {
  * Get the text for the question giving a choice between virtue v1 and
  * virtue v2 (zero based virtue index, starting at honesty).
  */
-string IntroController::getQuestion(int v1, int v2) {
+std::string IntroController::getQuestion(int v1, int v2) {
     int i = 0;
     int d = 7;
 
@@ -886,7 +884,7 @@ string IntroController::getQuestion(int v1, int v2) {
 
     zu4_assert((i + v2 - 1) < 28, "calculation failed");
 
-    return (string)introQuestions[i + v2 - 1];
+    return (std::string)introQuestions[i + v2 - 1];
 }
 
 /**
@@ -955,8 +953,8 @@ void IntroController::about() {
 /**
  * Shows text in the question area.
  */
-void IntroController::showText(const string &text) {
-    string current = text;
+void IntroController::showText(const std::string &text) {
+    std::string current = text;
     int lineNo = 0;
 
     questionArea.clear();

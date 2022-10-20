@@ -29,7 +29,7 @@
 SpellEffectCallback spellEffectCallback = NULL;
 
 CombatController *spellCombatController();
-void spellMagicAttack(const string &tilename, Direction dir, int minDamage, int maxDamage);
+void spellMagicAttack(const std::string &tilename, Direction dir, int minDamage, int maxDamage);
 bool spellMagicAttackAt(const Coords &coords, MapTile attackTile, int attackDamage);
 
 static int spellAwaken(int player);
@@ -203,7 +203,7 @@ TransportContext spellGetTransportContext(unsigned int spell) {
     return spells[spell].transportContext;
 }
 
-string spellGetErrorMessage(unsigned int spell, SpellCastError error) {
+std::string spellGetErrorMessage(unsigned int spell, SpellCastError error) {
     unsigned int i;
     SpellCastError err = error;
 
@@ -220,10 +220,10 @@ string spellGetErrorMessage(unsigned int spell, SpellCastError error) {
     /* find the message that we're looking for and return it! */
     for (i = 0; i < sizeof(spellErrorMsgs) / sizeof(spellErrorMsgs[0]); i++) {
         if (err == spellErrorMsgs[i].err)
-            return string(spellErrorMsgs[i].msg);
+            return std::string(spellErrorMsgs[i].msg);
     }
 
-    return string();
+    return std::string();
 }
 
 /**
@@ -335,7 +335,7 @@ CombatController *spellCombatController() {
 /**
  * Makes a special magic ranged attack in the given direction
  */
-void spellMagicAttack(const string &tilename, Direction dir, int minDamage, int maxDamage) {    
+void spellMagicAttack(const std::string &tilename, Direction dir, int minDamage, int maxDamage) {    
     CombatController *controller = spellCombatController();
     PartyMemberVector *party = controller->getParty();
 
@@ -345,9 +345,9 @@ void spellMagicAttack(const string &tilename, Direction dir, int minDamage, int 
         zu4_random((maxDamage + 1) - minDamage) + minDamage :
         maxDamage;
 
-    vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, (*party)[controller->getFocus()]->getCoords(), 
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, (*party)[controller->getFocus()]->getCoords(), 
                                                        1, 11, Tile::canAttackOverTile, false);
-    for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+    for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (spellMagicAttackAt(*i, tile, attackDamage))
             return;
     }

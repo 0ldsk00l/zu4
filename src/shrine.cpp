@@ -27,9 +27,6 @@
 #include "tileset.h"
 #include "types.h"
 
-using std::string;
-using std::vector;
-
 int cycles, completedCycles;
 static char *shrineAdvice[24];
 
@@ -61,7 +58,7 @@ bool isShrine(Map *punknown) {
  */ 
 Shrine::Shrine() {}
 
-string Shrine::getName() {
+std::string Shrine::getName() {
     if (name.empty()) {
         name = "Shrine of ";
         name += getVirtueName(virtue);
@@ -69,10 +66,10 @@ string Shrine::getName() {
     return name;
 }
 Virtue Shrine::getVirtue() const    { return virtue; }
-string Shrine::getMantra() const    { return mantra; }
+std::string Shrine::getMantra() const    { return mantra; }
 
 void Shrine::setVirtue(Virtue v)    { virtue = v; }
-void Shrine::setMantra(string m)    { mantra = m; }
+void Shrine::setMantra(std::string m)    { mantra = m; }
 
 /**
  * Enter the shrine
@@ -91,7 +88,7 @@ void Shrine::enter() {
         screenMessage("You enter the ancient shrine and sit before the altar...");
 
     screenMessage("\nUpon which virtue dost thou meditate?\n");
-    string virtue;
+    std::string virtue;
     virtue = ReadStringController::get(32, TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
 
     int choice;
@@ -170,7 +167,7 @@ void Shrine::meditationCycle() {
 void Shrine::askMantra() {
     screenEnableCursor();
     screenMessage("\nMantra: ");
-    string mantra;
+    std::string mantra;
     mantra = ReadStringController::get(4, TEXT_AREA_X + c->col, TEXT_AREA_Y + c->line);
     screenMessage("\n");
 

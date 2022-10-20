@@ -70,7 +70,7 @@ public:
     Dungeon() {}
 
     // Members
-    virtual string getName();
+    virtual std::string getName();
 
     DungeonToken tokenForTile(MapTile tile);
     DungeonToken currentToken();
@@ -84,7 +84,7 @@ public:
     bool validTeleportLocation(Coords coords);
 
     // Properties
-    string name;
+    std::string name;
     unsigned int n_rooms;
     std::vector<unsigned char> dataSubTokens;
     DngRoom *rooms;

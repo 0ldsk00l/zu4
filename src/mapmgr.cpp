@@ -24,9 +24,6 @@
 #include "u4file.h"
 #include "config.h"
 
-using std::vector;
-using std::pair;
-
 MapMgr *MapMgr::instance = NULL;
 
 extern bool isAbyssOpened(const Portal *p);
@@ -51,7 +48,7 @@ MapMgr::MapMgr() {
     const Config *config = Config::getInstance();
     Map *map;
 
-    vector<ConfigElement> maps = config->getElement("maps").getChildren();
+    std::vector<ConfigElement> maps = config->getElement("maps").getChildren();
     for (std::vector<ConfigElement>::iterator i = maps.begin(); i != maps.end(); i++) {
         map = initMapFromConf(*i);
 
@@ -68,7 +65,7 @@ MapMgr::~MapMgr() {
 void MapMgr::unloadMap(MapId id) {
     delete mapList[id];
     const Config *config = Config::getInstance();
-    vector<ConfigElement> maps = config->getElement("maps").getChildren();
+    std::vector<ConfigElement> maps = config->getElement("maps").getChildren();
 
     for (std::vector<ConfigElement>::const_iterator i = maps.begin(); i != maps.end(); ++i) {
         if (id == static_cast<MapId>((*i).getInt("id"))) {
@@ -177,7 +174,7 @@ Map *MapMgr::initMapFromConf(const ConfigElement &mapConf) {
     map->tileset = Tileset::get(mapConf.getString("tileset"));
     map->tilemap = TileMap::get(mapConf.getString("tilemap"));
 
-    vector<ConfigElement> children = mapConf.getChildren();
+    std::vector<ConfigElement> children = mapConf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
         if (i->getName() == "city") {
             City *city = dynamic_cast<City*>(map);
@@ -209,7 +206,7 @@ void MapMgr::initCityFromConf(const ConfigElement &cityConf, City *city) {
     city->type = cityConf.getString("type");
     city->tlk_fname = cityConf.getString("tlk_fname");
 
-    vector<ConfigElement> children = cityConf.getChildren();
+    std::vector<ConfigElement> children = cityConf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
         if (i->getName() == "personrole")
             city->personroles.push_back(initPersonRoleFromConf(*i));
@@ -248,7 +245,7 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
     portal->start.y = static_cast<unsigned short>(portalConf.getInt("starty"));
     portal->start.z = static_cast<unsigned short>(portalConf.getInt("startlevel", 0));
 
-    string prop = portalConf.getString("action");
+    std::string prop = portalConf.getString("action");
     if (prop == "none")
         portal->trigger_action = ACTION_NONE;
     else if (prop == "enter")
@@ -292,7 +289,7 @@ Portal *MapMgr::initPortalFromConf(const ConfigElement &portalConf) {
 
     portal->exitPortal = portalConf.getBool("exits");
 
-    vector<ConfigElement> children = portalConf.getChildren();
+    std::vector<ConfigElement> children = portalConf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
         if (i->getName() == "retroActiveDest") {
             portal->retroActiveDest = new PortalDestination;
@@ -332,8 +329,8 @@ int MapMgr::initCompressedChunkFromConf(const ConfigElement &compressedChunkConf
     return compressedChunkConf.getInt("index");
 }
 
-pair<string, Coords> MapMgr::initLabelFromConf(const ConfigElement &labelConf) {
-    return pair<string, Coords>
+std::pair<std::string, Coords> MapMgr::initLabelFromConf(const ConfigElement &labelConf) {
+    return std::pair<std::string, Coords>
         (labelConf.getString("name"), 
          (Coords){labelConf.getInt("x"), labelConf.getInt("y"), labelConf.getInt("z", 0)});
 }

@@ -2,7 +2,6 @@
  * $Id: dialogueloader_lb.cpp 3012 2012-03-05 21:24:06Z twschulz $
  */
 
-
 #include <string>
 
 #include "context.h"
@@ -11,8 +10,6 @@
 #include "player.h"
 #include "savegame.h"
 #include "u4file.h"
-
-using std::string;
 
 Response *lordBritishGetHelp(const DynamicResponse *resp);
 Response *lordBritishGetIntro(const DynamicResponse *resp);
@@ -97,7 +94,7 @@ Dialogue* U4LBDialogueLoader::load(void *source) {
 Response *lordBritishGetHelp(const DynamicResponse *resp) {
     int v;
     bool fullAvatar, partialAvatar;
-    string text;
+    std::string text;
 
     /*
      * check whether player is full avatar (in all virtues) or partial
@@ -162,7 +159,7 @@ Response *lordBritishGetHelp(const DynamicResponse *resp) {
                "\nThe hearts and souls of all Britannia go with thee now. Take care, my friend.\n";
     }
 
-    return new Response(string("He says: ") + text);
+    return new Response(std::string("He says: ") + text);
 }
 
 Response *lordBritishGetIntro(const DynamicResponse *resp) {
@@ -171,18 +168,18 @@ Response *lordBritishGetIntro(const DynamicResponse *resp) {
 
     if (c->saveGame->lbintro) {
         if (c->saveGame->members == 1) {
-            intro->add(string("\n\n\nLord British\nsays:  Welcome\n") + 
+            intro->add(std::string("\n\n\nLord British\nsays:  Welcome\n") +
                        c->party->member(0)->getName() + "!\n\n");
         }
         else if (c->saveGame->members == 2) {
-            intro->add(string("\n\nLord British\nsays:  Welcome\n") +
+            intro->add(std::string("\n\nLord British\nsays:  Welcome\n") +
                        c->party->member(0)->getName() + 
                        " and thee also " + 
                        c->party->member(1)->getName() + 
                        "!\n\n"); 
         }
         else {
-            intro->add(string("\n\n\nLord British\nsays:  Welcome\n") +
+            intro->add(std::string("\n\n\nLord British\nsays:  Welcome\n") +
                        c->party->member(0)->getName() +
                        " and thy\nworthy\nAdventurers!\n\n");
         }
@@ -194,7 +191,7 @@ Response *lordBritishGetIntro(const DynamicResponse *resp) {
     }
 
     else {
-        intro->add(string("\n\n\nLord British rises and says: At long last!\n") +
+        intro->add(std::string("\n\n\nLord British rises and says: At long last!\n") +
                    c->party->member(0)->getName() +
                    " thou hast come!  We have waited such a long, long time...\n"
                    "\n\nLord British sits and says: A new age is upon Britannia. The great evil Lords are gone but our people lack direction and purpose in their lives...\n\n\n"

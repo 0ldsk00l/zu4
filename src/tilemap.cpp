@@ -11,8 +11,6 @@
 #include "error.h"
 #include "tileset.h"
 
-using std::vector;
-
 /**
  * Static variables
  */
@@ -23,7 +21,7 @@ TileMap::TileIndexMapMap TileMap::tileMaps;
  */
 void TileMap::loadAll() {
     const Config *config = Config::getInstance();    
-    vector<ConfigElement> conf;
+    std::vector<ConfigElement> conf;
 
     /* FIXME: make sure tilesets are loaded by now */    
 
@@ -68,13 +66,13 @@ void TileMap::unloadAll() {
 void TileMap::load(const ConfigElement &tilemapConf) {
     TileMap *tm = new TileMap;
     
-    string name = tilemapConf.getString("name");
+    std::string name = tilemapConf.getString("name");
     zu4_error(ZU4_LOG_DBG, "Tilemap name is: %s",  name.c_str());
     
-    string tileset = tilemapConf.getString("tileset");
+    std::string tileset = tilemapConf.getString("tileset");
 
     int index = 0;
-    vector<ConfigElement> children = tilemapConf.getChildren();
+    std::vector<ConfigElement> children = tilemapConf.getChildren();
     for (std::vector<ConfigElement>::iterator i = children.begin(); i != children.end(); i++) {
         if (i->getName() != "mapping")
             continue;
@@ -83,7 +81,7 @@ void TileMap::load(const ConfigElement &tilemapConf) {
            so let's do some translations! */
         
         int frames = 1;
-        string tile = i->getString("tile");
+        std::string tile = i->getString("tile");
 
         zu4_error(ZU4_LOG_DBG, "\tLoading %s", tile.c_str());
         
@@ -116,7 +114,7 @@ void TileMap::load(const ConfigElement &tilemapConf) {
 /**
  * Returns the Tile index map with the specified name
  */
-TileMap *TileMap::get(string name) {
+TileMap *TileMap::get(std::string name) {
     if (tileMaps.find(name) != tileMaps.end())
         return tileMaps[name];
     else return NULL;    

@@ -28,9 +28,7 @@
 bool verbose = false;
 bool quit = false;
 bool useProfile = false;
-string profileName = "";
-
-using namespace std;
+std::string profileName = "";
 
 int main(int argc, char *argv[]) {
 	if (!u4fopen("AVATAR.EXE")) {

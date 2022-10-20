@@ -15,8 +15,6 @@
 #include "tileview.h"
 #include "types.h"
 
-using std::vector;
-
 struct Map;
 struct Portal;
 struct Creature;
@@ -58,14 +56,14 @@ public:
  */
 struct AlphaActionController : public WaitableController<int> {
 public:
-    AlphaActionController(char letter, const string &p) : lastValidLetter(letter), prompt(p) {}
+    AlphaActionController(char letter, const std::string &p) : lastValidLetter(letter), prompt(p) {}
     bool keyPressed(int key);
     
-    static int get(char lastValidLetter, const string &prompt, EventHandler *eh = NULL);
+    static int get(char lastValidLetter, const std::string &prompt, EventHandler *eh = NULL);
 
 private:
     char lastValidLetter;
-    string prompt;
+    std::string prompt;
 };
 
 /**
@@ -170,12 +168,12 @@ void gameCreatureCleanup(void);
 bool gameSpawnCreature(const struct Creature *m);
 
 /* etc */
-string gameGetInput(int maxlen = 32);
+std::string gameGetInput(int maxlen = 32);
 int gameGetPlayer(bool canBeDisabled, bool canBeActivePlayer);
 void gameGetPlayerForCommand(bool (*commandFn)(int player), bool canBeDisabled, bool canBeActivePlayer);
 void gameDamageParty(int minDamage, int maxDamage);
 void gameDamageShip(int minDamage, int maxDamage);
 void gameSetActivePlayer(int player);
-vector<Coords> gameGetDirectionalActionPath(int dirmask, int validDirections, const Coords &origin, int minDistance, int maxDistance, bool (*blockedPredicate)(const Tile *tile), bool includeBlocked);
+std::vector<Coords> gameGetDirectionalActionPath(int dirmask, int validDirections, const Coords &origin, int minDistance, int maxDistance, bool (*blockedPredicate)(const Tile *tile), bool includeBlocked);
 
 #endif

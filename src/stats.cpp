@@ -185,7 +185,7 @@ void StatsArea::redraw() {
 /**
  * Sets the title of the stats area.
  */
-void StatsArea::setTitle(const string &s) {
+void StatsArea::setTitle(const std::string &s) {
     int titleStart = (STATS_AREA_WIDTH / 2) - ((s.length() + 2) / 2);
     title.textAt(titleStart, 0, "%c%s%c", 16, s.c_str(), 17);
 }
@@ -224,7 +224,7 @@ void StatsArea::showPlayerDetails() {
     PartyMember *p = c->party->member(player);
     setTitle(p->getName());
     mainArea.textAt(0, 0, "%c             %c", p->getSex(), p->getStatus());
-    string classStr = getClassName(p->getClass());
+    std::string classStr = getClassName(p->getClass());
     int classStart = (STATS_AREA_WIDTH / 2) - (classStr.length() / 2);
     mainArea.textAt(classStart, 0, "%s", classStr.c_str());
     mainArea.textAt(0, 2, " MP:%02d  LV:%d", p->getMp(), p->getRealLevel());
@@ -366,7 +366,7 @@ void StatsArea::showReagents(bool active)
     Menu::MenuItemList::iterator i;
     int line = 0,
         r = REAG_ASH;
-    string shortcut ("A");
+    std::string shortcut ("A");
 
     reagentsMixMenu.show(&mainArea);
 

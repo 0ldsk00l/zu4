@@ -1076,7 +1076,7 @@ void CombatController::attack() {
     zu4_snd_play(SOUND_PC_ATTACK, false, -1); // PC_ATTACK, melee and ranged
 
 
-    vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, 
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL,
                                                        attacker->getCoords(),
                                                        1, range, 
                                                        weapon->flags & WEAP_ATTACKTHROUGHOBJECTS ? NULL : &Tile::canAttackOverTile,
@@ -1089,7 +1089,7 @@ void CombatController::attack() {
         targetCoords = path.back();
 
     int distance = 1;
-    for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+    for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (attackAt(*i, attacker, MASK_DIR(dir), range, distance)) {
             foundTarget = true;
             targetDistance = distance;

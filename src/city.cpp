@@ -2,7 +2,6 @@
  * $Id: city.cpp 3022 2012-03-18 11:32:01Z daniel_santos $
  */
 
-
 #include <string>
 #include <typeinfo>
 #include "city.h"
@@ -14,12 +13,9 @@
 #include "person.h"
 #include "player.h"
 
-using std::string;
-
 City::City() : Map() {
 
 }
-
 
 City::~City() {
     for (PersonList::iterator i = persons.begin(); i != persons.end(); i++)
@@ -33,7 +29,7 @@ City::~City() {
 /**
  * Returns the name of the city
  */ 
-string City::getName() {
+std::string City::getName() {
     return name;
 }
 

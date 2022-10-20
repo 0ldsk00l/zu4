@@ -16,8 +16,6 @@
 #include "settings.h"
 #include "u4file.h"
 
-using namespace std;
-
 void xmlAccumError(void *l, const char *fmt, ...);
 
 extern bool verbose;
@@ -28,7 +26,7 @@ void *xmlXu4FileOpen (const char *filename) {
     void *result;
     char path[64];
     u4find_conf(path, sizeof(path), filename);
-    string pathname = (string)path;
+    std::string pathname = (std::string)path;
 
     if (pathname.empty())
         return NULL;
@@ -59,7 +57,7 @@ xmlDocPtr xmlParse(const char *filename) {
         zu4_error(ZU4_LOG_ERR, "error parsing %s", filename);
 
     if (settings.validateXml && doc->intSubset) {
-        string errorMessage;        
+        std::string errorMessage;
         xmlValidCtxt cvp;
 
         if (verbose)
@@ -76,7 +74,7 @@ xmlDocPtr xmlParse(const char *filename) {
 }
 
 void xmlAccumError(void *l, const char *fmt, ...) {
-    string* errorMessage = (string*) l;
+    std::string* errorMessage = (std::string*) l;
     char buffer[1000];
     va_list args;
 
@@ -95,7 +93,7 @@ bool xmlPropExists(xmlNodePtr node, const char *name) {
     return exists;
 }
 
-string xmlGetPropAsString(xmlNodePtr node, const char *name) {
+std::string xmlGetPropAsString(xmlNodePtr node, const char *name) {
     xmlChar *prop;
 
     if (settings.validateXml && !xmlHasProp(node, (const xmlChar *)name))
@@ -105,7 +103,7 @@ string xmlGetPropAsString(xmlNodePtr node, const char *name) {
     if (!prop)
         return "";
 
-    string result((char *)prop);
+    std::string result((char *)prop);
     xmlFree(prop);
     
     return result;
