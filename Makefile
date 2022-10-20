@@ -25,12 +25,13 @@ LIBS_XML2 := $(shell $(PKG_CONFIG) --libs libxml-2.0)
 
 #UIFLAGS += -ggdb1 -rdynamic -g -O0 -fno-inline -fno-eliminate-unused-debug-types -gstabs -g3
 
-UIFLAGS := -Wall -Isrc $(CFLAGS_SDL2) $(CFLAGS_XML2)
+UIFLAGS := -Wall -Ideps/yxml $(CFLAGS_SDL2) $(CFLAGS_XML2)
 UILIBS := $(LIBS_SDL2) $(LIBS_XML2) -lGL -lGLU
 
 TARGET := u4
 
 CSRCS := \
+	deps/yxml/yxml.c \
 	src/lzw/hash.c \
 	src/lzw/lzw.c \
 	src/lzw/u4decode.c \
@@ -55,8 +56,7 @@ CSRCS := \
 	src/u4_sdl.c \
 	src/video.c \
 	src/weapon.c \
-	src/u4file.c \
-	src/yxml.c
+	src/u4file.c
 
 CXXSRCS := \
 	src/annotation.cpp \

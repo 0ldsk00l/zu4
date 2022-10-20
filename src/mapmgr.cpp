@@ -4,14 +4,10 @@
 
 #include <vector>
 
-#include "u4.h"
-
-#include "annotation.h"
 #include "city.h"
-#include "combat.h"
+#include "config.h"
 #include "dungeon.h"
 #include "error.h"
-#include "map.h"
 #include "maploader.h"
 #include "mapmgr.h"
 #include "moongate.h"
@@ -19,10 +15,6 @@
 #include "portal.h"
 #include "shrine.h"
 #include "tilemap.h"
-#include "tileset.h"
-#include "types.h"
-#include "u4file.h"
-#include "config.h"
 
 MapMgr *MapMgr::instance = NULL;
 
@@ -78,7 +70,7 @@ void MapMgr::unloadMap(MapId id) {
 }
 
 Map *MapMgr::initMap(Map::Type type) {
-    Map *map;
+    Map *map = NULL;
 
     switch(type) {
     case Map::WORLD:

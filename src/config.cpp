@@ -7,10 +7,6 @@
 #include <cstdlib>
 #include <cctype>
 
-#include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
-#include <libxml/valid.h>
-#include <libxml/xmlIO.h>
 #include <libxml/xinclude.h>
 #include <libxml/xpath.h>
 
@@ -24,8 +20,6 @@
 #include "settings.h"
 #include "u4file.h"
 
-using namespace std;
-
 extern bool verbose;
 Config *Config::instance = NULL;
 
@@ -37,11 +31,11 @@ const Config *Config::getInstance() {
     return instance;
 }
 
-ConfigElement Config::getElement(const string &name) const {
+ConfigElement Config::getElement(const std::string &name) const {
     xmlXPathContextPtr context;
     xmlXPathObjectPtr result;
 
-    string path = "/config/" + name;
+    std::string path = "/config/" + name;
     context = xmlXPathNewContext(doc);
     result = xmlXPathEvalExpression(reinterpret_cast<const xmlChar *>(path.c_str()), context);
     if(xmlXPathNodeSetIsEmpty(result->nodesetval))
@@ -71,7 +65,7 @@ Config::Config() {
     xmlXIncludeProcess(doc);
 
     if (settings.validateXml && doc->intSubset) {
-        string errorMessage;
+        std::string errorMessage;
         xmlValidCtxt cvp;
 
         if (verbose)
@@ -86,20 +80,20 @@ Config::Config() {
     }
 }
 
-vector<string> Config::getGames() {
-    vector<string> result;
+std::vector<std::string> Config::getGames() {
+    std::vector<std::string> result;
     result.push_back("Ultima IV");
     return result;
 }
 
-void Config::setGame(const string &name) {
+void Config::setGame(const std::string &name) {
 }
 
 void *Config::fileOpen(const char *filename) {
     void *result;
     char path[64];
     u4find_conf(path, sizeof(path), filename);
-    string pathname = (string)path;
+    std::string pathname = (std::string)path;
 
     if (pathname.empty())
         return NULL;
@@ -112,7 +106,7 @@ void *Config::fileOpen(const char *filename) {
 }
 
 void Config::accumError(void *l, const char *fmt, ...) {
-    string* errorMessage = static_cast<string *>(l);
+    std::string* errorMessage = static_cast<std::string *>(l);
     char buffer[1000];
     va_list args;
 
@@ -151,18 +145,18 @@ bool ConfigElement::exists(const std::string &name) const {
     return exists;
 }
 
-string ConfigElement::getString(const string &name) const {
+std::string ConfigElement::getString(const std::string &name) const {
     xmlChar *prop = xmlGetProp(node, reinterpret_cast<const xmlChar *>(name.c_str()));
     if (!prop)
         return "";
 
-    string result(reinterpret_cast<const char *>(prop));
+    std::string result(reinterpret_cast<const char *>(prop));
     xmlFree(prop);
 
     return result;
 }
 
-int ConfigElement::getInt(const string &name, int defaultValue) const {
+int ConfigElement::getInt(const std::string &name, int defaultValue) const {
     long result;
     xmlChar *prop;
 
@@ -176,7 +170,7 @@ int ConfigElement::getInt(const string &name, int defaultValue) const {
     return static_cast<int>(result);
 }
 
-bool ConfigElement::getBool(const string &name) const {
+bool ConfigElement::getBool(const std::string &name) const {
     int result;
 
     xmlChar *prop = xmlGetProp(node, reinterpret_cast<const xmlChar *>(name.c_str()));
@@ -193,7 +187,7 @@ bool ConfigElement::getBool(const string &name) const {
     return result;
 }
 
-int ConfigElement::getEnum(const string &name, const char *enumValues[]) const {
+int ConfigElement::getEnum(const std::string &name, const char *enumValues[]) const {
     int result = -1, i;
     xmlChar *prop;
 
@@ -214,8 +208,8 @@ int ConfigElement::getEnum(const string &name, const char *enumValues[]) const {
     return result;
 }
 
-vector<ConfigElement> ConfigElement::getChildren() const {
-    vector<ConfigElement> result;
+std::vector<ConfigElement> ConfigElement::getChildren() const {
+    std::vector<ConfigElement> result;
 
     for (xmlNodePtr child = node->children; child; child = child->next) {
         if (child->type == XML_ELEMENT_NODE)

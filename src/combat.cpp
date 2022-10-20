@@ -120,7 +120,7 @@ void CombatController::init(struct Creature *m) {
  * Initializes dungeon room combat
  */
 void CombatController::initDungeonRoom(int room, Direction from) {
-    int offset, i;
+    int offset = 0, i;
     init(NULL);
 
     zu4_assert(c->location->prev->context & CTX_DUNGEON, "Error: called initDungeonRoom from non-dungeon context");

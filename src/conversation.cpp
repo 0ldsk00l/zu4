@@ -7,7 +7,6 @@
 
 #include "conversation.h"
 #include "error.h"
-#include "person.h"
 #include "random.h"
 #include "script.h"
 

@@ -5,12 +5,8 @@
 #include <cstdlib>
 #include <cstdarg>
 
-#include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
-#include <libxml/valid.h>
-#include <libxml/xmlIO.h>
-
 #include "xml.h"
+
 #include "error.h"
 #include "settings.h"
 #include "u4file.h"

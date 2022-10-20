@@ -3,17 +3,16 @@
  */
 
 #include <stdint.h>
+#include <string>
 
+#include "tileview.h"
+
+#include "error.h"
 #include "image.h"
-#include "imagemgr.h"
-#include "settings.h"
 #include "screen.h"
 #include "tile.h"
 #include "tileanim.h"
-#include "tileset.h"
-#include "tileview.h"
 #include "u4.h"
-#include "error.h"
 
 TileView::TileView(int x, int y, int columns, int rows) : View(x, y, columns * TILE_WIDTH, rows * TILE_HEIGHT) {
     this->columns = columns;

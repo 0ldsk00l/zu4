@@ -3,17 +3,10 @@
  */
 
 #include <ctime>
-#include "u4.h"
 
 #include "death.h"
 
-#include "map.h"
-#include "annotation.h"
-#include "city.h"
-#include "context.h"
-#include "event.h"
 #include "game.h"
-#include "location.h"
 #include "mapmgr.h"
 #include "music.h"
 #include "player.h"

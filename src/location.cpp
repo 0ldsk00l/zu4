@@ -11,14 +11,7 @@
 #include "annotation.h"
 #include "context.h"
 #include "combat.h"
-#include "creature.h"
-#include "event.h"
-#include "game.h"
-#include "map.h"
-#include "object.h"
-#include "savegame.h"
 #include "settings.h"
-#include "tileset.h"
 
 Location *locationPush(Location *stack, Location *loc);
 Location *locationPop(Location **stack);

@@ -6,17 +6,9 @@
 
 #include "config.h"
 #include "context.h"
-#include "creature.h"
 #include "error.h"
-#include "image.h"
 #include "imagemgr.h"
-#include "location.h"
-#include "settings.h"
 #include "tileanim.h"
-#include "tilemap.h"
-#include "tileset.h"
-#include "utils.h"
-#include "assert.h"
 
 TileId Tile::nextId = 0;
 

@@ -6,54 +6,34 @@
 #include <ctime>
 #include <map>
 
-#include "u4.h"
-
 #include "game.h"
 
 #include "annotation.h"
-#include "armor.h"
 #include "camp.h"
 #include "cheat.h"
 #include "city.h"
 #include "conversation.h"
-#include "dungeon.h"
-#include "combat.h"
-#include "context.h"
 #include "death.h"
-#include "direction.h"
+#include "dungeonview.h"
 #include "error.h"
-#include "event.h"
 #include "intro.h"
 #include "item.h"
 #include "imagemgr.h"
-#include "location.h"
 #include "mapmgr.h"
-#include "menu.h"
-#include "creature.h"
 #include "moongate.h"
-#include "movement.h"
 #include "music.h"
 #include "names.h"
 #include "person.h"
-#include "player.h"
 #include "portal.h"
 #include "progress_bar.h"
-#include "savegame.h"
 #include "screen.h"
-#include "settings.h"
 #include "shrine.h"
 #include "sound.h"
 #include "spell.h"
 #include "stats.h"
 #include "random.h"
 #include "tilemap.h"
-#include "tileset.h"
-#include "utils.h"
-#include "script.h"
-#include "weapon.h"
-#include "dungeonview.h"
-
-using namespace std;
+#include "u4.h"
 
 GameController *game = NULL;
 
@@ -1604,9 +1584,9 @@ void destroy() {
     if (dir == DIR_NONE)
         return;
 
-    vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
                                                        1, 1, NULL, true);
-    for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+    for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (destroyAt(*i))
             return;
     }
@@ -1649,9 +1629,9 @@ void attack() {
     if (dir == DIR_NONE)
         return;
 
-    vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
                                                                        1, 1, NULL, true);
-    for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+    for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (attackAt(*i))
             return;
     }
@@ -1866,9 +1846,9 @@ void fire() {
     }
 
     // nothing (not even mountains!) can block cannonballs
-    vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), broadsidesDirs, c->location->coords,
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), broadsidesDirs, c->location->coords,
                                                        1, 3, NULL, false);
-    for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+    for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (fireAt(*i, true))
             return;
     }
@@ -2337,9 +2317,9 @@ void jimmy() {
     if (dir == DIR_NONE)
         return;
 
-    vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
                                                                        1, 1, NULL, true);
-    for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+    for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (jimmyAt(*i))
             return;
     }
@@ -2385,9 +2365,9 @@ void opendoor() {
     if (dir == DIR_NONE)
         return;
 
-    vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
                                                        1, 1, NULL, true);
-    for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+    for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (openAt(*i))
             return;
     }
@@ -2485,9 +2465,9 @@ void talk() {
     if (dir == DIR_NONE)
         return;
 
-    vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
+    std::vector<Coords> path = gameGetDirectionalActionPath(MASK_DIR(dir), MASK_DIR_ALL, c->location->coords,
                                                                        1, 2, &Tile::canTalkOverTile, true);
-    for (vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
+    for (std::vector<Coords>::iterator i = path.begin(); i != path.end(); i++) {
         if (talkAt(*i))
             return;
     }
@@ -3204,8 +3184,8 @@ bool creatureRangeAttack(const Coords &coords, Creature *m) {
  * fails.  If a tile is blocked, that tile is included in the path
  * only if includeBlocked is true.
  */
-vector<Coords> gameGetDirectionalActionPath(int dirmask, int validDirections, const Coords &origin, int minDistance, int maxDistance, bool (*blockedPredicate)(const Tile *tile), bool includeBlocked) {
-    vector<Coords> path;
+std::vector<Coords> gameGetDirectionalActionPath(int dirmask, int validDirections, const Coords &origin, int minDistance, int maxDistance, bool (*blockedPredicate)(const Tile *tile), bool includeBlocked) {
+    std::vector<Coords> path;
     Direction dirx = DIR_NONE,
               diry = DIR_NONE;
 

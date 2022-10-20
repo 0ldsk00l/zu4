@@ -2,9 +2,6 @@
  * $Id: dialogueloader.cpp 2819 2011-01-31 05:38:20Z darren_janeczek $
  */
 
-#include <stdlib.h>
-#include <string.h>
-#include "conversation.h"
 #include "dialogueloader.h"
 #include "error.h"
 

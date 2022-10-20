@@ -3,20 +3,12 @@
  */
 
 #include "movement.h"
+
 #include "annotation.h"
-#include "combat.h"
 #include "context.h"
 #include "dungeon.h"
 #include "error.h"
-#include "event.h"
-#include "location.h"
-#include "creature.h"
-#include "object.h"
-#include "player.h"
 #include "random.h"
-#include "savegame.h"
-#include "tile.h"
-#include "utils.h"
 
 bool collisionOverride = false;
 

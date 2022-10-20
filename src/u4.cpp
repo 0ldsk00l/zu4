@@ -9,10 +9,11 @@
  * intro stuff goes here...
  */
 
-#include "u4.h"
 #include <cstring>
+
+#include "u4.h"
+
 #include "error.h"
-#include "event.h"
 #include "game.h"
 #include "intro.h"
 #include "music.h"
@@ -22,9 +23,7 @@
 #include "screen.h"
 #include "settings.h"
 #include "sound.h"
-#include "tileset.h"
 #include "u4file.h"
-#include "utils.h"
 
 bool verbose = false;
 bool quit = false;

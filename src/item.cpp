@@ -6,24 +6,13 @@
 
 #include "annotation.h"
 #include "codex.h"
-#include "combat.h"
-#include "context.h"
 #include "dungeon.h"
 #include "error.h"
-#include "game.h"
-#include "location.h"
-#include "map.h"
 #include "mapmgr.h"
 #include "names.h"
-#include "player.h"
 #include "portal.h"
 #include "random.h"
-#include "savegame.h"
 #include "screen.h"
-#include "tileset.h"
-#include "u4.h"
-#include "utils.h"
-#include "weapon.h"
 
 DestroyAllCreaturesCallback destroyAllCreaturesCallback;
 

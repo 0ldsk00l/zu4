@@ -8,8 +8,6 @@
 
 #include "config.h"
 #include "error.h"
-#include "screen.h"
-#include "settings.h"
 #include "tile.h"
 #include "tilemap.h"
 

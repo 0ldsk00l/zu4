@@ -2,24 +2,13 @@
  * $Id: map.cpp 3066 2014-07-21 00:18:48Z darren_janeczek $
  */
 
-#include "u4.h"
 #include "map.h"
+
 #include "annotation.h"
-#include "context.h"
-#include "direction.h"
 #include "error.h"
-#include "location.h"
-#include "movement.h"
-#include "object.h"
-#include "person.h"
 #include "player.h"
 #include "portal.h"
-#include "savegame.h"
-#include "tileset.h"
 #include "tilemap.h"
-#include "types.h"
-#include "utils.h"
-#include "settings.h"
 
 static Coords nowhere = zu4_coords_nowhere();
 

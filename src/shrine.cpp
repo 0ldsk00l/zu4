@@ -3,28 +3,19 @@
  */
 
 #include <string>
-#include <vector>
-
-#include "u4.h"
 
 #include "shrine.h"
 
 #include "annotation.h"
-#include "context.h"
-#include "event.h"
 #include "game.h"
 #include "imagemgr.h"
-#include "location.h"
 #include "mapmgr.h"
-#include "creature.h"
 #include "music.h"
 #include "names.h"
 #include "player.h"
 #include "portal.h"
 #include "screen.h"
-#include "settings.h"
-#include "tileset.h"
-#include "types.h"
+#include "u4.h"
 
 int cycles, completedCycles;
 static char *shrineAdvice[24];

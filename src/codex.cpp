@@ -3,26 +3,16 @@
  */
 
 #include <string>
-#include <cstring>
-#include <vector>
 
 #include "codex.h"
 
 #include "context.h"
-#include "event.h"
 #include "game.h"
-#include "item.h"
 #include "imagemgr.h"
 #include "music.h"
 #include "names.h"
-#include "savegame.h"
 #include "screen.h"
 #include "stats.h"
-#include "u4.h"
-#include "u4file.h"
-#include "utils.h"
-
-using namespace std;
 
 int codexInit();
 void codexDelete();

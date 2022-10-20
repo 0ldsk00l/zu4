@@ -6,29 +6,18 @@
 #include <cstdarg>
 #include <cfloat>
 #include <cstring>
-#include "u4.h"
-#include "video.h"
 
 #include "screen.h"
 
 #include "config.h"
-#include "context.h"
 #include "dungeonview.h"
 #include "error.h"
-#include "event.h"
 #include "intro.h"
 #include "imagemgr.h"
-#include "location.h"
 #include "names.h"
-#include "object.h"
-#include "player.h"
-#include "savegame.h"
-#include "settings.h"
-#include "textcolor.h"
 #include "tileanim.h"
-#include "tileset.h"
-#include "tileview.h"
-#include "annotation.h"
+#include "video.h"
+#include "u4.h"
 
 enum LayoutType {
     LAYOUT_STANDARD,
