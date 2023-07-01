@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
 #include <stdio.h>
 
 #define PARTY_SAV_BASE_FILENAME         "party.sav"
