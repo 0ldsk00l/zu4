@@ -5,6 +5,8 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
+#include <time.h>
+
 #include "location.h"
 #include "aura.h"
 
