@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <libxml/HTMLparser.h>
 #include <libxml/xmlmemory.h>
 
 struct ConfigElement;
