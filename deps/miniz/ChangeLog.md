@@ -1,5 +1,13 @@
 ## Changelog
 
+### 3.0.2
+
+ - Fix buffer overrun in mz_utf8z_to_widechar on Windows
+
+### 3.0.1
+
+ - Fix compilation error with MINIZ_USE_UNALIGNED_LOADS_AND_STORES=1
+
 ### 3.0.0
 
  - Reduce memory usage for inflate. This changes `struct tinfl_decompressor_tag` and therefore requires a major version bump (breaks ABI compatibility)
@@ -26,6 +34,14 @@
  - Fixed alignment problems on MacOS
  - Fixed get error string for MZ_ZIP_TOTAL_ERRORS
  - Write correct FLEVEL 2-bit value in zlib header
+ - miniz.pc.in: fix include path not containing the "miniz" suffix
+ - Fix compatibility with FreeBSD
+ - pkg-config tweaks
+ - Fix integer overflow in header corruption check
+ - Fix some warnings
+ - tdefl_compress_normal: Avoid NULL ptr arithmetic UB
+ - replace use of stdint.h types with mz_ variants
+ 
  
 ### 2.2.0
 
